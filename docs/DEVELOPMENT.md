@@ -19,7 +19,7 @@ plan"). This file covers how to build, run and test the game.
 | 5. Operations | Theatre with an AI team and a nurse handing instruments | |
 | 6. Career and politics | Promotions, reputation, rivals and hospital politics | |
 
-The earlier SwiftUI and SpriteKit prototype is kept under the git tag
+The earlier SwiftUI and SpriteKit prototype is kept on the git branch
 `swift-prototype`.
 
 ## Run it on your computer
@@ -103,5 +103,6 @@ shadows are off; characters and furniture have soft contact shadows instead
 
 - **Linux:** downloads Godot, runs the tests, renders iPhone and iPad
   screenshots, and on `main` publishes them to the `screenshots` branch.
-- **macOS:** exports the iOS Xcode project with Godot's templates and builds it
-  for the iOS Simulator with code signing turned off.
+- **macOS:** exports the iOS Xcode project with Godot's templates and builds
+  the iPhone and iPad app with code signing turned off. (Godot's simulator
+  library is Intel only, so CI builds the real device app instead.)

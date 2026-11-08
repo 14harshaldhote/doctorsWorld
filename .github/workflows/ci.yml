@@ -131,15 +131,21 @@ jobs:
           ls -la build/ios
           test -d build/ios/DoctorsWorld.xcodeproj
 
-      - name: Build for the iOS Simulator
+      - name: Build the app for iPhone and iPad (unsigned)
+        # Godot's iOS template ships an arm64 device library (its simulator
+        # library is Intel only), so CI builds the real device app with code
+        # signing turned off. Signing happens on your Mac, see DEVELOPMENT.md.
         run: |
           set -o pipefail
-          xcodebuild -list -project build/ios/DoctorsWorld.xcodeproj
           xcodebuild build \
             -project build/ios/DoctorsWorld.xcodeproj \
             -scheme DoctorsWorld \
             -configuration Debug \
-            -sdk iphonesimulator \
-            -destination "generic/platform=iOS Simulator" \
-            CODE_SIGNING_ALLOWED=NO \
-            | tail -n 60
+            -sdk iphoneos \
+            -destination "generic/platform=iOS" \
+            -derivedDataPath build/derived \
+            CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" \
+            | tail -n 40
+          APP=build/derived/Build/Products/Debug-iphoneos/DoctorsWorld.app
+          ls -la "$APP"
+          lipo -info "$APP/DoctorsWorld"

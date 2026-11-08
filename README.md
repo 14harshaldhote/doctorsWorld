@@ -66,7 +66,7 @@ how you know you're winning.
 ## What works right now
 
 The game is being built in stages, and the old 2D version has been retired
-(it's kept safe under the `swift-prototype` tag). Stage 1 of the 3D game is in:
+(it's kept safe on the `swift-prototype` branch). Stage 1 of the 3D game is in:
 
 - The title screen: the hospital at dusk, an ambulance, a doctor wandering about.
 - Name your doctor and choose whether people call you by your first or last name.
