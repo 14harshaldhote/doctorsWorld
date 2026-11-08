@@ -157,6 +157,13 @@ public struct Shift: Sendable, Equatable {
         events.append(.lost(patient: patients[index].id))
     }
 
+    /// Ends the shift now, as if the clock had run out: everyone still here
+    /// is handed over to the next team. Does nothing if the shift is over.
+    public mutating func finishEarly() {
+        guard !isOver else { return }
+        endShift()
+    }
+
     private mutating func endShift() {
         for index in patients.indices where patients[index].isActive {
             if let bed = patients[index].bed { beds[bed] = nil }

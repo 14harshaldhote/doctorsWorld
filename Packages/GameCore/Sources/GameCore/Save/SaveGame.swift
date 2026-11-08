@@ -85,3 +85,61 @@ public struct FileSaveStore: SaveStore {
         try game.encoded().write(to: url, options: .atomic)
     }
 }
+
+/// How the game came by the save it started with.
+public enum LoadOutcome: Equatable, Sendable {
+    /// No save yet: a brand new career.
+    case fresh
+    /// The save loaded normally.
+    case loaded
+    /// The save could not be read. It was moved aside to `backup`, never
+    /// deleted, and a new career started.
+    case setAside(backup: URL, reason: SaveError)
+    /// The save could not be read or moved. It stays untouched, and the new
+    /// career must not be saved over it.
+    case leftInPlace(reason: SaveError)
+
+    /// False when saving would overwrite a file the player may still want.
+    public var canSave: Bool {
+        if case .leftInPlace = self { return false }
+        return true
+    }
+}
+
+extension FileSaveStore {
+    /// Loads the save, or starts a new career if there is none.
+    ///
+    /// An unreadable save (damaged, or written by a newer build) is renamed
+    /// rather than overwritten, so a bug can never silently wipe someone's
+    /// progress. If even the rename fails, the game still starts with a new
+    /// career, and `canSave` is false so the old file is never overwritten.
+    public func loadOrStart() -> (game: SaveGame, outcome: LoadOutcome) {
+        do {
+            if let game = try load() { return (game, .loaded) }
+            return (SaveGame(profile: PlayerProfile()), .fresh)
+        } catch {
+            let reason = (error as? SaveError) ?? .corrupt
+            let backup = setAsideURL()
+            do {
+                try FileManager.default.moveItem(at: url, to: backup)
+            } catch {
+                return (SaveGame(profile: PlayerProfile()), .leftInPlace(reason: reason))
+            }
+            return (SaveGame(profile: PlayerProfile()), .setAside(backup: backup, reason: reason))
+        }
+    }
+
+    /// A free file name next to the save: save.unreadable.json, then
+    /// save.unreadable-2.json and so on.
+    private func setAsideURL() -> URL {
+        let folder = url.deletingLastPathComponent()
+        let stem = url.deletingPathExtension().lastPathComponent
+        var number = 1
+        while true {
+            let suffix = number == 1 ? "" : "-\(number)"
+            let candidate = folder.appendingPathComponent("\(stem).unreadable\(suffix).json")
+            if !FileManager.default.fileExists(atPath: candidate.path) { return candidate }
+            number += 1
+        }
+    }
+}

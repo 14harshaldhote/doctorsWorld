@@ -39,3 +39,38 @@ public struct ShiftConfig: Codable, Sendable, Equatable {
         return config
     }
 }
+
+/// Shift settings that do not come from the player's profile. Demo mode and
+/// the UI tests use them for short, busy shifts. Values are kept in sane
+/// ranges so a bad launch argument cannot break a shift.
+public struct ShiftOverrides: Sendable, Equatable {
+    public static let durationRange = 5.0...1800.0
+    public static let arrivalRange = 2.0...600.0
+
+    /// Shift length in game seconds.
+    public var duration: Double?
+    /// Shortest gap between arrivals; the longest is 1.5 times this.
+    public var arrivalSeconds: Double?
+
+    public init(duration: Double? = nil, arrivalSeconds: Double? = nil) {
+        self.duration = duration
+        self.arrivalSeconds = arrivalSeconds
+    }
+
+    /// Applies the overrides to a config.
+    public func applied(to config: ShiftConfig) -> ShiftConfig {
+        var config = config
+        if let duration, duration.isFinite {
+            config.duration = Self.clamp(duration, to: Self.durationRange)
+        }
+        if let arrivalSeconds, arrivalSeconds.isFinite {
+            let gap = Self.clamp(arrivalSeconds, to: Self.arrivalRange)
+            config.arrivalInterval = gap...(gap * 1.5)
+        }
+        return config
+    }
+
+    private static func clamp(_ value: Double, to range: ClosedRange<Double>) -> Double {
+        min(max(value, range.lowerBound), range.upperBound)
+    }
+}
