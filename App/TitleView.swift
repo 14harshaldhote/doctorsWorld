@@ -13,7 +13,7 @@ struct TitleView: View {
             VStack(spacing: 20) {
                 Spacer()
                 heart
-                Text("Pulse Ward")
+                Text("Doctors World")
                     .font(.system(size: 46, weight: .bold, design: .rounded))
                     .foregroundStyle(.white)
                     .accessibilityAddTraits(.isHeader)

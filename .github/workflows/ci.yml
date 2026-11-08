@@ -43,8 +43,8 @@ jobs:
         run: |
           set -o pipefail
           xcodebuild test \
-            -project PulseWard.xcodeproj \
-            -scheme PulseWard \
+            -project DoctorsWorld.xcodeproj \
+            -scheme DoctorsWorld \
             -destination "id=${{ steps.sim.outputs.udid }}" \
             CODE_SIGNING_ALLOWED=NO \
             | tail -n 80
@@ -52,8 +52,8 @@ jobs:
         run: |
           set -o pipefail
           xcodebuild build \
-            -project PulseWard.xcodeproj \
-            -scheme PulseWard \
+            -project DoctorsWorld.xcodeproj \
+            -scheme DoctorsWorld \
             -destination "generic/platform=iOS Simulator" \
             CODE_SIGNING_ALLOWED=NO \
             | tail -n 20

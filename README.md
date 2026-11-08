@@ -1,4 +1,4 @@
-# Pulse Ward
+# Doctors World
 
 An original hospital game for iPhone and iPad. You start as a first-day intern
 in a small city hospital and rise to Chief of Medicine by handling short, tense
@@ -41,13 +41,13 @@ You need a Mac with Xcode 16 or newer.
 ```sh
 brew install xcodegen
 xcodegen generate
-open PulseWard.xcodeproj
+open DoctorsWorld.xcodeproj
 ```
 
-1. In Xcode, select the **PulseWard** target, open **Signing & Capabilities**,
+1. In Xcode, select the **DoctorsWorld** target, open **Signing & Capabilities**,
    and choose your Apple ID as the team (a free Apple ID works).
 2. If Xcode says the bundle identifier is taken, change
-   `com.harshaldhote.pulseward` to something unique.
+   `com.harshaldhote.doctorsworld` to something unique.
 3. Plug in your device, pick it as the run destination and press Run.
 
 With a free Apple ID the installed app expires after 7 days; run it from Xcode
@@ -58,7 +58,7 @@ TestFlight.
 
 ```sh
 swift test --package-path Packages/GameCore          # game core, any Mac or Linux
-xcodebuild test -project PulseWard.xcodeproj -scheme PulseWard \
+xcodebuild test -project DoctorsWorld.xcodeproj -scheme DoctorsWorld \
   -destination 'platform=iOS Simulator,name=iPhone 16'   # UI smoke test
 ```
 

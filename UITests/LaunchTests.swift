@@ -11,7 +11,7 @@ final class LaunchTests: XCTestCase {
         let app = XCUIApplication()
         app.launch()
 
-        XCTAssertTrue(app.staticTexts["Pulse Ward"].waitForExistence(timeout: 15))
+        XCTAssertTrue(app.staticTexts["Doctors World"].waitForExistence(timeout: 15))
         XCTAssertTrue(app.buttons["startShiftButton"].exists)
         XCTAssertTrue(app.staticTexts["coreVersionLabel"].exists)
     }
