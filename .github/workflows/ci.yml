@@ -35,42 +35,30 @@ jobs:
         run: swift test --package-path Packages/GameCore
       - name: Generate Xcode project
         run: xcodegen generate
-      - name: Pick a simulator
+      - name: Pick simulators
         id: sim
         run: |
-          UDID=$(xcrun simctl list devices available | grep -E "iPhone 1[5-9]" | head -1 | grep -oE '[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}')
-          echo "Using simulator $UDID"
-          echo "udid=$UDID" >> "$GITHUB_OUTPUT"
-      - name: Build and run UI smoke test
+          UUID_RE='[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}'
+          IPHONE=$(xcrun simctl list devices available | grep -E "iPhone 1[5-9]" | head -1 | grep -oE "$UUID_RE")
+          IPAD=$(xcrun simctl list devices available | grep -E "iPad (Pro|Air)" | head -1 | grep -oE "$UUID_RE")
+          echo "Using iPhone $IPHONE and iPad $IPAD"
+          echo "iphone=$IPHONE" >> "$GITHUB_OUTPUT"
+          echo "ipad=$IPAD" >> "$GITHUB_OUTPUT"
+      - name: UI tests and screenshots on iPhone and iPad
         run: |
           set -o pipefail
           xcodebuild test \
             -project DoctorsWorld.xcodeproj \
             -scheme DoctorsWorld \
-            -destination "id=${{ steps.sim.outputs.udid }}" \
-            -derivedDataPath build \
+            -destination "id=${{ steps.sim.outputs.iphone }}" \
+            -destination "id=${{ steps.sim.outputs.ipad }}" \
             CODE_SIGNING_ALLOWED=NO \
             | tail -n 80
-      - name: Take screenshots on iPhone and iPad
+      - name: Collect screenshots
         run: |
-          set -euo pipefail
-          UUID_RE='[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}'
-          IPHONE="${{ steps.sim.outputs.udid }}"
-          IPAD=$(xcrun simctl list devices available | grep -E "iPad (Pro|Air)" | head -1 | grep -oE "$UUID_RE")
-          # Reuse the app the UI test just built instead of building again.
-          APP=$(find build/Build/Products -name "DoctorsWorld.app" -path "*iphonesimulator*" | head -1)
           mkdir -p screenshots
-          for DEV in "$IPHONE" "$IPAD"; do
-            NAME=$(xcrun simctl list devices | grep "$DEV" | head -1 | sed -E 's/^ *([^(]+) \(.*/\1/' | tr ' ' '-')
-            xcrun simctl boot "$DEV" || true
-            xcrun simctl bootstatus "$DEV" -b
-            xcrun simctl status_bar "$DEV" override --time "9:41" --batteryState charged --batteryLevel 100 || true
-            xcrun simctl install "$DEV" "$APP"
-            xcrun simctl launch "$DEV" com.harshaldhote.doctorsworld
-            sleep 5
-            xcrun simctl io "$DEV" screenshot "screenshots/${NAME}.png"
-            echo "Saved screenshots/${NAME}.png"
-          done
+          cp ~/doctorsworld-screenshots/*.png screenshots/
+          ls -la screenshots
       - name: Upload screenshots
         uses: actions/upload-artifact@v4
         with:
