@@ -1,15 +1,11 @@
-# Xcode (the project is generated from project.yml by XcodeGen)
-*.xcodeproj/
-*.xcworkspace/
-xcuserdata/
-DerivedData/
-build/
-*.xcresult
+# Godot
+.godot/
+*.translation
+export_credentials.cfg
 
-# Swift Package Manager
-.build/
-.swiftpm/
-Package.resolved
+# Build output
+build/
+shots/
 
 # macOS
 .DS_Store

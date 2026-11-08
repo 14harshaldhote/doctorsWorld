@@ -2,87 +2,83 @@
 
 *Congratulations, you're a doctor now. Nobody checked whether you were ready.*
 
-It's your first day at a small city hospital. The coffee machine is broken, there
-are three beds, and the waiting room keeps filling up with people who rate their
-pain as "kind of a seven." Your job is to keep them alive long enough to send them
-home, and to get promoted so you can be blamed for bigger things.
+You spent years learning the names of bones. You graduated. Your family cried,
+mostly about the fees. Now a letter says you start Monday at Riverside City
+Hospital, a place where the lifts are slow, the coffee is worse, and everyone
+already has an opinion about you.
 
-## What you actually do all day
+Doctors World is a small, chunky, fully 3D story game for iPhone and iPad. You
+make your doctor, walk the corridors, talk to people who talk back, and try to
+climb from terrified intern to Chief of Medicine without killing anyone. Or at
+least without killing anyone important.
 
-**Decide who goes first.** Patients walk in and you drag them onto beds. You have
-three beds. You will never have only three patients. The man screaming about his
-finger is fine. The quiet woman in the corner, politely turning grey, is not.
-Choose wisely, or choose quickly. Ideally both.
+> Every patient, illness and hospital in the game is made up. This is a game,
+> not medical advice. If you're actually unwell, put the phone down.
 
-**Watch the numbers go the wrong way.** Every bed has a monitor: heart rate,
-oxygen, blood pressure, all drifting quietly downhill while you stand there
-thinking. The game does not pause for your feelings.
+## What you'll be doing
 
-**Play detective.** The symptoms overlap on purpose. A stomach ache could be food
-poisoning, could be appendicitis, could be someone who just doesn't want to go to
-work. Order a test if you're not sure. Tests take time, and time is exactly what
-your patients are running out of.
+**Making yourself.** Skin, face, eyes, brows, nose, twelve hair styles, beards,
+glasses, scrubs, a white coat you haven't earned yet. Spin yourself round and
+admire the doctor your mother always wanted.
 
-**Ask the awkward question.** Some patients forget to mention things, like their
-allergy to the thing you're about to give them. There's always a clue somewhere.
-Ask before you act, or enjoy learning the hard way.
+**Graduating, then immediately regretting it.** The story opens at your MBBS
+graduation, follows you to the job letter, and drops you at the hospital door
+on day one, still holding the letter like it might protect you.
 
-**Do it with your own hands.** Stitch a cut by tracing it with your finger. Hold an
-injection steady in the green zone. Keep chest compressions on the beat. Hunt for a
-vein that is clearly hiding from you. Your hands get shakier as the shift drags on,
-which is realistic and also rude.
+**Walking around.** Tap the floor and you walk there. Tap a person and you go
+and talk to them. The hospital is a real place you move through, not a menu
+pretending to be one. Some rooms you see through your own eyes.
 
-**Get interrupted.** An emergency rolls in while you're halfway through stitching
-someone. Finish the job, or abandon a half-sewn patient to save someone worse off.
-Nobody will judge you. Except the half-sewn patient.
+**Talking to people.** Nurses, senior doctors, rivals, patients, and patients'
+families, who have done their own research. What you say changes what they
+think of you, and they remember.
+
+**Learning on the job.** Training tasks teach you the moves you'll later need
+for real, like reading a monitor, picking the right instrument, or noticing
+the thing the patient didn't mention.
+
+**Operating.** Eventually someone lets you into theatre. An AI surgical team
+works around you, a nurse hands you instruments (please ask for the right one),
+and the patient's heart rate tells you how it's going.
+
+**Meeting the patients.** Every patient has a story: a teenager who lied about
+how it happened, a mother who won't leave the corridor, an old man who has
+outlived three of his doctors and intends to outlive you.
+
+**Hospital politics.** Who gets the good cases, who gets blamed for the bad
+ones, and why the head of department suddenly wants to be your friend.
 
 ## Climbing the ladder
 
-Good calls earn experience. Experience earns promotions. Promotions earn you harder
-patients, fewer staff and more responsibility, which is how you know you're winning.
+Experience comes from good decisions and successful operations. Experience
+gets you promoted. Promotion gets you harder patients and more blame, which is
+how you know you're winning.
 
-| Rank | What you get |
+| Rank | What it means |
 | --- | --- |
-| Intern | You can stitch, inject and panic. |
-| Junior Resident | Lab tests, a second bed bay, and CPR for when things go really well. |
-| Senior Resident | Night shifts. Fewer staff. Same number of patients. |
-| Attending Doctor | You can assign a nurse to a patient. The nurse will remember this. |
-| Specialist | Pick a specialty and receive the patients nobody else wanted. |
-| Chief of Medicine | Coming later. Hire people, buy machines, take the blame for all of it. |
+| Intern | You can walk, talk and panic. |
+| Junior Resident | People start asking for your opinion and then ignoring it. |
+| Senior Resident | Night shifts. Fewer staff. Same number of emergencies. |
+| Surgeon | Your own operations. Your own complications. |
+| Head of Department | Meetings. So many meetings. |
+| Chief of Medicine | Everything is your fault now. Congratulations. |
 
-Every level gives you a skill point to spend on one of three things:
+## What works right now
 
-- **Eyes:** spot what patients aren't telling you, and get test results back faster.
-- **Hands:** steadier fingers, a bigger margin for error, one free do-over per shift.
-- **Calm:** slow time down for a few seconds. In the game. Not in real life. Sorry.
+The game is being built in stages, and the old 2D version has been retired
+(it's kept safe under the `swift-prototype` tag). Stage 1 of the 3D game is in:
 
-Mistakes never take your experience away. They just cost the hospital its
-reputation, and a hospital with a bad reputation gets the same patients, only
-angrier.
+- The title screen: the hospital at dusk, an ambulance, a doctor wandering about.
+- Name your doctor and choose whether people call you by your first or last name.
+- The avatar creator, with every option above and a doctor you can spin round.
+- Day 1 in the hospital lobby: walk around, meet Dr. Meera Iyer (who notices
+  you're late) and Sister Grace (who notices everything), and say hello to the
+  waiting patients. You earn your first experience points. Enjoy them.
 
-## The fine print
+Screenshots of every screen are rebuilt automatically after each change, on
+the [`screenshots` branch](../../tree/screenshots).
 
-- A shift lasts about five minutes. Perfect for a bus ride, a lunch break, or
-  putting off your own doctor's appointment.
-- Every illness in the game is simplified and made up. This is not medical advice.
-  If you learned medicine from a game's README, please put the phone down and call
-  a real doctor.
-- It isn't gory. It's cartoons with clipboards.
-- No ads and nothing to buy. It only costs you sleep, which suits the theme.
-- Plays on iPhone and iPad.
+## For developers
 
-## How far along is it?
-
-Still early, but you can now work a real shift. Patients walk in, you drag them
-onto beds, the monitors beep at you, and you poke at people until you work out
-what is wrong with them. Tests take time. Wrong guesses hurt. Experience goes up,
-and it is saved, so your career survives you closing the app.
-
-Treatment is currently one confident button press. The proper hands-on stuff
-(stitching, injections) arrives in the next build. Skill points are already being
-earned and are piling up like unused holiday days until the skill tree opens.
-
----
-
-Building the game or poking at the code? Read the
-[development guide](docs/DEVELOPMENT.md).
+Building, testing and running the game on a device are covered in
+[docs/DEVELOPMENT.md](docs/DEVELOPMENT.md).

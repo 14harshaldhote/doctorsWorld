@@ -9,71 +9,64 @@ concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
 
-jobs:
-  core-linux:
-    name: Game core tests (Linux)
-    runs-on: ubuntu-latest
-    container: swift:6.0-noble
-    steps:
-      - uses: actions/checkout@v4
-      - name: Build and test GameCore
-        run: swift test --package-path Packages/GameCore --parallel
+env:
+  GODOT_VERSION: 4.7.2
+  GODOT_RELEASE: https://github.com/godotengine/godot/releases/download/4.7.2-stable
 
-  app-macos:
-    name: iOS app build and UI test (macOS)
-    runs-on: macos-15
-    timeout-minutes: 40
+jobs:
+  game-linux:
+    name: Tests and screenshots (Linux)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
     permissions:
       contents: write
     steps:
       - uses: actions/checkout@v4
-      - name: Install tools
-        run: brew install xcodegen swiftlint
-      - name: Lint
-        run: swiftlint lint --quiet
-      - name: Game core tests (macOS)
-        run: swift test --package-path Packages/GameCore
-      - name: Generate Xcode project
-        run: xcodegen generate
-      - name: Pick simulators
-        id: sim
+
+      - name: Cache Godot
+        id: godot-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/godot
+          key: godot-linux-${{ env.GODOT_VERSION }}
+
+      - name: Download Godot
+        if: steps.godot-cache.outputs.cache-hit != 'true'
         run: |
-          UUID_RE='[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}'
-          IPHONE=$(xcrun simctl list devices available | grep -E "iPhone 1[5-9]" | head -1 | grep -oE "$UUID_RE")
-          IPAD=$(xcrun simctl list devices available | grep -E "iPad (Pro|Air)" | head -1 | grep -oE "$UUID_RE")
-          echo "Using iPhone $IPHONE and iPad $IPAD"
-          echo "iphone=$IPHONE" >> "$GITHUB_OUTPUT"
-          echo "ipad=$IPAD" >> "$GITHUB_OUTPUT"
-      - name: Boot simulators
-        # Booting both before testing avoids the test runner timing out on a
-        # cold simulator, which showed up as an instant failure on iPad.
-        run: |
-          for id in "${{ steps.sim.outputs.iphone }}" "${{ steps.sim.outputs.ipad }}"; do
-            xcrun simctl boot "$id" || true
-          done
-          for id in "${{ steps.sim.outputs.iphone }}" "${{ steps.sim.outputs.ipad }}"; do
-            xcrun simctl bootstatus "$id" -b
-          done
-      - name: UI tests and screenshots on iPhone and iPad
+          mkdir -p ~/godot
+          curl -fsSL -o /tmp/godot.zip "$GODOT_RELEASE/Godot_v${GODOT_VERSION}-stable_linux.x86_64.zip"
+          unzip -q /tmp/godot.zip -d ~/godot
+          mv ~/godot/Godot_v${GODOT_VERSION}-stable_linux.x86_64 ~/godot/godot
+
+      - name: Install a virtual screen for rendering
+        run: sudo apt-get update -q && sudo apt-get install -yq xvfb libgl1-mesa-dri mesa-utils
+
+      - name: Import the project
+        run: ~/godot/godot --headless --path . --import
+
+      - name: Tests
+        run: ~/godot/godot --headless --path . -s res://tests/run_tests.gd
+
+      - name: Screenshots (iPhone and iPad)
         run: |
           set -o pipefail
-          xcodebuild test \
-            -project DoctorsWorld.xcodeproj \
-            -scheme DoctorsWorld \
-            -destination "id=${{ steps.sim.outputs.iphone }}" \
-            -destination "id=${{ steps.sim.outputs.ipad }}" \
-            CODE_SIGNING_ALLOWED=NO \
-            | tail -n 80
-      - name: Collect screenshots
-        run: |
           mkdir -p screenshots
-          cp ~/doctorsworld-screenshots/*.png screenshots/
+          for device in "iphone 1688x780" "ipad 2048x1536"; do
+            set -- $device
+            xvfb-run -a -s "-screen 0 2400x1600x24" ~/godot/godot --path . --resolution "$2" \
+              -s res://tools/screenshots.gd -- screenshots "$1" 2>&1 | tee "shots-$1.log"
+          done
+          # A script error while drawing a screen fails the build.
+          if grep -h "SCRIPT ERROR" shots-*.log; then exit 1; fi
           ls -la screenshots
+          test "$(ls screenshots/*.png | wc -l)" -eq 20
+
       - name: Upload screenshots
         uses: actions/upload-artifact@v4
         with:
           name: screenshots
           path: screenshots/
+
       - name: Publish screenshots to the screenshots branch
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
@@ -89,9 +82,64 @@ jobs:
           {
             echo "# Screenshots"
             echo
-            echo "Screens as of commit ${GITHUB_SHA}, captured automatically by CI."
+            echo "Screens as of commit ${GITHUB_SHA}, drawn automatically by CI."
             for f in *.png; do echo; echo "![${f%.png}]($f)"; done
           } > README.md
           git add -A
           git commit -qm "Screenshots for ${GITHUB_SHA}"
           git push -qf origin HEAD:screenshots
+
+  ios-macos:
+    name: iOS build (macOS)
+    runs-on: macos-15
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache Godot and the iOS template
+        id: godot-cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/godot
+            ~/Library/Application Support/Godot/export_templates
+          key: godot-macos-ios-${{ env.GODOT_VERSION }}
+
+      - name: Download Godot and the iOS export template
+        if: steps.godot-cache.outputs.cache-hit != 'true'
+        run: |
+          set -euo pipefail
+          mkdir -p ~/godot
+          curl -fsSL -o /tmp/godot.zip "$GODOT_RELEASE/Godot_v${GODOT_VERSION}-stable_macos.universal.zip"
+          unzip -q /tmp/godot.zip -d ~/godot
+          curl -fsSL -o /tmp/templates.tpz "$GODOT_RELEASE/Godot_v${GODOT_VERSION}-stable_export_templates.tpz"
+          TEMPLATES="$HOME/Library/Application Support/Godot/export_templates/${GODOT_VERSION}.stable"
+          mkdir -p "$TEMPLATES"
+          unzip -q -j /tmp/templates.tpz templates/ios.zip templates/version.txt -d "$TEMPLATES"
+          rm /tmp/templates.tpz
+          ls -la "$TEMPLATES"
+
+      - name: Import the project
+        run: ~/godot/Godot.app/Contents/MacOS/Godot --headless --path . --import
+
+      - name: Export the Xcode project
+        run: |
+          set -o pipefail
+          mkdir -p build/ios
+          ~/godot/Godot.app/Contents/MacOS/Godot --headless --path . --export-debug "iOS" build/ios/DoctorsWorld.ipa 2>&1 \
+            | tee export.log
+          ls -la build/ios
+          test -d build/ios/DoctorsWorld.xcodeproj
+
+      - name: Build for the iOS Simulator
+        run: |
+          set -o pipefail
+          xcodebuild -list -project build/ios/DoctorsWorld.xcodeproj
+          xcodebuild build \
+            -project build/ios/DoctorsWorld.xcodeproj \
+            -scheme DoctorsWorld \
+            -configuration Debug \
+            -sdk iphonesimulator \
+            -destination "generic/platform=iOS Simulator" \
+            CODE_SIGNING_ALLOWED=NO \
+            | tail -n 60
