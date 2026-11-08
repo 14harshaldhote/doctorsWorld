@@ -3,5 +3,5 @@
 public enum GameCoreInfo {
     /// Semantic version of the rules. Bump the minor version whenever a
     /// change could alter the outcome of a replayed shift.
-    public static let version = "0.1.0"
+    public static let version = "0.2.0"
 }

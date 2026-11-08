@@ -49,6 +49,16 @@ public struct SeededRandom: RandomNumberGenerator, Sendable, Equatable {
         nextDouble() < min(max(probability, 0), 1)
     }
 
+    /// A shuffled copy of the array (Fisher-Yates), fully determined by the seed.
+    public mutating func shuffled<T>(_ items: [T]) -> [T] {
+        var result = items
+        guard result.count > 1 else { return result }
+        for index in stride(from: result.count - 1, to: 0, by: -1) {
+            result.swapAt(index, nextInt(upperBound: index + 1))
+        }
+        return result
+    }
+
     /// A random element of a non-empty collection, or `nil` if it is empty.
     public mutating func pick<C: Collection>(from items: C) -> C.Element? {
         guard !items.isEmpty else { return nil }
