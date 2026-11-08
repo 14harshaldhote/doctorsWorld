@@ -119,6 +119,16 @@ jobs:
           rm /tmp/templates.tpz
           ls -la "$TEMPLATES"
 
+      - name: Use Xcode 26
+        # Godot 4.7's iOS library is built against the iOS 26 SDK (it uses
+        # Metal and Core Animation symbols that older SDKs lack).
+        run: |
+          ls -d /Applications/Xcode*.app
+          XCODE=$(ls -d /Applications/Xcode_26*.app 2>/dev/null | sort -V | tail -1)
+          if [ -z "$XCODE" ]; then echo "No Xcode 26 on this runner"; exit 1; fi
+          sudo xcode-select -s "$XCODE"
+          xcodebuild -version
+
       - name: Import the project
         run: ~/godot/Godot.app/Contents/MacOS/Godot --headless --path . --import
 
