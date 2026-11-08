@@ -78,7 +78,7 @@ struct SimulationTests {
                 #expect(shift.beds[bed] == patient.id, "seed \(seed): patient \(patient.id) not in bed \(bed)")
             }
             if patient.isActive {
-                let ids = Diagnosis.candidates(for: patient, in: shift.catalog).map(\.id)
+                let ids = Diagnosis.candidates(for: patient, in: shift.catalog).map { $0.id }
                 #expect(ids.contains(patient.conditionID), "seed \(seed): real condition ruled out")
             }
         }

@@ -8,7 +8,7 @@ struct ContentTests {
 
     @Test("The standard catalog has the eight first-release conditions")
     func eightConditions() {
-        let ids = catalog.conditions.map(\.id)
+        let ids = catalog.conditions.map { $0.id }
         #expect(ids == [
             "dehydration", "brokenArm", "allergicReaction", "asthmaAttack",
             "appendicitis", "foodPoisoning", "concussion", "deepCut"
@@ -28,7 +28,7 @@ struct ContentTests {
 
     @Test("only() keeps the requested conditions in the requested order")
     func onlyFilter() {
-        #expect(catalog.only("deepCut", "dehydration", "missing").conditions.map(\.id) == ["deepCut", "dehydration"])
+        #expect(catalog.only("deepCut", "dehydration", "missing").conditions.map { $0.id } == ["deepCut", "dehydration"])
     }
 
     @Test("Visible symptoms overlap between conditions on purpose")
@@ -53,7 +53,7 @@ struct ContentTests {
         for test in DiagnosticTest.allCases {
             #expect((5...20).contains(test.duration))
             #expect(!test.reveals.isEmpty)
-            #expect(test.reveals.allSatisfy(\.isFinding))
+            #expect(test.reveals.allSatisfy { $0.isFinding })
         }
     }
 

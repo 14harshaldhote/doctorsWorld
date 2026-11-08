@@ -32,7 +32,7 @@ struct ShiftTimeTests {
     func arrivalTiming() {
         var shift = Shift(config: .every(10))
         shift.advance(ticks: 350)
-        #expect(shift.patients.map(\.arrivalTick) == [0, 100, 200, 300])
+        #expect(shift.patients.map { $0.arrivalTick } == [0, 100, 200, 300])
     }
 
     @Test("Nobody arrives once the shift is over")
@@ -88,7 +88,7 @@ struct ShiftTimeTests {
         var second = Shift(config: ShiftConfig(seed: 8))
         first.advance(ticks: 3_000)
         second.advance(ticks: 3_000)
-        #expect(first.patients.map(\.name) != second.patients.map(\.name))
+        #expect(first.patients.map { $0.name } != second.patients.map { $0.name })
     }
 
     @Test("The monitor reflects the patient's condition")

@@ -17,7 +17,7 @@ struct DiagnosisTests {
         for condition in catalog.conditions {
             for seed in 1...20 {
                 let shift = Shift.only(condition.id, config: .quiet(seed: UInt64(seed)))
-                let ids = Diagnosis.candidates(for: shift.first, in: catalog).map(\.id)
+                let ids = Diagnosis.candidates(for: shift.first, in: catalog).map { $0.id }
                 #expect(ids.contains(condition.id))
             }
         }
@@ -27,7 +27,7 @@ struct DiagnosisTests {
     func lookalikesAfterExam() throws {
         var shift = try seated("appendicitis")
         try shift.apply(.examine(patient: 1))
-        let ids = Diagnosis.candidates(for: shift.first, in: catalog).map(\.id)
+        let ids = Diagnosis.candidates(for: shift.first, in: catalog).map { $0.id }
         #expect(ids == ["appendicitis", "foodPoisoning"])
         let useful = Diagnosis.usefulTests(for: shift.first, in: catalog)
         #expect(useful == [.bloodTest, .scan])
@@ -39,7 +39,7 @@ struct DiagnosisTests {
         try shift.apply(.examine(patient: 1))
         try shift.apply(.runTest(patient: 1, test: .bloodTest))
         shift.advance(ticks: 150)
-        #expect(Diagnosis.candidates(for: shift.first, in: catalog).map(\.id) == [conditionID])
+        #expect(Diagnosis.candidates(for: shift.first, in: catalog).map { $0.id } == [conditionID])
         #expect(Diagnosis.usefulTests(for: shift.first, in: catalog).isEmpty)
     }
 
@@ -47,7 +47,7 @@ struct DiagnosisTests {
     func examEnough(conditionID: String) throws {
         var shift = try seated(conditionID)
         try shift.apply(.examine(patient: 1))
-        #expect(Diagnosis.candidates(for: shift.first, in: catalog).map(\.id) == [conditionID])
+        #expect(Diagnosis.candidates(for: shift.first, in: catalog).map { $0.id } == [conditionID])
     }
 
     @Test("Tests already run or running are not suggested again")
