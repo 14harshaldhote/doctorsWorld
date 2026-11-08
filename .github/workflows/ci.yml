@@ -1,0 +1,59 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  core-linux:
+    name: Game core tests (Linux)
+    runs-on: ubuntu-latest
+    container: swift:6.0-noble
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build and test GameCore
+        run: swift test --package-path Packages/GameCore --parallel
+
+  app-macos:
+    name: iOS app build and UI test (macOS)
+    runs-on: macos-15
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install tools
+        run: brew install xcodegen swiftlint
+      - name: Lint
+        run: swiftlint lint --quiet
+      - name: Game core tests (macOS)
+        run: swift test --package-path Packages/GameCore
+      - name: Generate Xcode project
+        run: xcodegen generate
+      - name: Pick a simulator
+        id: sim
+        run: |
+          UDID=$(xcrun simctl list devices available | grep -E "iPhone 1[5-9]" | head -1 | grep -oE '[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}')
+          echo "Using simulator $UDID"
+          echo "udid=$UDID" >> "$GITHUB_OUTPUT"
+      - name: Build and run UI smoke test
+        run: |
+          set -o pipefail
+          xcodebuild test \
+            -project PulseWard.xcodeproj \
+            -scheme PulseWard \
+            -destination "id=${{ steps.sim.outputs.udid }}" \
+            CODE_SIGNING_ALLOWED=NO \
+            | tail -n 80
+      - name: Build for any simulator (iPhone and iPad)
+        run: |
+          set -o pipefail
+          xcodebuild build \
+            -project PulseWard.xcodeproj \
+            -scheme PulseWard \
+            -destination "generic/platform=iOS Simulator" \
+            CODE_SIGNING_ALLOWED=NO \
+            | tail -n 20
