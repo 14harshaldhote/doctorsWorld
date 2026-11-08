@@ -44,6 +44,16 @@ jobs:
           echo "Using iPhone $IPHONE and iPad $IPAD"
           echo "iphone=$IPHONE" >> "$GITHUB_OUTPUT"
           echo "ipad=$IPAD" >> "$GITHUB_OUTPUT"
+      - name: Boot simulators
+        # Booting both before testing avoids the test runner timing out on a
+        # cold simulator, which showed up as an instant failure on iPad.
+        run: |
+          for id in "${{ steps.sim.outputs.iphone }}" "${{ steps.sim.outputs.ipad }}"; do
+            xcrun simctl boot "$id" || true
+          done
+          for id in "${{ steps.sim.outputs.iphone }}" "${{ steps.sim.outputs.ipad }}"; do
+            xcrun simctl bootstatus "$id" -b
+          done
       - name: UI tests and screenshots on iPhone and iPad
         run: |
           set -o pipefail
