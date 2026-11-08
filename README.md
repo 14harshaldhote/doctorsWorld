@@ -73,9 +73,14 @@ angrier.
 
 ## How far along is it?
 
-Honestly? Early. Right now you get a title screen and a Start button that looks
-very confident and does absolutely nothing, like most interns on their first day.
-The first playable shift arrives in an upcoming build.
+Still early, but you can now work a real shift. Patients walk in, you drag them
+onto beds, the monitors beep at you, and you poke at people until you work out
+what is wrong with them. Tests take time. Wrong guesses hurt. Experience goes up,
+and it is saved, so your career survives you closing the app.
+
+Treatment is currently one confident button press. The proper hands-on stuff
+(stitching, injections) arrives in the next build. Skill points are already being
+earned and are piling up like unused holiday days until the skill tree opens.
 
 ---
 

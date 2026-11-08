@@ -79,7 +79,7 @@ jobs:
           {
             echo "# Screenshots"
             echo
-            echo "Title screen as of commit ${GITHUB_SHA}, captured automatically by CI."
+            echo "Screens as of commit ${GITHUB_SHA}, captured automatically by CI."
             for f in *.png; do echo; echo "![${f%.png}]($f)"; done
           } > README.md
           git add -A
