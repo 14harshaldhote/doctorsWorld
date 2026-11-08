@@ -1,68 +1,83 @@
 # Doctors World
 
-An original hospital game for iPhone and iPad. You start as a first-day intern
-in a small city hospital and rise to Chief of Medicine by handling short, tense
-shifts well: triage arrivals, read drifting vitals, diagnose overlapping
-symptoms and perform procedures with your own fingers. Good decisions earn
-experience, experience unlocks skills, and skills change how you play.
+*Congratulations, you're a doctor now. Nobody checked whether you were ready.*
 
-> Conditions in the game are simplified and fictional. This is not medical advice.
+It's your first day at a small city hospital. The coffee machine is broken, there
+are three beds, and the waiting room keeps filling up with people who rate their
+pain as "kind of a seven." Your job is to keep them alive long enough to send them
+home, and to get promoted so you can be blamed for bigger things.
 
-## Status
+## What you actually do all day
 
-| Stage | What it adds | State |
-| --- | --- | --- |
-| 1. Foundation | Xcode project, game core package, title screen, CI | Done |
-| 2. Game core | Seeded shifts, patients, vitals, triage, scoring, XP, saves | Next |
-| 3. First playable shift | SpriteKit floor, drag to triage, HUD, results | |
-| 4. Diagnosis and procedures | Symptom cards, tests, suture and injection mini-games | |
-| 5. Progression screens | Ranks, skill tree, reputation, CPR and IV | |
-| 6. Polish | Animation, haptics, sound, tutorial, iPad tuning | |
+**Decide who goes first.** Patients walk in and you drag them onto beds. You have
+three beds. You will never have only three patients. The man screaming about his
+finger is fine. The quiet woman in the corner, politely turning grey, is not.
+Choose wisely, or choose quickly. Ideally both.
 
-## Project layout
+**Watch the numbers go the wrong way.** Every bed has a monitor: heart rate,
+oxygen, blood pressure, all drifting quietly downhill while you stand there
+thinking. The game does not pause for your feelings.
 
-```
-App/                    SwiftUI app: screens and, from stage 3, the SpriteKit floor
-UITests/                XCUITest smoke tests
-Packages/GameCore/      Every game rule, in plain Swift with no UI imports
-project.yml             XcodeGen spec (the .xcodeproj is generated, not committed)
-.github/workflows/      CI: core tests on Linux, app build and UI test on macOS
-```
+**Play detective.** The symptoms overlap on purpose. A stomach ache could be food
+poisoning, could be appendicitis, could be someone who just doesn't want to go to
+work. Order a test if you're not sure. Tests take time, and time is exactly what
+your patients are running out of.
 
-The core rule of the codebase: **the game core decides, the screens only draw.**
-A tap becomes an action, the core applies it and advances a fixed-step clock,
-and the UI renders the new state. The same seed and the same actions always
-replay the same shift, so every bug can be reproduced in a unit test.
+**Ask the awkward question.** Some patients forget to mention things, like their
+allergy to the thing you're about to give them. There's always a clue somewhere.
+Ask before you act, or enjoy learning the hard way.
 
-## Run it on your iPhone or iPad
+**Do it with your own hands.** Stitch a cut by tracing it with your finger. Hold an
+injection steady in the green zone. Keep chest compressions on the beat. Hunt for a
+vein that is clearly hiding from you. Your hands get shakier as the shift drags on,
+which is realistic and also rude.
 
-You need a Mac with Xcode 16 or newer.
+**Get interrupted.** An emergency rolls in while you're halfway through stitching
+someone. Finish the job, or abandon a half-sewn patient to save someone worse off.
+Nobody will judge you. Except the half-sewn patient.
 
-```sh
-brew install xcodegen
-xcodegen generate
-open DoctorsWorld.xcodeproj
-```
+## Climbing the ladder
 
-1. In Xcode, select the **DoctorsWorld** target, open **Signing & Capabilities**,
-   and choose your Apple ID as the team (a free Apple ID works).
-2. If Xcode says the bundle identifier is taken, change
-   `com.harshaldhote.doctorsworld` to something unique.
-3. Plug in your device, pick it as the run destination and press Run.
+Good calls earn experience. Experience earns promotions. Promotions earn you harder
+patients, fewer staff and more responsibility, which is how you know you're winning.
 
-With a free Apple ID the installed app expires after 7 days; run it from Xcode
-again to renew. The Apple Developer Program removes that limit and enables
-TestFlight.
+| Rank | What you get |
+| --- | --- |
+| Intern | You can stitch, inject and panic. |
+| Junior Resident | Lab tests, a second bed bay, and CPR for when things go really well. |
+| Senior Resident | Night shifts. Fewer staff. Same number of patients. |
+| Attending Doctor | You can assign a nurse to a patient. The nurse will remember this. |
+| Specialist | Pick a specialty and receive the patients nobody else wanted. |
+| Chief of Medicine | Coming later. Hire people, buy machines, take the blame for all of it. |
 
-## Tests
+Every level gives you a skill point to spend on one of three things:
 
-```sh
-swift test --package-path Packages/GameCore          # game core, any Mac or Linux
-xcodebuild test -project DoctorsWorld.xcodeproj -scheme DoctorsWorld \
-  -destination 'platform=iOS Simulator,name=iPhone 16'   # UI smoke test
-```
+- **Eyes:** spot what patients aren't telling you, and get test results back faster.
+- **Hands:** steadier fingers, a bigger margin for error, one free do-over per shift.
+- **Calm:** slow time down for a few seconds. In the game. Not in real life. Sorry.
 
-## Tech
+Mistakes never take your experience away. They just cost the hospital its
+reputation, and a hospital with a bad reputation gets the same patients, only
+angrier.
 
-Swift 6 with strict concurrency, SwiftUI, SpriteKit, Swift Testing, XcodeGen,
-SwiftLint. No third-party runtime dependencies and no paid services.
+## The fine print
+
+- A shift lasts about five minutes. Perfect for a bus ride, a lunch break, or
+  putting off your own doctor's appointment.
+- Every illness in the game is simplified and made up. This is not medical advice.
+  If you learned medicine from a game's README, please put the phone down and call
+  a real doctor.
+- It isn't gory. It's cartoons with clipboards.
+- No ads and nothing to buy. It only costs you sleep, which suits the theme.
+- Plays on iPhone and iPad.
+
+## How far along is it?
+
+Honestly? Early. Right now you get a title screen and a Start button that looks
+very confident and does absolutely nothing, like most interns on their first day.
+The first playable shift arrives in an upcoming build.
+
+---
+
+Building the game or poking at the code? Read the
+[development guide](docs/DEVELOPMENT.md).
