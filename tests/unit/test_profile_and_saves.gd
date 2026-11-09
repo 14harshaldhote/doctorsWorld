@@ -85,12 +85,21 @@ func test_names_are_cleaned_and_addressed_properly() -> void:
 	expect_equal(profile.called(), "Doctor")
 
 
-func test_profile_level_and_rank_come_from_xp() -> void:
+func test_level_comes_from_xp_but_rank_from_promotion() -> void:
 	var profile := PlayerProfile.new()
 	expect_equal(profile.level(), 1)
 	expect_equal(profile.rank(), Rank.INTERN)
 	profile.total_xp = 2000
+	expect_equal(profile.level(), 4)
+	expect_equal(profile.rank_earned(), Rank.JUNIOR_RESIDENT, "enough experience for the next rank")
+	expect_equal(profile.rank(), Rank.INTERN, "but nobody has promoted the doctor yet")
+	expect_equal(profile.promote(), Rank.JUNIOR_RESIDENT)
 	expect_equal(profile.rank(), Rank.JUNIOR_RESIDENT)
+	var loaded := PlayerProfile.from_dict(profile.to_dict())
+	expect_equal(loaded.rank(), Rank.JUNIOR_RESIDENT, "the rank is saved")
+	expect_equal(PlayerProfile.from_dict({"rank": 99}).rank(), Rank.CHIEF, "a bad saved rank is clamped")
+	profile.rank_held = Rank.CHIEF
+	expect_equal(profile.promote(), Rank.CHIEF, "nothing above the top")
 
 
 func test_save_text_is_stable_and_versioned() -> void:

@@ -66,7 +66,7 @@ how you know you're winning.
 ## What works right now
 
 The game is being built in stages, and the old 2D version has been retired
-(it's kept safe on the `swift-prototype` branch). Stages 1 to 4 of the 3D game
+(it's kept safe on the `swift-prototype` branch). Stages 1 to 5 of the 3D game
 are in:
 
 - The title screen: the hospital at dusk, an ambulance, a doctor wandering about.
@@ -116,6 +116,30 @@ are in:
   over, and then you get to explain that to his mother. Afterwards Dr. Iyer
   tells you what she really thought, and the next morning the pager tells you
   how he's doing.
+- Days 4 to 8, the surgical ward. Six beds, a trolley in admissions, a side
+  room everyone wants, and an X-ray viewer that hums. Sister Grace runs the
+  handover; Dr. Iyer runs you. A pager card tells you who's next.
+- Five patients, each with a story. Mrs. Lakshmi Pillai has pain under her
+  ribs and a secret her son doesn't know, and he's on a video call asking.
+  Kunal, an influencer with a sore wrist, is filming you and would like the
+  side room. Little Aarav swallowed something round and shiny: read the
+  X-ray and decide whether it's a coin that can wait or a battery that
+  can't. Mr. Joseph Fernandes, 81, has a blocked bowel and a family who
+  disagree about what he wants, and nobody has asked him.
+- Examining patients, a new skill: tap where to look, listen or press, be
+  gentle where it hurts, and decide what's wrong. Reading X-rays: the front
+  view, the side view, a closer look, and then a decision a child depends on.
+- The night on call. The lights go down, Mrs. Banerjee can't sleep, and at
+  two in the morning an unknown motorbike rider comes in bleeding while the
+  monitor counts. Press on the right place first. Then his phone rings.
+- Bed politics. Mr. Vikram Malhotra, the administrator, needs two beds by
+  tonight and would like a doctor to agree with him. Whether you check each
+  patient, refuse, or hand the beds over comes back to you when Dr. Anand
+  Rao, the head of surgery, asks what you saw this week.
+- The review. Dr. Rao reads the week back to you, the letters arrive, and if
+  you've earned it you finish Day 8 as a Junior Resident. Experience now
+  shows your level; rank comes from being promoted. The next morning is an
+  ordinary day, which is somehow worse.
 
 Screenshots of every screen are rebuilt automatically after each change, on
 the [`screenshots` branch](../../tree/screenshots).

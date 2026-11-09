@@ -15,6 +15,9 @@ var about := ""
 var actor := "iyer"
 var opening := ""
 var limit := 5
+## How the coach refers to the patient: "him" and "his", or "her" and "her".
+var him := "him"
+var his := "his"
 ## The case's questions, in the order they are offered.
 var questions: Array[Dictionary] = []
 var asked: Array[String] = []
@@ -33,10 +36,12 @@ func _init(which_case: String = "training_history") -> void:
 	actor = str(data.get("actor", "iyer"))
 	opening = str(data.get("opening", ""))
 	limit = int(data.get("limit", 5))
+	him = str(data.get("him", "him"))
+	his = str(data.get("his", "his"))
 	for entry: Variant in data.get("questions", []):
 		if typeof(entry) == TYPE_DICTIONARY:
 			questions.append(entry)
-	_say("You get %d questions. Find out what would hurt him on the table." % limit)
+	_say(str(data.get("brief", "You get %d questions. Find out what would hurt %s on the table." % [limit, him])))
 
 
 func question(question_id: String) -> Dictionary:
@@ -71,7 +76,7 @@ func ask(question_id: String) -> String:
 		"useful":
 			_say("Useful. Not the most important thing.")
 		_:
-			_say("That told you nothing about his belly.", true)
+			_say("That told you nothing about %s belly." % his, true)
 	if remaining() <= 0:
 		_end()
 	else:
@@ -137,7 +142,7 @@ func _end() -> void:
 		else:
 			missed.append(entry)
 	var keys := found + missed.size()
-	_note(missed.is_empty(), "You found %d of the %d facts that could hurt him." % [found, keys])
+	_note(missed.is_empty(), "You found %d of the %d facts that could hurt %s." % [found, keys, him])
 	for entry in missed:
 		_note(false, str(entry.get("why", "You missed: %s." % entry.get("fact", ""))))
 	var wasted := 0

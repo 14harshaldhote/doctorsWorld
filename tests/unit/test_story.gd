@@ -117,9 +117,10 @@ func test_validation_catches_mistakes() -> void:
 func test_every_story_file_is_valid() -> void:
 	var cast := StoryBook.cast()
 	expect(cast.has("iyer") and cast.has("grace"), "the cast loads")
-	var actions: Array = Opening.ACTIONS + Lobby.ACTIONS + SkillsLab.ACTIONS + Theatre.ACTIONS + StoryPlayer.GENERIC
+	var actions: Array = Opening.ACTIONS + Lobby.ACTIONS + SkillsLab.ACTIONS + Theatre.ACTIONS + Ward.ACTIONS \
+		+ StoryPlayer.GENERIC
 	var names := StoryBook.chapter_names()
-	for expected in ["banter", "cases", "day1", "opening", "theatre", "training"]:
+	for expected in ["banter", "cases", "day1", "opening", "theatre", "training", "ward"]:
 		expect(names.has(expected), "chapter %s exists" % expected)
 	for chapter_name in names:
 		# Banter and patient cases are data, not conversations.
@@ -173,6 +174,9 @@ func test_cases_have_patients_and_explained_questions() -> void:
 	var cast := StoryBook.cast()
 	for case_id: String in cases:
 		var data: Dictionary = cases[case_id]
+		# Examinations and X-rays are checked in test_exam.
+		if str(data.get("kind", "history")) != "history":
+			continue
 		for key in ["patient", "about", "actor", "limit", "opening", "questions"]:
 			expect(data.has(key), "%s has %s" % [case_id, key])
 		expect(cast.has(str(data.get("actor", ""))), "%s is played by someone in the cast" % case_id)

@@ -27,6 +27,9 @@ var relationships := {}
 var flags := {}
 ## Best training score per skill, 0 to 100, by training task id.
 var skills := {}
+## The rank the hospital has given the player (a Rank value). Experience
+## makes a promotion possible; the review on the ward makes it happen.
+var rank_held := Rank.INTERN
 
 const DAY_START := 7 * 60
 
@@ -110,8 +113,22 @@ func level() -> int:
 	return LevelCurve.level_for_xp(total_xp)
 
 
+## The rank the player holds now.
 func rank() -> int:
+	return rank_held
+
+
+## The rank the player's experience is enough for.
+func rank_earned() -> int:
 	return Rank.for_level(level())
+
+
+## Moves up to the next rank. Returns the new rank.
+func promote() -> int:
+	var next := Rank.next(rank_held)
+	if next >= 0:
+		rank_held = next
+	return rank_held
 
 
 func to_dict() -> Dictionary:
@@ -128,6 +145,7 @@ func to_dict() -> Dictionary:
 		"relationships": relationships.duplicate(),
 		"flags": flags.duplicate(),
 		"skills": skills.duplicate(),
+		"rank": rank_held,
 	}
 
 
@@ -165,6 +183,9 @@ static func from_dict(data: Variant) -> PlayerProfile:
 		for flag: Variant in facts:
 			if typeof(flag) == TYPE_STRING and typeof(facts[flag]) == TYPE_BOOL and facts[flag]:
 				profile.flags[flag] = true
+	var held: Variant = data.get("rank")
+	if typeof(held) in [TYPE_INT, TYPE_FLOAT]:
+		profile.rank_held = clampi(int(held), Rank.INTERN, Rank.CHIEF)
 	var best: Variant = data.get("skills")
 	if typeof(best) == TYPE_DICTIONARY:
 		for skill: Variant in best:

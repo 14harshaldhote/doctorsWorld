@@ -158,7 +158,7 @@ func test_a_save_that_finished_day_one_before_the_lab_moves_on() -> void:
 	_clear()
 
 
-func test_going_home_after_training_leads_to_theatre_day_and_then_back_to_the_lab() -> void:
+func test_going_home_after_training_leads_to_theatre_day_and_then_the_ward() -> void:
 	var main := _main()
 	main.profile.name = "Kiran Rao"
 	main.profile.created = true
@@ -185,9 +185,106 @@ func test_going_home_after_training_leads_to_theatre_day_and_then_back_to_the_la
 	var good := AutoPlayer.new()
 	theatre.play_until(func() -> bool: return main.screen != theatre,
 		Theatre.pick_tones(["Ask Rohit", "Allergies", "Explain", "Be straight", "Hold firm"]), good, 900.0)
-	var after := main.screen as SkillsLab
-	expect(after != null, "after the operation the doctor practises in the lab")
+	var after := main.screen as Ward
+	expect(after != null, "after the operation the doctor works on the ward")
 	expect_equal(main.profile.day, 4)
 	expect(main.profile.has_flag("op_rohit_done"), "the operation is remembered")
-	expect(after != null and after.hud.pager_text().contains("Rohit"), "the pager says how Rohit is doing")
+	expect(after != null and after.bed("bed1").patient == after.rig_for("rohit"), "Rohit is in bed 1")
+	main.show_title()
+	(main.screen as TitleScreen).continue_pressed.emit()
+	expect(main.screen is Ward, "continue returns to the ward")
+	_clear()
+
+
+## Plays a lobby conversation to its end: the one on show, or a new one
+## with id.
+func _lobby_talk(lobby: Lobby, id: String) -> void:
+	if not lobby.story.is_playing() and not id.is_empty():
+		lobby._start_talk(id)
+	for frame in 4000:
+		if not lobby.story.is_playing():
+			return
+		if lobby.talk_ui.is_choosing():
+			lobby.story.choose(0)
+		elif not lobby.story.is_busy():
+			lobby.talk_ui.tap()
+		lobby._process(1.0 / 30.0)
+
+
+func test_a_whole_career_from_new_game_to_junior_resident() -> void:
+	var main := _main()
+	var days_seen := []
+	# A new career: a name, a look and the opening.
+	(main.screen as TitleScreen).new_career_pressed.emit()
+	var naming := main.screen as NameScreen
+	naming.name_field.text = "Asha Verma"
+	naming._on_name_changed(naming.name_field.text)
+	naming._on_next()
+	(main.screen as AvatarCreator)._pick("hair_style", 7)
+	(main.screen as AvatarCreator)._on_done()
+	(main.screen as Opening).skip()
+	# Day 1 in the lobby: Dr. Iyer at the door, Sister Grace, a patient, and
+	# back to Dr. Iyer.
+	var lobby := main.screen as Lobby
+	expect(lobby != null, "Day 1 is in the lobby")
+	if lobby == null:
+		return
+	days_seen.append(main.profile.day)
+	for id: String in ["", "grace", "nair", "iyer"]:
+		_lobby_talk(lobby, id)
+	for frame in 300:
+		if main.screen != lobby:
+			break
+		lobby._process(1.0 / 30.0)
+	# Day 2 in the skills lab: all six skills, then home.
+	var lab := main.screen as SkillsLab
+	expect(lab != null, "Day 2 is in the skills lab")
+	if lab == null:
+		return
+	days_seen.append(main.profile.day)
+	lab.talk_through()
+	for id: String in TrainingTask.IDS:
+		expect(lab.go_to_task(id), "%s opens" % id)
+		expect(lab.play_task(), "%s is played" % id)
+		lab.view.done_pressed.emit()
+		for frame in 15:
+			lab.update(1.0 / 30.0)
+	for frame in 150:
+		lab.update(1.0 / 30.0)
+	lab.talk_through()
+	expect(lab.can_go_home(), "training is done")
+	lab.go_home()
+	for frame in 900:
+		if main.screen != lab:
+			break
+		lab.update(1.0 / 30.0)
+	# Day 3 in theatre: Rohit's operation.
+	var theatre := main.screen as Theatre
+	expect(theatre != null, "Day 3 is theatre day")
+	if theatre == null:
+		return
+	days_seen.append(main.profile.day)
+	theatre.play_until(func() -> bool: return main.screen != theatre,
+		Theatre.pick_tones(["Ask Rohit", "Allergies", "Explain", "Be straight", "Hold firm"]), AutoPlayer.new(), 900.0)
+	# Days 4 to 8 on the ward, until the review.
+	var careful := Ward.pick_tones(["Ready", "Honest", "Reassure", "Ask her", "Check", "Own it", "Calm", "Compromise",
+		"To Aarav", "Gentle", "Careful", "Stay", "Patient first", "Answer", "Light", "Ask him", "The facts", "Grateful"])
+	for attempt in 6:
+		var ward := main.screen as Ward
+		if ward == null or main.profile.has_flag("ward_day%d" % Ward.REVIEW_DAY):
+			break
+		days_seen.append(main.profile.day)
+		ward.play_until(func() -> bool: return main.screen != ward, careful, AutoPlayer.new(), 1500.0)
+	expect_equal(days_seen, [1, 2, 3, 4, 5, 6, 7, 8], "every day is played once, in order")
+	var profile := main.profile
+	expect_equal(profile.rank(), Rank.JUNIOR_RESIDENT, "promoted at the review")
+	expect(profile.level() >= 4, "with the experience to match")
+	for flag: String in ["met_iyer", "day1_iyer", "training_done", "op_rohit_done", "lakshmi_exam_right",
+			"aarav_scan_right", "rider_treated", "joseph_exam_right", "promoted"]:
+		expect(profile.has_flag(flag), flag)
+	expect(main.screen is Ward and profile.day == Ward.REVIEW_DAY + 1, "the next morning is an ordinary day")
+	var saved: PlayerProfile = SaveStore.new(SAVE).load_or_start()["profile"]
+	expect_equal(saved.rank(), Rank.JUNIOR_RESIDENT, "the promotion is saved")
+	print("    career: %d XP, level %d, %s, day %d %s" % [profile.total_xp, profile.level(),
+		Rank.title(profile.rank()), profile.day, profile.clock_text()])
 	_clear()

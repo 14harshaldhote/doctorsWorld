@@ -24,6 +24,11 @@ var trainer := "iyer"
 var speaker_override := ""
 ## The score card's main button.
 var done_text := "Back to the lab"
+## Real patients can't be examined twice: false hides "Try again".
+var can_retry := true
+## Replaces the line over the title and the score card's top line (on the
+## ward: "Ward round · Bed 2").
+var kicker_override := ""
 
 var _header: PanelContainer
 var _title: Label
@@ -113,7 +118,7 @@ func show_result(reward: String) -> void:
 	var names := UiKit.vbox(2)
 	names.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	top.add_child(names)
-	names.add_child(UiKit.kicker("Training · " + _trainer_name()))
+	names.add_child(UiKit.kicker(kicker_override if not kicker_override.is_empty() else "Training · " + _trainer_name()))
 	names.add_child(UiKit.heading(task.title(), 22))
 	var stars := UiKit.hbox(4)
 	stars.size_flags_vertical = Control.SIZE_SHRINK_CENTER
@@ -147,6 +152,7 @@ func show_result(reward: String) -> void:
 	var again := UiKit.ghost_button("Try again", 44, 15)
 	again.name = "TryAgain"
 	again.pressed.connect(func() -> void: retry_pressed.emit())
+	again.visible = can_retry
 	buttons.add_child(again)
 	var done := UiKit.primary_button(done_text, 44, 16)
 	done.name = "Done"
@@ -251,7 +257,7 @@ func _build_header() -> void:
 	add_child(_header)
 	var column := UiKit.vbox(5)
 	_header.add_child(column)
-	column.add_child(UiKit.kicker(_kicker_text()))
+	column.add_child(UiKit.kicker(kicker_override if not kicker_override.is_empty() else _kicker_text()))
 	_title = UiKit.label(task.title() if task != null else "", 17, UiKit.TEXT, UiKit.heading_font())
 	column.add_child(_title)
 	_instruction = UiKit.label("", 13, Color("#DCEDEA"), UiKit.heavy_font())

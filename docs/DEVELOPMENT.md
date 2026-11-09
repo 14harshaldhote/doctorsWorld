@@ -15,10 +15,10 @@ plan"). This file covers how to build, run and test the game.
 | 1. Avatar and lobby | Godot project, avatar creator, title and name screens, walkable lobby, CI | Done |
 | 2. Intro story | Story engine (replies, trust, moods), talking animation and voices, graduation, job letter and first-morning cutscenes, Dr. Iyer's welcome, lobby conversations and banter | Done |
 | 3. Training | Day 2 skills lab: six scored, explained practice tasks (scrub in, monitor, history, instruments, IV line, stitching), trainers, best scores, Day 1 to Day 2 | Done |
-| 4. First operation | Day 3: Rohit's consent with his mother, scrubbing in, the time-out, instrument calls with Tom, incision, a complication called by Dr. Khan, the swab count, stitching, the talk with his family and Dr. Iyer's debrief; won, struggled or failed (Dr. Iyer takes over), Day 4 back at the lab | Done |
-| 4b. Wards and patients | Patient stories, examinations, conversations with families | Next |
-| 5. Operations | Theatre with an AI team and a nurse handing instruments | |
-| 6. Career and politics | Promotions, reputation, rivals and hospital politics | |
+| 4. First operation | Day 3: Rohit's consent with his mother, scrubbing in, the time-out, instrument calls with Tom, incision, a complication called by Dr. Khan, the swab count, stitching, the talk with his family and Dr. Iyer's debrief; won, struggled or failed (Dr. Iyer takes over) | Done |
+| 5. Hospital life | Days 4 to 8 on the surgical ward: five patient stories (Lakshmi, Kunal, Aarav, an unknown rider, Mr. Fernandes), examining patients and reading X-rays as new skills, the bed-shortage politics with Mr. Malhotra, an on-call night, Dr. Rao's review and promotion to Junior Resident; an automated run from a new game to promotion | Done |
+| 6. Polish | Sound, animation passes, accessibility (text size, reduced motion, colour-blind-safe monitor), iPad layout, performance on older iPhones | Next |
+| Later | More operations, more stories, Senior Resident and beyond, the rival and the strike storylines | |
 
 The earlier SwiftUI and SpriteKit prototype is kept on the git branch
 `swift-prototype`.
@@ -57,11 +57,11 @@ TestFlight.
 ```
 project.godot           Project settings (landscape, 1688x780 canvas, Compatibility renderer)
 export_presets.cfg      iOS export (Xcode project only, so CI needs no signing)
-game/main.gd            Screen flow: title, name, look, opening, Day 1 lobby, Day 2 skills lab;
-                        loading and saving
-game/core/              Rules with no visuals: profile (with best training scores), avatar
-                        look, XP curve, ranks, saves, seeded random numbers, walkable floor
-                        and paths, patient vitals
+game/main.gd            Screen flow: title, name, look, opening, Day 1 lobby, Day 2 skills lab,
+                        Day 3 theatre, the ward from Day 4; loading and saving
+game/core/              Rules with no visuals: profile (best training scores, the rank
+                        held), avatar look, XP curve, ranks, saves, seeded random numbers,
+                        walkable floor and paths, patient vitals
 game/avatar/            LowPoly mesh helpers, AvatarRig (the jointed, animated
                         character with gestures, gaze and lip movement), Props
                         (things people hold), AvatarSheet (a line-up of looks)
@@ -72,12 +72,14 @@ game/ui/                UiKit (colours, fonts, buttons), title, name and avatar
                         the patient monitor and the instrument ring (reused in
                         operations)
 game/ui/training/       One screen per training task, on a shared TrainingView
-                        (instructions, coaching, score card)
+                        (instructions, coaching, score card), including ExamView
+                        (spots on the patient) and ScanView with XrayFilm
 game/ui/surgery/        OperationView: the operation screen (monitor, team meter,
                         instrument ring, time-out board, decisions, score card)
 game/training/          The training tasks' rules and scoring (no visuals), the
-                        instruments, and AutoPlayer (plays any task well, for
-                        tests and screenshots)
+                        instruments, ExamTask (examining a patient) and ScanTask
+                        (reading an X-ray), and AutoPlayer (plays any task well, or
+                        badly, for tests and screenshots)
 game/training/stations/ The six stations in 3D: sink, monitor bed, history chair,
                         instrument trolley, practice arm, suture pad
 game/surgery/           OperationTask (the appendectomy's rules: time-out, calls,
@@ -88,10 +90,11 @@ game/story/             StoryBook (loads story files), StoryRunner (steps,
                         replies, trust), StoryPlayer (puts a story on stage),
                         Opening and its sets (graduation hall, home, morning)
 game/world/             StageLighting, the hospital front, the Day 1 lobby, the Day 2
-                        skills lab, the Day 3 ward and Theatre 2
+                        skills lab, the Day 3 ward and Theatre 2, and Ward (Days 4 to
+                        8 and after) with WardBed and Lightbox
 story/                  The words: cast, opening, Day 1 conversations, banter, training
                         conversations, patient cases (cases.json), the theatre day
-                        (theatre.json)
+                        (theatre.json), the ward days (ward.json)
 assets/fonts/           Fredoka and Nunito (SIL Open Font License)
 tests/                  The test runner and unit tests
 tools/                  Screenshot tool used by CI
@@ -120,10 +123,35 @@ name. The full list of keys is at the top of `game/story/story_runner.gd`, and
 and the actions each scene knows, so a typo fails the build. The export preset
 includes `story/*.json`, and CI checks the exported game carries them.
 
-Patient cases for history taking live in `story/cases.json`: the patient, who
-plays them, how many questions you get, and each question with its answer,
-the fact it adds to the notes, its weight (`key`, `useful` or `none`) and,
-for key questions, why it matters.
+Patient cases live in `story/cases.json`. A history case (the default
+`kind`) has the patient, who plays them, how many questions you get, and each
+question with its answer, the fact it adds to the notes, its weight (`key`,
+`useful` or `none`) and, for key questions, why it matters. An `exam` case has
+spots on the patient's body (`"at": [joint, x, y, z]`, a point in that joint's
+own space, so the buttons follow them as they breathe), each with a finding,
+a weight, and `gentle`, `sore` or `"act": "pressure"` where it matters, plus
+the diagnoses to choose from. A `scan` case names the object really on the
+film and the answers.
+
+## The ward
+
+`game/world/ward.gd` runs Days 4 to 8, and an ordinary day after that. Each
+day in `Ward.DAYS` is a list of beats: a conversation (`talk`), a place to
+walk to (`go`: a bed, the trolley, the desk or the X-ray viewer), tasks with a
+case (`tasks`), the conversation after them (`after`), a pager line (`page`)
+and a time card (`card`). A beat with `if` only runs when the flag is set, so
+the rider leads to Mr. Salim's morning only if he was treated on the ward.
+Where people stand for each beat is set in `_stage_day` and `_stage_beat`.
+
+Ward conversations can use the actions `arrive` (walk in from the door to a
+place), `leave`, `put` (place someone at once), `card` (a time card) and
+`page` (a pager line). A place is a bed id with a mark, such as
+`trolley:head`, `bed2:sit` or `bed6:other`, or the desk and the family
+corner.
+
+Rank is no longer worked out from XP. XP sets the level, and the rank only
+rises when someone promotes you (`PlayerProfile.promote()`), which Dr. Rao
+does at the review on Day 8.
 
 ## Training tasks
 
@@ -137,7 +165,10 @@ be tested without drawing anything:
 - the screen (`game/ui/training/`): buttons and panels that call the rules.
 
 Time only moves through `tick()`, so `AutoPlayer` and the tests can play every
-station start to finish in a fraction of a second.
+station start to finish in a fraction of a second. `Ward.play_until()` and
+`Theatre.play_until()` do the same for whole days, and
+`test_a_whole_career_from_new_game_to_junior_resident` plays from the title
+screen to the promotion in a few seconds.
 
 ## Tests
 

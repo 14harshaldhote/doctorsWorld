@@ -103,6 +103,8 @@ var mood: int = AvatarConfig.Mood.CALM
 ## How much the character is walking, from 0 (still) to 1 (full stride).
 var moving := 0.0
 var sitting := false
+## Lying on a bed (the rig is turned onto its back by whoever lays it down).
+var lying := false
 var talking := false
 ## Seconds between blinks; 0 turns blinking off (for still screenshots).
 var blink_every := 3.4
@@ -734,7 +736,7 @@ func set_pose(phase: float, walk: float, breath: float = 0.0) -> void:
 	if hips == null:
 		return
 	var swing := sin(phase)
-	joint("Shadow").visible = not sitting
+	joint("Shadow").visible = not sitting and not lying
 	if sitting:
 		for suffix in ["L", "R"]:
 			joint("Hip" + suffix).rotation.x = -1.5
@@ -822,9 +824,13 @@ func _update_upper(delta: float, snap: bool = false) -> void:
 	if _look_target != null and is_inside_tree():
 		var local: Vector3 = global_transform.affine_inverse() * (_look_target as Vector3)
 		var eye_height := (1.08 if sitting else 1.5) * (HEIGHT_SCALES[config.height] as float)
+		if lying:
+			# On a pillow the head only turns to the side, it doesn't nod.
+			eye_height = local.y
 		var flat := Vector2(local.x, local.z)
 		if flat.length() > 0.05:
-			goal_look.x = clampf(atan2(local.x, local.z), -1.15, 1.15)
+			var turn := 0.8 if lying else 1.15
+			goal_look.x = clampf(atan2(local.x, local.z), -turn, turn)
 			goal_look.y = clampf(-atan2(local.y - eye_height, flat.length()), -0.45, 0.45)
 	_look = goal_look if snap else _look.lerp(goal_look, 1.0 - exp(-delta * 6.0))
 	var head := joint("Head")

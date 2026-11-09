@@ -73,8 +73,9 @@ func _on_opening_finished(_skipped: bool) -> void:
 
 ## The hospital. A career that has not seen the opening plays it first, and
 ## Day 1 starts with Dr. Iyer at the door until the player has met her.
-## Day 2 is the skills lab, Day 3 is Rohit's operation, and after it the
-## doctor practises in the lab while Rohit recovers.
+## Day 2 is the skills lab, Day 3 is Rohit's operation, and from Day 4 the
+## doctor works on the surgical ward: a week of patients, a night on call
+## and the review that makes them a Junior Resident.
 func show_hospital() -> void:
 	if not profile.opening_seen:
 		show_opening()
@@ -90,6 +91,9 @@ func show_hospital() -> void:
 		return
 	if profile.day == 3:
 		show_theatre()
+		return
+	if profile.day >= Ward.FIRST_DAY:
+		show_ward()
 		return
 	if profile.day >= 2:
 		show_skills_lab()
@@ -117,6 +121,15 @@ func show_theatre() -> void:
 	theatre.menu_choice.connect(_on_menu_choice)
 	theatre.day_finished.connect(_on_day_finished)
 	_swap(theatre)
+
+
+## Day 4 onwards: the surgical ward.
+func show_ward() -> void:
+	var ward := Ward.new(profile)
+	ward.save_requested.connect(_save)
+	ward.menu_choice.connect(_on_menu_choice)
+	ward.day_finished.connect(_on_day_finished)
+	_swap(ward)
 
 
 func _on_day_finished() -> void:

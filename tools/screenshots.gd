@@ -56,6 +56,7 @@ func _run() -> void:
 	await _shot("12-lobby-arrival", arriving, func() -> void: arriving.stage_for_screenshot("arrival"))
 	await _lab_shots()
 	await _theatre_shots()
+	await _ward_shots()
 	quit(0)
 
 
@@ -125,6 +126,83 @@ func _theatre_shots() -> void:
 	await _day_shot("33-after", func(t: Theatre) -> bool:
 		return t.conversation == "after_won" and t.talk_ui.line_text().begins_with("Thank God") \
 			and not t.talk_ui.is_typing(), careful, "good")
+
+
+## Days 4 to 8 on the surgical ward: the round, examining, the X-ray, the
+## bed politics, the night on call, the family meeting and the review.
+func _ward_shots() -> void:
+	var careful := Ward.pick_tones(["Ready", "Honest", "Reassure", "Ask her", "Check", "Own it", "Calm", "Compromise",
+		"To Aarav", "Gentle", "Careful", "Stay", "Patient first", "Answer", "Light", "Ask him", "The facts", "Grateful"])
+	var past := ["beds_checked", "banerjee_room", "rider_treated", "rider_named", "pooja_answered", "joseph_asked",
+		"lakshmi_exam_right", "aarav_battery_found", "rohit_honest", "banerjee_sat"]
+	await _ward_shot("34-ward", 4, [], "", func(w: Ward) -> bool:
+		return w.mode == "walk" and w.beat().get("id", "") == "rohit", careful)
+	await _ward_shot("35-round", 4, [], "rohit", func(w: Ward) -> bool:
+		return w.conversation == "rohit_round" and w.talk_ui.is_choosing(), careful)
+	await _ward_shot("36-history", 4, [], "lakshmi", func(w: Ward) -> bool:
+		return w.view is HistoryView and (w.view.task as HistoryTask).asked.size() >= 2, careful)
+	await _ward_shot("37-exam", 4, [], "lakshmi", func(w: Ward) -> bool:
+		return w.view is ExamView and (w.view.task as ExamTask).examined.size() >= 4, careful)
+	await _ward_shot("38-exam-decide", 4, [], "lakshmi", func(w: Ward) -> bool:
+		return w.view is ExamView and (w.view.task as ExamTask).phase == "decide", careful)
+	await _ward_shot("39-video-call", 4, ["lakshmi_history_medicines", "lakshmi_exam_right"], "arjun", func(w: Ward) -> bool:
+		return w.conversation == "arjun_call" and w.talk_ui.is_choosing(), careful)
+	await _ward_shot("40-beds", 4, ["lakshmi_exam_right"], "beds", func(w: Ward) -> bool:
+		return w.conversation == "malhotra_beds" and w.talk_ui.is_choosing(), careful)
+	await _ward_shot("41-wrist", 5, ["beds_checked"], "kunal", func(w: Ward) -> bool:
+		return w.view is ExamView and (w.view.task as ExamTask).examined.size() >= 3, careful)
+	await _ward_shot("42-side-room", 5, ["beds_checked"], "kunal", func(w: Ward) -> bool:
+		return w.conversation == "kunal_room" and w.talk_ui.is_choosing(), careful)
+	await _ward_shot("43-xray", 5, ["beds_checked"], "aarav", func(w: Ward) -> bool:
+		return w.view is ScanView and (w.view.task as ScanTask).zoomed, careful)
+	await _ward_shot("44-xray-side", 5, ["beds_checked"], "aarav", func(w: Ward) -> bool:
+		return w.view is ScanView and (w.view.task as ScanTask).view == "side", careful)
+	await _ward_shot("45-night", 6, ["beds_checked", "banerjee_room"], "banerjee", func(w: Ward) -> bool:
+		return w.mode == "walk", careful)
+	await _ward_shot("46-trauma", 6, ["beds_checked", "banerjee_room"], "rider", func(w: Ward) -> bool:
+		return w.view is ExamView and (w.view.task as ExamTask).examined.size() >= 2, careful)
+	await _ward_shot("47-pooja", 6, ["beds_checked", "banerjee_room"], "rider", func(w: Ward) -> bool:
+		return w.conversation == "rider_after" and w.talk_ui.line_text().contains("birthday") and not w.talk_ui.is_typing(),
+		careful)
+	await _ward_shot("48-family", 7, past, "joseph", func(w: Ward) -> bool:
+		return w.conversation == "joseph_family" and w.talk_ui.is_choosing(), careful)
+	await _ward_shot("49-rao", 7, past, "rao", func(w: Ward) -> bool:
+		return w.conversation == "rao_round" and w.talk_ui.is_choosing(), careful)
+	await _ward_shot("50-review", 8, past + ["beds_saved"], "review", func(w: Ward) -> bool:
+		return w.conversation == "review" and w.talk_ui.line_text().contains("Junior Resident") and not w.talk_ui.is_typing(),
+		careful)
+	await _ward_shot("51-promoted", 8, past + ["beds_saved"], "review", func(w: Ward) -> bool:
+		return w.mode == "end" and w.overlay.fade_amount() > 0.9, careful)
+
+
+## A ward day from a beat (or from the start) played up to a moment.
+func _ward_shot(shot_name: String, day: int, flags: Array, from_beat: String, moment: Callable, picker: Callable) -> void:
+	var ward := Ward.new(sample_profile_on_ward(day, flags))
+	await _shot(shot_name, ward, func() -> void:
+		if not from_beat.is_empty():
+			ward.skip_to(from_beat)
+		if not ward.play_until(moment.bind(ward), picker, AutoPlayer.new()):
+			push_error("The ward never reached %s" % shot_name)
+		var step := 1.0 / 30.0
+		for frame in 90:
+			if ward.view != null:
+				ward.view._type_coach(step)
+		if ward.mode == "end":
+			ward.overlay.tick(1.0)
+		ward.settle_camera()
+		ward.set_process(false))
+
+
+## The doctor on the ward: the operation done, some of the week played.
+static func sample_profile_on_ward(day: int, flags: Array = []) -> PlayerProfile:
+	var doctor := sample_profile_on_theatre_day()
+	for flag: String in ["op_rohit_done", "op_rohit_won"] + flags:
+		doctor.set_flag(flag)
+	doctor.record_score("appendix", 91)
+	doctor.day = day
+	doctor.minutes = PlayerProfile.DAY_START
+	doctor.total_xp = 760 + 260 * (day - 4)
+	return doctor
 
 
 ## The theatre day played from the start (replies picked by picker, tasks

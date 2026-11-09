@@ -41,6 +41,10 @@ func step(view: TrainingView, delta: float) -> void:
 			_iv(view as IvView)
 		"stitch":
 			_stitch(view as StitchView)
+		"exam":
+			_exam(view as ExamView)
+		"scan":
+			_scan(view as ScanView)
 		"appendix":
 			_operation(view as OperationView, delta)
 
@@ -108,6 +112,90 @@ func _history(view: HistoryView) -> void:
 				view.ask(question_id)
 				return
 	view.done_asking()
+
+
+## Examines like a careful doctor: a bleed first, then gentle places
+## before sore ones, every finding that matters, then the right answer.
+## "shaky" presses the sore spot first and skips one finding; "bad" also
+## wastes time and picks a wrong answer.
+func _exam(view: ExamView) -> void:
+	if not _act():
+		return
+	var exam := view.task as ExamTask
+	if exam.phase == "decide":
+		var pick := exam.right_diagnosis()
+		if quality == "bad":
+			for entry in exam.diagnoses:
+				if not bool(entry.get("right", false)):
+					pick = str(entry.get("id", ""))
+					break
+		view.decide(pick)
+		return
+	var order: Array[String] = []
+	for entry in exam.spots:
+		if str(entry.get("act", "")) == "pressure":
+			order.append(str(entry.get("id", "")))
+	var sore_first := quality != "good"
+	for pass_name: String in ["first", "gentle", "key", "useful", "none"]:
+		for entry in exam.spots:
+			var spot_id := str(entry.get("id", ""))
+			if spot_id in order:
+				continue
+			var weight := str(entry.get("weight", ""))
+			var take := false
+			match pass_name:
+				"first":
+					take = sore_first and bool(entry.get("sore", false))
+				"gentle":
+					take = bool(entry.get("gentle", false))
+				"key":
+					take = weight == "key"
+				"useful":
+					take = weight == "useful" and quality == "good"
+				"none":
+					take = weight == "none" and quality == "bad"
+			if take:
+				order.append(spot_id)
+	if quality != "good":
+		# Misses the last finding that matters.
+		for index in range(order.size() - 1, -1, -1):
+			if str(exam.spot(order[index]).get("weight", "")) == "key" and str(exam.spot(order[index]).get("act", "")) == "":
+				order.remove_at(index)
+				break
+	for spot_id in order:
+		if not exam.is_examined(spot_id):
+			# Taps the patient's body where the spot is, like a finger.
+			var point: Variant = view.spot_point(spot_id)
+			var cam := view.view_camera()
+			if point != null and cam != null and view.spot_at(cam.unproject_position(point as Vector3)) == spot_id:
+				view.world_tap(cam.unproject_position(point as Vector3))
+			else:
+				view.examine(spot_id)
+			return
+	view.ready_to_decide()
+
+
+## Reads the film: zoom in on the object, the side view, a moment's
+## thought, then the answer. "bad" answers from the front view alone.
+func _scan(view: ScanView) -> void:
+	if not _act():
+		return
+	var scan := view.task as ScanTask
+	if quality == "bad":
+		view.answer("coin" if scan.right_answer() != "coin" else "battery")
+		return
+	if not scan.looked_zoom:
+		if scan.view != "front":
+			view.show_view("front")
+		elif not scan.zoomed:
+			view.zoom()
+		return
+	if not scan.looked_side:
+		view.show_view("side")
+		return
+	if scan.elapsed < 4.5:
+		return
+	view.answer(scan.right_answer())
 
 
 func _instruments(view: InstrumentView) -> void:

@@ -5,7 +5,7 @@
 	"leela": {"name": "Leela Thomas", "role": "Waiting with her son", "voice": 1.14, "trust": 45},
 	"aarav": {"name": "Aarav", "role": "Leela's son, 6", "voice": 1.55},
 	"tom": {"name": "Tom D'Souza", "role": "Scrub nurse", "voice": 0.9},
-	"priya": {"name": "Priya Nambiar", "role": "Staff nurse", "voice": 1.22},
+	"priya": {"name": "Priya Nambiar", "role": "Staff nurse", "voice": 1.22, "trust": 45},
 	"dean": {"name": "Dr. R. Menon", "role": "Dean of the medical college", "voice": 0.82},
 	"mum": {"name": "Mum", "role": "Your mother", "voice": 1.15},
 	"dad": {"name": "Dad", "role": "Your father", "voice": 0.84},
@@ -13,5 +13,18 @@
 	"family": {"name": "Your family", "role": "Mum, Dad and Anu", "voice": 1.0, "trust": 60},
 	"khan": {"name": "Dr. Fatima Khan", "role": "Anaesthetist", "voice": 1.02, "trust": 45},
 	"rohit": {"name": "Rohit Kulkarni", "role": "Patient · 19, engineering student", "voice": 0.98, "trust": 50},
-	"sunita": {"name": "Sunita Kulkarni", "role": "Rohit's mother", "voice": 1.12, "trust": 35}
+	"sunita": {"name": "Sunita Kulkarni", "role": "Rohit's mother", "voice": 1.12, "trust": 35},
+	"lakshmi": {"name": "Lakshmi Pillai", "role": "Patient · 58, gallstones", "voice": 1.06, "trust": 45},
+	"arjun": {"name": "Arjun Pillai", "role": "Her son · video call from Dubai", "voice": 0.96, "trust": 40},
+	"malhotra": {"name": "Vikram Malhotra", "role": "Hospital administrator", "voice": 0.9, "trust": 50},
+	"kunal": {"name": "Kunal Bhatia", "role": "Patient · 24, a minister's nephew", "voice": 1.0, "trust": 40},
+	"rider": {"name": "The rider", "role": "Patient · no ID", "voice": 0.92},
+	"salim": {"name": "Salim Sheikh", "role": "Patient · 34, delivery rider", "voice": 0.92, "trust": 40},
+	"pooja": {"name": "Pooja", "role": "Salim's daughter · on the phone", "voice": 1.5},
+	"joseph": {"name": "Mr. Joseph Fernandes", "role": "Patient · 81, retired teacher", "voice": 0.82, "trust": 50},
+	"maria": {"name": "Maria Fernandes", "role": "Joseph's daughter", "voice": 1.1, "trust": 40},
+	"peter": {"name": "Peter Fernandes", "role": "Joseph's son", "voice": 0.94, "trust": 35},
+	"rao": {"name": "Dr. Anand Rao", "role": "Head of Surgery", "voice": 0.86, "trust": 45},
+	"sethi": {"name": "Dr. Kabir Sethi", "role": "Senior Resident", "voice": 0.98, "trust": 45},
+	"banerjee": {"name": "Mrs. Banerjee", "role": "Patient · 77, pneumonia", "voice": 1.16, "trust": 50}
 }

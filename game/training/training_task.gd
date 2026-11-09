@@ -20,6 +20,8 @@ const TITLES := {
 	"instruments": "Know your instruments",
 	"iv": "IV line",
 	"stitch": "Stitching",
+	"exam": "Examine",
+	"scan": "Read the X-ray",
 }
 ## Who runs each station.
 const TRAINERS := {
@@ -29,6 +31,8 @@ const TRAINERS := {
 	"instruments": "tom",
 	"iv": "grace",
 	"stitch": "iyer",
+	"exam": "iyer",
+	"scan": "iyer",
 }
 
 var id := ""
@@ -47,14 +51,20 @@ static func title_of(task_id: String) -> String:
 	return str(TITLES.get(task_id, task_id.capitalize()))
 
 
-static func make(task_id: String, with_seed: int = 1) -> TrainingTask:
+## A task by id. which_case picks the patient for a history, an examination
+## or an X-ray ("" for the default case).
+static func make(task_id: String, with_seed: int = 1, which_case: String = "") -> TrainingTask:
 	match task_id:
 		"scrub":
 			return ScrubTask.new()
 		"monitor":
 			return MonitorTask.new(with_seed)
 		"history":
-			return HistoryTask.new()
+			return HistoryTask.new() if which_case.is_empty() else HistoryTask.new(which_case)
+		"exam":
+			return ExamTask.new() if which_case.is_empty() else ExamTask.new(which_case)
+		"scan":
+			return ScanTask.new() if which_case.is_empty() else ScanTask.new(which_case)
 		"instruments":
 			return InstrumentTask.new(with_seed)
 		"iv":

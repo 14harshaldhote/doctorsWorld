@@ -1,11 +1,11 @@
 class_name Props
 extends RefCounted
-## Small things people hold: a pager, a letter, a rolled certificate and a
-## cup of coffee. Each is built to sit in a hand: the hand's fingers point
+## Small things people hold: a pager, a letter, a rolled certificate, a cup
+## of coffee and a phone. Each is built to sit in a hand: the hand's fingers point
 ## along -Y and the palm faces +Z, so with the forearm held out in front the
 ## prop sits the right way up.
 
-const ITEMS := ["pager", "letter", "certificate", "coffee"]
+const ITEMS := ["pager", "letter", "certificate", "coffee", "phone"]
 
 
 static func make(item: String) -> Node3D:
@@ -34,6 +34,11 @@ static func make(item: String) -> Node3D:
 			LowPoly.put(cup, LowPoly.cylinder(0.042, 0.034, 0.12, 8, Color("#F7F4EE"), "Coffee"), Vector3(0, 0.06, 0))
 			LowPoly.put(cup, LowPoly.cylinder(0.043, 0.039, 0.045, 8, Color("#9A6A44")), Vector3(0, 0.055, 0))
 			LowPoly.put(cup, LowPoly.cylinder(0.045, 0.045, 0.014, 8, Color("#E2DCD2")), Vector3(0, 0.124, 0))
+		"phone":
+			LowPoly.put(prop, LowPoly.box(Vector3(0.072, 0.148, 0.01), Color("#22262B"), "Phone"), Vector3(0, -0.06, 0.03))
+			var glass := LowPoly.box(Vector3(0.062, 0.128, 0.003), Color("#7FD3E8"))
+			glass.material_override = LowPoly.glow(Color("#7FD3E8"), 0.8)
+			LowPoly.put(prop, glass, Vector3(0, -0.06, 0.036))
 		_:
 			push_error("Unknown prop: %s" % item)
 	return prop
