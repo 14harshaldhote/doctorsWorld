@@ -16,6 +16,17 @@ var total_xp := 0
 var day := 1
 ## True once the player has finished the creator, so Continue makes sense.
 var created := false
+## Minutes since midnight on the current day (07:00 when a day starts).
+var minutes := DAY_START
+## True once the opening story (graduation, letter, first morning) has played.
+var opening_seen := false
+var sound_on := true
+## How much each character trusts the player, 0 to 100, by character id.
+var relationships := {}
+## Story facts the game remembers: what the player said and did.
+var flags := {}
+
+const DAY_START := 7 * 60
 
 
 ## Trims spaces, collapses runs of spaces and cuts overly long names.
@@ -48,6 +59,38 @@ func called() -> String:
 	return "Dr. " + (first_name() if address_form == "first" else last_name())
 
 
+## How much a character trusts the player. start is used until they meet.
+func trust(id: String, start: int = 50) -> int:
+	return int(relationships.get(id, start))
+
+
+## Changes a character's trust, kept between 0 and 100. Returns the new value.
+func change_trust(id: String, delta: int, start: int = 50) -> int:
+	var value := clampi(trust(id, start) + delta, 0, 100)
+	relationships[id] = value
+	return value
+
+
+func has_flag(flag: String) -> bool:
+	return bool(flags.get(flag, false))
+
+
+func set_flag(flag: String, value: bool = true) -> void:
+	if value:
+		flags[flag] = true
+	else:
+		flags.erase(flag)
+
+
+## The time of day as "07:05".
+func clock_text() -> String:
+	return "%02d:%02d" % [(minutes / 60) % 24, minutes % 60]
+
+
+func pass_minutes(amount: int) -> void:
+	minutes += maxi(0, amount)
+
+
 func level() -> int:
 	return LevelCurve.level_for_xp(total_xp)
 
@@ -64,6 +107,11 @@ func to_dict() -> Dictionary:
 		"total_xp": total_xp,
 		"day": day,
 		"created": created,
+		"minutes": minutes,
+		"opening_seen": opening_seen,
+		"sound_on": sound_on,
+		"relationships": relationships.duplicate(),
+		"flags": flags.duplicate(),
 	}
 
 
@@ -84,4 +132,21 @@ static func from_dict(data: Variant) -> PlayerProfile:
 		profile.day = int(saved_day)
 	if typeof(data.get("created")) == TYPE_BOOL:
 		profile.created = data["created"]
+	var saved_minutes: Variant = data.get("minutes")
+	if typeof(saved_minutes) in [TYPE_INT, TYPE_FLOAT] and float(saved_minutes) >= 0.0:
+		profile.minutes = mini(int(saved_minutes), 48 * 60)
+	for toggle: String in ["opening_seen", "sound_on"]:
+		if typeof(data.get(toggle)) == TYPE_BOOL:
+			profile.set(toggle, data[toggle])
+	var meters: Variant = data.get("relationships")
+	if typeof(meters) == TYPE_DICTIONARY:
+		for id: Variant in meters:
+			var value: Variant = meters[id]
+			if typeof(id) == TYPE_STRING and typeof(value) in [TYPE_INT, TYPE_FLOAT]:
+				profile.relationships[id] = clampi(int(value), 0, 100)
+	var facts: Variant = data.get("flags")
+	if typeof(facts) == TYPE_DICTIONARY:
+		for flag: Variant in facts:
+			if typeof(flag) == TYPE_STRING and typeof(facts[flag]) == TYPE_BOOL and facts[flag]:
+				profile.flags[flag] = true
 	return profile

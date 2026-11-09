@@ -47,6 +47,15 @@ jobs:
       - name: Tests
         run: ~/godot/godot --headless --path . -s res://tests/run_tests.gd
 
+      - name: The exported game carries the story files
+        # Stories are plain JSON, which Godot leaves out of an export unless
+        # the preset's include filter names them.
+        run: |
+          ~/godot/godot --headless --path . --export-pack "iOS" /tmp/game.pck
+          for chapter in cast opening day1 banter; do
+            grep -a -q "story/$chapter.json" /tmp/game.pck || { echo "story/$chapter.json is missing from the export"; exit 1; }
+          done
+
       - name: Screenshots (iPhone and iPad)
         run: |
           set -o pipefail
@@ -59,7 +68,7 @@ jobs:
           # A script error while drawing a screen fails the build.
           if grep -h "SCRIPT ERROR" shots-*.log; then exit 1; fi
           ls -la screenshots
-          test "$(ls screenshots/*.png | wc -l)" -eq 20
+          test "$(ls screenshots/*.png | wc -l)" -eq 32
 
       - name: Upload screenshots
         uses: actions/upload-artifact@v4

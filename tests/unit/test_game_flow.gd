@@ -1,5 +1,6 @@
 extends TestCase
-## The screens in order: title, name, look, hospital, and back again.
+## The screens in order: title, name, look, the opening story, the
+## hospital, and back again.
 
 const SAVE := "user://test_flow/save.json"
 
@@ -26,7 +27,7 @@ func test_a_fresh_install_shows_the_title_without_continue() -> void:
 	expect(title.continue_button == null, "nothing to continue yet")
 
 
-func test_new_career_runs_name_then_look_then_hospital_and_saves() -> void:
+func test_new_career_runs_name_then_look_then_the_opening_then_hospital() -> void:
 	var main := _main()
 	(main.screen as TitleScreen).new_career_pressed.emit()
 	var naming := main.screen as NameScreen
@@ -41,7 +42,14 @@ func test_new_career_runs_name_then_look_then_hospital_and_saves() -> void:
 	creator._pick("hair_style", 4)
 	creator._pick("glasses", 2)
 	creator._on_done()
-	expect(main.screen is Lobby, "hospital after the look")
+	var opening := main.screen as Opening
+	expect(opening != null, "the opening story after the look")
+	opening.update(0.5)
+	opening.skip()
+	var lobby := main.screen as Lobby
+	expect(lobby != null, "hospital after the opening")
+	expect(main.profile.opening_seen, "the opening is not shown twice")
+	expect(lobby.arrival and lobby.story.is_playing(), "Dr. Iyer meets the new doctor at the door")
 	var saved := SaveStore.new(SAVE).load_or_start()
 	expect_equal(saved["outcome"], SaveStore.Outcome.LOADED, "a save was written")
 	var profile: PlayerProfile = saved["profile"]
@@ -50,6 +58,7 @@ func test_new_career_runs_name_then_look_then_hospital_and_saves() -> void:
 	expect_equal(profile.avatar.hair_style, 4)
 	expect_equal(profile.avatar.glasses, 2)
 	expect(profile.created, "the career has started")
+	expect(profile.opening_seen, "the save remembers the opening was seen")
 	_clear()
 
 
@@ -68,16 +77,32 @@ func test_continue_and_the_pause_menu() -> void:
 	var main := _main()
 	main.profile.name = "Kiran Rao"
 	main.profile.created = true
+	main.profile.opening_seen = true
+	main.profile.set_flag("met_iyer")
 	main._save()
 	main.show_title()
 	var title := main.screen as TitleScreen
 	expect(title.continue_button != null, "continue offered once saved")
 	title.continue_pressed.emit()
 	expect(main.screen is Lobby, "continue goes to the hospital")
+	expect(not (main.screen as Lobby).story.is_playing(), "no second welcome from Dr. Iyer")
 	(main.screen as Lobby).menu_choice.emit("look")
 	expect(main.screen is AvatarCreator, "change my look opens the creator")
 	(main.screen as AvatarCreator).back_pressed.emit()
 	expect(main.screen is Lobby, "back from editing returns to the hospital")
 	(main.screen as Lobby).menu_choice.emit("title")
 	expect(main.screen is TitleScreen, "title screen from the menu")
+	_clear()
+
+
+func test_a_career_that_missed_the_opening_sees_it_on_continue() -> void:
+	var main := _main()
+	main.profile.name = "Kiran Rao"
+	main.profile.created = true
+	main._save()
+	main.show_title()
+	(main.screen as TitleScreen).continue_pressed.emit()
+	expect(main.screen is Opening, "the opening plays before the hospital")
+	(main.screen as Opening).skip()
+	expect(main.screen is Lobby, "then the hospital")
 	_clear()

@@ -7,6 +7,12 @@ extends Node3D
 ## and talking. Faces show seven moods. Rebuilding is cheap, so the avatar
 ## creator simply rebuilds the whole character after every change.
 ##
+## People move while they talk: arm gestures (explaining, shrugging,
+## pointing, cheering...), head movements (nods, shakes, tilts), turning the
+## head towards whoever they are looking at, and a mouth that opens with each
+## spoken syllable. Characters can hold props (a pager, a letter) and wear a
+## few outfits besides the doctor's coat (a graduation gown, home clothes).
+##
 ## Units are metres. The feet stand on y = 0 and the character faces +Z.
 
 const HEIGHT_SCALES := [0.92, 0.96, 1.0, 1.04, 1.08]
@@ -59,6 +65,32 @@ const MOODS := [
 	{"brow": 0.12, "lift": 0.018, "mouth": []},
 ]
 
+## Arm gestures. Each arm is [shoulder forward, shoulder twist, arm out to
+## the side, elbow bend, forearm swing, forearm tilt], written for the right
+## arm; the left arm mirrors them. Negative "forward" and "bend" raise the
+## arm and forearm in front of the body. "beat" moves the hands in time with
+## speech; the other keys add their own motion.
+const GESTURES := {
+	"explain": {"R": [-0.45, 0.0, 0.2, -1.25, 0.25, 0.0], "beat": 0.16},
+	"open_hands": {"R": [-0.38, 0.0, 0.32, -1.15, 0.4, 0.0], "L": [-0.38, 0.0, 0.32, -1.15, 0.4, 0.0], "beat": 0.1},
+	"point": {"R": [-1.4, 0.0, 0.06, -0.1, 0.0, 0.0]},
+	"shrug": {"R": [-0.12, 0.0, 0.42, -1.5, 0.55, 0.0], "L": [-0.12, 0.0, 0.42, -1.5, 0.55, 0.0], "shrug": 1.0,
+		"tilt": 0.14},
+	"chest": {"R": [-0.38, 0.0, -0.32, -2.0, -0.55, 0.0]},
+	"wave": {"R": [-0.2, 0.0, 2.35, -0.3, 0.0, 0.0], "swing": 0.42},
+	"cheer": {"R": [-0.25, 0.0, 2.65, -0.25, 0.0, 0.0], "L": [-0.25, 0.0, 2.65, -0.25, 0.0, 0.0], "bounce": 1.0},
+	"clap": {"R": [-0.95, 0.0, -0.16, -1.05, -0.35, 0.0], "L": [-0.95, 0.0, -0.16, -1.05, -0.35, 0.0], "clap": 1.0},
+	"think": {"R": [-0.3, 0.0, -0.3, -2.3, -0.35, 0.0], "L": [-0.32, 0.0, -0.2, -1.55, -1.0, 0.0], "tilt": 0.12},
+	"offer": {"R": [-1.0, 0.0, 0.04, -0.42, 0.0, 0.0]},
+	"fold_arms": {"R": [-0.32, 0.0, -0.08, -1.7, -1.15, 0.0], "L": [-0.36, 0.0, -0.08, -1.62, -1.2, 0.0]},
+	"raise": {"R": [-0.3, 0.0, 2.1, -0.35, 0.0, 0.0]},
+	"wag": {"R": [-0.5, 0.0, 0.1, -1.75, 0.0, 0.0], "swing": 0.28},
+	"hold": {"R": [-0.38, 0.0, 0.02, -1.22, 0.0, 0.0]},
+}
+## Head movements: nods and shakes play once, the others hold for the line.
+const HEAD_GESTURES := ["nod", "shake", "tilt", "down", "up"]
+const ARM_REST := [0.0, 0.0, -0.09, -0.2, 0.0, 0.0]
+
 ## Emitted after the character has been rebuilt.
 signal rebuilt
 
@@ -70,6 +102,33 @@ var sitting := false
 var talking := false
 ## Seconds between blinks; 0 turns blinking off (for still screenshots).
 var blink_every := 3.4
+## "doctor" (scrubs, and the coat if the look has one), "casual" (home
+## clothes), "kurta" or "gown" (graduation). Set before the rig is built.
+var outfit := "doctor"
+var gown_colour := Color("#1D1D24")
+var trim_colour := Color("#7A2440")
+var mortarboard := true
+## The current arm gesture (a key of GESTURES) or "".
+var gesture := ""
+## The current head movement (one of HEAD_GESTURES) or "".
+var head_gesture := ""
+## True while listening to someone: small nods now and then.
+var listening := false
+## How high this character's voice is (1 is the middle).
+var voice_pitch := 1.0
+var voice_volume_db := 0.0
+
+var _gesture_clock := 0.0
+var _head_clock := 0.0
+var _arm_now := {"L": ARM_REST.duplicate(), "R": ARM_REST.duplicate()}
+var _arm_weight := {"L": 0.0, "R": 0.0}
+var _shrug := 0.0
+var _look_target: Variant = null
+var _look := Vector2.ZERO
+var _mouth_open := 0.0
+var _since_syllable := 10.0
+var _props := {}
+var _voice: AudioStreamPlayer3D
 
 var _joints := {}
 var _eyes: Array[Node3D] = []
@@ -99,6 +158,92 @@ func set_mood(new_mood: int) -> void:
 	mood = clampi(new_mood, 0, MOODS.size() - 1)
 	if has_node("Model"):
 		_build_face(joint("Head"))
+
+
+## Starts an arm gesture ("" to drop it) and optionally a head movement.
+func set_gesture(new_gesture: String, new_head: String = "") -> void:
+	if new_gesture != gesture:
+		gesture = new_gesture if GESTURES.has(new_gesture) else ""
+		_gesture_clock = 0.0
+	set_head_gesture(new_head)
+
+
+func set_head_gesture(new_head: String) -> void:
+	head_gesture = new_head if new_head in HEAD_GESTURES else ""
+	_head_clock = 0.0
+
+
+## Turns the head towards a point in the world, or straight ahead with null.
+func look_at_point(point: Variant) -> void:
+	_look_target = point
+
+
+## Turns the head towards another character's face.
+func look_at_rig(other: AvatarRig) -> void:
+	if other == null:
+		_look_target = null
+		return
+	_look_target = other.face_point()
+
+
+## The middle of the face in world space, for others to look at.
+func face_point() -> Vector3:
+	var head_height := (1.08 if sitting else 1.5) * scale.y * (HEIGHT_SCALES[config.height] as float)
+	return global_position + Vector3(0, head_height, 0)
+
+
+## Opens the mouth for one spoken syllable and plays the voice murmur.
+func say_syllable(letter: String = "a") -> void:
+	_mouth_open = 1.0
+	_since_syllable = 0.0
+	if not Voice.enabled or not is_inside_tree():
+		return
+	if _voice == null:
+		_voice = AudioStreamPlayer3D.new()
+		_voice.name = "Voice"
+		_voice.unit_size = 4.0
+		_voice.max_db = 3.0
+		add_child(_voice)
+		_voice.position = Vector3(0, 1.5, 0)
+	_voice.stream = Voice.syllable(letter)
+	_voice.volume_db = voice_volume_db
+	_voice.pitch_scale = voice_pitch * (0.94 + 0.12 * fposmod(_clock * 7.31, 1.0))
+	_voice.play()
+
+
+## Puts a prop ("pager", "letter", "certificate", "coffee") in a hand.
+func hold(item: String, side: String = "R") -> void:
+	drop(side)
+	var elbow := joint("Elbow" + side)
+	if elbow == null:
+		return
+	var prop := Props.make(item)
+	prop.name = "Held" + side
+	elbow.add_child(prop)
+	prop.position = Vector3(0, -0.345, 0.02)
+	_props[side] = item
+
+
+func drop(side: String = "R") -> void:
+	_props.erase(side)
+	var elbow := joint("Elbow" + side)
+	if elbow == null:
+		return
+	var old := elbow.get_node_or_null("Held" + side)
+	if old != null:
+		elbow.remove_child(old)
+		old.free()
+
+
+## The prop in a hand, or "".
+func held(side: String = "R") -> String:
+	return str(_props.get(side, ""))
+
+
+## Jumps straight to the end of any gesture or head turn, for screenshots.
+func settle() -> void:
+	set_pose(_walk_phase, _shown_moving)
+	_update_upper(0.0, true)
 
 
 ## A joint or part by name, for posing and tests (for example "Head").
@@ -140,6 +285,16 @@ func build() -> void:
 	var skin := config.skin_colour()
 	var scrubs := config.scrubs_colour()
 	var trousers := scrubs.darkened(0.12)
+	var doctor := outfit == "doctor"
+	match outfit:
+		"casual":
+			trousers = Color("#3A4558")
+		"kurta":
+			scrubs = scrubs.lightened(0.25)
+			trousers = Color("#EDE3D0")
+		"gown":
+			scrubs = gown_colour
+			trousers = Color("#2B2B30")
 
 	var model := Node3D.new()
 	model.name = "Model"
@@ -164,23 +319,28 @@ func build() -> void:
 		Vector3(width, 1.0, 0.64))
 	LowPoly.put(torso, LowPoly.cylinder(0.045, 0.0, 0.08, 3, skin, "NeckV"), Vector3(0, 0.46, 0.098),
 		Vector3(0.12, PI, 0))
-	if config.coat:
+	var coat := config.coat and doctor
+	if coat:
 		_build_coat(torso, width, scrubs)
+	_build_outfit(hips, torso, width, scrubs)
 
 	# Arms: sleeves are white with a coat, short scrub sleeves without.
 	for side: int in [-1, 1]:
 		var suffix := "L" if side < 0 else "R"
 		var shoulder := _add_joint(torso, "Shoulder" + suffix, Vector3(0.215 * width * side, 0.46, 0.0),
 			Vector3(0, 0, -0.09 * side))
-		var sleeve := COAT if config.coat else scrubs
-		var forearm := COAT if config.coat else skin
-		LowPoly.put(shoulder, LowPoly.cylinder(0.058, 0.05, 0.3, 6, sleeve), Vector3(0, -0.15, 0))
+		var long_sleeves := coat or outfit in ["gown", "kurta"]
+		var sleeve := COAT if coat else scrubs
+		var forearm := sleeve if long_sleeves else skin
+		var cuff := 0.068 if outfit == "gown" else 0.05
+		LowPoly.put(shoulder, LowPoly.cylinder(0.058, cuff, 0.3, 6, sleeve), Vector3(0, -0.15, 0))
 		var elbow := _add_joint(shoulder, "Elbow" + suffix, Vector3(0, -0.3, 0))
-		LowPoly.put(elbow, LowPoly.cylinder(0.05, 0.044, 0.25, 6, forearm), Vector3(0, -0.125, 0))
-		if config.coat:
+		LowPoly.put(elbow, LowPoly.cylinder(cuff, cuff * 1.15 if outfit == "gown" else 0.044, 0.25, 6, forearm),
+			Vector3(0, -0.125, 0))
+		if long_sleeves:
 			LowPoly.put(elbow, LowPoly.cylinder(0.042, 0.042, 0.03, 6, skin), Vector3(0, -0.26, 0))
 		LowPoly.put(elbow, LowPoly.box(Vector3(0.07, 0.085, 0.036), skin, "Hand" + suffix), Vector3(0, -0.31, 0))
-		if side < 0 and config.watch:
+		if side < 0 and config.watch and outfit != "gown":
 			var watch := Node3D.new()
 			watch.name = "Watch"
 			LowPoly.put(elbow, watch, Vector3(0, -0.235, 0))
@@ -193,13 +353,64 @@ func build() -> void:
 	var head := _add_joint(torso, "Head", Vector3(0, 0.565, 0))
 	head.scale = Vector3.ONE * HEAD_SCALE
 	_build_head(head)
-	if config.stethoscope:
+	if config.stethoscope and doctor:
 		_build_stethoscope(torso)
+	if outfit == "gown" and mortarboard:
+		_build_mortarboard(head)
 	var shadow := LowPoly.shadow_blob(0.26 * width, Vector2(1.0, 0.8))
 	model.add_child(shadow)
 	_joints["Shadow"] = shadow
+	var props := _props.duplicate()
+	_props.clear()
+	for side: String in props:
+		hold(props[side], side)
 	set_pose(0.0, 0.0)
+	_update_upper(0.0, true)
 	rebuilt.emit()
+
+
+## Home clothes and graduation gowns: the parts the doctor's outfit lacks.
+func _build_outfit(hips: Node3D, torso: Node3D, width: float, main: Color) -> void:
+	match outfit:
+		"casual":
+			# A shirt collar.
+			for side: int in [-1, 1]:
+				LowPoly.put(torso, LowPoly.box(Vector3(0.08, 0.035, 0.05), main.lightened(0.15)),
+					Vector3(0.045 * side, 0.475, 0.085), Vector3(0.3, 0, 0.45 * side))
+		"kurta":
+			var tunic := LowPoly.cylinder(0.19, 0.25, 0.44, 7, main, "Tunic")
+			LowPoly.put(hips, tunic, Vector3(0, -0.2, 0), Vector3.ZERO, Vector3(width, 1.0, 0.72))
+			# A scarf over one shoulder.
+			var scarf := main.darkened(0.35) if main.get_luminance() > 0.5 else Color("#F5B841")
+			LowPoly.put(torso, LowPoly.box(Vector3(0.09, 0.62, 0.02), scarf, "Scarf"), Vector3(0.0, 0.25, 0.13),
+				Vector3(0, 0, 0.62), Vector3(width, 1.0, 1.0))
+			LowPoly.put(torso, LowPoly.box(Vector3(0.09, 0.42, 0.02), scarf), Vector3(-0.15 * width, 0.25, -0.12),
+				Vector3(0, 0, -0.2))
+		"gown":
+			var robe := LowPoly.cylinder(0.2, 0.27, 0.6, 8, gown_colour, "Gown")
+			LowPoly.put(hips, robe, Vector3(0, -0.26, 0), Vector3.ZERO, Vector3(width, 1.0, 0.78))
+			var front := 0.19 * 0.64 + 0.004
+			for side: int in [-1, 1]:
+				var stole := LowPoly.box(Vector3(0.055, 0.5, 0.012), trim_colour, "Stole")
+				LowPoly.put(torso, stole, Vector3(0.055 * side * width, 0.24, front), Vector3(0, 0, 0.08 * side))
+				LowPoly.put(torso, LowPoly.box(Vector3(0.056, 0.012, 0.014), Color("#C9A15A")),
+					Vector3(0.055 * side * width + 0.01 * side, 0.0, front + 0.002))
+
+
+func _build_mortarboard(head: Node3D) -> void:
+	var cap := Node3D.new()
+	cap.name = "Mortarboard"
+	head.add_child(cap)
+	_joints["Mortarboard"] = cap
+	var shape: Vector3 = FACE_SCALES[config.face]
+	var top := HEAD_CENTRE.y + HEAD_RADIUS * shape.y * 0.82
+	var lift := 0.06 if config.hair_style in [4, 7, 11] else 0.0
+	LowPoly.put(cap, LowPoly.cylinder(HEAD_RADIUS * 1.02 * shape.x, HEAD_RADIUS * 1.06 * shape.x, 0.08, 8, gown_colour),
+		Vector3(0, top + lift, -0.005), Vector3(-0.12, 0, 0))
+	LowPoly.put(cap, LowPoly.box(Vector3(0.36, 0.02, 0.36), gown_colour.lightened(0.04), "Board"),
+		Vector3(0, top + 0.05 + lift, -0.01), Vector3(-0.12, PI / 4, 0))
+	LowPoly.put(cap, LowPoly.cylinder(0.006, 0.006, 0.13, 4, Color("#C9A15A"), "Tassel"),
+		Vector3(0.16, top - 0.01 + lift, 0.06))
 
 
 func _build_coat(torso: Node3D, width: float, scrubs: Color) -> void:
@@ -531,15 +742,117 @@ func set_pose(phase: float, walk: float, breath: float = 0.0) -> void:
 	joint("Head").rotation.x = -0.04 * walk + breath * 0.012
 
 
+## The gesture an arm should take now: the active gesture's pose for that arm,
+## the holding pose when the hand has a prop, or null to hang loose.
+func _arm_goal(side: String) -> Variant:
+	var move: Dictionary = GESTURES.get(gesture, {})
+	if move.has(side):
+		return move[side]
+	if move.has("R") and side == "L" and held("L").is_empty():
+		return null
+	if not held(side).is_empty():
+		return GESTURES["hold"]["R"]
+	return null
+
+
+## Layers gestures, head movement and gaze over the walk/idle pose.
+func _update_upper(delta: float, snap: bool = false) -> void:
+	var hips := joint("Hips")
+	if hips == null:
+		return
+	var rate := 1.0 if snap else 1.0 - exp(-delta * 8.0)
+	var move: Dictionary = GESTURES.get(gesture, {})
+	var t := _gesture_clock
+	var speaking := talking and _since_syllable < 0.45
+	for side: String in ["L", "R"]:
+		var sign := -1.0 if side == "L" else 1.0
+		var goal: Variant = _arm_goal(side)
+		var now: Array = _arm_now[side]
+		if goal != null:
+			for index in 6:
+				now[index] = lerpf(now[index], float(goal[index]), rate)
+		_arm_weight[side] = lerpf(_arm_weight[side], 1.0 if goal != null else 0.0, rate)
+		var weight: float = _arm_weight[side]
+		var arm: Array = now.duplicate()
+		if goal != null and move.has(side):
+			if speaking and move.has("beat"):
+				arm[3] += sin(t * 6.5 + (0.0 if side == "R" else 1.7)) * float(move["beat"])
+				arm[0] += sin(t * 3.3) * float(move["beat"]) * 0.3
+			if move.has("swing"):
+				arm[5] += sin(t * 9.0) * float(move["swing"])
+			if move.has("clap"):
+				arm[2] -= (sin(t * 11.0) * 0.5 + 0.5) * 0.14
+			if move.has("bounce"):
+				arm[2] += sin(t * 7.0) * 0.12
+		var shoulder := joint("Shoulder" + side)
+		var elbow := joint("Elbow" + side)
+		shoulder.rotation = Vector3(
+			lerpf(shoulder.rotation.x, arm[0], weight),
+			lerpf(0.0, arm[1] * sign, weight),
+			lerpf(ARM_REST[2] * sign, arm[2] * sign, weight))
+		elbow.rotation = Vector3(
+			lerpf(elbow.rotation.x, arm[3], weight),
+			lerpf(0.0, arm[4] * sign, weight),
+			lerpf(0.0, arm[5] * sign, weight))
+	# Shrugs lift the shoulders; cheering bounces on the toes.
+	_shrug = lerpf(_shrug, float(move.get("shrug", 0.0)), rate)
+	for side: String in ["L", "R"]:
+		joint("Shoulder" + side).position.y = 0.46 + 0.035 * _shrug
+	if move.has("bounce") and not sitting:
+		hips.position.y += absf(sin(t * 7.0)) * 0.035
+	# Gaze: the head turns towards the target and the chest follows a little.
+	var goal_look := Vector2.ZERO
+	if _look_target != null and is_inside_tree():
+		var local: Vector3 = global_transform.affine_inverse() * (_look_target as Vector3)
+		var eye_height := (1.08 if sitting else 1.5) * (HEIGHT_SCALES[config.height] as float)
+		var flat := Vector2(local.x, local.z)
+		if flat.length() > 0.05:
+			goal_look.x = clampf(atan2(local.x, local.z), -1.15, 1.15)
+			goal_look.y = clampf(-atan2(local.y - eye_height, flat.length()), -0.45, 0.45)
+	_look = goal_look if snap else _look.lerp(goal_look, 1.0 - exp(-delta * 6.0))
+	var head := joint("Head")
+	var nod := 0.0
+	var shake := 0.0
+	var tilt := float(move.get("tilt", 0.0))
+	match head_gesture:
+		"nod":
+			nod = sin(_head_clock * TAU * 2.2) * 0.17 * clampf(1.0 - _head_clock / 0.95, 0.0, 1.0)
+		"shake":
+			shake = sin(_head_clock * TAU * 2.4) * 0.3 * clampf(1.0 - _head_clock / 1.1, 0.0, 1.0)
+		"tilt":
+			tilt += 0.16
+		"down":
+			nod = 0.3
+		"up":
+			nod = -0.3
+	if listening and head_gesture.is_empty():
+		nod += maxf(0.0, sin(_clock * 2.2)) * maxf(0.0, sin(_clock * 0.71)) * 0.09
+	if speaking:
+		nod += sin(_clock * 8.5) * 0.03
+	head.rotation.x += nod + _look.y
+	head.rotation.y = _look.x * 0.75 + shake
+	head.rotation.z = tilt
+	joint("Torso").rotation.y = _look.x * 0.25
+
+
 func _process(delta: float) -> void:
 	_clock += delta
+	_gesture_clock += delta
+	_head_clock += delta
+	_since_syllable += delta
 	_shown_moving = move_toward(_shown_moving, moving, delta * 4.0)
 	_walk_phase = fmod(_walk_phase + delta * TAU * (0.6 + 1.0 * _shown_moving), TAU)
 	set_pose(_walk_phase, _shown_moving, sin(_clock * 1.9) * (1.0 - _shown_moving))
+	_update_upper(delta)
 	if blink_every > 0.0:
 		var blink := fmod(_clock, blink_every) < 0.12
 		for eye in _eyes:
 			if is_instance_valid(eye):
 				eye.scale.y = 0.15 if blink else 1.0
+	_mouth_open = move_toward(_mouth_open, 0.0, delta * 7.0)
 	if _mouth != null and is_instance_valid(_mouth):
-		_mouth.scale.y = 1.0 + (absf(sin(_clock * 14.0)) * 1.4 if talking else 0.0)
+		var open := _mouth_open
+		if talking and _since_syllable > 0.6:
+			# Talking without a voice (a quiet aside): a steady murmur.
+			open = absf(sin(_clock * 14.0))
+		_mouth.scale.y = 1.0 + open * 1.5

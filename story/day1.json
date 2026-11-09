@@ -1,0 +1,123 @@
+{
+	"arrival": [
+		{"do": "shot", "name": "arrival"},
+		{"do": "walk", "who": "you", "to": "entrance"},
+		{"do": "walk", "who": "iyer", "to": "meet"},
+		{"do": "face", "who": "you", "at": "iyer"},
+		{"do": "face", "who": "iyer", "at": "you"},
+		{"say": "iyer", "text": "{called}? You're late.", "mood": "focused", "gesture": "fold_arms"},
+		{"say": "iyer", "text": "Good. It means you're nervous.", "mood": "calm", "gesture": "explain"},
+		{"say": "iyer", "text": "I'm Meera Iyer. For the next year, every mistake you make is my mistake. So you won't make many.",
+			"gesture": "chest"},
+		{"choose": [
+			{"tone": "Apologise", "text": "Sorry, Dr. Iyer. The bus... no. No excuses. It won't happen again.",
+				"trust": {"iyer": 2}, "then": [
+				{"say": "iyer", "text": "Don't apologise. Fix it. Tomorrow, 6:45.", "gesture": "point", "head": "nod"}
+			]},
+			{"tone": "Be precise", "text": "It's 6:58. Technically I'm two minutes early.", "trust": {"iyer": -3},
+				"flag": "corrected_iyer", "then": [
+				{"say": "iyer", "text": "Two minutes early is late here. Technically.", "mood": "angry", "gesture": "wag"}
+			]},
+			{"tone": "Be honest", "text": "I walked round the block twice before I could come in.", "trust": {"iyer": 5},
+				"flag": "honest_with_iyer", "then": [
+				{"say": "iyer", "text": "Twice? Good. Nervous doctors check things twice. Keep that.", "mood": "happy",
+					"gesture": "open_hands", "head": "nod"}
+			]}
+		]},
+		{"say": "iyer", "text": "This coffee is mine. This is yours.", "gesture": "offer", "mood": "calm"},
+		{"do": "hold", "who": "you", "item": "letter", "side": "L"},
+		{"do": "drop", "who": "you", "side": "R"},
+		{"do": "give", "from": "iyer", "to": "you", "item": "pager"},
+		{"do": "pager", "text": "Dr. Iyer: Welcome to Riverside. Sister Grace is at the desk."},
+		{"say": "iyer", "text": "When it beeps, you move. Go and meet Sister Grace at the desk. She runs this hospital. I just operate in it.",
+			"gesture": "point"},
+		{"say": "you", "text": "Yes, Doctor.", "head": "nod", "mood": "focused"},
+		{"do": "start_day"}
+	],
+
+	"grace": [
+		{"say": "grace", "text": "So you're the new intern. {called}, is it?", "mood": "happy", "gesture": "explain"},
+		{"say": "grace", "text": "Rule one: wash your hands. Rule two: see rule one.", "gesture": "wag", "head": "nod"},
+		{"choose": [
+			{"tone": "Warm", "text": "I've heard you're the one who really runs this place.", "trust": {"grace": 5}, "then": [
+				{"say": "grace", "text": "Flattery. Good start. It won't get you out of night shifts.", "mood": "happy", "gesture": "shrug"}
+			]},
+			{"tone": "Curious", "text": "And rule three?", "trust": {"grace": 3}, "then": [
+				{"say": "grace", "text": "Rule three: never ask a nurse what rule three is. Come back tomorrow.", "gesture": "point",
+					"mood": "calm"}
+			]},
+			{"tone": "Brisk", "text": "Understood. Where do I sign in?", "trust": {"grace": -2}, "then": [
+				{"say": "grace", "text": "Register's there. Smile next time. It's free.", "mood": "calm", "gesture": "point"}
+			]}
+		]},
+		{"say": "grace", "text": "Your locker is 214. Your ID badge comes tomorrow, if HR remembers. HR rarely remembers.",
+			"gesture": "open_hands"},
+		{"minutes": 10}
+	],
+	"grace_again": [
+		{"say": "grace", "text": "Locker 214. Hands washed. Go and be useful.", "gesture": "point"}
+	],
+
+	"nair": [
+		{"say": "nair", "text": "Are you a real doctor? You look about twelve.", "mood": "tired", "gesture": "point"},
+		{"choose": [
+			{"tone": "Joke", "text": "Twelve and a half, sir. The half matters.", "trust": {"nair": 4}, "then": [
+				{"say": "nair", "text": "Ha! A doctor with jokes. That's new.", "mood": "happy", "gesture": "open_hands"}
+			]},
+			{"tone": "Ask", "text": "Fully qualified, as of a few weeks ago. How long have you been waiting?", "skill": "History",
+				"trust": {"nair": 5}, "flag": "asked_nair_wait",
+				"detail": "Mr. Nair has waited since 6 a.m. with a swollen knee, and nobody has asked him about it.", "then": [
+				{"say": "nair", "text": "Since six. My knee is the size of a coconut. Nobody asks me anything.", "mood": "worried",
+					"gesture": "open_hands"},
+				{"say": "nair", "text": "You asked. Write that down somewhere.", "mood": "calm", "gesture": "point"}
+			]},
+			{"tone": "Defensive", "text": "I'm a doctor. Please wait your turn.", "trust": {"nair": -4}, "then": [
+				{"say": "nair", "text": "Waiting is all I do. I'm a professional.", "mood": "angry", "gesture": "fold_arms"}
+			]}
+		]},
+		{"minutes": 5}
+	],
+	"nair_again": [
+		{"say": "nair", "text": "Still here. Still a coconut.", "mood": "tired", "gesture": "shrug"}
+	],
+
+	"leela": [
+		{"say": "leela", "text": "He swallowed a coin. He says it was an accident. It was not.", "mood": "worried", "gesture": "open_hands"},
+		{"say": "aarav", "text": "It was a shiny one!", "mood": "happy", "gesture": "raise", "to": "you"},
+		{"choose": [
+			{"tone": "Calm", "text": "Most coins pass on their own. Has he been sick, or in pain?", "skill": "History",
+				"trust": {"leela": 4}, "flag": "asked_leela_symptoms", "then": [
+				{"say": "leela", "text": "No pain. He ate two biscuits on the way here. Greedy, not sick.", "mood": "calm",
+					"gesture": "shrug"}
+			]},
+			{"tone": "Light", "text": "At least it wasn't a big one.", "trust": {"leela": -3}, "then": [
+				{"say": "leela", "text": "It was a five rupee coin, Doctor. It was a big one.", "mood": "angry", "gesture": "wag"}
+			]}
+		]},
+		{"say": "leela", "text": "The scan room said one hour. That was two hours ago.", "mood": "tired", "gesture": "shrug"},
+		{"minutes": 5}
+	],
+	"leela_again": [
+		{"say": "leela", "text": "Still waiting for the scan. Aarav has found another coin. I'm watching him.", "gesture": "point"}
+	],
+
+	"iyer_report": [
+		{"say": "iyer", "text": "Well? Did Grace scare you?", "mood": "calm", "gesture": "explain"},
+		{"if": "asked_nair_wait", "then": [
+			{"say": "iyer", "text": "Mr. Nair says you asked how long he'd waited. Nobody asks. Remember that feeling.",
+				"mood": "happy", "head": "nod"}
+		]},
+		{"if": "corrected_iyer", "then": [
+			{"say": "iyer", "text": "And tomorrow, be early by more than two minutes.", "gesture": "wag"}
+		]},
+		{"say": "iyer", "text": "That's Day 1. Go home. Sleep. Come back sharper.", "gesture": "wave", "mood": "happy"},
+		{"minutes": 5}
+	],
+	"iyer_waiting": [
+		{"say": "iyer", "text": "Go on. Sister Grace first, then say hello to someone in the waiting area. Then come back to me.",
+			"gesture": "point"}
+	],
+	"iyer_again": [
+		{"say": "iyer", "text": "Home. Sleep. That's an order, Doctor.", "gesture": "wave"}
+	]
+}

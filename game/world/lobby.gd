@@ -1,8 +1,14 @@
 class_name Lobby
 extends Node3D
-## Day 1: the reception of Riverside City Hospital. The player walks around
-## (tap the floor, or WASD and arrow keys), meets Dr. Meera Iyer and Sister
-## Grace, and says hello to a waiting patient.
+## Day 1: the reception of Riverside City Hospital.
+##
+## The day opens with Dr. Meera Iyer meeting the new doctor at the door with
+## a coffee and a pager. Then the player walks around (tap the floor, or WASD
+## and arrow keys), meets Sister Grace, says hello to a waiting patient and
+## reports back. Nurses and patients chat among themselves nearby.
+##
+## Conversations come from story/day1.json and play through StoryPlayer, so
+## people gesture, nod and murmur while they talk, and replies change trust.
 ##
 ## Floor coordinates: x runs left to right, z runs from the back wall (-6)
 ## towards the camera (+6). The room is open on the camera side.
@@ -16,6 +22,14 @@ const CAMERA_OFFSET := Vector3(0, 3.7, 5.0)
 const TALK_DISTANCE := 1.0
 const TAP_RADIUS := 70.0
 const XP_PER_TASK := 40
+const ACTIONS := ["shot", "pager", "start_day"]
+## Today's tasks: id, text. Each is remembered as the story flag "day1_<id>".
+const TASKS := [
+	["grace", "Meet Sister Grace"],
+	["patient", "Greet a waiting patient"],
+	["iyer", "Report back to Dr. Iyer"],
+]
+const IYER_POST := Vector3(2.7, 0, -1.9)
 
 const WALL := Color("#EEF2EC")
 const WALL_TOP := Color("#DCE8E6")
@@ -30,28 +44,35 @@ var walk_area: WalkArea
 var player: AvatarRig
 var camera: Camera3D
 var hud: LobbyHud
-## People you can talk to: id -> {rig, name, role, lines, task}.
+var talk_ui: ConversationUi
+var story: StoryPlayer
+## True when the day starts with Dr. Iyer meeting the player at the door.
+var arrival := false
+## People you can talk to: id -> {rig, facing, home}.
 var people := {}
 ## Today's tasks in order: [id, text, done].
-var tasks := [
-	["iyer", "Find Dr. Iyer", false],
-	["grace", "Meet Sister Grace", false],
-	["patient", "Greet a waiting patient", false],
-]
+var tasks := []
+## The conversation running now (a key of story/day1.json) and with whom.
+var talking_with := ""
+var conversation := ""
 
 var _path := PackedVector2Array()
 var _talk_target := ""
-var _talking_to := ""
-var _line_index := 0
 var _marker: Node3D
 var _marker_time := 0.0
 var _press_at := Vector2.ZERO
 var _facing := PI
 var _camera_target := Vector3.ZERO
+var _camera_mode := "follow"
+var _camera_speaker := ""
+var _banter: Array = []
+var _banter_clock := 0.0
+var _walking_home: Array[String] = []
 
 
-func _init(for_profile: PlayerProfile = null) -> void:
+func _init(for_profile: PlayerProfile = null, with_arrival: bool = false) -> void:
 	profile = for_profile if for_profile != null else PlayerProfile.new()
+	arrival = with_arrival
 
 
 func _ready() -> void:
@@ -64,6 +85,7 @@ func _ready() -> void:
 	_build_people()
 	player = AvatarRig.new(profile.avatar)
 	player.name = "Player"
+	player.voice_pitch = 1.08 - 0.04 * profile.avatar.height
 	player.position = Vector3(0, 0, 4.6)
 	player.rotation.y = _facing
 	add_child(player)
@@ -72,18 +94,29 @@ func _ready() -> void:
 	camera.name = "Camera"
 	camera.fov = 42
 	add_child(camera)
-	_place_camera(1.0)
 	var layer := CanvasLayer.new()
 	layer.name = "HudLayer"
 	add_child(layer)
 	hud = LobbyHud.new(profile)
 	hud.name = "Hud"
 	layer.add_child(hud)
-	hud.dialogue_next.connect(_on_dialogue_next)
-	hud.menu_choice.connect(func(choice: String) -> void: menu_choice.emit(choice))
-	hud.set_clock("Day %d · 07:00 · First day" % profile.day)
-	hud.set_pager("Dr. Iyer: Reception. Now. Don't make me page twice.")
-	_refresh_tasks()
+	hud.menu_choice.connect(_on_menu_choice)
+	talk_ui = ConversationUi.new()
+	talk_ui.name = "Conversation"
+	talk_ui.mode = ConversationUi.Mode.TALK
+	layer.add_child(talk_ui)
+	story = StoryPlayer.new(StoryRunner.new(profile), talk_ui, self)
+	story.actors = _actors()
+	story.finished.connect(_on_talk_finished)
+	_load_tasks()
+	_update_clock()
+	if arrival:
+		_begin_arrival()
+	else:
+		hud.set_pager(_pager_for_progress())
+		_refresh_tasks()
+	_place_camera(1.0)
+	_build_banter()
 
 
 # --- Building the room ---------------------------------------------------
@@ -250,11 +283,8 @@ func _build_people() -> void:
 	iyer.glasses = 4
 	iyer.scrubs = 1
 	iyer.watch = true
-	_add_person("iyer", iyer, Vector3(2.7, 0, -1.9), -0.6, "Dr. Meera Iyer", "Senior surgeon", [
-		"You're late. Good, it means you're nervous.",
-		"Nervous doctors check things twice. Keep that, %s." % profile.called(),
-		"Go and see Sister Grace at the desk. She runs this hospital. I just operate in it.",
-	], AvatarConfig.Mood.FOCUSED)
+	var iyer_rig := _add_person("iyer", iyer, IYER_POST, -0.6, AvatarConfig.Mood.FOCUSED)
+	iyer_rig.hold("coffee", "L")
 	var grace := AvatarConfig.new()
 	grace.skin = 7
 	grace.face = 0
@@ -265,45 +295,102 @@ func _build_people() -> void:
 	grace.stethoscope = false
 	grace.watch = true
 	grace.brows = 2
-	_add_person("grace", grace, Vector3(-0.7, 0, -4.4), 0.0, "Sister Grace Mathew", "Head nurse", [
-		"So you're the new intern. Welcome to Riverside, %s." % profile.called(),
-		"Rule one: wash your hands. Rule two: see rule one.",
-		"The wards open to you tomorrow. Tonight, sleep. You won't get much after this.",
-	], AvatarConfig.Mood.HAPPY)
-	var rng := SeededRandom.new(4242)
-	var waiting := [
-		["patient", Vector3(-5.9, 0, -0.2), "Mr. Prakash Nair", "Waiting since 6 a.m.", [
-			"Are you a real doctor? You look about twelve.",
-			"Never mind. Everyone looks twelve to me now.",
-		]],
-		["patient2", Vector3(-4.3, 0, 1.5), "Leela Thomas", "Waiting with her son", [
-			"He swallowed a coin. He says it was an accident. It was not.",
-		]],
-	]
-	for entry: Array in waiting:
-		var look := AvatarConfig.random(rng)
-		look.coat = false
-		look.stethoscope = false
-		look.scrubs = rng.pick([2, 3, 5, 7])
-		var rig := _add_person(entry[0], look, entry[1], 0.0, entry[2], entry[3], entry[4], AvatarConfig.Mood.TIRED)
-		rig.sitting = true
+	_add_person("grace", grace, Vector3(-0.7, 0, -4.4), 0.0, AvatarConfig.Mood.HAPPY)
+	var nair := AvatarConfig.new()
+	nair.skin = 6
+	nair.face = 5
+	nair.hair_style = 0
+	nair.hair_colour = 5
+	nair.facial_hair = 2
+	nair.body = 2
+	nair.height = 1
+	nair.scrubs = 7
+	nair.coat = false
+	nair.stethoscope = false
+	_add_person("nair", nair, Vector3(-5.9, 0, -0.2), 0.0, AvatarConfig.Mood.TIRED, "casual").sitting = true
+	var leela := AvatarConfig.new()
+	leela.skin = 4
+	leela.face = 3
+	leela.hair_style = 5
+	leela.hair_colour = 1
+	leela.eyes = 2
+	leela.scrubs = 2
+	leela.coat = false
+	leela.stethoscope = false
+	_add_person("leela", leela, Vector3(-5.1, 0, -0.2), 0.0, AvatarConfig.Mood.WORRIED, "kurta").sitting = true
+	var aarav := AvatarConfig.new()
+	aarav.skin = 4
+	aarav.face = 0
+	aarav.eyes = 4
+	aarav.hair_style = 3
+	aarav.hair_colour = 0
+	aarav.scrubs = 7
+	aarav.coat = false
+	aarav.stethoscope = false
+	var child := _add_person("aarav", aarav, Vector3(-4.3, 0, -0.2), 0.0, AvatarConfig.Mood.HAPPY, "casual")
+	child.sitting = true
+	child.scale = Vector3.ONE * 0.64
+	var tom := AvatarConfig.new()
+	tom.skin = 3
+	tom.face = 2
+	tom.hair_style = 2
+	tom.hair_colour = 0
+	tom.facial_hair = 1
+	tom.scrubs = 1
+	tom.coat = false
+	tom.stethoscope = false
+	tom.height = 3
+	var priya := AvatarConfig.new()
+	priya.skin = 6
+	priya.face = 3
+	priya.hair_style = 8
+	priya.hair_colour = 0
+	priya.eyes = 7
+	priya.scrubs = 2
+	priya.coat = false
+	priya.stethoscope = false
+	priya.watch = true
+	var tom_spot := Vector3(6.7, 0, 1.15)
+	var priya_spot := Vector3(5.95, 0, 0.7)
+	_add_person("tom", tom, tom_spot, atan2(priya_spot.x - tom_spot.x, priya_spot.z - tom_spot.z), AvatarConfig.Mood.HAPPY)
+	_add_person("priya", priya, priya_spot, atan2(tom_spot.x - priya_spot.x, tom_spot.z - priya_spot.z),
+		AvatarConfig.Mood.CALM)
 
 
-func _add_person(id: String, look: AvatarConfig, at: Vector3, facing: float, display_name: String, role: String,
-		lines: Array, mood: int) -> AvatarRig:
+func _add_person(id: String, look: AvatarConfig, at: Vector3, facing: float, mood: int,
+		outfit: String = "doctor") -> AvatarRig:
 	var rig := AvatarRig.new(look)
 	rig.name = id.capitalize().replace(" ", "")
+	rig.outfit = outfit
 	rig.position = at
 	rig.rotation.y = facing
 	rig.mood = mood
+	rig.voice_pitch = float(StoryBook.cast().get(id, {}).get("voice", 1.0))
 	add_child(rig)
-	people[id] = {"rig": rig, "name": display_name, "role": role, "lines": lines, "facing": facing}
-	if not rig.sitting:
+	people[id] = {"rig": rig, "facing": facing, "home": at}
+	if outfit == "doctor" or id in ["tom", "priya"]:
 		walk_area.add_blocker(Rect2(at.x - 0.25, at.z - 0.25, 0.5, 0.5))
 	return rig
 
 
+func _actors() -> Dictionary:
+	var found := {"you": player}
+	for id: String in people:
+		found[id] = people[id]["rig"]
+	return found
+
+
+func person_name(id: String) -> String:
+	return story.runner.display_name(id)
+
+
 # --- Tasks ---------------------------------------------------------------
+
+func _load_tasks() -> void:
+	tasks = []
+	for task: Array in TASKS:
+		tasks.append([task[0], task[1], profile.has_flag("day1_" + str(task[0]))])
+
 
 func _refresh_tasks() -> void:
 	var list := []
@@ -312,26 +399,185 @@ func _refresh_tasks() -> void:
 	hud.set_tasks(list)
 
 
+func task_done(id: String) -> bool:
+	for task: Array in tasks:
+		if task[0] == id:
+			return task[2]
+	return false
+
+
 func _complete_task(id: String) -> void:
 	for task: Array in tasks:
 		if task[0] == id and not task[2]:
 			task[2] = true
+			profile.set_flag("day1_" + id)
 			profile.total_xp += XP_PER_TASK
 			hud.refresh_profile()
 			hud.toast("+%d XP · %s" % [XP_PER_TASK, task[1]])
-			save_requested.emit()
 	_refresh_tasks()
-	var done := tasks.all(func(task: Array) -> bool: return task[2])
-	if done:
-		hud.set_pager("Dr. Iyer: Good. That's Day 1. Go home. Sleep. Come back sharper.")
-	elif id == "iyer":
-		hud.set_pager("Sister Grace: I'm at the desk. Bring your ID badge.")
+	hud.set_pager(_pager_for_progress())
+
+
+func _pager_for_progress() -> String:
+	if task_done("iyer"):
+		return "Dr. Iyer: Good. That's Day 1. Go home. Sleep. Come back sharper."
+	if task_done("grace") and task_done("patient"):
+		return "Dr. Iyer: Done? Come and find me by the theatre doors."
+	if task_done("grace"):
+		return "Sister Grace: Say hello to the waiting area. Nicely."
+	return "Dr. Iyer: Sister Grace is at the desk. Go."
+
+
+func _update_clock() -> void:
+	hud.set_clock("Day %d · %s · First day" % [profile.day, profile.clock_text()])
+
+
+# --- The arrival: Dr. Iyer at the door -----------------------------------
+
+func _begin_arrival() -> void:
+	player.position = Vector3(0.1, 0, 7.4)
+	player.rotation.y = PI
+	_facing = PI
+	player.hold("letter")
+	var iyer: AvatarRig = people["iyer"]["rig"]
+	iyer.position = Vector3(1.9, 0, 1.6)
+	iyer.rotation.y = PI * 0.85
+	iyer.hold("pager")
+	hud.set_tasks([])
+	hud.set_pager("")
+	talking_with = "iyer"
+	conversation = "arrival"
+	story.focus = "iyer"
+	hud.set_talking(true)
+	story.play(StoryBook.conversation("day1", "arrival"))
+
+
+## Called from the story when Dr. Iyer has handed over the pager.
+func _start_day() -> void:
+	profile.set_flag("met_iyer")
+	player.drop("L")
+	player.drop("R")
+	_refresh_tasks()
+	hud.set_pager(_pager_for_progress())
+	Sfx.play(self, "pager", -8.0)
+
+
+# --- What the story asks for ---------------------------------------------
+
+func perform(step: Dictionary) -> Variant:
+	match str(step["do"]):
+		"shot":
+			_camera_mode = str(step.get("name", "follow"))
+			return 0.0
+		"pager":
+			hud.set_pager(story.runner.fill(str(step.get("text", ""))))
+			Sfx.play(self, "pager", -8.0)
+			return 0.4
+		"start_day":
+			_start_day()
+			return 0.0
+	return null
+
+
+func mark(mark_name: String) -> Variant:
+	match mark_name:
+		"entrance":
+			return Vector3(0.1, 0, 4.75)
+		"meet":
+			return Vector3(0.5, 0, 3.8)
+		"iyer_post":
+			return IYER_POST
+	return null
+
+
+func on_line(speaker: String, _listener: String) -> void:
+	_camera_speaker = speaker
+	_camera_mode = "talk"
+
+
+# --- Conversations -------------------------------------------------------
+
+## The conversation to play when the player talks to someone now.
+func conversation_for(id: String) -> String:
+	match id:
+		"iyer":
+			if task_done("iyer"):
+				return "iyer_again"
+			if task_done("grace") and task_done("patient"):
+				return "iyer_report"
+			return "iyer_waiting"
+		"grace":
+			return "grace_again" if task_done("grace") else "grace"
+		"nair", "leela":
+			return id + "_again" if profile.has_flag("talked_" + id) else id
+		"aarav":
+			return conversation_for("leela")
+	return id
+
+
+func _start_talk(id: String) -> void:
+	_talk_target = ""
+	_path = PackedVector2Array()
+	var key := conversation_for(id)
+	var steps := StoryBook.conversation("day1", key)
+	if steps.is_empty():
+		return
+	var partner := "leela" if id == "aarav" else id
+	talking_with = partner
+	conversation = key
+	var rig: AvatarRig = people[partner]["rig"]
+	var to_them := Vector2(rig.position.x - player.position.x, rig.position.z - player.position.z)
+	_facing = atan2(to_them.x, to_them.y)
+	player.rotation.y = _facing
+	player.moving = 0.0
+	if not rig.sitting:
+		rig.rotation.y = atan2(-to_them.x, -to_them.y)
+	story.focus = partner if story.runner.start_trust(partner) >= 0 else ""
+	_camera_speaker = partner
+	_camera_mode = "talk"
+	hud.set_talking(true)
+	story.play(steps)
+
+
+func _on_talk_finished(_skipped: bool) -> void:
+	var finished := conversation
+	var partner := talking_with
+	talking_with = ""
+	conversation = ""
+	_camera_mode = "follow"
+	hud.set_talking(false)
+	if people.has(partner):
+		var rig: AvatarRig = people[partner]["rig"]
+		if not rig.sitting and partner not in ["iyer"]:
+			rig.rotation.y = people[partner]["facing"]
+	match finished:
+		"arrival":
+			# Dr. Iyer goes back to her spot by the theatre doors.
+			_walk_home("iyer")
+		"grace":
+			_complete_task("grace")
+		"nair", "leela":
+			profile.set_flag("talked_" + finished)
+			_complete_task("patient")
+		"iyer_report":
+			_complete_task("iyer")
+	_update_clock()
+	save_requested.emit()
+
+
+func _walk_home(id: String) -> void:
+	story.walk(id, people[id]["home"], 1.3)
+	_walking_home.append(id)
+
+
+func is_talking() -> bool:
+	return story.is_playing()
 
 
 # --- Input and movement --------------------------------------------------
 
 func _unhandled_input(event: InputEvent) -> void:
-	if hud.dialogue_open() or hud.menu_open():
+	if story.is_playing() or hud.menu_open():
 		return
 	var button := event as InputEventMouseButton
 	if button == null or button.button_index != MOUSE_BUTTON_LEFT:
@@ -344,6 +590,8 @@ func _unhandled_input(event: InputEvent) -> void:
 
 ## Handles a tap on the screen: talk to a person, or walk to the floor.
 func tap(screen_point: Vector2) -> void:
+	if story.is_playing():
+		return
 	var person := person_at(screen_point)
 	if not person.is_empty():
 		walk_to_person(person)
@@ -362,7 +610,7 @@ func person_at(screen_point: Vector2) -> String:
 	for id: String in people:
 		var rig: AvatarRig = people[id]["rig"]
 		var feet := rig.global_position
-		var head := feet + Vector3(0, 1.1 if rig.sitting else 1.6, 0)
+		var head := rig.face_point() + Vector3(0, 0.12, 0)
 		if camera.is_position_behind(head):
 			continue
 		var a := camera.unproject_position(feet)
@@ -398,20 +646,25 @@ func walk_to_person(id: String) -> void:
 	var spot := Vector2(rig.position.x, rig.position.z)
 	var me := Vector2(player.position.x, player.position.z)
 	var away := (me - spot).normalized() if me.distance_to(spot) > 0.01 else Vector2(0, 1)
+	if rig.sitting:
+		# Seated people are greeted from the front.
+		away = (Vector2(0, 1) + away * 0.4).normalized()
 	_talk_target = id
 	if me.distance_to(spot) <= TALK_DISTANCE + 0.3:
 		_path = PackedVector2Array()
 		_start_talk(id)
 		return
 	walk_to(walk_area.closest_walkable(spot + away * TALK_DISTANCE))
+	if _path.is_empty():
+		_start_talk(id)
 
 
 func _physics_process(delta: float) -> void:
-	if player == null:
+	if player == null or story.is_playing():
 		return
 	var keys := _key_direction()
 	var moved := Vector2.ZERO
-	if keys != Vector2.ZERO and not hud.dialogue_open() and not hud.menu_open():
+	if keys != Vector2.ZERO and not hud.menu_open():
 		_path = PackedVector2Array()
 		_talk_target = ""
 		moved = _step(keys.normalized() * WALK_SPEED * delta)
@@ -426,6 +679,7 @@ func _physics_process(delta: float) -> void:
 			_path.remove_at(0)
 			if _path.is_empty() and not _talk_target.is_empty():
 				_start_talk(_talk_target)
+				return
 		else:
 			moved = to_next.normalized() * step
 			player.position += Vector3(moved.x, 0, moved.y)
@@ -459,6 +713,12 @@ func _key_direction() -> Vector2:
 
 
 func _process(delta: float) -> void:
+	story.update(delta)
+	_update_banter(delta)
+	for id: String in _walking_home.duplicate():
+		if not story.is_walking(id):
+			_walking_home.erase(id)
+			(people[id]["rig"] as AvatarRig).rotation.y = people[id]["facing"]
 	_place_camera(minf(1.0, delta * 4.0))
 	if _marker_time > 0.0:
 		_marker_time -= delta
@@ -472,16 +732,31 @@ func _place_camera(weight: float) -> void:
 	var focus := player.position if player != null else Vector3.ZERO
 	var goal: Vector3
 	var target: Vector3
-	if not _talking_to.is_empty():
-		# In a conversation the camera swings round to frame both faces.
-		var other: AvatarRig = people[_talking_to]["rig"]
+	var offset := 0.0
+	if _camera_mode == "arrival":
+		goal = Vector3(-0.6, 2.2, 9.6)
+		target = Vector3(0.6, 1.3, 3.2)
+	elif _camera_mode == "talk" and people.has(talking_with):
+		# A two-shot from the side, leaning towards whoever is speaking, with
+		# both people kept left of the reply panel.
+		var other: AvatarRig = people[talking_with]["rig"]
 		var middle := (focus + other.position) / 2.0
-		var across := Vector3(other.position.x - focus.x, 0, other.position.z - focus.z).normalized()
+		var across := Vector3(other.position.x - focus.x, 0, other.position.z - focus.z)
+		across = across.normalized() if across.length() > 0.01 else Vector3(1, 0, 0)
 		var side := Vector3(-across.z, 0, across.x)
-		if side.z < 0.0:
+		if side.z < -0.05 or (absf(side.z) <= 0.05 and side.x > 0.0):
 			side = -side
-		goal = middle + side * 3.5 + Vector3(0, 1.8, 0)
-		target = middle + Vector3(0, 1.15, 0)
+		if talking_with == "grace":
+			# The desk monitor stands on Sister Grace's left.
+			side = Vector3(1, 0, 0) if side.x < 0.0 else side
+		# From the side and a little in front, so desks don't get in the way.
+		var view := (side + Vector3(0, 0, 0.75)).normalized()
+		var speaker_spot := focus if _camera_speaker == "you" else other.position
+		var lean := middle.lerp(speaker_spot, 0.25)
+		var height := 1.0 if other.sitting else 1.22
+		goal = middle + view * 3.7 + Vector3(0, 1.85, 0)
+		target = lean + Vector3(0, height, 0)
+		offset = 0.62
 	else:
 		focus.x = clampf(focus.x, -5.0, 5.0)
 		focus.z = clampf(focus.z, -3.4, 3.6)
@@ -489,6 +764,7 @@ func _place_camera(weight: float) -> void:
 		target = focus + Vector3(0, 0.9, 0)
 	_camera_target = _camera_target.lerp(target, weight) if weight < 1.0 else target
 	camera.position = camera.position.lerp(goal, weight)
+	camera.h_offset = lerpf(camera.h_offset, offset, weight)
 	camera.look_at(_camera_target)
 
 
@@ -498,69 +774,144 @@ func _update_tags() -> void:
 		if not task[2]:
 			next_task = task[0]
 			break
+	var started := profile.has_flag("met_iyer")
 	for id: String in people:
-		var person: Dictionary = people[id]
-		var rig: AvatarRig = person["rig"]
-		var head := rig.global_position + Vector3(0, 1.45 if rig.sitting else 2.05, 0)
-		var shown := not camera.is_position_behind(head)
-		var text: String = person["name"] if id in ["iyer", "grace"] else "%s · waiting" % person["name"]
-		var highlight := next_task == id or (next_task == "patient" and id.begins_with("patient"))
+		var rig: AvatarRig = people[id]["rig"]
+		var head := rig.face_point() + Vector3(0, 0.58 * rig.scale.y, 0)
+		var shown := not camera.is_position_behind(head) and started
+		var text := person_name(id)
+		if id in ["nair", "leela"]:
+			text += " · waiting"
+		var highlight := next_task == id or (next_task == "patient" and id in ["nair", "leela"])
 		hud.set_tag(id, text, camera.unproject_position(head), shown, highlight)
 
 
-# --- Conversations -------------------------------------------------------
-
-func _start_talk(id: String) -> void:
-	_talk_target = ""
-	_talking_to = id
-	_line_index = 0
-	var person: Dictionary = people[id]
-	var rig: AvatarRig = person["rig"]
-	var to_them := Vector2(rig.position.x - player.position.x, rig.position.z - player.position.z)
-	_facing = atan2(to_them.x, to_them.y)
-	if not rig.sitting:
-		rig.rotation.y = atan2(-to_them.x, -to_them.y)
-	_show_line()
-
-
-func _show_line() -> void:
-	var person: Dictionary = people[_talking_to]
-	var lines: Array = person["lines"]
-	var rig: AvatarRig = person["rig"]
-	rig.talking = true
-	hud.show_line(person["name"], person["role"], lines[_line_index], _line_index == lines.size() - 1)
-
-
-func _on_dialogue_next() -> void:
-	if _talking_to.is_empty():
-		hud.hide_dialogue()
+func _on_menu_choice(choice: String) -> void:
+	if choice == "sound":
+		save_requested.emit()
 		return
-	var person: Dictionary = people[_talking_to]
-	var lines: Array = person["lines"]
-	_line_index += 1
-	if _line_index < lines.size():
-		_show_line()
-		return
-	var rig: AvatarRig = person["rig"]
-	rig.talking = false
-	if not rig.sitting:
-		rig.rotation.y = person["facing"]
-	hud.hide_dialogue()
-	var finished := _talking_to
-	_talking_to = ""
-	_complete_task("patient" if finished.begins_with("patient") else finished)
+	if choice != "resume":
+		menu_choice.emit(choice)
 
 
-## Sets up a calm, posed moment for the screenshot tool.
-func stage_for_screenshot(talking: bool) -> void:
-	for person: Dictionary in people.values():
-		(person["rig"] as AvatarRig).blink_every = 0.0
-	player.blink_every = 0.0
-	if talking:
-		player.position = Vector3(2.15, 0, -1.05)
-		_start_talk("iyer")
-	else:
-		player.position = Vector3(0.6, 0, 1.4)
-		_facing = PI * 0.9
-	player.rotation.y = _facing
+# --- People chatting among themselves ------------------------------------
+
+func _build_banter() -> void:
+	var sets: Array = StoryBook.chapter("banter").get("lobby", [])
+	for entry: Dictionary in sets:
+		var pair: Array = entry.get("between", [])
+		if pair.size() == 2 and people.has(pair[0]) and people.has(pair[1]):
+			_banter.append({"pair": pair, "lines": entry.get("lines", []), "index": 0, "time": 0.0,
+				"wait": 1.5 + _banter.size() * 2.2, "syllable": 0.0, "vowels": ""})
+
+
+func _update_banter(delta: float) -> void:
+	_banter_clock += delta
+	for chat: Dictionary in _banter:
+		var pair: Array = chat["pair"]
+		var a: AvatarRig = people[pair[0]]["rig"]
+		var b: AvatarRig = people[pair[1]]["rig"]
+		var busy := story.is_playing() and (talking_with in pair or conversation == "arrival")
+		var lines: Array = chat["lines"]
+		if busy or lines.is_empty():
+			_quiet_banter(chat, a, b)
+			continue
+		if float(chat["wait"]) > 0.0:
+			chat["wait"] = float(chat["wait"]) - delta
+			continue
+		var line: Array = lines[int(chat["index"]) % lines.size()]
+		var speaker: AvatarRig = people[line[0]]["rig"]
+		var listener := b if speaker == a else a
+		if float(chat["time"]) == 0.0:
+			speaker.set_gesture(str(line[2]) if line.size() > 2 else "explain")
+			speaker.talking = true
+			speaker.look_at_rig(listener)
+			listener.look_at_rig(speaker)
+			listener.listening = true
+			listener.talking = false
+			listener.set_gesture("")
+			chat["vowels"] = _vowels(str(line[1]))
+		chat["time"] = float(chat["time"]) + delta
+		# Murmur a syllable every so often while the bubble shows.
+		chat["syllable"] = float(chat["syllable"]) - delta
+		var vowels: String = chat["vowels"]
+		if float(chat["syllable"]) <= 0.0 and float(chat["time"]) < 2.2 and not vowels.is_empty():
+			chat["syllable"] = 0.17
+			speaker.voice_volume_db = -14.0
+			speaker.say_syllable(vowels[int(float(chat["time"]) / 0.17) % vowels.length()])
+		var head := speaker.face_point() + Vector3(0, 0.62 * speaker.scale.y, 0)
+		hud.set_bubble(pair[0] + pair[1], str(line[1]), camera.unproject_position(head),
+			not camera.is_position_behind(head))
+		if float(chat["time"]) >= 3.2:
+			speaker.talking = false
+			speaker.set_gesture("")
+			chat["time"] = 0.0
+			chat["index"] = int(chat["index"]) + 1
+			var finished_round: bool = int(chat["index"]) % lines.size() == 0
+			chat["wait"] = 7.0 if finished_round else 0.5
+			hud.set_bubble(pair[0] + pair[1], "", Vector2.ZERO, false)
+
+
+func _quiet_banter(chat: Dictionary, a: AvatarRig, b: AvatarRig) -> void:
+	if float(chat["time"]) > 0.0:
+		chat["time"] = 0.0
+		for rig: AvatarRig in [a, b]:
+			rig.talking = false
+			rig.listening = false
+			if rig != story._speaker:
+				rig.set_gesture("")
+	var pair: Array = chat["pair"]
+	hud.set_bubble(pair[0] + pair[1], "", Vector2.ZERO, false)
+
+
+static func _vowels(text: String) -> String:
+	var found := ""
+	for letter in text.to_lower():
+		if letter in "aeiou":
+			found += letter
+	return found
+
+
+## The pair chatting now and the line on show, for tests: [speaker, text] or [].
+func banter_line(index: int = 0) -> Array:
+	if index >= _banter.size():
+		return []
+	var chat: Dictionary = _banter[index]
+	if float(chat["time"]) <= 0.0:
+		return []
+	var lines: Array = chat["lines"]
+	var line: Array = lines[int(chat["index"]) % lines.size()]
+	return [line[0], line[1]]
+
+
+## Sets up a calm, posed moment for the screenshot tool: "walk", "talk"
+## (Sister Grace offering replies) or "arrival" (Dr. Iyer at the door).
+func stage_for_screenshot(moment: String) -> void:
+	match moment:
+		"talk":
+			player.position = Vector3(-0.55, 0, -2.45)
+			_start_talk("grace")
+			_advance_to_choice()
+		"arrival":
+			for frame in 900:
+				story.update(1.0 / 30.0)
+				if talk_ui.is_choosing():
+					break
+				if not story.is_busy() and not talk_ui.is_typing():
+					talk_ui.tap()
+		_:
+			player.position = Vector3(0.6, 0, 1.4)
+			_facing = PI * 0.9
+			player.rotation.y = _facing
+			for frame in 150:
+				_update_banter(1.0 / 30.0)
 	_place_camera(1.0)
+
+
+func _advance_to_choice() -> void:
+	for frame in 600:
+		story.update(1.0 / 30.0)
+		if talk_ui.is_choosing() or not story.is_playing():
+			return
+		if not talk_ui.is_typing():
+			talk_ui.tap()

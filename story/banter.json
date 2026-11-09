@@ -1,0 +1,18 @@
+{
+	"lobby": [
+		{"between": ["tom", "priya"], "lines": [
+			["tom", "New intern at nine o'clock. Eyes like a deer on a highway.", "explain"],
+			["priya", "Leave them alone. We were all deer once.", "shrug"],
+			["tom", "I was never a deer. I was born scrubbed in.", "chest"],
+			["priya", "You were born late. Like every shift since.", "point"],
+			["tom", "Bed six wants a private room again.", "open_hands"],
+			["priya", "Bed six wants a lot of things. Bed six can want.", "shrug"]
+		]},
+		{"between": ["nair", "leela"], "lines": [
+			["nair", "Six hours. I could have died twice by now.", "open_hands"],
+			["leela", "You've told me four times. You look very alive.", "shrug"],
+			["nair", "That's the illness talking.", "point"],
+			["leela", "Aarav, put that down. That is not a sweet.", "wag"]
+		]}
+	]
+}

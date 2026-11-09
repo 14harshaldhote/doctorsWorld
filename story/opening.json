@@ -1,0 +1,75 @@
+{
+	"opening": [
+		{"do": "set", "name": "graduation"},
+		{"do": "shot", "name": "wide"},
+		{"do": "card", "text": "Convocation day", "sub": "City Medical College", "time": 2.6},
+		{"do": "fade", "to": "clear", "time": 1.2, "wait": false},
+		{"say": "dean", "text": "Bachelor of Medicine and Bachelor of Surgery. Our next graduate...", "gesture": "explain"},
+		{"say": "dean", "text": "{name}!", "gesture": "open_hands", "mood": "happy"},
+		{"do": "cue", "name": "applause"},
+		{"do": "shot", "name": "stage"},
+		{"do": "walk", "who": "you", "to": "dean_front"},
+		{"do": "face", "who": "you", "at": "dean"},
+		{"do": "give", "from": "dean", "to": "you", "item": "certificate"},
+		{"say": "dean", "text": "Congratulations, Doctor. The easy part is over.", "mood": "happy", "gesture": "explain"},
+		{"say": "you", "text": "Thank you, sir.", "mood": "happy", "head": "nod"},
+		{"do": "face", "who": "you", "at": "audience"},
+		{"do": "shot", "name": "family"},
+		{"do": "gesture", "who": "anu", "gesture": "cheer", "time": 5.0},
+		{"do": "gesture", "who": "dad", "gesture": "clap", "time": 2.5},
+		{"say": "anu", "text": "That's {first}! That's OUR {first}!", "mood": "happy"},
+		{"say": "dad", "text": "Twenty-two years of school fees. Worth every rupee. Probably.", "mood": "happy", "gesture": "shrug"},
+		{"say": "mum", "text": "I'm not crying. The hall is dusty.", "mood": "happy", "gesture": "chest", "head": "tilt"},
+		{"do": "shot", "name": "hero"},
+		{"do": "gesture", "who": "you", "gesture": "raise", "time": 2.6, "wait": true},
+		{"do": "fade", "to": "black", "time": 0.8},
+
+		{"do": "set", "name": "home"},
+		{"do": "card", "text": "A few weeks later", "time": 2.2},
+		{"do": "shot", "name": "room"},
+		{"do": "fade", "to": "clear", "time": 0.8, "wait": false},
+		{"do": "cue", "name": "knock"},
+		{"do": "walk", "who": "dad", "to": "table_side"},
+		{"do": "face", "who": "dad", "at": "you"},
+		{"say": "dad", "text": "Post! Something official. It has a stamp and everything.", "gesture": "offer", "to": "you"},
+		{"do": "give", "from": "dad", "to": "you", "item": "letter"},
+		{"do": "shot", "name": "letter"},
+		{"do": "letter"},
+		{"say": "anu", "text": "Well? Did they take you or not?", "gesture": "open_hands"},
+		{"say": "you", "text": "Riverside City Hospital. An internship. Starting Monday.", "mood": "shocked", "gesture": "raise", "to": "anu"},
+		{"do": "gesture", "who": "anu", "gesture": "cheer", "time": 3.0},
+		{"do": "mood", "who": "you", "mood": "happy"},
+		{"do": "face", "who": "you", "at": "mum"},
+		{"do": "shot", "name": "family_table"},
+		{"say": "mum", "text": "Riverside? The big one? Will you even eat properly there?", "mood": "worried", "gesture": "open_hands"},
+		{"choose": [
+			{"tone": "Promise", "text": "Three meals a day and eight hours of sleep. Promise.", "trust": {"family": 5},
+				"flag": "promised_family", "then": [
+				{"say": "dad", "text": "Eight hours. Wonderful. Someone tell the hospital.", "gesture": "shrug", "mood": "happy"}
+			]},
+			{"tone": "Joke", "text": "Doctors don't sleep, Ma. It's tradition.", "trust": {"family": 2},
+				"flag": "joked_with_family", "then": [
+				{"say": "mum", "text": "Then you'll start a new tradition. For me.", "gesture": "wag", "mood": "calm"}
+			]},
+			{"tone": "Be honest", "text": "Honestly? I'm scared.", "trust": {"family": 6}, "flag": "admitted_fear", "then": [
+				{"say": "mum", "text": "Good. Scared people are careful. Careful doctors are the good ones.", "gesture": "chest",
+					"mood": "happy", "head": "tilt"}
+			]}
+		], "about": "family"},
+		{"say": "anu", "text": "Can I have your room when you move out?", "gesture": "explain", "mood": "happy"},
+		{"do": "fade", "to": "black", "time": 0.8},
+
+		{"do": "set", "name": "morning"},
+		{"do": "card", "text": "Monday · 06:52", "sub": "Riverside City Hospital", "time": 2.2},
+		{"do": "shot", "name": "street"},
+		{"do": "fade", "to": "clear", "time": 0.8, "wait": false},
+		{"do": "cue", "name": "ambulance"},
+		{"do": "walk", "who": "you", "to": "path_mid"},
+		{"do": "shot", "name": "look_up"},
+		{"do": "look", "who": "you", "at": "sign", "height": 0},
+		{"say": "you", "text": "Okay. You studied for this. You studied for this for years.", "mood": "worried", "head": "up"},
+		{"do": "look", "who": "you"},
+		{"do": "walk", "who": "you", "to": "doors"},
+		{"do": "fade", "to": "white", "time": 0.9}
+	]
+}

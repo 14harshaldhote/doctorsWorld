@@ -13,8 +13,8 @@ plan"). This file covers how to build, run and test the game.
 | Stage | What it adds | State |
 | --- | --- | --- |
 | 1. Avatar and lobby | Godot project, avatar creator, title and name screens, walkable lobby, CI | Done |
-| 2. Intro story | Graduation, job letter and first-morning cutscenes | Next |
-| 3. Training | Logical training tasks that later return in operations | |
+| 2. Intro story | Story engine (replies, trust, moods), talking animation and voices, graduation, job letter and first-morning cutscenes, Dr. Iyer's welcome, lobby conversations and banter | Done |
+| 3. Training | Logical training tasks that later return in operations | Next |
 | 4. Wards and patients | Patient stories, examinations, conversations with families | |
 | 5. Operations | Theatre with an AI team and a nurse handing instruments | |
 | 6. Career and politics | Promotions, reputation, rivals and hospital politics | |
@@ -56,18 +56,43 @@ TestFlight.
 ```
 project.godot           Project settings (landscape, 1688x780 canvas, Compatibility renderer)
 export_presets.cfg      iOS export (Xcode project only, so CI needs no signing)
-game/main.gd            Screen flow: title, name, look, hospital; loading and saving
+game/main.gd            Screen flow: title, name, look, opening, hospital; loading and saving
 game/core/              Rules with no visuals: profile, avatar look, XP curve, ranks,
                         saves, seeded random numbers, walkable floor and paths
 game/avatar/            LowPoly mesh helpers, AvatarRig (the jointed, animated
-                        character), AvatarSheet (a line-up of looks)
+                        character with gestures, gaze and lip movement), Props
+                        (things people hold), AvatarSheet (a line-up of looks)
+game/audio/             Voice murmurs and sound effects, synthesised in code
 game/ui/                UiKit (colours, fonts, buttons), title, name and avatar
-                        creator screens, lobby HUD, icons drawn in code
-game/world/             StageLighting, the hospital at dusk, the Day 1 lobby
+                        creator screens, lobby HUD, conversation screen,
+                        story overlay (fades, title cards, the letter), icons
+game/story/             StoryBook (loads story files), StoryRunner (steps,
+                        replies, trust), StoryPlayer (puts a story on stage),
+                        Opening and its sets (graduation hall, home, morning)
+game/world/             StageLighting, the hospital front, the Day 1 lobby
+story/                  The words: cast, opening, Day 1 conversations, banter
 assets/fonts/           Fredoka and Nunito (SIL Open Font License)
 tests/                  The test runner and unit tests
 tools/                  Screenshot tool used by CI
 ```
+
+## Writing story
+
+Conversations and cutscenes are JSON files in `story/`, one per chapter. A
+conversation is a list of steps:
+
+```json
+{"say": "iyer", "text": "{called}? You're late.", "mood": "focused", "gesture": "fold_arms"}
+{"choose": [{"tone": "Be honest", "text": "...", "trust": {"iyer": 5}, "flag": "honest_with_iyer"}]}
+{"do": "walk", "who": "you", "to": "entrance"}
+{"if": "asked_nair_wait", "then": [...], "else": [...]}
+```
+
+`{name}`, `{first}`, `{last}`, `{called}` and `{title}` fill in the player's
+name. The full list of keys is at the top of `game/story/story_runner.gd`, and
+`tests/unit/test_story.gd` checks every file against the cast, the gestures
+and the actions each scene knows, so a typo fails the build. The export preset
+includes `story/*.json`, and CI checks the exported game carries them.
 
 ## Tests
 

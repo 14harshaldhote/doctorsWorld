@@ -66,14 +66,27 @@ how you know you're winning.
 ## What works right now
 
 The game is being built in stages, and the old 2D version has been retired
-(it's kept safe on the `swift-prototype` branch). Stage 1 of the 3D game is in:
+(it's kept safe on the `swift-prototype` branch). Stages 1 and 2 of the 3D game
+are in:
 
 - The title screen: the hospital at dusk, an ambulance, a doctor wandering about.
 - Name your doctor and choose whether people call you by your first or last name.
 - The avatar creator, with every option above and a doctor you can spin round.
-- Day 1 in the hospital lobby: walk around, meet Dr. Meera Iyer (who notices
-  you're late) and Sister Grace (who notices everything), and say hello to the
-  waiting patients. You earn your first experience points. Enjoy them.
+- The opening, about a minute and a half, starring you. Convocation day: the
+  dean reads out your name, the hall claps, your sister screams, your mother
+  insists the hall is dusty. A few weeks later a letter arrives. Your mum asks
+  whether you'll even eat properly there, and you get to answer (she remembers).
+  Then Monday morning, an ambulance, and a very large building. Hold anywhere
+  to skip it, if you're the kind of person who skips weddings too.
+- Day 1 in the hospital lobby. Dr. Meera Iyer meets you at the door with a
+  coffee (hers) and a pager (yours), and notices you're late. Then you walk
+  around, meet Sister Grace (who notices everything), and say hello to the
+  waiting patients, who have been waiting since before you were born.
+- Conversations with replies. Pick how you answer and people trust you more,
+  or less, and a little meter shows you exactly how badly that went.
+- People move when they talk: hands, shrugs, nods, turning to look at whoever
+  is speaking, lips that keep time, and a murmur of a voice. Nurses gossip by
+  the vending machine whether you're listening or not.
 
 Screenshots of every screen are rebuilt automatically after each change, on
 the [`screenshots` branch](../../tree/screenshots).

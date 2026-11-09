@@ -1,5 +1,5 @@
 extends SceneTree
-## Renders the store-style screenshots of every stage-1 screen.
+## Renders the store-style screenshots of every screen and story moment.
 ##
 ##   godot --path . --resolution 1688x780 -s res://tools/screenshots.gd -- shots iphone
 ##
@@ -38,11 +38,40 @@ func _run() -> void:
 				creator.rig.set_mood(AvatarConfig.Mood.HAPPY)
 			creator.settle_camera())
 	await _shot("04-avatar-range", AvatarSheet.new())
-	var lobby := Lobby.new(doctor)
-	await _shot("05-lobby", lobby, func() -> void: lobby.stage_for_screenshot(false))
-	var talking := Lobby.new(doctor)
-	await _shot("06-lobby-talk", talking, func() -> void: talking.stage_for_screenshot(true))
+	var lobby := Lobby.new(sample_profile_at_work())
+	await _shot("05-lobby", lobby, func() -> void: lobby.stage_for_screenshot("walk"))
+	var talking := Lobby.new(sample_profile_at_work())
+	await _shot("06-lobby-talk", talking, func() -> void: talking.stage_for_screenshot("talk"))
+	await _opening_shot("07-opening-graduation", func(o: Opening) -> bool:
+		return o.set_name == "graduation" and o.ui.line_text().begins_with("Congratulations") and not o.ui.is_typing())
+	await _opening_shot("08-opening-family", func(o: Opening) -> bool:
+		return o.set_name == "graduation" and o.ui.line_text().begins_with("Twenty-two") and not o.ui.is_typing())
+	await _opening_shot("09-opening-letter", func(o: Opening) -> bool:
+		return o.overlay.letter_open() and o.overlay._letter.modulate.a >= 1.0, -1)
+	await _opening_shot("10-opening-choice", func(o: Opening) -> bool:
+		return o.set_name == "home" and o.ui.is_choosing(), -1)
+	await _opening_shot("11-opening-morning", func(o: Opening) -> bool:
+		return o.set_name == "morning" and o.ui.line_text().begins_with("Okay") and not o.ui.is_typing())
+	var arriving := Lobby.new(sample_profile(), true)
+	await _shot("12-lobby-arrival", arriving, func() -> void: arriving.stage_for_screenshot("arrival"))
 	quit(0)
+
+
+static func sample_profile_at_work() -> PlayerProfile:
+	var doctor := sample_profile()
+	doctor.opening_seen = true
+	doctor.set_flag("met_iyer")
+	return doctor
+
+
+## A moment from the opening story: plays forward until the moment, then
+## holds still for the picture.
+func _opening_shot(shot_name: String, moment: Callable, reply: int = 2) -> void:
+	var opening := Opening.new(sample_profile())
+	await _shot(shot_name, opening, func() -> void:
+		if not opening.play_until(moment.bind(opening), reply):
+			push_error("The opening never reached %s" % shot_name)
+		opening.set_process(false))
 
 
 ## The doctor used in every screenshot.
@@ -77,6 +106,12 @@ func _shot(shot_name: String, node: Node, prepare: Callable = Callable()) -> voi
 		prepare.call()
 	for frame in FRAMES_TO_SETTLE:
 		await process_frame
+	# Hold every character still: eyes open, gestures finished.
+	for found in node.find_children("*", "AvatarRig", true, false):
+		var rig := found as AvatarRig
+		rig.blink_every = 0.0
+		rig.settle()
+	await process_frame
 	var path := _out.path_join("%s-%s.png" % [_prefix, shot_name])
 	root.get_viewport().get_texture().get_image().save_png(path)
 	print("saved ", path)

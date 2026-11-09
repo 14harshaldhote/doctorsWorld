@@ -7,7 +7,8 @@ extends RefCounted
 ## (damaged, or written by a newer build) is moved aside, never deleted or
 ## overwritten. Ported from the Swift prototype's FileSaveStore.
 
-const CURRENT_VERSION := 1
+## Version 2 added story progress: trust, story facts, the clock and settings.
+const CURRENT_VERSION := 2
 const DEFAULT_PATH := "user://save.json"
 
 enum Outcome { FRESH, LOADED, SET_ASIDE, LEFT_IN_PLACE }

@@ -1,7 +1,7 @@
 class_name Main
 extends Node
 ## Runs the game: loads the save, then moves between the title screen, the
-## new-career steps (name, look) and the hospital.
+## new-career steps (name, look), the opening story and the hospital.
 
 var store := SaveStore.new()
 var profile: PlayerProfile
@@ -13,6 +13,7 @@ func _ready() -> void:
 	var loaded := store.load_or_start()
 	profile = loaded["profile"]
 	has_save = loaded["outcome"] == SaveStore.Outcome.LOADED and profile.created
+	Voice.enabled = profile.sound_on
 	show_title()
 
 
@@ -57,8 +58,27 @@ func _on_look_done() -> void:
 	show_hospital()
 
 
+## Graduation, the letter and the first morning, with the player's own doctor.
+func show_opening() -> void:
+	var opening := Opening.new(profile)
+	opening.finished.connect(_on_opening_finished)
+	_swap(opening)
+
+
+func _on_opening_finished(_skipped: bool) -> void:
+	profile.opening_seen = true
+	_save()
+	show_hospital()
+
+
+## The hospital. A career that has not seen the opening plays it first, and
+## Day 1 starts with Dr. Iyer at the door until the player has met her.
 func show_hospital() -> void:
-	var lobby := Lobby.new(profile)
+	if not profile.opening_seen:
+		show_opening()
+		return
+	Voice.enabled = profile.sound_on
+	var lobby := Lobby.new(profile, not profile.has_flag("met_iyer"))
 	lobby.save_requested.connect(_save)
 	lobby.menu_choice.connect(_on_menu_choice)
 	_swap(lobby)

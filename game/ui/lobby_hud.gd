@@ -1,10 +1,10 @@
 class_name LobbyHud
 extends Control
 ## Everything drawn over the hospital while walking around: the doctor's
-## badge and XP, the clock, the pager, today's tasks, name tags over people,
-## conversations, and the Phone / Casebook / Team / Menu buttons.
+## badge and XP, the clock, the pager, today's tasks, name tags and speech
+## bubbles over people, and the Phone / Casebook / Team / Menu buttons.
+## Conversations themselves are drawn by ConversationUi on top.
 
-signal dialogue_next
 signal menu_choice(choice: String)
 
 var profile: PlayerProfile
@@ -20,12 +20,10 @@ var _hint: PanelContainer
 var _buttons: HBoxContainer
 var _today: PanelContainer
 var _tags := {}
-var _dialogue: PanelContainer
-var _speaker: Label
-var _role: Label
-var _line: Label
-var _next: Button
+var _bubbles := {}
+var _talking := false
 var _menu: PanelContainer
+var _sound_button: Button
 var _toast: PanelContainer
 var _toast_label: Label
 var _toast_time := 0.0
@@ -46,7 +44,6 @@ func _ready() -> void:
 	_build_tasks()
 	_build_hint()
 	_build_buttons()
-	_build_dialogue()
 	_build_menu()
 	_build_toast()
 	refresh_profile()
@@ -230,46 +227,6 @@ func _build_buttons() -> void:
 		row.add_child(button)
 
 
-func _build_dialogue() -> void:
-	_dialogue = UiKit.panel(Color(7 / 255.0, 32 / 255.0, 37 / 255.0, 0.94), 18, Vector2(18, 14))
-	_dialogue.name = "Dialogue"
-	var style := _dialogue.get_theme_stylebox("panel") as StyleBoxFlat
-	style.border_color = Color(UiKit.MINT, 0.5)
-	style.set_border_width_all(int(UiKit.px(1.5)))
-	_dialogue.anchor_left = 0.5
-	_dialogue.anchor_right = 0.5
-	_dialogue.anchor_top = 1.0
-	_dialogue.anchor_bottom = 1.0
-	_dialogue.grow_horizontal = Control.GROW_DIRECTION_BOTH
-	_dialogue.grow_vertical = Control.GROW_DIRECTION_BEGIN
-	_dialogue.offset_left = -UiKit.px(300)
-	_dialogue.offset_right = UiKit.px(300)
-	_dialogue.offset_bottom = -UiKit.px(14)
-	_dialogue.visible = false
-	add_child(_dialogue)
-	var row := UiKit.hbox(14)
-	_dialogue.add_child(row)
-	var text := UiKit.vbox(4)
-	text.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	row.add_child(text)
-	var names := UiKit.hbox(8)
-	text.add_child(names)
-	_speaker = UiKit.label("", 16, UiKit.MINT, UiKit.heading_font())
-	names.add_child(_speaker)
-	_role = UiKit.label("", 12, UiKit.TEXT_SOFT)
-	_role.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	names.add_child(_role)
-	_line = UiKit.label("", 16, UiKit.TEXT)
-	_line.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_line.custom_minimum_size = Vector2(UiKit.px(400), 0)
-	text.add_child(_line)
-	_next = UiKit.primary_button("Next", 44, 16)
-	_next.name = "Next"
-	_next.size_flags_vertical = Control.SIZE_SHRINK_END
-	_next.pressed.connect(func() -> void: dialogue_next.emit())
-	row.add_child(_next)
-
-
 func _build_menu() -> void:
 	_menu = UiKit.panel(Color(7 / 255.0, 32 / 255.0, 37 / 255.0, 0.96), 18, Vector2(18, 16))
 	_menu.name = "Menu"
@@ -286,11 +243,17 @@ func _build_menu() -> void:
 	_menu.add_child(column)
 	column.add_child(UiKit.heading("Paused", 20))
 	for entry: Array in [["Back to work", "resume", true], ["Change my look", "look", false],
-			["Title screen", "title", false]]:
+			[_sound_text(), "sound", false], ["Title screen", "title", false]]:
 		var button := UiKit.primary_button(entry[0], 46, 16) if entry[2] else UiKit.ghost_button(entry[0], 46, 16)
 		button.name = str(entry[1]).capitalize()
 		button.pressed.connect(_on_menu_choice.bind(entry[1]))
 		column.add_child(button)
+		if entry[1] == "sound":
+			_sound_button = button
+
+
+func _sound_text() -> String:
+	return "Sound: on" if profile.sound_on else "Sound: off"
 
 
 func _build_toast() -> void:
@@ -317,6 +280,12 @@ func _on_corner_button(which: String) -> void:
 
 
 func _on_menu_choice(choice: String) -> void:
+	if choice == "sound":
+		profile.sound_on = not profile.sound_on
+		Voice.enabled = profile.sound_on
+		_sound_button.text = _sound_text()
+		menu_choice.emit(choice)
+		return
 	_menu.visible = false
 	menu_choice.emit(choice)
 
@@ -345,15 +314,23 @@ func set_clock(text: String) -> void:
 
 
 func set_pager(text: String) -> void:
-	_pager.visible = not text.is_empty()
+	_pager.visible = not text.is_empty() and not _talking
 	_pager_text.text = text
 
 
+func pager_text() -> String:
+	return _pager_text.text
+
+
 ## tasks: an array of [text, done]. The first unfinished task is highlighted.
+## No tasks hides the card.
 func set_tasks(tasks: Array) -> void:
 	for child in _tasks.get_children():
 		_tasks.remove_child(child)
 		child.queue_free()
+	_today.visible = not tasks.is_empty() and not _talking
+	if tasks.is_empty():
+		return
 	_tasks.add_child(UiKit.kicker("Today", 11))
 	var current_found := false
 	for task: Array in tasks:
@@ -392,32 +369,76 @@ func set_tag(id: String, text: String, at: Vector2, shown: bool, highlight: bool
 	text_label.text = text
 	var style := tag.get_theme_stylebox("panel") as StyleBoxFlat
 	style.bg_color = UiKit.AMBER if highlight else Color(1, 1, 1, 0.94)
-	var badge := get_node("Badge") as Control
-	var covered: bool = _today.get_global_rect().has_point(at) or badge.get_global_rect().has_point(at)
-	tag.visible = shown and not covered and not _dialogue.visible
 	tag.reset_size()
-	tag.position = at - Vector2(tag.size.x / 2.0, tag.size.y)
+	tag.position = _keep_on_screen(at - Vector2(tag.size.x / 2.0, tag.size.y), tag.size)
+	tag.visible = shown and not _talking and _on_screen(at) and not _covered(Rect2(tag.position, tag.size))
 
 
-func show_line(speaker: String, role: String, line: String, last: bool) -> void:
-	_speaker.text = speaker
-	_role.text = role
-	_line.text = line
-	_next.text = "Bye" if last else "Next"
-	_dialogue.visible = true
-	for quiet: Control in [_hint, _buttons, _today, _pager]:
-		quiet.visible = false
+## A speech bubble over someone chatting nearby ("" hides it).
+func set_bubble(id: String, text: String, at: Vector2, shown: bool) -> void:
+	var bubble: PanelContainer = _bubbles.get(id)
+	if bubble == null:
+		bubble = UiKit.panel(Color(1, 1, 1, 0.92), 12, Vector2(10, 6))
+		bubble.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		var label := UiKit.label("", 12, UiKit.INK, UiKit.body_font())
+		label.name = "Text"
+		label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		label.custom_minimum_size = Vector2(UiKit.px(150), 0)
+		bubble.add_child(label)
+		add_child(bubble)
+		move_child(bubble, 0)
+		_bubbles[id] = bubble
+	var label := bubble.get_node("Text") as Label
+	if label.text != text:
+		label.text = text
+		bubble.size = Vector2.ZERO
+	bubble.reset_size()
+	bubble.position = _keep_on_screen(at - Vector2(bubble.size.x / 2.0, bubble.size.y), bubble.size)
+	bubble.visible = shown and not text.is_empty() and not _talking and _on_screen(at) \
+		and not _covered(Rect2(bubble.position, bubble.size))
 
 
-func hide_dialogue() -> void:
-	_dialogue.visible = false
-	for back: Control in [_hint, _buttons, _today]:
-		back.visible = true
-	_pager.visible = not _pager_text.text.is_empty()
+func bubble_text(id: String) -> String:
+	var bubble: PanelContainer = _bubbles.get(id)
+	if bubble == null or not bubble.visible:
+		return ""
+	return (bubble.get_node("Text") as Label).text
 
 
-func dialogue_open() -> bool:
-	return _dialogue.visible
+func _on_screen(at: Vector2) -> bool:
+	return Rect2(Vector2.ZERO, size).grow(-UiKit.px(4)).has_point(at)
+
+
+func _keep_on_screen(spot: Vector2, box: Vector2) -> Vector2:
+	var margin := UiKit.px(6)
+	return Vector2(clampf(spot.x, margin, size.x - box.x - margin), clampf(spot.y, margin, size.y - box.y - margin))
+
+
+## True when a floating tag or bubble would slide under one of the HUD panels.
+func _covered(box: Rect2) -> bool:
+	var panels: Array[Control] = [_today, _pager, _buttons, get_node("Badge") as Control, get_node("Clock") as Control]
+	for panel in panels:
+		if panel.visible and panel.get_global_rect().grow(UiKit.px(4)).intersects(box):
+			return true
+	return false
+
+
+## While a conversation is on screen the walking HUD steps aside.
+func set_talking(talking: bool) -> void:
+	_talking = talking
+	for quiet: Control in [_hint, _buttons, get_node("Badge") as Control, get_node("Clock") as Control]:
+		quiet.visible = not talking
+	_pager.visible = not talking and not _pager_text.text.is_empty()
+	_today.visible = not talking and _tasks.get_child_count() > 1
+	if talking:
+		for tag: Control in _tags.values():
+			tag.visible = false
+		for bubble: Control in _bubbles.values():
+			bubble.visible = false
+
+
+func is_talking() -> bool:
+	return _talking
 
 
 func _process(delta: float) -> void:

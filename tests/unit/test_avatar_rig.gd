@@ -131,3 +131,84 @@ func test_fifty_random_looks_build_cleanly() -> void:
 			var mouth := rig.joint("Face").get_node("Mouth") as Node3D
 			var beard_front := rig._beard_front(mouth.position.y)
 			expect(mouth.position.z > beard_front, "look %d: mouth sits in front of the beard" % round)
+
+
+func test_gestures_move_the_arms_and_settle_back() -> void:
+	var rig := _rig()
+	rig.settle()
+	var rest: Vector3 = rig.joint("ShoulderR").rotation
+	for gesture: String in AvatarRig.GESTURES:
+		rig.set_gesture(gesture)
+		rig.settle()
+		var moved := rig.joint("ShoulderR").rotation.distance_to(rest) + rig.joint("ShoulderL").rotation.distance_to(rest)
+		expect(moved > 0.05, "%s moves an arm" % gesture)
+	rig.set_gesture("")
+	rig.settle()
+	expect(rig.joint("ShoulderR").rotation.distance_to(rest) < 0.05, "arms go back to rest")
+
+
+func test_unknown_gestures_are_ignored() -> void:
+	var rig := _rig()
+	rig.set_gesture("moonwalk", "spin")
+	expect_equal(rig.gesture, "")
+	expect_equal(rig.head_gesture, "")
+
+
+func test_looking_at_someone_turns_the_head_towards_them() -> void:
+	var rig := _rig()
+	rig.rotation.y = 0.0
+	rig.look_at_point(rig.global_position + Vector3(2, 1.5, 1))
+	rig.settle()
+	expect(rig.joint("Head").rotation.y > 0.3, "head turns towards a point on the left of the body")
+	expect(rig.joint("Torso").rotation.y > 0.05, "the chest follows a little")
+	rig.look_at_point(rig.global_position + Vector3(-2, 1.5, 1))
+	rig.settle()
+	expect(rig.joint("Head").rotation.y < -0.3, "and the other way")
+	rig.look_at_point(rig.global_position + Vector3(0, 1.5, -3))
+	rig.settle()
+	expect(absf(rig.joint("Head").rotation.y) <= 1.15 * 0.75 + 0.01, "no owl turns for someone behind")
+
+
+func test_speaking_opens_the_mouth_and_it_closes_again() -> void:
+	var rig := _rig()
+	var mouth: Node3D = rig._mouth
+	rig.say_syllable("o")
+	rig._process(0.01)
+	expect(mouth.scale.y > 1.5, "mouth opens on a syllable")
+	for frame in 30:
+		rig._process(1.0 / 30.0)
+	expect_near(mouth.scale.y, 1.0, 0.01, "and closes when the line is over")
+
+
+func test_outfits_for_the_story() -> void:
+	var rig := _rig()
+	rig.outfit = "gown"
+	rig.build()
+	expect(rig.find_child("Gown", true, false) != null, "graduation gown")
+	expect(rig.joint("Mortarboard") != null, "with the cap")
+	expect(rig.joint("Coat") == null, "no lab coat under the gown")
+	rig.mortarboard = false
+	rig.build()
+	expect(rig.joint("Mortarboard") == null, "the cap can stay off")
+	rig.outfit = "kurta"
+	rig.build()
+	expect(rig.find_child("Tunic", true, false) != null, "kurta")
+	rig.outfit = "doctor"
+	rig.build()
+	expect(rig.joint("Coat") != null, "back in the lab coat")
+
+
+func test_props_go_in_the_hands_and_survive_a_rebuild() -> void:
+	var rig := _rig()
+	for item: String in Props.ITEMS:
+		rig.hold(item)
+		expect_equal(rig.held(), item)
+		expect(rig.joint("ElbowR").get_node_or_null("HeldR") != null, "%s is in the hand" % item)
+	rig.hold("coffee", "L")
+	rig.build()
+	expect_equal(rig.held("L"), "coffee", "still holding the coffee after a rebuild")
+	expect(rig.joint("ElbowL").get_node_or_null("HeldL") != null, "the cup is back in the new hand")
+	rig.drop("L")
+	rig.drop("R")
+	expect_equal(rig.held("L"), "")
+	expect(rig.joint("ElbowR").get_node_or_null("HeldR") == null, "hands empty")

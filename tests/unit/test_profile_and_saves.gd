@@ -99,7 +99,7 @@ func test_save_text_is_stable_and_versioned() -> void:
 	profile.avatar = AvatarConfig.random(SeededRandom.new(1))
 	var text := SaveStore.encode(profile)
 	expect_equal(text, SaveStore.encode(PlayerProfile.from_dict(profile.to_dict())), "byte-for-byte stable")
-	expect(text.contains("\"version\": 1"))
+	expect(text.contains("\"version\": 2"))
 	var decoded := SaveStore.decode(text)
 	expect(decoded.has("profile"))
 	expect_equal((decoded["profile"] as PlayerProfile).to_dict(), profile.to_dict())
@@ -110,7 +110,43 @@ func test_decode_refuses_damaged_and_newer_saves() -> void:
 	expect_equal(SaveStore.decode("[1, 2]")["error"], "corrupt")
 	expect_equal(SaveStore.decode("{\"profile\": {}}")["error"], "corrupt")
 	expect_equal(SaveStore.decode("{\"version\": 0, \"profile\": {}}")["error"], "corrupt")
-	expect_equal(SaveStore.decode("{\"version\": 2, \"profile\": {}}")["error"], "newer_version")
+	expect_equal(SaveStore.decode("{\"version\": 3, \"profile\": {}}")["error"], "newer_version")
+
+
+func test_story_progress_is_saved_and_repaired() -> void:
+	var profile := PlayerProfile.new()
+	expect_equal(profile.trust("iyer", 50), 50, "strangers start at their default")
+	expect_equal(profile.change_trust("iyer", 8, 50), 58)
+	expect_equal(profile.change_trust("iyer", 90, 50), 100, "trust tops out at 100")
+	expect_equal(profile.change_trust("grace", -80, 45), 0, "and bottoms out at 0")
+	profile.set_flag("honest_with_iyer")
+	profile.opening_seen = true
+	profile.sound_on = false
+	profile.pass_minutes(25)
+	expect_equal(profile.clock_text(), "07:25")
+	var back := PlayerProfile.from_dict(profile.to_dict())
+	expect_equal(back.trust("iyer"), 100)
+	expect_equal(back.trust("grace"), 0)
+	expect(back.has_flag("honest_with_iyer"))
+	expect(not back.has_flag("corrected_iyer"))
+	expect(back.opening_seen)
+	expect(not back.sound_on)
+	expect_equal(back.minutes, PlayerProfile.DAY_START + 25)
+	var damaged := PlayerProfile.from_dict({"relationships": {"iyer": 400, "x": "lots"}, "flags": {"a": true, "b": "yes"},
+		"minutes": -5, "opening_seen": "yes"})
+	expect_equal(damaged.trust("iyer"), 100, "out-of-range trust is clamped")
+	expect(not damaged.relationships.has("x"), "nonsense trust is dropped")
+	expect(damaged.has_flag("a") and not damaged.has_flag("b"))
+	expect_equal(damaged.minutes, PlayerProfile.DAY_START)
+	expect(not damaged.opening_seen)
+
+
+func test_version_1_saves_still_load() -> void:
+	var decoded := SaveStore.decode("{\"version\": 1, \"profile\": {\"name\": \"Mei Lin\", \"created\": true}}")
+	var profile: PlayerProfile = decoded["profile"]
+	expect_equal(profile.name, "Mei Lin")
+	expect(not profile.opening_seen, "players from stage 1 see the new opening")
+	expect(profile.sound_on)
 
 
 func test_fresh_start_then_save_then_load() -> void:

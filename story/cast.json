@@ -1,0 +1,14 @@
+{
+	"iyer": {"name": "Dr. Meera Iyer", "role": "Senior surgeon · your mentor", "voice": 1.08, "trust": 50},
+	"grace": {"name": "Sister Grace Mathew", "role": "Head nurse", "voice": 1.18, "trust": 45},
+	"nair": {"name": "Mr. Prakash Nair", "role": "Waiting since 6 a.m.", "voice": 0.78, "trust": 40},
+	"leela": {"name": "Leela Thomas", "role": "Waiting with her son", "voice": 1.14, "trust": 45},
+	"aarav": {"name": "Aarav", "role": "Leela's son, 6", "voice": 1.55},
+	"tom": {"name": "Tom D'Souza", "role": "Scrub nurse", "voice": 0.9},
+	"priya": {"name": "Priya Nambiar", "role": "Staff nurse", "voice": 1.22},
+	"dean": {"name": "Dr. R. Menon", "role": "Dean of the medical college", "voice": 0.82},
+	"mum": {"name": "Mum", "role": "Your mother", "voice": 1.15},
+	"dad": {"name": "Dad", "role": "Your father", "voice": 0.84},
+	"anu": {"name": "Anu", "role": "Your little sister", "voice": 1.32},
+	"family": {"name": "Your family", "role": "Mum, Dad and Anu", "voice": 1.0, "trust": 60}
+}
