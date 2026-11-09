@@ -14,8 +14,9 @@ plan"). This file covers how to build, run and test the game.
 | --- | --- | --- |
 | 1. Avatar and lobby | Godot project, avatar creator, title and name screens, walkable lobby, CI | Done |
 | 2. Intro story | Story engine (replies, trust, moods), talking animation and voices, graduation, job letter and first-morning cutscenes, Dr. Iyer's welcome, lobby conversations and banter | Done |
-| 3. Training | Logical training tasks that later return in operations | Next |
-| 4. Wards and patients | Patient stories, examinations, conversations with families | |
+| 3. Training | Day 2 skills lab: six scored, explained practice tasks (scrub in, monitor, history, instruments, IV line, stitching), trainers, best scores, Day 1 to Day 2 | Done |
+| 4. First operation | Rohit's appendectomy, using the skills from training | Next |
+| 4b. Wards and patients | Patient stories, examinations, conversations with families | |
 | 5. Operations | Theatre with an AI team and a nurse handing instruments | |
 | 6. Career and politics | Promotions, reputation, rivals and hospital politics | |
 
@@ -56,21 +57,34 @@ TestFlight.
 ```
 project.godot           Project settings (landscape, 1688x780 canvas, Compatibility renderer)
 export_presets.cfg      iOS export (Xcode project only, so CI needs no signing)
-game/main.gd            Screen flow: title, name, look, opening, hospital; loading and saving
-game/core/              Rules with no visuals: profile, avatar look, XP curve, ranks,
-                        saves, seeded random numbers, walkable floor and paths
+game/main.gd            Screen flow: title, name, look, opening, Day 1 lobby, Day 2 skills lab;
+                        loading and saving
+game/core/              Rules with no visuals: profile (with best training scores), avatar
+                        look, XP curve, ranks, saves, seeded random numbers, walkable floor
+                        and paths, patient vitals
 game/avatar/            LowPoly mesh helpers, AvatarRig (the jointed, animated
                         character with gestures, gaze and lip movement), Props
                         (things people hold), AvatarSheet (a line-up of looks)
 game/audio/             Voice murmurs and sound effects, synthesised in code
 game/ui/                UiKit (colours, fonts, buttons), title, name and avatar
                         creator screens, lobby HUD, conversation screen,
-                        story overlay (fades, title cards, the letter), icons
+                        story overlay (fades, title cards, the letter), icons,
+                        the patient monitor and the instrument ring (reused in
+                        operations)
+game/ui/training/       One screen per training task, on a shared TrainingView
+                        (instructions, coaching, score card)
+game/training/          The training tasks' rules and scoring (no visuals), the
+                        instruments, and AutoPlayer (plays any task well, for
+                        tests and screenshots)
+game/training/stations/ The six stations in 3D: sink, monitor bed, history chair,
+                        instrument trolley, practice arm, suture pad
 game/story/             StoryBook (loads story files), StoryRunner (steps,
                         replies, trust), StoryPlayer (puts a story on stage),
                         Opening and its sets (graduation hall, home, morning)
-game/world/             StageLighting, the hospital front, the Day 1 lobby
-story/                  The words: cast, opening, Day 1 conversations, banter
+game/world/             StageLighting, the hospital front, the Day 1 lobby, the Day 2
+                        skills lab
+story/                  The words: cast, opening, Day 1 conversations, banter, training
+                        conversations, patient cases (cases.json)
 assets/fonts/           Fredoka and Nunito (SIL Open Font License)
 tests/                  The test runner and unit tests
 tools/                  Screenshot tool used by CI
@@ -93,6 +107,25 @@ name. The full list of keys is at the top of `game/story/story_runner.gd`, and
 `tests/unit/test_story.gd` checks every file against the cast, the gestures
 and the actions each scene knows, so a typo fails the build. The export preset
 includes `story/*.json`, and CI checks the exported game carries them.
+
+Patient cases for history taking live in `story/cases.json`: the patient, who
+plays them, how many questions you get, and each question with its answer,
+the fact it adds to the notes, its weight (`key`, `useful` or `none`) and,
+for key questions, why it matters.
+
+## Training tasks
+
+Each task in the skills lab is three pieces that stay apart, so the rules can
+be tested without drawing anything:
+
+- the rules (`game/training/*_task.gd`): what you can do, scoring out of 100,
+  stars, the coach's lines and the notes on the score card;
+- the 3D station (`game/training/stations/`): furniture, where people stand,
+  the close-up camera, and how the task's state looks;
+- the screen (`game/ui/training/`): buttons and panels that call the rules.
+
+Time only moves through `tick()`, so `AutoPlayer` and the tests can play every
+station start to finish in a fraction of a second.
 
 ## Tests
 

@@ -191,6 +191,7 @@ func _build_hint() -> void:
 	_corner(_hint, true, false, 12, 14)
 	add_child(_hint)
 	var text := UiKit.label("Tap the floor to walk · tap a person to talk", 12, Color("#DCEDEA"))
+	text.name = "Text"
 	text.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	_hint.add_child(text)
 
@@ -322,16 +323,26 @@ func pager_text() -> String:
 	return _pager_text.text
 
 
-## tasks: an array of [text, done]. The first unfinished task is highlighted.
-## No tasks hides the card.
-func set_tasks(tasks: Array) -> void:
+## The line at the bottom left that says how to move around.
+func set_hint(text: String) -> void:
+	(_hint.get_node("Text") as Label).text = text
+
+
+func hint_text() -> String:
+	return (_hint.get_node("Text") as Label).text
+
+
+## tasks: an array of [text, done], or [text, done, stars] to show a best
+## result as three stars (-1 for none yet). The first unfinished task is
+## highlighted. No tasks hides the card.
+func set_tasks(tasks: Array, title: String = "Today") -> void:
 	for child in _tasks.get_children():
 		_tasks.remove_child(child)
 		child.queue_free()
 	_today.visible = not tasks.is_empty() and not _talking
 	if tasks.is_empty():
 		return
-	_tasks.add_child(UiKit.kicker("Today", 11))
+	_tasks.add_child(UiKit.kicker(title, 11))
 	var current_found := false
 	for task: Array in tasks:
 		var done: bool = task[1]
@@ -348,6 +359,14 @@ func set_tasks(tasks: Array) -> void:
 		text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		text.custom_minimum_size = Vector2(UiKit.px(160), 0)
 		row.add_child(text)
+		if task.size() > 2 and int(task[2]) >= 0:
+			text.custom_minimum_size = Vector2(UiKit.px(118), 0)
+			var stars := UiKit.hbox(1)
+			stars.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+			for index in 3:
+				var lit := index < int(task[2])
+				stars.add_child(UiIcon.make("star" if lit else "star_off", 13, UiKit.AMBER if lit else Color(UiKit.TEXT, 0.3)))
+			row.add_child(stars)
 		_tasks.add_child(row)
 
 

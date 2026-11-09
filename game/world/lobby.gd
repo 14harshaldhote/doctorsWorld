@@ -15,6 +15,8 @@ extends Node3D
 
 signal save_requested
 signal menu_choice(choice: String)
+## Day 1 is over: emitted a moment after Dr. Iyer sends the doctor home.
+signal day_finished
 
 const ROOM := Rect2(-8, -6, 16, 12)
 const WALK_SPEED := 1.8
@@ -30,6 +32,8 @@ const TASKS := [
 	["iyer", "Report back to Dr. Iyer"],
 ]
 const IYER_POST := Vector3(2.7, 0, -1.9)
+## Seconds between Dr. Iyer's goodbye and the end of the day.
+const DAY_END_DELAY := 2.5
 
 const WALL := Color("#EEF2EC")
 const WALL_TOP := Color("#DCE8E6")
@@ -68,6 +72,7 @@ var _camera_speaker := ""
 var _banter: Array = []
 var _banter_clock := 0.0
 var _walking_home: Array[String] = []
+var _day_end_in := -1.0
 
 
 func _init(for_profile: PlayerProfile = null, with_arrival: bool = false) -> void:
@@ -561,6 +566,7 @@ func _on_talk_finished(_skipped: bool) -> void:
 			_complete_task("patient")
 		"iyer_report":
 			_complete_task("iyer")
+			_day_end_in = DAY_END_DELAY
 	_update_clock()
 	save_requested.emit()
 
@@ -715,6 +721,12 @@ func _key_direction() -> Vector2:
 func _process(delta: float) -> void:
 	story.update(delta)
 	_update_banter(delta)
+	if _day_end_in > 0.0:
+		_day_end_in -= delta
+		if _day_end_in <= 0.0:
+			# The game moves on to the next day, and this scene goes away.
+			day_finished.emit()
+			return
 	for id: String in _walking_home.duplicate():
 		if not story.is_walking(id):
 			_walking_home.erase(id)

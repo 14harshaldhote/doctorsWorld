@@ -54,7 +54,78 @@ func _run() -> void:
 		return o.set_name == "morning" and o.ui.line_text().begins_with("Okay") and not o.ui.is_typing())
 	var arriving := Lobby.new(sample_profile(), true)
 	await _shot("12-lobby-arrival", arriving, func() -> void: arriving.stage_for_screenshot("arrival"))
+	await _lab_shots()
 	quit(0)
+
+
+## Day 2 in the skills lab: the room, a trainer explaining, each task in
+## the middle of being played, and a score card.
+func _lab_shots() -> void:
+	var lab := SkillsLab.new(sample_profile_in_lab())
+	await _shot("13-lab", lab, func() -> void:
+		lab.player.position = Vector3(-0.4, 0, 1.6)
+		lab.player.rotation.y = PI * 0.92
+		lab.update(0.1)
+		lab.settle_camera())
+	var intro := SkillsLab.new(sample_profile_in_lab())
+	await _shot("14-lab-intro", intro, func() -> void:
+		intro.start_station("history")
+		for frame in 900:
+			intro.update(1.0 / 30.0)
+			if intro.story.is_playing() and intro.talk_ui.line_text().begins_with("I'll be") and not intro.talk_ui.is_typing():
+				break
+			if intro.story.is_playing() and not intro.story.is_busy() and not intro.talk_ui.is_typing():
+				intro.talk_ui.tap()
+		intro.settle_camera())
+	await _task_shot("15-scrub", "scrub", func(task: TrainingTask) -> bool:
+		return (task as ScrubTask).areas_done() >= 3 and float((task as ScrubTask).scrubbed["nails"]) > 0.7)
+	await _task_shot("16-monitor", "monitor", func(task: TrainingTask) -> bool:
+		var monitor := task as MonitorTask
+		return monitor.round_index >= 1 and monitor.revealing and monitor.answer_now() != "none")
+	await _task_shot("17-history", "history", func(task: TrainingTask) -> bool:
+		return (task as HistoryTask).asked.size() >= 3)
+	await _task_shot("18-instruments", "instruments", func(task: TrainingTask) -> bool:
+		var tray := task as InstrumentTask
+		return tray.part == "call" and tray.round_index == 1 and tray.revealing)
+	await _task_shot("19-iv-angle", "iv", func(task: TrainingTask) -> bool:
+		return (task as IvTask).phase == "angle" and absf((task as IvTask).angle - 22.0) < 0.5)
+	await _task_shot("20-iv-steady", "iv", func(task: TrainingTask) -> bool:
+		return (task as IvTask).steady_time > 1.4)
+	await _task_shot("21-stitch", "stitch", func(task: TrainingTask) -> bool:
+		return (task as StitchTask).stitches.size() >= 7)
+	await _task_shot("22-result", "stitch", func(_task: TrainingTask) -> bool: return false)
+
+
+## A task played well by the robot up to a moment (or to its score card when
+## the moment never comes), then held still for the picture.
+func _task_shot(shot_name: String, id: String, moment: Callable) -> void:
+	var lab := SkillsLab.new(sample_profile_in_lab())
+	await _shot(shot_name, lab, func() -> void:
+		if not lab.go_to_task(id):
+			push_error("The %s station never opened" % id)
+			return
+		lab.play_task(func() -> bool: return bool(moment.call(lab.view.task)) or lab.view.result_open())
+		# Let the camera, the coach's typing and the result card settle.
+		for frame in 90:
+			if not lab.view.result_open() and lab.view.task.finished:
+				lab.update(1.0 / 30.0)
+				continue
+			lab.view._type_coach(1.0 / 30.0)
+		lab.settle_camera()
+		lab.set_process(false))
+
+
+## The doctor on Day 2, welcomed, with the sink and the monitor done.
+static func sample_profile_in_lab() -> PlayerProfile:
+	var doctor := sample_profile_at_work()
+	for flag in ["day1_grace", "day1_patient", "day1_iyer", "lab_welcome", "trained_scrub", "trained_monitor"]:
+		doctor.set_flag(flag)
+	doctor.day = 2
+	doctor.minutes = PlayerProfile.DAY_START + 20
+	doctor.total_xp = 240
+	doctor.record_score("scrub", 92)
+	doctor.record_score("monitor", 74)
+	return doctor
 
 
 static func sample_profile_at_work() -> PlayerProfile:

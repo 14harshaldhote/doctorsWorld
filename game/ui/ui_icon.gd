@@ -64,6 +64,21 @@ func _draw() -> void:
 		"check":
 			draw_circle(p.call(12, 12), s * 9.0 / 24.0, colour)
 			draw_polyline(PackedVector2Array([p.call(7.5, 12), p.call(10.5, 15), p.call(16.5, 9)]), UiKit.INK, width * 1.2)
+		"cross":
+			draw_circle(p.call(12, 12), s * 9.0 / 24.0, colour)
+			draw_line(p.call(8.5, 8.5), p.call(15.5, 15.5), UiKit.INK, width * 1.2)
+			draw_line(p.call(15.5, 8.5), p.call(8.5, 15.5), UiKit.INK, width * 1.2)
+		"star", "star_off":
+			var points := PackedVector2Array()
+			for index in 10:
+				var angle := -PI / 2.0 + TAU * index / 10.0
+				var reach := 10.5 if index % 2 == 0 else 4.4
+				points.append(p.call(12 + cos(angle) * reach, 12.6 + sin(angle) * reach))
+			if kind == "star":
+				draw_colored_polygon(points, colour)
+			else:
+				points.append(points[0])
+				draw_polyline(points, colour, width)
 		"circle":
 			draw_arc(p.call(12, 12), s * 8.5 / 24.0, 0, TAU, 24, colour, width)
 		"dot":

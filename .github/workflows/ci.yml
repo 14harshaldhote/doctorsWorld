@@ -68,7 +68,7 @@ jobs:
           # A script error while drawing a screen fails the build.
           if grep -h "SCRIPT ERROR" shots-*.log; then exit 1; fi
           ls -la screenshots
-          test "$(ls screenshots/*.png | wc -l)" -eq 32
+          test "$(ls screenshots/*.png | wc -l)" -eq 52
 
       - name: Upload screenshots
         uses: actions/upload-artifact@v4

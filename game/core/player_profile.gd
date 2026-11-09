@@ -25,6 +25,8 @@ var sound_on := true
 var relationships := {}
 ## Story facts the game remembers: what the player said and did.
 var flags := {}
+## Best training score per skill, 0 to 100, by training task id.
+var skills := {}
 
 const DAY_START := 7 * 60
 
@@ -91,6 +93,19 @@ func pass_minutes(amount: int) -> void:
 	minutes += maxi(0, amount)
 
 
+func best_score(skill: String) -> int:
+	return int(skills.get(skill, -1))
+
+
+## Records a training score. Returns true when it beats the best so far.
+func record_score(skill: String, points: int) -> bool:
+	var clean := clampi(points, 0, 100)
+	if clean <= best_score(skill):
+		return false
+	skills[skill] = clean
+	return true
+
+
 func level() -> int:
 	return LevelCurve.level_for_xp(total_xp)
 
@@ -112,6 +127,7 @@ func to_dict() -> Dictionary:
 		"sound_on": sound_on,
 		"relationships": relationships.duplicate(),
 		"flags": flags.duplicate(),
+		"skills": skills.duplicate(),
 	}
 
 
@@ -149,4 +165,10 @@ static func from_dict(data: Variant) -> PlayerProfile:
 		for flag: Variant in facts:
 			if typeof(flag) == TYPE_STRING and typeof(facts[flag]) == TYPE_BOOL and facts[flag]:
 				profile.flags[flag] = true
+	var best: Variant = data.get("skills")
+	if typeof(best) == TYPE_DICTIONARY:
+		for skill: Variant in best:
+			var points: Variant = best[skill]
+			if typeof(skill) == TYPE_STRING and typeof(points) in [TYPE_INT, TYPE_FLOAT]:
+				profile.skills[skill] = clampi(int(points), 0, 100)
 	return profile

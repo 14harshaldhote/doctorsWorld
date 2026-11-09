@@ -1,0 +1,40 @@
+{
+	"training_history": {
+		"patient": "Mr. Ravi Kumar",
+		"about": "52 · stomach pain since last night",
+		"actor": "iyer",
+		"limit": 5,
+		"opening": "Mr. Kumar today. Fifty-two, stomach pain, and a terrible patient. Go on. Ask.",
+		"questions": [
+			{"id": "onset", "ask": "When did the pain start, and has it moved?", "weight": "key",
+				"answer": "Last night, around my belly button. This morning it moved down here, low on the right.",
+				"fact": "Pain moved from belly button to low right",
+				"why": "Pain that starts at the belly button and moves low on the right is the classic story of appendicitis."},
+			{"id": "allergy", "ask": "Are you allergic to anything?", "weight": "key",
+				"answer": "Penicillin. I came up in a rash once. Big one.",
+				"fact": "Allergic to penicillin",
+				"why": "He's allergic to penicillin. The usual antibiotic before surgery would have given him a reaction on the table."},
+			{"id": "medicines", "ask": "Do you take any medicines?", "weight": "key",
+				"answer": "A blood thinner. For my heart. And something for acidity, when I remember.",
+				"fact": "Takes a blood thinner",
+				"why": "He takes a blood thinner. Operate without knowing and he bleeds, a lot."},
+			{"id": "meal", "ask": "When did you last eat or drink?", "weight": "key",
+				"answer": "Breakfast at eight. Two idlis and tea. Is that bad?",
+				"fact": "Ate at 08:00",
+				"why": "He ate at eight. A full stomach under anaesthetic can come back up into the lungs, so surgery has to wait."},
+			{"id": "where", "ask": "Show me exactly where it hurts.", "weight": "useful",
+				"answer": "Here. Sharp when I walk, worse when I cough. Don't press it. Don't.",
+				"fact": "Sharp low right, worse on coughing"},
+			{"id": "surgery", "ask": "Have you had any operations before?", "weight": "useful",
+				"answer": "My tonsils. I was eight. I still remember the ice cream.",
+				"fact": "Tonsils out as a child"},
+			{"id": "smoke", "ask": "Do you smoke or drink?", "weight": "useful",
+				"answer": "I gave up smoking. Mostly. Weekends don't count.",
+				"fact": "Smokes at weekends"},
+			{"id": "cricket", "ask": "Do you follow the cricket?", "weight": "none",
+				"answer": "Who doesn't? That's one question gone, Doctor. Patients get tired. So do I."},
+			{"id": "job", "ask": "Is it stressful at work?", "weight": "none",
+				"answer": "I'm a bank manager. Everything is stressful. It's not why my belly hurts."}
+		]
+	}
+}

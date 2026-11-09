@@ -66,7 +66,7 @@ how you know you're winning.
 ## What works right now
 
 The game is being built in stages, and the old 2D version has been retired
-(it's kept safe on the `swift-prototype` branch). Stages 1 and 2 of the 3D game
+(it's kept safe on the `swift-prototype` branch). Stages 1 to 3 of the 3D game
 are in:
 
 - The title screen: the hospital at dusk, an ambulance, a doctor wandering about.
@@ -87,6 +87,18 @@ are in:
 - People move when they talk: hands, shrugs, nods, turning to look at whoever
   is speaking, lips that keep time, and a murmur of a voice. Nurses gossip by
   the vending machine whether you're listening or not.
+- Day 2, the skills lab. Six stations, three trainers, and a sign promising
+  that everything you break is plastic. Scrub in without touching your face
+  (you will want to). Read a patient monitor before Dr. Iyer reads you.
+  Interview Mr. Kumar, who is Dr. Iyer in a terrible mood, and find what
+  could kill him in five questions. Learn the instruments, then call for them
+  while Tom waits with his eyebrows. Put in an IV line with hands that won't
+  stay still. Stitch a cut neatly, because patients judge you by the scar.
+- Every task is scored out of 100 with up to three stars, and the score card
+  tells you exactly what you did wrong and why it would have mattered.
+  Try again as often as you like; only your best counts, and only
+  improvements earn more XP. Finish all six and Dr. Iyer has news about
+  tomorrow.
 
 Screenshots of every screen are rebuilt automatically after each change, on
 the [`screenshots` branch](../../tree/screenshots).

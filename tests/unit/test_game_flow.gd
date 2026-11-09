@@ -106,3 +106,53 @@ func test_a_career_that_missed_the_opening_sees_it_on_continue() -> void:
 	(main.screen as Opening).skip()
 	expect(main.screen is Lobby, "then the hospital")
 	_clear()
+
+
+func test_the_end_of_day_one_leads_to_the_skills_lab_on_day_two() -> void:
+	var main := _main()
+	main.profile.name = "Kiran Rao"
+	main.profile.created = true
+	main.profile.opening_seen = true
+	for flag in ["met_iyer", "day1_grace", "day1_patient"]:
+		main.profile.set_flag(flag)
+	main.show_hospital()
+	var lobby := main.screen as Lobby
+	expect(lobby != null, "Day 1 is in the lobby")
+	lobby._start_talk("iyer")
+	for frame in 4000:
+		if not lobby.story.is_playing():
+			break
+		if lobby.talk_ui.is_choosing():
+			lobby.story.choose(0)
+		elif not lobby.story.is_busy():
+			lobby.talk_ui.tap()
+		lobby._process(1.0 / 30.0)
+	expect(main.screen == lobby, "a moment to take in the goodbye")
+	for frame in 120:
+		if main.screen != lobby:
+			break
+		lobby._process(1.0 / 30.0)
+	var lab := main.screen as SkillsLab
+	expect(lab != null, "then Day 2 starts in the skills lab")
+	expect_equal(main.profile.day, 2)
+	expect_equal(main.profile.clock_text(), "07:00", "at seven sharp")
+	expect(lab != null and lab.mode == "story", "with a welcome")
+	var saved: PlayerProfile = SaveStore.new(SAVE).load_or_start()["profile"]
+	expect_equal(saved.day, 2, "the new day is saved")
+	main.show_title()
+	(main.screen as TitleScreen).continue_pressed.emit()
+	expect(main.screen is SkillsLab, "continue returns to the lab")
+	_clear()
+
+
+func test_a_save_that_finished_day_one_before_the_lab_moves_on() -> void:
+	var main := _main()
+	main.profile.name = "Kiran Rao"
+	main.profile.created = true
+	main.profile.opening_seen = true
+	for flag in ["met_iyer", "day1_grace", "day1_patient", "day1_iyer"]:
+		main.profile.set_flag(flag)
+	main.show_hospital()
+	expect(main.screen is SkillsLab, "straight to Day 2")
+	expect_equal(main.profile.day, 2)
+	_clear()

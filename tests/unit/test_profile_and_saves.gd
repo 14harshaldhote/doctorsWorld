@@ -141,6 +141,26 @@ func test_story_progress_is_saved_and_repaired() -> void:
 	expect(not damaged.opening_seen)
 
 
+func test_training_best_scores_are_kept_saved_and_repaired() -> void:
+	var profile := PlayerProfile.new()
+	expect_equal(profile.best_score("scrub"), -1, "nothing tried yet")
+	expect(profile.record_score("scrub", 72), "a first score is a best")
+	expect(not profile.record_score("scrub", 60), "a lower score is not")
+	expect_equal(profile.best_score("scrub"), 72)
+	expect(profile.record_score("scrub", 140), "a higher score is")
+	expect_equal(profile.best_score("scrub"), 100, "scores stop at 100")
+	profile.record_score("iv", 0)
+	var back := PlayerProfile.from_dict(profile.to_dict())
+	expect_equal(back.best_score("scrub"), 100)
+	expect_equal(back.best_score("iv"), 0, "a zero is still a try")
+	var damaged := PlayerProfile.from_dict({"skills": {"scrub": 400, "monitor": "great", "iv": -3, "stitch": 55.6}})
+	expect_equal(damaged.best_score("scrub"), 100, "out-of-range scores are clamped")
+	expect_equal(damaged.best_score("monitor"), -1, "nonsense is dropped")
+	expect_equal(damaged.best_score("iv"), 0)
+	expect_equal(damaged.best_score("stitch"), 55)
+	expect(PlayerProfile.from_dict({"skills": "lots"}).skills.is_empty(), "a broken list of scores is ignored")
+
+
 func test_version_1_saves_still_load() -> void:
 	var decoded := SaveStore.decode("{\"version\": 1, \"profile\": {\"name\": \"Mei Lin\", \"created\": true}}")
 	var profile: PlayerProfile = decoded["profile"]

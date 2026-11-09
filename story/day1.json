@@ -110,7 +110,9 @@
 		{"if": "corrected_iyer", "then": [
 			{"say": "iyer", "text": "And tomorrow, be early by more than two minutes.", "gesture": "wag"}
 		]},
-		{"say": "iyer", "text": "That's Day 1. Go home. Sleep. Come back sharper.", "gesture": "wave", "mood": "happy"},
+		{"say": "iyer", "text": "That's Day 1. Tomorrow, seven sharp, the skills lab. Grace and I will find out what your hands can do.",
+			"gesture": "point", "mood": "happy"},
+		{"say": "iyer", "text": "Now go home. Sleep. Come back sharper.", "gesture": "wave", "head": "nod"},
 		{"minutes": 5}
 	],
 	"iyer_waiting": [

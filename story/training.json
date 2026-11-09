@@ -1,0 +1,59 @@
+{
+	"welcome": [
+		{"say": "iyer", "text": "Morning, {called}. On time. I'm almost disappointed.", "mood": "calm", "gesture": "fold_arms"},
+		{"say": "grace", "text": "Welcome to the skills lab. Six stations. Everything you break in here is plastic.", "mood": "happy",
+			"gesture": "open_hands", "to": "you"},
+		{"say": "iyer", "text": "Scrubbing, monitors, histories, instruments, IV lines, stitches. You'll use every one of them in theatre, usually all at once.", "gesture": "explain"},
+		{"say": "iyer", "text": "Pick a station. Mistakes are free today. Tomorrow they're not.", "gesture": "point", "head": "nod"}
+	],
+	"scrub_intro": [
+		{"say": "grace", "text": "Theatre rule one: nothing dirty touches the patient. That includes you.", "gesture": "wag", "mood": "focused"},
+		{"say": "grace", "text": "Water. Soap. Every part of both hands, properly. Rinse, towel, gown, gloves. In that order.", "gesture": "explain"},
+		{"say": "grace", "text": "And once you've soaped, don't touch your face. Not your mask, not your nose. I'm watching.", "gesture": "point", "head": "nod"}
+	],
+	"monitor_intro": [
+		{"say": "iyer", "text": "This screen talks to you all operation long. Most people stop listening. Then it starts screaming.", "gesture": "point"},
+		{"say": "iyer", "text": "Learn the four numbers. Then I'll show you patients, and you tell me what's wrong before it's too late.", "gesture": "explain", "head": "nod"}
+	],
+	"history_intro": [
+		{"say": "iyer", "text": "Half of surgery is asking the right question before the knife comes out.", "gesture": "explain"},
+		{"say": "iyer", "text": "I'll be the patient. Mr. Kumar. You get five questions. Find what could hurt him on the table.", "gesture": "chest",
+			"mood": "happy"}
+	],
+	"instruments_intro": [
+		{"say": "tom", "text": "Tom D'Souza. Scrub nurse. I hand you things, you don't drop them. That's our whole relationship.", "gesture": "chest",
+			"mood": "happy"},
+		{"say": "tom", "text": "First, match each job to the right instrument. Then Dr. Iyer calls for things and you tell me, fast.", "gesture": "explain"}
+	],
+	"iv_intro": [
+		{"say": "grace", "text": "An IV line. You'll do a hundred of these before you do one operation.", "gesture": "explain"},
+		{"say": "grace", "text": "Choose a good vein, get the angle right, and keep your hand still. The arm is plastic. Pretend it isn't.", "gesture": "point",
+			"head": "nod"}
+	],
+	"stitch_intro": [
+		{"say": "iyer", "text": "Every operation ends the same way: someone has to close.", "gesture": "explain"},
+		{"say": "iyer", "text": "Stitches across the cut, end to end, evenly spaced. Patients judge you by the scar, not the surgery.", "gesture": "point",
+			"mood": "calm"}
+	],
+	"again": [
+		{"say": "grace", "text": "Again? Good. Habits are built, not born.", "gesture": "open_hands", "mood": "happy"}
+	],
+	"done": [
+		{"say": "iyer", "text": "Six for six. I've seen worse. I've also seen better, but I'm in a good mood.", "mood": "happy", "gesture": "fold_arms"},
+		{"say": "grace", "text": "She means well done.", "gesture": "shrug", "to": "you"},
+		{"say": "iyer", "text": "Tomorrow you assist me in theatre. Appendectomy. A student called Rohit, nineteen. Read his notes tonight.",
+			"gesture": "point", "mood": "focused"},
+		{"choose": [
+			{"tone": "Confident", "text": "I'll be ready.", "trust": {"iyer": 2}, "then": [
+				{"say": "iyer", "text": "Everyone's ready until the first cut. We'll see.", "gesture": "explain", "head": "nod"}
+			]},
+			{"tone": "Honest", "text": "I'm nervous.", "trust": {"iyer": 4}, "flag": "nervous_before_theatre", "then": [
+				{"say": "iyer", "text": "Good. Nervous people wash their hands properly.", "gesture": "open_hands", "mood": "happy"}
+			]},
+			{"tone": "Joke", "text": "Can Mr. Kumar come too?", "trust": {"grace": 3}, "then": [
+				{"say": "grace", "text": "He's busy. He has a very full stomach.", "mood": "happy", "gesture": "shrug"}
+			]}
+		]},
+		{"flag": "training_done"}
+	]
+}

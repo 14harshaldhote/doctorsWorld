@@ -73,15 +73,43 @@ func _on_opening_finished(_skipped: bool) -> void:
 
 ## The hospital. A career that has not seen the opening plays it first, and
 ## Day 1 starts with Dr. Iyer at the door until the player has met her.
+## From Day 2 the doctor is in the skills lab.
 func show_hospital() -> void:
 	if not profile.opening_seen:
 		show_opening()
 		return
+	if profile.day == 1 and profile.has_flag("day1_iyer"):
+		# Day 1 was finished before the skills lab existed.
+		_start_day(2)
+		return
 	Voice.enabled = profile.sound_on
+	if profile.day >= 2:
+		show_skills_lab()
+		return
 	var lobby := Lobby.new(profile, not profile.has_flag("met_iyer"))
 	lobby.save_requested.connect(_save)
 	lobby.menu_choice.connect(_on_menu_choice)
+	lobby.day_finished.connect(_on_day_finished)
 	_swap(lobby)
+
+
+## Day 2: six training stations with Dr. Iyer, Sister Grace and Tom.
+func show_skills_lab() -> void:
+	var lab := SkillsLab.new(profile)
+	lab.save_requested.connect(_save)
+	lab.menu_choice.connect(_on_menu_choice)
+	_swap(lab)
+
+
+func _on_day_finished() -> void:
+	_start_day(profile.day + 1)
+
+
+func _start_day(day: int) -> void:
+	profile.day = day
+	profile.minutes = PlayerProfile.DAY_START
+	_save()
+	show_hospital()
 
 
 func _on_menu_choice(choice: String) -> void:

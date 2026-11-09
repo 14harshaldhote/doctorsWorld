@@ -117,18 +117,44 @@ func test_validation_catches_mistakes() -> void:
 func test_every_story_file_is_valid() -> void:
 	var cast := StoryBook.cast()
 	expect(cast.has("iyer") and cast.has("grace"), "the cast loads")
-	var actions: Array = Opening.ACTIONS + Lobby.ACTIONS + StoryPlayer.GENERIC
+	var actions: Array = Opening.ACTIONS + Lobby.ACTIONS + SkillsLab.ACTIONS + StoryPlayer.GENERIC
 	var names := StoryBook.chapter_names()
-	for expected in ["banter", "day1", "opening"]:
+	for expected in ["banter", "cases", "day1", "opening", "training"]:
 		expect(names.has(expected), "chapter %s exists" % expected)
 	for chapter_name in names:
-		if chapter_name == "banter":
+		# Banter and patient cases are data, not conversations.
+		if chapter_name in ["banter", "cases"]:
 			continue
 		var chapter := StoryBook.chapter(chapter_name)
 		expect(not chapter.is_empty(), "%s has conversations" % chapter_name)
 		for id: String in chapter:
 			var problems := StoryRunner.validate(chapter[id], cast, actions, "%s.%s" % [chapter_name, id])
 			expect(problems.is_empty(), "\n".join(problems))
+
+
+func test_cases_have_patients_and_explained_questions() -> void:
+	var cases := StoryBook.chapter("cases")
+	expect(cases.has("training_history"), "the training history case exists")
+	var cast := StoryBook.cast()
+	for case_id: String in cases:
+		var data: Dictionary = cases[case_id]
+		for key in ["patient", "about", "actor", "limit", "opening", "questions"]:
+			expect(data.has(key), "%s has %s" % [case_id, key])
+		expect(cast.has(str(data.get("actor", ""))), "%s is played by someone in the cast" % case_id)
+		var ids := {}
+		var keys := 0
+		for entry: Dictionary in data.get("questions", []):
+			var question_id := str(entry.get("id", ""))
+			expect(not question_id.is_empty() and not ids.has(question_id), "%s: question ids are unique" % case_id)
+			ids[question_id] = true
+			expect(not str(entry.get("ask", "")).is_empty() and not str(entry.get("answer", "")).is_empty(),
+				"%s.%s has a question and an answer" % [case_id, question_id])
+			var weight := str(entry.get("weight", ""))
+			expect(weight in ["key", "useful", "none"], "%s.%s weight is known" % [case_id, question_id])
+			if weight == "key":
+				keys += 1
+				expect(not str(entry.get("why", "")).is_empty(), "%s.%s explains why it matters" % [case_id, question_id])
+		expect(keys >= 2 and keys <= int(data.get("limit", 0)), "%s: the key questions fit in the limit" % case_id)
 
 
 func test_banter_names_real_people_and_gestures() -> void:
