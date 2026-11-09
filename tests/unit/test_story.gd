@@ -117,9 +117,9 @@ func test_validation_catches_mistakes() -> void:
 func test_every_story_file_is_valid() -> void:
 	var cast := StoryBook.cast()
 	expect(cast.has("iyer") and cast.has("grace"), "the cast loads")
-	var actions: Array = Opening.ACTIONS + Lobby.ACTIONS + SkillsLab.ACTIONS + StoryPlayer.GENERIC
+	var actions: Array = Opening.ACTIONS + Lobby.ACTIONS + SkillsLab.ACTIONS + Theatre.ACTIONS + StoryPlayer.GENERIC
 	var names := StoryBook.chapter_names()
-	for expected in ["banter", "cases", "day1", "opening", "training"]:
+	for expected in ["banter", "cases", "day1", "opening", "theatre", "training"]:
 		expect(names.has(expected), "chapter %s exists" % expected)
 	for chapter_name in names:
 		# Banter and patient cases are data, not conversations.
@@ -130,6 +130,41 @@ func test_every_story_file_is_valid() -> void:
 		for id: String in chapter:
 			var problems := StoryRunner.validate(chapter[id], cast, actions, "%s.%s" % [chapter_name, id])
 			expect(problems.is_empty(), "\n".join(problems))
+
+
+func test_questions_can_be_asked_again_and_hidden_once_answered() -> void:
+	var runner := _runner()
+	runner.start([
+		{"choose": [
+			{"tone": "Ask", "text": "When did it start?", "if": "!asked", "again": true, "flag": "asked",
+				"then": [{"say": "iyer", "text": "Yesterday."}]},
+			{"tone": "Know", "text": "You knew.", "if": "asked", "trust": {"iyer": 2}},
+			{"tone": "Go on", "text": "Let's go."},
+		]},
+		{"say": "iyer", "text": "Theatre, then."},
+	])
+	var first := runner.next()
+	expect_equal(first["type"], "choice")
+	var tones: Array = []
+	for option: Dictionary in runner.offered():
+		tones.append(option["tone"])
+	expect_equal(tones, ["Ask", "Go on"], "a reply whose if fails is not offered")
+	runner.choose(0)
+	expect_equal(runner.next()["text"], "When did it start?")
+	expect_equal(runner.next()["text"], "Yesterday.")
+	expect_equal(runner.next()["type"], "choice", "again offers the same question once more")
+	tones.clear()
+	for option: Dictionary in runner.offered():
+		tones.append(option["tone"])
+	expect_equal(tones, ["Know", "Go on"], "an answered question is gone, a new one appears")
+	runner.choose(0)
+	expect_equal(runner.next()["text"], "You knew.")
+	expect_equal(runner.next()["text"], "Theatre, then.", "a reply without again moves on")
+	var problems := StoryRunner.validate([{"choose": [
+		{"tone": "A", "text": "a", "again": true},
+		{"tone": "B", "text": "b", "if": "x"},
+	]}], StoryBook.cast(), [], "test")
+	expect("\n".join(problems).contains("a reply that always moves on"), "a choice that could loop forever is caught")
 
 
 func test_cases_have_patients_and_explained_questions() -> void:

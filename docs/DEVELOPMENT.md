@@ -15,8 +15,8 @@ plan"). This file covers how to build, run and test the game.
 | 1. Avatar and lobby | Godot project, avatar creator, title and name screens, walkable lobby, CI | Done |
 | 2. Intro story | Story engine (replies, trust, moods), talking animation and voices, graduation, job letter and first-morning cutscenes, Dr. Iyer's welcome, lobby conversations and banter | Done |
 | 3. Training | Day 2 skills lab: six scored, explained practice tasks (scrub in, monitor, history, instruments, IV line, stitching), trainers, best scores, Day 1 to Day 2 | Done |
-| 4. First operation | Rohit's appendectomy, using the skills from training | Next |
-| 4b. Wards and patients | Patient stories, examinations, conversations with families | |
+| 4. First operation | Day 3: Rohit's consent with his mother, scrubbing in, the time-out, instrument calls with Tom, incision, a complication called by Dr. Khan, the swab count, stitching, the talk with his family and Dr. Iyer's debrief; won, struggled or failed (Dr. Iyer takes over), Day 4 back at the lab | Done |
+| 4b. Wards and patients | Patient stories, examinations, conversations with families | Next |
 | 5. Operations | Theatre with an AI team and a nurse handing instruments | |
 | 6. Career and politics | Promotions, reputation, rivals and hospital politics | |
 
@@ -73,18 +73,25 @@ game/ui/                UiKit (colours, fonts, buttons), title, name and avatar
                         operations)
 game/ui/training/       One screen per training task, on a shared TrainingView
                         (instructions, coaching, score card)
+game/ui/surgery/        OperationView: the operation screen (monitor, team meter,
+                        instrument ring, time-out board, decisions, score card)
 game/training/          The training tasks' rules and scoring (no visuals), the
                         instruments, and AutoPlayer (plays any task well, for
                         tests and screenshots)
 game/training/stations/ The six stations in 3D: sink, monitor bed, history chair,
                         instrument trolley, practice arm, suture pad
+game/surgery/           OperationTask (the appendectomy's rules: time-out, calls,
+                        traced and held actions, complications, the count,
+                        scoring) and OperatingTable (the table, the wound and the
+                        first-person hands in 3D)
 game/story/             StoryBook (loads story files), StoryRunner (steps,
                         replies, trust), StoryPlayer (puts a story on stage),
                         Opening and its sets (graduation hall, home, morning)
 game/world/             StageLighting, the hospital front, the Day 1 lobby, the Day 2
-                        skills lab
+                        skills lab, the Day 3 ward and Theatre 2
 story/                  The words: cast, opening, Day 1 conversations, banter, training
-                        conversations, patient cases (cases.json)
+                        conversations, patient cases (cases.json), the theatre day
+                        (theatre.json)
 assets/fonts/           Fredoka and Nunito (SIL Open Font License)
 tests/                  The test runner and unit tests
 tools/                  Screenshot tool used by CI
@@ -101,6 +108,11 @@ conversation is a list of steps:
 {"do": "walk", "who": "you", "to": "entrance"}
 {"if": "asked_nair_wait", "then": [...], "else": [...]}
 ```
+
+A reply with `"if": "flag"` is only offered while the flag is set (`"!flag"`
+for unset), and `"again": true` brings the same choice back after it, which
+makes question lists ("Ask Rohit", "Allergies"...) that end with a reply that
+moves on. Every choice needs at least one reply without `if` or `again`.
 
 `{name}`, `{first}`, `{last}`, `{called}` and `{title}` fill in the player's
 name. The full list of keys is at the top of `game/story/story_runner.gd`, and

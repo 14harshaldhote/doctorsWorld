@@ -1,0 +1,964 @@
+{
+	"morning": [
+		{
+			"say": "iyer",
+			"text": "Morning, {called}. Did you read his notes?",
+			"mood": "focused",
+			"gesture": "fold_arms"
+		},
+		{
+			"choose": [
+				{
+					"tone": "Honest",
+					"text": "Twice. Then I lay awake reading them in my head.",
+					"trust": {
+						"iyer": 3
+					},
+					"then": [
+						{
+							"say": "iyer",
+							"text": "Good. Sleep is for people who aren't operating.",
+							"mood": "happy",
+							"head": "nod"
+						}
+					]
+				},
+				{
+					"tone": "Confident",
+					"text": "Every word. Rohit Kulkarni, nineteen, right-sided pain.",
+					"trust": {
+						"iyer": 1
+					},
+					"then": [
+						{
+							"say": "iyer",
+							"text": "We'll see which words stuck.",
+							"gesture": "explain"
+						}
+					]
+				}
+			]
+		},
+		{
+			"say": "iyer",
+			"text": "Consent first. He's in bed four. His mother is... with him.",
+			"gesture": "point",
+			"mood": "calm"
+		},
+		{
+			"say": "iyer",
+			"text": "You explain it. I'll stand right here, pretending not to listen.",
+			"gesture": "fold_arms"
+		},
+		{
+			"flag": "theatre_morning"
+		}
+	],
+	"consent": [
+		{
+			"say": "sunita",
+			"text": "Doctor, finally! Tell them it's gas. He ate street food. Pani puri. I told him not to.",
+			"mood": "worried",
+			"gesture": "explain"
+		},
+		{
+			"say": "rohit",
+			"text": "Mum...",
+			"mood": "tired",
+			"head": "down"
+		},
+		{
+			"say": "sunita",
+			"text": "His final exams are on Thursday. Just give him something for the pain and we'll go home.",
+			"gesture": "open_hands"
+		},
+		{
+			"say": "iyer",
+			"text": "{called}. Over to you.",
+			"gesture": "open_hands",
+			"to": "you"
+		},
+		{
+			"choose": [
+				{
+					"tone": "Ask Rohit",
+					"text": "Rohit, how long has it really been hurting?",
+					"if": "!rohit_asked_pain",
+					"again": true,
+					"flag": "rohit_asked_pain",
+					"trust": {
+						"rohit": 3
+					},
+					"then": [
+						{
+							"say": "rohit",
+							"text": "Since... yesterday morning.",
+							"mood": "worried",
+							"head": "down",
+							"to": "sunita"
+						},
+						{
+							"say": "sunita",
+							"text": "Yesterday? You told me it started last night!",
+							"mood": "shocked",
+							"gesture": "open_hands",
+							"to": "rohit"
+						},
+						{
+							"say": "rohit",
+							"text": "I didn't want to miss the exam. It started round my belly button. Now it's low on the right, and coughing hurts.",
+							"mood": "worried",
+							"gesture": "chest"
+						},
+						{
+							"say": "iyer",
+							"text": "Pain that moves down to the right. Remember that one, {called}.",
+							"gesture": "explain",
+							"to": "you"
+						},
+						{
+							"flag": "rohit_pain_day"
+						}
+					]
+				},
+				{
+					"tone": "Allergies",
+					"text": "Is he allergic to anything? Any medicines?",
+					"if": "!rohit_asked_allergy",
+					"again": true,
+					"flag": "rohit_asked_allergy",
+					"then": [
+						{
+							"say": "sunita",
+							"text": "No, nothing. He's never ill.",
+							"gesture": "shrug"
+						},
+						{
+							"say": "rohit",
+							"text": "Mum. The rash. When I was small. That injection.",
+							"to": "sunita",
+							"head": "tilt"
+						},
+						{
+							"say": "sunita",
+							"text": "Oh! Yes. Penicillin. His whole face swelled up. It was so long ago, I forgot.",
+							"mood": "shocked",
+							"gesture": "chest"
+						},
+						{
+							"say": "iyer",
+							"text": "And that is why we ask. Write it down, big.",
+							"gesture": "point",
+							"to": "you",
+							"head": "nod"
+						},
+						{
+							"flag": "rohit_allergy_known"
+						}
+					]
+				},
+				{
+					"tone": "Ask about the exam",
+					"text": "When is the exam, exactly?",
+					"if": "!rohit_asked_exam",
+					"again": true,
+					"flag": "rohit_asked_exam",
+					"trust": {
+						"sunita": 2
+					},
+					"then": [
+						{
+							"say": "sunita",
+							"text": "Thursday. Engineering finals. His father and I saved for four years for that college.",
+							"gesture": "explain"
+						},
+						{
+							"say": "rohit",
+							"text": "There's a supplementary exam in August, Mum. People take it all the time.",
+							"to": "sunita"
+						},
+						{
+							"say": "sunita",
+							"text": "People. Not my son.",
+							"mood": "angry",
+							"gesture": "fold_arms"
+						}
+					]
+				},
+				{
+					"tone": "Explain",
+					"text": "Mrs. Kulkarni, let me tell you what's going on.",
+					"then": [
+						{
+							"choose": [
+								{
+									"tone": "Be straight",
+									"text": "His appendix is inflamed. If it bursts, it gets dangerous fast. It has to come out today.",
+									"then": [
+										{
+											"if": "rohit_pain_day",
+											"then": [
+												{
+													"say": "sunita",
+													"text": "A whole day. And he said nothing.",
+													"mood": "worried",
+													"head": "down"
+												},
+												{
+													"say": "sunita",
+													"text": "Okay. Okay. Take it out. Where do I sign?",
+													"gesture": "open_hands"
+												},
+												{
+													"trust": {
+														"sunita": 6
+													}
+												}
+											],
+											"else": [
+												{
+													"say": "sunita",
+													"text": "Today? Can't it wait until after Thursday? Three days!",
+													"mood": "worried",
+													"gesture": "open_hands"
+												},
+												{
+													"choose": [
+														{
+															"tone": "Hold firm",
+															"text": "It can't wait three days. Exams come back. A burst appendix doesn't wait.",
+															"trust": {
+																"sunita": 2,
+																"iyer": 2
+															},
+															"then": [
+																{
+																	"say": "sunita",
+																	"text": "...Fine. But you look after him. You, personally.",
+																	"mood": "worried",
+																	"gesture": "point"
+																}
+															]
+														},
+														{
+															"tone": "Meet her halfway",
+															"text": "We could watch him for a few hours first, and operate this afternoon.",
+															"trust": {
+																"sunita": 5
+															},
+															"then": [
+																{
+																	"say": "iyer",
+																	"text": "A few hours. Not a minute longer. I'll book theatre for two o'clock.",
+																	"mood": "focused",
+																	"gesture": "point"
+																},
+																{
+																	"flag": "rohit_delayed"
+																}
+															]
+														}
+													]
+												}
+											]
+										}
+									]
+								},
+								{
+									"tone": "Reassure",
+									"text": "It's a small operation. He'll be home in two days, and he can sit the exam in August.",
+									"trust": {
+										"sunita": 3,
+										"rohit": 3
+									},
+									"then": [
+										{
+											"say": "sunita",
+											"text": "August...",
+											"mood": "worried",
+											"head": "tilt"
+										},
+										{
+											"say": "rohit",
+											"text": "Mum. Please. It really hurts.",
+											"mood": "worried",
+											"to": "sunita"
+										},
+										{
+											"say": "sunita",
+											"text": "...All right. Do it.",
+											"gesture": "open_hands"
+										}
+									]
+								},
+								{
+									"tone": "Wait and see",
+									"text": "Let's give him something for the pain and see how he is this afternoon.",
+									"trust": {
+										"sunita": 7
+									},
+									"then": [
+										{
+											"say": "sunita",
+											"text": "Thank you! Finally, a sensible doctor.",
+											"mood": "happy",
+											"gesture": "open_hands"
+										},
+										{
+											"say": "iyer",
+											"text": "This afternoon, then. Two o'clock. Not one minute later.",
+											"mood": "focused",
+											"gesture": "point",
+											"to": "you"
+										},
+										{
+											"flag": "rohit_delayed"
+										}
+									]
+								},
+								{
+									"tone": "Pull rank",
+									"text": "With respect, he's an adult. It's his decision, not yours.",
+									"trust": {
+										"sunita": -10,
+										"rohit": 4
+									},
+									"then": [
+										{
+											"say": "sunita",
+											"text": "He's my son!",
+											"mood": "angry",
+											"gesture": "wag"
+										},
+										{
+											"say": "rohit",
+											"text": "I'm nineteen, Mum. I'll sign it myself.",
+											"mood": "focused",
+											"to": "sunita"
+										},
+										{
+											"say": "sunita",
+											"text": "...Then sign. Since nobody listens to me.",
+											"mood": "angry",
+											"gesture": "fold_arms"
+										}
+									]
+								}
+							]
+						}
+					]
+				}
+			],
+			"about": "sunita"
+		},
+		{
+			"flag": "rohit_consent"
+		},
+		{
+			"if": "rohit_delayed",
+			"then": [
+				{
+					"say": "iyer",
+					"text": "Two o'clock, theatre two. Scrub when they call you.",
+					"gesture": "point",
+					"to": "you"
+				}
+			],
+			"else": [
+				{
+					"say": "iyer",
+					"text": "Theatre two in twenty minutes. Go and scrub.",
+					"gesture": "point",
+					"to": "you"
+				}
+			]
+		},
+		{
+			"say": "rohit",
+			"text": "Doctor? You'll be in there, right? The whole time?",
+			"mood": "worried",
+			"to": "you"
+		},
+		{
+			"choose": [
+				{
+					"tone": "Honest",
+					"text": "The whole time. Dr. Iyer too. You're in good hands.",
+					"trust": {
+						"rohit": 3
+					}
+				},
+				{
+					"tone": "Joke",
+					"text": "I'll be the one with the shaky hands. Kidding. Mostly.",
+					"trust": {
+						"rohit": 2,
+						"sunita": -2
+					},
+					"then": [
+						{
+							"say": "sunita",
+							"text": "Not funny!",
+							"mood": "angry",
+							"gesture": "wag"
+						},
+						{
+							"say": "rohit",
+							"text": "It was a bit funny.",
+							"mood": "happy"
+						}
+					]
+				}
+			]
+		},
+		{
+			"minutes": 15
+		}
+	],
+	"scrub": [
+		{
+			"say": "tom",
+			"text": "Morning, Doctor. Same as the lab, but faster. The patient's already asleep in there.",
+			"gesture": "explain"
+		},
+		{
+			"say": "tom",
+			"text": "And don't touch your face. Everyone touches their face.",
+			"gesture": "wag",
+			"mood": "happy"
+		}
+	],
+	"khan_intro": [
+		{
+			"say": "khan",
+			"text": "So you're the new one. Fatima Khan. I keep him asleep and alive. You do the rest.",
+			"mood": "focused",
+			"gesture": "explain"
+		},
+		{
+			"say": "tom",
+			"text": "Gloves fit? Good. Don't touch anything that isn't blue.",
+			"gesture": "point",
+			"mood": "happy"
+		},
+		{
+			"choose": [
+				{
+					"tone": "Polite",
+					"text": "Good to meet you, Dr. Khan.",
+					"trust": {
+						"khan": 2
+					},
+					"then": [
+						{
+							"say": "khan",
+							"text": "Say that again after the time-out.",
+							"gesture": "fold_arms"
+						}
+					]
+				},
+				{
+					"tone": "Honest",
+					"text": "Is it normal that my hands are shaking?",
+					"trust": {
+						"khan": 3
+					},
+					"then": [
+						{
+							"say": "tom",
+							"text": "Before? Always. During? Never. That's the rule.",
+							"gesture": "shrug",
+							"mood": "happy"
+						},
+						{
+							"say": "khan",
+							"text": "And if they shake during, I'll see it on his heart rate before you do.",
+							"gesture": "explain"
+						}
+					]
+				}
+			]
+		},
+		{
+			"say": "iyer",
+			"text": "Time-out, everyone. Hands off. Then we start.",
+			"gesture": "raise",
+			"mood": "focused"
+		}
+	],
+	"after_won": [
+		{
+			"say": "sunita",
+			"text": "Doctor? Is he... is it over?",
+			"mood": "worried",
+			"gesture": "chest"
+		},
+		{
+			"choose": [
+				{
+					"tone": "Plain",
+					"text": "It went well. The appendix is out, and he's waking up now.",
+					"trust": {
+						"sunita": 8
+					}
+				},
+				{
+					"tone": "Warm",
+					"text": "He's fine. He asked about his exam as he fell asleep.",
+					"trust": {
+						"sunita": 10,
+						"rohit": 2
+					}
+				}
+			]
+		},
+		{
+			"say": "sunita",
+			"text": "Thank God. Thank you. Thank you, Doctor.",
+			"mood": "happy",
+			"gesture": "open_hands"
+		},
+		{
+			"if": "rohit_pain_day",
+			"then": [
+				{
+					"say": "sunita",
+					"text": "A whole day he hid it from me. I'm going to shout at him.",
+					"mood": "angry",
+					"gesture": "wag"
+				},
+				{
+					"say": "sunita",
+					"text": "After I hug him.",
+					"mood": "happy",
+					"head": "tilt"
+				}
+			]
+		},
+		{
+			"if": "op_bleeding",
+			"then": [
+				{
+					"say": "iyer",
+					"text": "There was some bleeding. Your doctor had it clamped before I could say the word.",
+					"gesture": "explain",
+					"to": "sunita"
+				}
+			]
+		},
+		{
+			"if": "op_reaction",
+			"then": [
+				{
+					"say": "iyer",
+					"text": "He reacted to an antibiotic. We caught it and treated it straight away. He's fine.",
+					"gesture": "explain",
+					"to": "sunita"
+				}
+			]
+		}
+	],
+	"after_struggled": [
+		{
+			"say": "sunita",
+			"text": "Doctor? You were in there so long. What happened?",
+			"mood": "worried",
+			"gesture": "open_hands"
+		},
+		{
+			"choose": [
+				{
+					"tone": "Honest",
+					"text": "It was harder than we hoped. But he's stable, and the appendix is out.",
+					"trust": {
+						"sunita": 6,
+						"iyer": 3
+					},
+					"then": [
+						{
+							"if": "op_reaction",
+							"then": [
+								{
+									"say": "you",
+									"text": "He reacted badly to an antibiotic. Penicillin. We stopped it and treated him."
+								},
+								{
+									"say": "sunita",
+									"text": "Penicillin! I should have said. I forgot. I forgot!",
+									"mood": "shocked",
+									"gesture": "chest"
+								}
+							]
+						},
+						{
+							"if": "op_burst",
+							"then": [
+								{
+									"say": "you",
+									"text": "The appendix had burst. We had to wash out his belly. That takes time."
+								},
+								{
+									"say": "sunita",
+									"text": "Because we waited. Because I made you wait.",
+									"mood": "worried",
+									"head": "down"
+								}
+							]
+						},
+						{
+							"if": "op_bleeding",
+							"then": [
+								{
+									"say": "you",
+									"text": "A blood vessel bled. We stopped it. He may need a few extra days here."
+								}
+							]
+						},
+						{
+							"if": "op_pressure",
+							"then": [
+								{
+									"say": "you",
+									"text": "His blood pressure dropped for a while. Dr. Khan brought it back up."
+								}
+							]
+						},
+						{
+							"say": "sunita",
+							"text": "But he's okay? He's really okay?",
+							"mood": "worried",
+							"gesture": "open_hands"
+						},
+						{
+							"say": "you",
+							"text": "He's okay."
+						}
+					]
+				},
+				{
+					"tone": "Soften",
+					"text": "It went fine. A small hiccup. Nothing to worry about.",
+					"trust": {
+						"sunita": 2,
+						"iyer": -3
+					},
+					"then": [
+						{
+							"say": "sunita",
+							"text": "Okay... okay. Thank you.",
+							"head": "nod"
+						},
+						{
+							"say": "iyer",
+							"text": "A small hiccup. Interesting choice of words.",
+							"mood": "focused",
+							"gesture": "fold_arms",
+							"to": "you"
+						}
+					]
+				}
+			]
+		}
+	],
+	"after_failed": [
+		{
+			"say": "sunita",
+			"text": "Where is he? Why did Dr. Iyer go back in? Nobody tells me anything!",
+			"mood": "shocked",
+			"gesture": "open_hands"
+		},
+		{
+			"say": "iyer",
+			"text": "{called}. Tell her. I'm right here.",
+			"mood": "focused",
+			"to": "you"
+		},
+		{
+			"choose": [
+				{
+					"tone": "Honest",
+					"text": "Things went wrong in there. Dr. Iyer took over. He's alive, but he'll be in intensive care tonight.",
+					"trust": {
+						"sunita": 4,
+						"iyer": 5
+					},
+					"then": [
+						{
+							"say": "sunita",
+							"text": "Intensive care?",
+							"mood": "shocked",
+							"gesture": "chest"
+						},
+						{
+							"say": "iyer",
+							"text": "He's young and strong. I expect him to wake up tomorrow and complain about the food.",
+							"gesture": "explain",
+							"to": "sunita"
+						},
+						{
+							"say": "sunita",
+							"text": "...Can I see him?",
+							"mood": "worried"
+						},
+						{
+							"say": "iyer",
+							"text": "In an hour. I'll take you myself.",
+							"head": "nod",
+							"to": "sunita"
+						}
+					]
+				},
+				{
+					"tone": "Deflect",
+					"text": "It got complicated. These things happen sometimes.",
+					"trust": {
+						"sunita": -6,
+						"iyer": -6
+					},
+					"then": [
+						{
+							"say": "sunita",
+							"text": "These things happen? To my son?",
+							"mood": "angry",
+							"gesture": "wag"
+						},
+						{
+							"say": "iyer",
+							"text": "What happened in there is on us. All of us. He's in intensive care tonight, and he will recover.",
+							"mood": "angry",
+							"gesture": "open_hands",
+							"to": "sunita"
+						}
+					]
+				},
+				{
+					"tone": "Hand it over",
+					"text": "He's resting. Dr. Iyer will explain everything.",
+					"trust": {
+						"iyer": -4
+					},
+					"then": [
+						{
+							"say": "iyer",
+							"text": "No. You'll explain. Then I'll add the parts you leave out.",
+							"mood": "focused",
+							"gesture": "point",
+							"to": "you"
+						},
+						{
+							"say": "you",
+							"text": "...It went wrong. Dr. Iyer took over. He's in intensive care tonight, but he's alive."
+						},
+						{
+							"say": "sunita",
+							"text": "Alive. Okay. Alive.",
+							"mood": "worried",
+							"head": "down"
+						}
+					]
+				}
+			]
+		}
+	],
+	"debrief_won": [
+		{
+			"say": "iyer",
+			"text": "Clean work. You called early, you didn't panic, and you listened to Khan.",
+			"mood": "happy",
+			"gesture": "explain"
+		},
+		{
+			"if": "rohit_allergy_known",
+			"then": [
+				{
+					"say": "iyer",
+					"text": "And you asked about allergies. Half the interns I've had would have killed him with that injection.",
+					"gesture": "point"
+				}
+			]
+		},
+		{
+			"choose": [
+				{
+					"tone": "Grateful",
+					"text": "Thank you. I had a good teacher.",
+					"trust": {
+						"iyer": 2
+					},
+					"then": [
+						{
+							"say": "iyer",
+							"text": "Flattery. Noted. Still works.",
+							"mood": "happy",
+							"head": "tilt"
+						}
+					]
+				},
+				{
+					"tone": "Eager",
+					"text": "When can I do the next one?",
+					"trust": {
+						"iyer": 1
+					},
+					"then": [
+						{
+							"say": "iyer",
+							"text": "Don't push it.",
+							"gesture": "wag"
+						},
+						{
+							"say": "iyer",
+							"text": "...Soon.",
+							"mood": "happy",
+							"head": "nod"
+						}
+					]
+				}
+			]
+		},
+		{
+			"say": "iyer",
+			"text": "Go home. Eat something. You've earned it.",
+			"gesture": "open_hands"
+		},
+		{
+			"minutes": 30
+		}
+	],
+	"debrief_struggled": [
+		{
+			"say": "iyer",
+			"text": "You got there. Not prettily, but you got there.",
+			"mood": "calm",
+			"gesture": "fold_arms"
+		},
+		{
+			"if": "op_reaction",
+			"then": [
+				{
+					"say": "iyer",
+					"text": "The allergy. Ask every patient, every time. Mothers forget. Charts lie. You check.",
+					"mood": "focused",
+					"gesture": "wag"
+				}
+			]
+		},
+		{
+			"if": "op_burst",
+			"then": [
+				{
+					"say": "iyer",
+					"text": "And now you know what waiting costs. Sometimes the kind answer is the fast one.",
+					"mood": "focused",
+					"gesture": "explain"
+				}
+			]
+		},
+		{
+			"if": "op_wrong_side",
+			"then": [
+				{
+					"say": "iyer",
+					"text": "The board said left. You said yes. Read the board like it's lying to you.",
+					"mood": "focused",
+					"gesture": "point"
+				}
+			]
+		},
+		{
+			"choose": [
+				{
+					"tone": "Own it",
+					"text": "I know. I'll do better next time.",
+					"trust": {
+						"iyer": 3
+					},
+					"then": [
+						{
+							"say": "iyer",
+							"text": "Better is all I ask. Perfect is for brochures.",
+							"head": "nod"
+						}
+					]
+				},
+				{
+					"tone": "Defend",
+					"text": "It was my first one. Nobody's perfect on the first one.",
+					"trust": {
+						"iyer": -2
+					},
+					"then": [
+						{
+							"say": "iyer",
+							"text": "Rohit didn't get a first-one discount.",
+							"mood": "focused",
+							"gesture": "fold_arms"
+						}
+					]
+				}
+			]
+		},
+		{
+			"say": "iyer",
+			"text": "Go home. Sleep. Tomorrow is another day full of people who need you.",
+			"gesture": "open_hands"
+		},
+		{
+			"minutes": 30
+		}
+	],
+	"debrief_failed": [
+		{
+			"say": "iyer",
+			"text": "Sit down a minute.",
+			"mood": "calm",
+			"gesture": "open_hands"
+		},
+		{
+			"say": "iyer",
+			"text": "Today was the most expensive lesson in this job. It's rarely the hands. It's everything before the hands.",
+			"gesture": "explain"
+		},
+		{
+			"choose": [
+				{
+					"tone": "Own it",
+					"text": "It was my fault. I froze.",
+					"trust": {
+						"iyer": 4
+					},
+					"then": [
+						{
+							"say": "iyer",
+							"text": "Some of it was. Own your part, learn it by heart, and come back tomorrow.",
+							"head": "nod"
+						}
+					]
+				},
+				{
+					"tone": "Doubt",
+					"text": "Maybe I'm not cut out for this.",
+					"trust": {
+						"iyer": 2
+					},
+					"then": [
+						{
+							"say": "iyer",
+							"text": "Everyone thinks that once. The good ones think it, then come back the next morning anyway.",
+							"gesture": "explain",
+							"mood": "calm"
+						}
+					]
+				}
+			]
+		},
+		{
+			"say": "iyer",
+			"text": "He'll live. Because a team was in there, not one person. Remember that too.",
+			"gesture": "chest"
+		},
+		{
+			"minutes": 30
+		}
+	]
+}

@@ -156,3 +156,38 @@ func test_a_save_that_finished_day_one_before_the_lab_moves_on() -> void:
 	expect(main.screen is SkillsLab, "straight to Day 2")
 	expect_equal(main.profile.day, 2)
 	_clear()
+
+
+func test_going_home_after_training_leads_to_theatre_day_and_then_back_to_the_lab() -> void:
+	var main := _main()
+	main.profile.name = "Kiran Rao"
+	main.profile.created = true
+	main.profile.opening_seen = true
+	main.profile.day = 2
+	for flag in ["met_iyer", "day1_iyer", "lab_welcome", "training_done"]:
+		main.profile.set_flag(flag)
+	main.show_hospital()
+	var lab := main.screen as SkillsLab
+	expect(lab != null, "Day 2 is the lab")
+	expect(lab.can_go_home(), "after training the doctor may go home")
+	lab.go_home()
+	for frame in 900:
+		if main.screen != lab:
+			break
+		lab.update(1.0 / 30.0)
+	var theatre := main.screen as Theatre
+	expect(theatre != null, "the next morning is theatre day")
+	expect_equal(main.profile.day, 3)
+	main.show_title()
+	(main.screen as TitleScreen).continue_pressed.emit()
+	expect(main.screen is Theatre, "continue returns to theatre day")
+	theatre = main.screen as Theatre
+	var good := AutoPlayer.new()
+	theatre.play_until(func() -> bool: return main.screen != theatre,
+		Theatre.pick_tones(["Ask Rohit", "Allergies", "Explain", "Be straight", "Hold firm"]), good, 900.0)
+	var after := main.screen as SkillsLab
+	expect(after != null, "after the operation the doctor practises in the lab")
+	expect_equal(main.profile.day, 4)
+	expect(main.profile.has_flag("op_rohit_done"), "the operation is remembered")
+	expect(after != null and after.hud.pager_text().contains("Rohit"), "the pager says how Rohit is doing")
+	_clear()

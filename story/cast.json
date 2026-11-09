@@ -10,5 +10,8 @@
 	"mum": {"name": "Mum", "role": "Your mother", "voice": 1.15},
 	"dad": {"name": "Dad", "role": "Your father", "voice": 0.84},
 	"anu": {"name": "Anu", "role": "Your little sister", "voice": 1.32},
-	"family": {"name": "Your family", "role": "Mum, Dad and Anu", "voice": 1.0, "trust": 60}
+	"family": {"name": "Your family", "role": "Mum, Dad and Anu", "voice": 1.0, "trust": 60},
+	"khan": {"name": "Dr. Fatima Khan", "role": "Anaesthetist", "voice": 1.02, "trust": 45},
+	"rohit": {"name": "Rohit Kulkarni", "role": "Patient · 19, engineering student", "voice": 0.98, "trust": 50},
+	"sunita": {"name": "Sunita Kulkarni", "role": "Rohit's mother", "voice": 1.12, "trust": 35}
 }

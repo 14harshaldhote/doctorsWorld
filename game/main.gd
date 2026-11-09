@@ -73,7 +73,8 @@ func _on_opening_finished(_skipped: bool) -> void:
 
 ## The hospital. A career that has not seen the opening plays it first, and
 ## Day 1 starts with Dr. Iyer at the door until the player has met her.
-## From Day 2 the doctor is in the skills lab.
+## Day 2 is the skills lab, Day 3 is Rohit's operation, and after it the
+## doctor practises in the lab while Rohit recovers.
 func show_hospital() -> void:
 	if not profile.opening_seen:
 		show_opening()
@@ -83,6 +84,13 @@ func show_hospital() -> void:
 		_start_day(2)
 		return
 	Voice.enabled = profile.sound_on
+	if profile.day == 3 and profile.has_flag("op_rohit_done"):
+		# The operation was finished but the day was not.
+		_start_day(4)
+		return
+	if profile.day == 3:
+		show_theatre()
+		return
 	if profile.day >= 2:
 		show_skills_lab()
 		return
@@ -98,7 +106,17 @@ func show_skills_lab() -> void:
 	var lab := SkillsLab.new(profile)
 	lab.save_requested.connect(_save)
 	lab.menu_choice.connect(_on_menu_choice)
+	lab.day_finished.connect(_on_day_finished)
 	_swap(lab)
+
+
+## Day 3: Rohit's appendectomy, from consent on the ward to his mother after.
+func show_theatre() -> void:
+	var theatre := Theatre.new(profile)
+	theatre.save_requested.connect(_save)
+	theatre.menu_choice.connect(_on_menu_choice)
+	theatre.day_finished.connect(_on_day_finished)
+	_swap(theatre)
 
 
 func _on_day_finished() -> void:

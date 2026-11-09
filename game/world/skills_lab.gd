@@ -14,6 +14,8 @@ extends Node3D
 
 signal save_requested
 signal menu_choice(choice: String)
+## The doctor has gone home through the door: the next day can start.
+signal day_finished
 
 const ROOM := Rect2(-7, -5, 14, 10)
 const WALK_SPEED := 1.8
@@ -34,6 +36,10 @@ const LAYOUT := {
 }
 const HOMES := {"iyer": Vector3(-0.8, 0, -1.3), "grace": Vector3(0.9, 0, -1.1)}
 const START := Vector3(0, 0, 3.2)
+## Where the doctor stands to leave by the door, and where its tag floats.
+const DOOR_SPOT := Vector3(6.3, 0, 3.4)
+const DOOR_TAG := Vector3(6.8, 1.9, 3.4)
+const HOME_FADE := 1.2
 
 const WALL := Color("#EEF2EC")
 const WALL_TOP := Color("#DCE8E6")
@@ -77,6 +83,7 @@ var _gather := ""
 var _gather_wait := 0.0
 var _marker: Node3D
 var _marker_time := 0.0
+var _home_in := -1.0
 
 
 func _init(for_profile: PlayerProfile = null) -> void:
@@ -350,14 +357,41 @@ func _refresh_board() -> void:
 
 
 func _pager_text() -> String:
+	if profile.has_flag("op_rohit_done"):
+		return _recovery_text()
 	if profile.has_flag("training_done"):
-		return "Dr. Iyer: Theatre tomorrow, 7:00. Rohit, nineteen, appendix. Practise if you like."
+		return "Dr. Iyer: Theatre tomorrow, 7:00. Rohit, nineteen, appendix. Practise if you like, then go home."
 	var next := next_station()
 	if next.is_empty():
 		return "Dr. Iyer: All six? Come here."
 	if trained_count() == 0:
 		return "Sister Grace: Six stations. Start with the sink. Everyone starts with the sink."
 	return "%s: Next, %s." % [_short_name(str(TrainingTask.TRAINERS[next])), TrainingTask.title_of(next).to_lower()]
+
+
+## How Rohit is getting on after his operation, by how it went.
+func _recovery_text() -> String:
+	if profile.has_flag("op_rohit_won"):
+		return "Ward: Rohit is eating toast and revising. His mother sent sweets for the whole team."
+	if profile.has_flag("op_rohit_struggled"):
+		return "Ward: Rohit had a fever overnight. Antibiotics and four more days with us. He's revising anyway."
+	return "ICU: Rohit is awake and complaining about the food. Dr. Iyer was right about that."
+
+
+## True once the day's training is done and the doctor may leave.
+func can_go_home() -> bool:
+	return profile.has_flag("training_done")
+
+
+## Walks to the door and goes home: the day ends.
+func go_home() -> void:
+	if not can_go_home() or not (mode == "walk" or mode == "approach") or story.is_playing():
+		return
+	active = "door"
+	mode = "approach"
+	_send("you", DOOR_SPOT, WALK_SPEED)
+	if not _routes.has("you"):
+		_arrive()
 
 
 func _short_name(id: String) -> String:
@@ -375,6 +409,9 @@ func _short_name(id: String) -> String:
 
 ## Walks to a station; the trainer comes over and the task begins.
 func start_station(id: String) -> void:
+	if id == "door":
+		go_home()
+		return
 	if not stations.has(id) or not (mode == "walk" or mode == "approach") or story.is_playing():
 		return
 	active = id
@@ -392,6 +429,14 @@ func start_station(id: String) -> void:
 
 
 func _arrive() -> void:
+	if active == "door":
+		mode = "story"
+		player.moving = 0.0
+		player.rotation.y = PI / 2
+		hud.set_talking(true)
+		overlay.fade("black", HOME_FADE)
+		_home_in = HOME_FADE + 0.2
+		return
 	var station: LabStation = stations[active]
 	var centre := station.at(Vector3(0, 0, 0))
 	_facing = atan2(centre.x - player.position.x, centre.z - player.position.z)
@@ -651,6 +696,9 @@ func station_at(screen_point: Vector2) -> String:
 			if distance < best_distance:
 				best_distance = distance
 				best = id
+	if can_go_home() and not camera.is_position_behind(DOOR_TAG):
+		if camera.unproject_position(DOOR_TAG).distance_to(screen_point) < best_distance:
+			best = "door"
 	return best
 
 
@@ -716,6 +764,8 @@ func _update_routes(delta: float) -> void:
 func _on_route_end(id: String) -> void:
 	if id == "you" and mode == "approach" and not active.is_empty():
 		_arrive()
+		return
+	if active == "door":
 		return
 	if people.has(id) and mode != "task":
 		var rig: AvatarRig = people[id]["rig"]
@@ -799,6 +849,11 @@ func update(delta: float) -> void:
 	if view != null:
 		view.tick(delta)
 		(stations[active] as LabStation).show_task(view.task, delta)
+	if _home_in > 0.0:
+		_home_in -= delta
+		if _home_in <= 0.0:
+			day_finished.emit()
+			return
 	if _marker_time > 0.0:
 		_marker_time -= delta
 		_marker.scale = Vector3.ONE * (1.0 + (1.2 - _marker_time) * 0.4)
@@ -864,6 +919,8 @@ func _update_tags() -> void:
 			text += " · %d" % best
 		hud.set_tag("station_" + id, text, camera.unproject_position(point),
 			walking and not camera.is_position_behind(point), id == next)
+	hud.set_tag("door", "Home time", camera.unproject_position(DOOR_TAG),
+		walking and can_go_home() and not camera.is_position_behind(DOOR_TAG), next.is_empty())
 
 
 func _on_menu_choice(choice: String) -> void:

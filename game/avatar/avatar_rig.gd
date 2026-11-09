@@ -11,7 +11,8 @@ extends Node3D
 ## pointing, cheering...), head movements (nods, shakes, tilts), turning the
 ## head towards whoever they are looking at, and a mouth that opens with each
 ## spoken syllable. Characters can hold props (a pager, a letter) and wear a
-## few outfits besides the doctor's coat (a graduation gown, home clothes).
+## few outfits besides the doctor's coat (a graduation gown, home clothes,
+## a patient's gown, a surgical gown with gloves for theatre).
 ##
 ## Units are metres. The feet stand on y = 0 and the character faces +Z.
 
@@ -28,6 +29,9 @@ const MOUTH := Color("#5A2A20")
 const COAT := Color("#E8EEEE")
 const COAT_SHADE := Color("#D9E2E4")
 const SHOE := Color("#2B2B2B")
+## The surgical gown and gloves worn in theatre.
+const SURGICAL_GOWN := Color("#6E9FD1")
+const GLOVE := Color("#E7D3A2")
 const METAL := Color("#A9B8BB")
 const TUBE := Color("#33454A")
 const FRAME := Color("#1F2A2E")
@@ -103,7 +107,8 @@ var talking := false
 ## Seconds between blinks; 0 turns blinking off (for still screenshots).
 var blink_every := 3.4
 ## "doctor" (scrubs, and the coat if the look has one), "casual" (home
-## clothes), "kurta" or "gown" (graduation). Set before the rig is built.
+## clothes), "kurta", "gown" (graduation) or "patient" (a hospital gown).
+## Set before the rig is built.
 var outfit := "doctor"
 var gown_colour := Color("#1D1D24")
 var trim_colour := Color("#7A2440")
@@ -295,6 +300,12 @@ func build() -> void:
 		"gown":
 			scrubs = gown_colour
 			trousers = Color("#2B2B30")
+		"patient":
+			scrubs = Color("#A9CFE0")
+			trousers = Color("#C4DDE8")
+		"theatre":
+			scrubs = SURGICAL_GOWN
+			trousers = SURGICAL_GOWN.darkened(0.3)
 
 	var model := Node3D.new()
 	model.name = "Model"
@@ -329,18 +340,19 @@ func build() -> void:
 		var suffix := "L" if side < 0 else "R"
 		var shoulder := _add_joint(torso, "Shoulder" + suffix, Vector3(0.215 * width * side, 0.46, 0.0),
 			Vector3(0, 0, -0.09 * side))
-		var long_sleeves := coat or outfit in ["gown", "kurta"]
+		var long_sleeves := coat or outfit in ["gown", "kurta", "theatre"]
 		var sleeve := COAT if coat else scrubs
 		var forearm := sleeve if long_sleeves else skin
+		var hand_colour := GLOVE if outfit == "theatre" else skin
 		var cuff := 0.068 if outfit == "gown" else 0.05
 		LowPoly.put(shoulder, LowPoly.cylinder(0.058, cuff, 0.3, 6, sleeve), Vector3(0, -0.15, 0))
 		var elbow := _add_joint(shoulder, "Elbow" + suffix, Vector3(0, -0.3, 0))
 		LowPoly.put(elbow, LowPoly.cylinder(cuff, cuff * 1.15 if outfit == "gown" else 0.044, 0.25, 6, forearm),
 			Vector3(0, -0.125, 0))
 		if long_sleeves:
-			LowPoly.put(elbow, LowPoly.cylinder(0.042, 0.042, 0.03, 6, skin), Vector3(0, -0.26, 0))
-		LowPoly.put(elbow, LowPoly.box(Vector3(0.07, 0.085, 0.036), skin, "Hand" + suffix), Vector3(0, -0.31, 0))
-		if side < 0 and config.watch and outfit != "gown":
+			LowPoly.put(elbow, LowPoly.cylinder(0.042, 0.042, 0.03, 6, hand_colour), Vector3(0, -0.26, 0))
+		LowPoly.put(elbow, LowPoly.box(Vector3(0.07, 0.085, 0.036), hand_colour, "Hand" + suffix), Vector3(0, -0.31, 0))
+		if side < 0 and config.watch and outfit not in ["gown", "theatre"]:
 			var watch := Node3D.new()
 			watch.name = "Watch"
 			LowPoly.put(elbow, watch, Vector3(0, -0.235, 0))
@@ -386,6 +398,11 @@ func _build_outfit(hips: Node3D, torso: Node3D, width: float, main: Color) -> vo
 				Vector3(0, 0, 0.62), Vector3(width, 1.0, 1.0))
 			LowPoly.put(torso, LowPoly.box(Vector3(0.09, 0.42, 0.02), scarf), Vector3(-0.15 * width, 0.25, -0.12),
 				Vector3(0, 0, -0.2))
+		"theatre":
+			# The gown falls to the knees and ties at the back.
+			var gown := LowPoly.cylinder(0.2, 0.25, 0.5, 8, main, "Gown")
+			LowPoly.put(hips, gown, Vector3(0, -0.2, 0), Vector3.ZERO, Vector3(width, 1.0, 0.74))
+			LowPoly.put(torso, LowPoly.box(Vector3(0.16, 0.02, 0.02), main.darkened(0.2)), Vector3(0, 0.06, -0.125))
 		"gown":
 			var robe := LowPoly.cylinder(0.2, 0.27, 0.6, 8, gown_colour, "Gown")
 			LowPoly.put(hips, robe, Vector3(0, -0.26, 0), Vector3.ZERO, Vector3(width, 1.0, 0.78))

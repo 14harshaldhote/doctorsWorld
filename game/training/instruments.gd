@@ -50,6 +50,11 @@ static func job_of(instrument: String) -> String:
 	return str(JOBS.get(instrument, ""))
 
 
+## How far along -z each model's working tip reaches, in metres.
+const TIPS := {"scalpel": 0.062, "forceps": 0.07, "retractor": 0.057, "needle_holder": 0.039, "scissors": 0.07,
+	"clamp": 0.062, "suction": 0.1, "swab": 0.0}
+
+
 ## A model lying flat, pointing along -z (tip away), about 14 cm long.
 static func make(instrument: String) -> Node3D:
 	var root := Node3D.new()

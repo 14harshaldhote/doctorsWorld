@@ -5,7 +5,7 @@ extends SceneTree
 ##
 ## The first argument is the output folder, the second a prefix for the file
 ## names (for example the device), and an optional third limits the run to
-## shots whose name contains it.
+## shots whose name contains it (or any of a comma-separated list).
 
 const FRAMES_TO_SETTLE := 10
 
@@ -55,6 +55,7 @@ func _run() -> void:
 	var arriving := Lobby.new(sample_profile(), true)
 	await _shot("12-lobby-arrival", arriving, func() -> void: arriving.stage_for_screenshot("arrival"))
 	await _lab_shots()
+	await _theatre_shots()
 	quit(0)
 
 
@@ -94,6 +95,98 @@ func _lab_shots() -> void:
 	await _task_shot("21-stitch", "stitch", func(task: TrainingTask) -> bool:
 		return (task as StitchTask).stitches.size() >= 7)
 	await _task_shot("22-result", "stitch", func(_task: TrainingTask) -> bool: return false)
+
+
+## Day 3, Rohit's operation: the ward, consent with his mother, the team in
+## Theatre 2, each part of the operation, the score card and the talk after.
+func _theatre_shots() -> void:
+	var careful := Theatre.pick_tones(["Ask Rohit", "Allergies", "Ask about the exam", "Explain", "Be straight",
+		"Hold firm", "Honest", "Polite", "Plain"])
+	await _day_shot("23-ward", func(t: Theatre) -> bool:
+		return t.mode == "walk" and t.stage == "consent", careful)
+	await _day_shot("24-consent", func(t: Theatre) -> bool:
+		return t.conversation == "consent" and t.talk_ui.is_choosing() and t.story.runner.offered().size() >= 4, careful)
+	await _day_shot("25-team", func(t: Theatre) -> bool:
+		return t.conversation == "khan_intro" and t.talk_ui.line_text().begins_with("So you're") \
+			and not t.talk_ui.is_typing(), careful)
+	await _op_shot("26-timeout", func(op: OperationTask) -> bool:
+		return op.phase == "timeout" and op.timeout_index == 2 and not op.busy())
+	await _op_shot("27-incision", func(op: OperationTask) -> bool:
+		return op.step == "incision" and op.tracing and op.trace.size() >= 18)
+	await _op_shot("28-call", func(op: OperationTask) -> bool:
+		return op.step == "clamp" and op.phase == "call" and not op.busy())
+	await _op_shot("29-complication", func(op: OperationTask) -> bool:
+		return op.active_complication == "bleeding" and op.phase == "act" and not op.busy())
+	await _op_shot("30-count", func(op: OperationTask) -> bool:
+		return op.phase == "count" and not op.busy())
+	await _op_shot("31-closing", func(op: OperationTask) -> bool:
+		return op.step == "close" and op.stitches.size() >= 4)
+	await _op_shot("32-op-result", func(_op: OperationTask) -> bool: return false)
+	await _day_shot("33-after", func(t: Theatre) -> bool:
+		return t.conversation == "after_won" and t.talk_ui.line_text().begins_with("Thank God") \
+			and not t.talk_ui.is_typing(), careful, "good")
+
+
+## The theatre day played from the start (replies picked by picker, tasks
+## by a robot of the given quality) up to a moment.
+func _day_shot(shot_name: String, moment: Callable, picker: Callable, quality: String = "good") -> void:
+	var theatre := Theatre.new(sample_profile_on_theatre_day())
+	theatre.operation_setup = {"complication": "bleeding"}
+	await _shot(shot_name, theatre, func() -> void:
+		var bot := AutoPlayer.new()
+		bot.quality = quality
+		if not theatre.play_until(moment.bind(theatre), picker, bot):
+			push_error("The theatre day never reached %s" % shot_name)
+		_hold_theatre(theatre))
+
+
+## The operation played well from the time-out up to a moment (or to its
+## score card when the moment never comes), bleeding as the complication.
+func _op_shot(shot_name: String, moment: Callable) -> void:
+	var theatre := Theatre.new(sample_profile_on_theatre_day())
+	theatre.operation_setup = {"complication": "bleeding", "lose_swab": 1}
+	await _shot(shot_name, theatre, func() -> void:
+		theatre.skip_to("operation", ["rohit_allergy_known"], 92)
+		var bot := AutoPlayer.new()
+		var step := 1.0 / 30.0
+		for frame in 7200:
+			if theatre.view == null or theatre.view.result_open():
+				break
+			if bool(moment.call(theatre.operation)):
+				break
+			bot.step(theatre.view, step)
+			theatre.update(step)
+		_hold_theatre(theatre))
+
+
+## Lets the coach finish typing, the wound and hands catch up and the camera
+## settle, without moving the story or the operation on.
+func _hold_theatre(theatre: Theatre) -> void:
+	var step := 1.0 / 30.0
+	for frame in 90:
+		if theatre.view != null:
+			theatre.view._type_coach(step)
+			var station := theatre.station_for(theatre.active)
+			if station != null:
+				station.show_task(theatre.view.task, step)
+	theatre.settle_camera()
+	theatre.set_process(false)
+
+
+## The doctor on Day 3: training finished, the theatre day ahead.
+static func sample_profile_on_theatre_day() -> PlayerProfile:
+	var doctor := sample_profile_in_lab()
+	for id: String in ["history", "instruments", "iv", "stitch"]:
+		doctor.set_flag("trained_" + id)
+	doctor.set_flag("training_done")
+	doctor.record_score("history", 81)
+	doctor.record_score("instruments", 88)
+	doctor.record_score("iv", 70)
+	doctor.record_score("stitch", 84)
+	doctor.day = 3
+	doctor.minutes = PlayerProfile.DAY_START
+	doctor.total_xp = 610
+	return doctor
 
 
 ## A task played well by the robot up to a moment (or to its score card when
@@ -164,8 +257,17 @@ static func sample_profile() -> PlayerProfile:
 	return doctor
 
 
+func _wanted(shot_name: String) -> bool:
+	if _only.is_empty():
+		return true
+	for part in _only.split(","):
+		if not part.is_empty() and shot_name.contains(part):
+			return true
+	return false
+
+
 func _shot(shot_name: String, node: Node, prepare: Callable = Callable()) -> void:
-	if not _only.is_empty() and not shot_name.contains(_only):
+	if not _wanted(shot_name):
 		node.free()
 		return
 	for child in root.get_children():

@@ -66,7 +66,7 @@ how you know you're winning.
 ## What works right now
 
 The game is being built in stages, and the old 2D version has been retired
-(it's kept safe on the `swift-prototype` branch). Stages 1 to 3 of the 3D game
+(it's kept safe on the `swift-prototype` branch). Stages 1 to 4 of the 3D game
 are in:
 
 - The title screen: the hospital at dusk, an ambulance, a doctor wandering about.
@@ -99,6 +99,23 @@ are in:
   Try again as often as you like; only your best counts, and only
   improvements earn more XP. Finish all six and Dr. Iyer has news about
   tomorrow.
+- Day 3, your first operation. Rohit, nineteen, has appendicitis and finals on
+  Thursday. His mother has diagnosed gas. You get his consent anyway, and how
+  you handle her decides whether she trusts you or the internet. Ask the right
+  questions (he's been hiding the pain for a day, he's allergic to something)
+  and they come back to save you later. Wait too long and his appendix makes
+  its own decisions.
+- Theatre 2: scrub in, then the time-out, where the board says the wrong side
+  and someone has to say so. Call for instruments from Tom, who hands you
+  exactly what you asked for, even when it's wrong. Trace the incision, hold
+  the wound open, find the appendix, clamp it, cut it. Something will go
+  wrong (bleeding, a crashing blood pressure, an allergic reaction) and Dr.
+  Khan will tell you so in a voice you will hear in your sleep. Count the
+  swabs before you close, because "probably all of them" is not a number.
+- Do well and Rohit is fine. Do badly and Dr. Iyer says "My hands" and takes
+  over, and then you get to explain that to his mother. Afterwards Dr. Iyer
+  tells you what she really thought, and the next morning the pager tells you
+  how he's doing.
 
 Screenshots of every screen are rebuilt automatically after each change, on
 the [`screenshots` branch](../../tree/screenshots).

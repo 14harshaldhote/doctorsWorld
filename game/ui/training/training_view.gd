@@ -22,6 +22,8 @@ var lab: Node
 var trainer := "iyer"
 ## Who the coach line is from, if not the trainer (an acting patient).
 var speaker_override := ""
+## The score card's main button.
+var done_text := "Back to the lab"
 
 var _header: PanelContainer
 var _title: Label
@@ -146,7 +148,7 @@ func show_result(reward: String) -> void:
 	again.name = "TryAgain"
 	again.pressed.connect(func() -> void: retry_pressed.emit())
 	buttons.add_child(again)
-	var done := UiKit.primary_button("Back to the lab", 44, 16)
+	var done := UiKit.primary_button(done_text, 44, 16)
 	done.name = "Done"
 	done.pressed.connect(func() -> void: done_pressed.emit())
 	buttons.add_child(done)
@@ -170,6 +172,24 @@ func world_tap(_screen_point: Vector2) -> void:
 ## A drag across the 3D scene, in screen pixels.
 func world_drag(_relative: Vector2) -> void:
 	pass
+
+
+## A finger going down on the 3D scene, moving, and lifting (for strokes).
+func world_press(_screen_point: Vector2) -> void:
+	pass
+
+
+func world_move(_screen_point: Vector2) -> void:
+	pass
+
+
+func world_release(_screen_point: Vector2) -> void:
+	pass
+
+
+## The small line over the task's title.
+func _kicker_text() -> String:
+	return "Skills lab · " + _trainer_name()
 
 
 ## The coach line on show and whether it warns: the trainer's, unless a
@@ -231,7 +251,7 @@ func _build_header() -> void:
 	add_child(_header)
 	var column := UiKit.vbox(5)
 	_header.add_child(column)
-	column.add_child(UiKit.kicker("Skills lab · " + _trainer_name()))
+	column.add_child(UiKit.kicker(_kicker_text()))
 	_title = UiKit.label(task.title() if task != null else "", 17, UiKit.TEXT, UiKit.heading_font())
 	column.add_child(_title)
 	_instruction = UiKit.label("", 13, Color("#DCEDEA"), UiKit.heavy_font())

@@ -9,7 +9,9 @@ extends RefCounted
 ##       A line. "to" names who the speaker looks at (default: the player).
 ##   {"choose": [{"tone": "Be honest", "text": "...", "trust": {"iyer": 5}, "flag": "x", "then": [...]}]}
 ##       Two to four replies. The player says the chosen text, its effects
-##       apply, then its "then" steps run.
+##       apply, then its "then" steps run. A reply with "if" is only offered
+##       while its condition holds; one with "again": true offers the same
+##       choice again afterwards (questions to ask before deciding).
 ##   {"do": "walk", "who": "you", "to": "podium"}
 ##       An action for the scene to perform (walk, give, shot, card...).
 ##   {"trust": {"grace": 2}}, {"flag": "met_grace"}, {"unflag": "x"}, {"xp": 10}, {"minutes": 5}
@@ -22,7 +24,8 @@ extends RefCounted
 
 const MOODS := ["calm", "happy", "worried", "focused", "tired", "angry", "shocked"]
 const LINE_KEYS := ["say", "text", "mood", "gesture", "head", "to"]
-const OPTION_KEYS := ["tone", "text", "skill", "trust", "flag", "xp", "effect", "detail", "then", "gesture", "mood"]
+const OPTION_KEYS := ["tone", "text", "skill", "trust", "flag", "xp", "effect", "detail", "then", "gesture", "mood", "if",
+	"again"]
 const SILENT_KEYS := ["trust", "flag", "unflag", "xp", "minutes"]
 
 var profile: PlayerProfile
@@ -32,6 +35,7 @@ var history: Array = []
 
 var _stack: Array = []
 var _pending: Array = []
+var _pending_step := {}
 var _about := ""
 var _finished := true
 
@@ -61,6 +65,11 @@ func waiting_for_choice() -> bool:
 	return not _pending.is_empty()
 
 
+## The replies on offer while waiting for a choice (their tone, text...).
+func offered() -> Array:
+	return _pending.duplicate()
+
+
 ## The next thing to show: a line, a choice, an action, or the end.
 func next() -> Dictionary:
 	if not _pending.is_empty():
@@ -77,7 +86,10 @@ func next() -> Dictionary:
 		if step.has("say"):
 			return _line_event(step)
 		if step.has("choose"):
-			_pending = step["choose"]
+			_pending = _offered(step["choose"])
+			if _pending.is_empty():
+				continue
+			_pending_step = step
 			_about = str(step.get("about", _about))
 			return _choice_event()
 		if step.has("do"):
@@ -103,6 +115,8 @@ func choose(index: int) -> Dictionary:
 	_pending = []
 	var changes := _apply(option)
 	var said := fill(str(option.get("text", "")))
+	if bool(option.get("again", false)):
+		_stack.append([[_pending_step], 0])
 	var then: Variant = option.get("then", [])
 	if typeof(then) == TYPE_ARRAY and not (then as Array).is_empty():
 		_stack.append([then, 0])
@@ -189,6 +203,15 @@ func _choice_event() -> Dictionary:
 	return {"type": "choice", "options": options, "about": _about}
 
 
+## The replies of a choice that are on offer now.
+func _offered(options: Array) -> Array:
+	var found := []
+	for option: Dictionary in options:
+		if not option.has("if") or _condition(str(option["if"])):
+			found.append(option)
+	return found
+
+
 func _condition(test: String) -> bool:
 	if test.begins_with("!"):
 		return not profile.has_flag(test.substr(1))
@@ -267,6 +290,11 @@ static func _validate_step(step: Dictionary, known_cast: Dictionary, actions: Ar
 			problems.append_array(_validate_trust(option, known_cast, place))
 			if option.has("then"):
 				problems.append_array(validate(option["then"], known_cast, actions, place + ".then"))
+		var exits := (options as Array).filter(func(option: Variant) -> bool:
+			return typeof(option) == TYPE_DICTIONARY and not bool((option as Dictionary).get("again", false)) \
+				and not (option as Dictionary).has("if"))
+		if exits.is_empty():
+			problems.append("%s: a choice needs a reply that always moves on (no if, no again)" % at)
 	elif step.has("do"):
 		if str(step["do"]) not in actions:
 			problems.append("%s: unknown action %s" % [at, step["do"]])

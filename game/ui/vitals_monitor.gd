@@ -113,6 +113,14 @@ func _draw() -> void:
 		var colour: Color = ALARM if _alarming(kind) else COLOURS[kind]
 		var label_size := int(UiKit.px(10))
 		var value_size := int(clampf(cell.size.y * 0.5, UiKit.px(16), UiKit.px(34)))
+		if cell.size.y < UiKit.px(34):
+			# A small monitor: the number on the left, its name on the right.
+			var middle := cell.position.y + cell.size.y / 2.0
+			draw_string(value_font, Vector2(cell.position.x + UiKit.px(8), middle + value_size * 0.36), vitals.value_text(kind),
+				HORIZONTAL_ALIGNMENT_LEFT, cell.size.x * 0.62, value_size, colour)
+			draw_string(label_font, Vector2(cell.position.x, middle + label_size * 0.36), str(Vitals.LABELS[kind]),
+				HORIZONTAL_ALIGNMENT_RIGHT, cell.size.x - UiKit.px(8), label_size, UiKit.TEXT_KICKER)
+			continue
 		draw_string(label_font, cell.position + Vector2(UiKit.px(8), UiKit.px(15)), str(Vitals.LABELS[kind]),
 			HORIZONTAL_ALIGNMENT_LEFT, -1, label_size, UiKit.TEXT_KICKER)
 		draw_string(value_font, cell.position + Vector2(UiKit.px(8), cell.size.y - UiKit.px(8)), vitals.value_text(kind),
