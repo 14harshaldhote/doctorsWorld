@@ -23,11 +23,13 @@ var _tags := {}
 var _bubbles := {}
 var _talking := false
 var _menu: PanelContainer
-var _sound_button: Button
+var _settings: SettingsPanel
 var _toast: PanelContainer
 var _toast_label: Label
 var _toast_time := 0.0
 var _portrait_rig: AvatarRig
+var _shown_level := -1
+var _xp_tween: Tween
 
 
 func _init(for_profile: PlayerProfile = null) -> void:
@@ -46,6 +48,7 @@ func _ready() -> void:
 	_build_buttons()
 	_build_menu()
 	_build_toast()
+	UiKit.keep_children_off_edges(self)
 	refresh_profile()
 
 
@@ -244,17 +247,11 @@ func _build_menu() -> void:
 	_menu.add_child(column)
 	column.add_child(UiKit.heading("Paused", 20))
 	for entry: Array in [["Back to work", "resume", true], ["Change my look", "look", false],
-			[_sound_text(), "sound", false], ["Title screen", "title", false]]:
+			["Settings", "settings", false], ["Title screen", "title", false]]:
 		var button := UiKit.primary_button(entry[0], 46, 16) if entry[2] else UiKit.ghost_button(entry[0], 46, 16)
 		button.name = str(entry[1]).capitalize()
 		button.pressed.connect(_on_menu_choice.bind(entry[1]))
 		column.add_child(button)
-		if entry[1] == "sound":
-			_sound_button = button
-
-
-func _sound_text() -> String:
-	return "Sound: on" if profile.sound_on else "Sound: off"
 
 
 func _build_toast() -> void:
@@ -281,31 +278,66 @@ func _on_corner_button(which: String) -> void:
 
 
 func _on_menu_choice(choice: String) -> void:
-	if choice == "sound":
-		profile.sound_on = not profile.sound_on
-		Voice.enabled = profile.sound_on
-		_sound_button.text = _sound_text()
-		menu_choice.emit(choice)
-		return
 	_menu.visible = false
+	if choice == "settings":
+		open_settings()
+		return
 	menu_choice.emit(choice)
 
 
+## Opens the settings over the paused game; closing them goes back to the menu.
+func open_settings() -> SettingsPanel:
+	if _settings != null:
+		return _settings
+	_settings = SettingsPanel.new()
+	_settings.closed.connect(func() -> void:
+		_settings = null
+		_menu.visible = true
+		profile.sound_on = GameSettings.current.effects > 0.0 or GameSettings.current.voices > 0.0)
+	add_child(_settings)
+	return _settings
+
+
+func settings_panel() -> SettingsPanel:
+	return _settings
+
+
 func menu_open() -> bool:
-	return _menu.visible
+	return _menu.visible or _settings != null
 
 
 ## Shows a short message under the clock for a few seconds.
 func toast(text: String) -> void:
 	_toast_label.text = text
-	_toast.visible = true
+	if not _toast.visible:
+		_toast.visible = true
+		UiKit.pop_in(_toast, 0.22)
 	_toast_time = 3.0
 
 
 func refresh_profile() -> void:
 	var progress := LevelCurve.progress(profile.total_xp)
-	_level_label.text = "%s · Level %d" % [Rank.title(profile.rank()), progress["level"]]
-	_xp_fill.size = Vector2(_xp_track.custom_minimum_size.x * float(progress["fraction"]), UiKit.px(6))
+	var level := int(progress["level"])
+	_level_label.text = "%s · Level %d" % [Rank.title(profile.rank()), level]
+	var goal := Vector2(_xp_track.custom_minimum_size.x * float(progress["fraction"]), UiKit.px(6))
+	var levelled_up := _shown_level > 0 and level > _shown_level
+	var first := _shown_level < 0
+	_shown_level = level
+	if _xp_tween != null:
+		_xp_tween.kill()
+		_xp_tween = null
+	if first or GameSettings.current.reduce_motion or not is_inside_tree() or goal == _xp_fill.size:
+		_xp_fill.size = goal
+	else:
+		# The bar fills up; on a new level it runs to the end and starts again.
+		_xp_tween = create_tween()
+		if levelled_up:
+			_xp_tween.tween_property(_xp_fill, "size:x", _xp_track.custom_minimum_size.x, 0.35)
+			_xp_tween.tween_callback(func() -> void: _xp_fill.size.x = 0.0)
+		_xp_tween.tween_property(_xp_fill, "size", goal, 0.6).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	if levelled_up:
+		Sfx.play(self, "levelup", -8.0)
+		toast("Level %d" % level)
 	if _portrait_rig != null and not _portrait_rig.config.equals(profile.avatar):
 		_portrait_rig.set_config(profile.avatar)
 
@@ -357,10 +389,11 @@ func set_tasks(tasks: Array, title: String = "Today") -> void:
 		var text := UiKit.label(task[0], 13, Color("#9FBFBB") if done else (Color.WHITE if current else UiKit.TEXT_LABEL),
 			UiKit.heavy_font() if current else UiKit.body_font())
 		text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		text.custom_minimum_size = Vector2(UiKit.px(160), 0)
+		var wider := GameSettings.current.text_scale()
+		text.custom_minimum_size = Vector2(UiKit.px(160) * wider, 0)
 		row.add_child(text)
 		if task.size() > 2 and int(task[2]) >= 0:
-			text.custom_minimum_size = Vector2(UiKit.px(118), 0)
+			text.custom_minimum_size = Vector2(UiKit.px(118) * wider, 0)
 			var stars := UiKit.hbox(1)
 			stars.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 			for index in 3:

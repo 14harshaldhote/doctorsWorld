@@ -82,6 +82,7 @@ func _init(for_profile: PlayerProfile = null, with_arrival: bool = false) -> voi
 
 func _ready() -> void:
 	StageLighting.add_to(self, Color("#A9C3C8"), Vector3(-55, 28, 0))
+	Music.cue("hospital")
 	walk_area = WalkArea.new(Rect2(-7.7, -5.75, 15.4, 11.6), 0.28)
 	_build_room()
 	_build_reception()
@@ -122,6 +123,7 @@ func _ready() -> void:
 		_refresh_tasks()
 	_place_camera(1.0)
 	_build_banter()
+	StaticBatch.optimise(self)
 
 
 # --- Building the room ---------------------------------------------------
@@ -731,7 +733,7 @@ func _process(delta: float) -> void:
 		if not story.is_walking(id):
 			_walking_home.erase(id)
 			(people[id]["rig"] as AvatarRig).rotation.y = people[id]["facing"]
-	_place_camera(minf(1.0, delta * 4.0))
+	_place_camera(UiKit.motion_weight(minf(1.0, delta * 4.0)))
 	if _marker_time > 0.0:
 		_marker_time -= delta
 		_marker.scale = Vector3.ONE * (1.0 + (1.2 - _marker_time) * 0.4)
@@ -799,9 +801,6 @@ func _update_tags() -> void:
 
 
 func _on_menu_choice(choice: String) -> void:
-	if choice == "sound":
-		save_requested.emit()
-		return
 	if choice != "resume":
 		menu_choice.emit(choice)
 

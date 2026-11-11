@@ -10,6 +10,8 @@ var saved: PlayerProfile
 
 var new_button: Button
 var continue_button: Button
+var settings_button: Button
+var settings: SettingsPanel
 
 
 func _init(saved_profile: PlayerProfile = null) -> void:
@@ -46,10 +48,16 @@ func _ready() -> void:
 	wash.offset_right = UiKit.px(470)
 	add_child(wash)
 
+	# Down the left side, centred top to bottom so it fits with or without
+	# Continue and at any text size.
 	var column := UiKit.vbox(10)
 	column.name = "Menu"
-	column.position = Vector2(UiKit.px(44), UiKit.px(40))
-	column.custom_minimum_size = Vector2(UiKit.px(380), 0)
+	column.alignment = BoxContainer.ALIGNMENT_CENTER
+	column.anchor_bottom = 1.0
+	column.offset_left = UiKit.px(44)
+	column.offset_right = UiKit.px(44 + 380)
+	column.offset_top = UiKit.px(16)
+	column.offset_bottom = -UiKit.px(16)
 	add_child(column)
 	column.add_child(UiKit.kicker("A hospital story", 13))
 	var title := UiKit.label("Doctors\nWorld", 58, Color.WHITE, UiKit.font("Fredoka-SemiBold"))
@@ -72,6 +80,17 @@ func _ready() -> void:
 	if saved != null:
 		continue_button = _continue_button()
 		buttons.add_child(continue_button)
+	settings_button = UiKit.ghost_button("Settings", 40, 15)
+	settings_button.name = "SettingsButton"
+	settings_button.custom_minimum_size.x = UiKit.px(120)
+	settings_button.anchor_left = 1.0
+	settings_button.anchor_right = 1.0
+	settings_button.grow_horizontal = Control.GROW_DIRECTION_BEGIN
+	settings_button.offset_right = -UiKit.px(20)
+	settings_button.offset_top = UiKit.px(18)
+	settings_button.pressed.connect(open_settings)
+	add_child(settings_button)
+	Music.cue("title")
 
 	var version := UiKit.label("v%s" % ProjectSettings.get_setting("application/config/version", "0"), 11,
 		Color(1, 1, 1, 0.45))
@@ -82,6 +101,17 @@ func _ready() -> void:
 	version.offset_left = -UiKit.px(60)
 	version.offset_top = -UiKit.px(26)
 	add_child(version)
+	UiKit.keep_off_edges(column)
+	UiKit.keep_off_edges(version)
+	UiKit.keep_off_edges(settings_button)
+
+
+func open_settings() -> SettingsPanel:
+	if settings == null:
+		settings = SettingsPanel.new()
+		settings.closed.connect(func() -> void: settings = null)
+		add_child(settings)
+	return settings
 
 
 func _continue_button() -> Button:

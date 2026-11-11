@@ -57,6 +57,7 @@ func _ready() -> void:
 
 	var layout := UiKit.hbox(0)
 	add_child(UiKit.fill(layout))
+	UiKit.keep_off_edges(layout)
 	layout.add_child(_build_stage())
 
 	var side := MarginContainer.new()
@@ -203,7 +204,7 @@ func show_tab(tab_name: String) -> void:
 		for state in ["font_color", "font_hover_color", "font_pressed_color", "font_hover_pressed_color"]:
 			button.add_theme_color_override(state, UiKit.MINT_TEXT if on else UiKit.TEXT)
 		button.add_theme_font_override("font", UiKit.heading_medium_font())
-		button.add_theme_font_size_override("font_size", int(UiKit.px(15)))
+		UiKit.set_text_size(button, 15)
 		button.focus_mode = Control.FOCUS_NONE
 	_camera_goal = HEAD_VIEW if tab_name == "Face" or tab_name == "Hair" or tab_name == "Extras" else FULL_VIEW
 	if tab_name != "Face" and rig.mood != AvatarConfig.Mood.CALM:

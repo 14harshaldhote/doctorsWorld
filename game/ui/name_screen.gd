@@ -28,11 +28,14 @@ func _ready() -> void:
 	var card_style := card.get_theme_stylebox("panel") as StyleBoxFlat
 	card_style.border_color = Color(UiKit.MINT, 0.3)
 	card_style.set_border_width_all(2)
+	# Centred, so it fits whatever the text size; the buttons live inside.
 	card.anchor_left = 0.5
 	card.anchor_right = 0.5
-	card.offset_left = -UiKit.px(280)
-	card.offset_right = UiKit.px(280)
-	card.offset_top = UiKit.px(20)
+	card.anchor_top = 0.5
+	card.anchor_bottom = 0.5
+	card.grow_horizontal = Control.GROW_DIRECTION_BOTH
+	card.grow_vertical = Control.GROW_DIRECTION_BOTH
+	card.custom_minimum_size = Vector2(UiKit.px(560), 0)
 	add_child(card)
 	var row := UiKit.hbox(24)
 	card.add_child(row)
@@ -55,7 +58,7 @@ func _ready() -> void:
 	name_field.add_theme_stylebox_override("normal", UiKit.box(UiKit.INPUT, 12, UiKit.MINT, 2, Vector2(14, 0)))
 	name_field.add_theme_stylebox_override("focus", UiKit.box(UiKit.INPUT, 12, UiKit.AMBER, 2, Vector2(14, 0)))
 	name_field.add_theme_font_override("font", UiKit.body_font())
-	name_field.add_theme_font_size_override("font_size", int(UiKit.px(18)))
+	UiKit.set_text_size(name_field, 18)
 	name_field.add_theme_color_override("font_color", Color.WHITE)
 	name_field.add_theme_color_override("font_placeholder_color", Color(1, 1, 1, 0.4))
 	name_field.add_theme_color_override("caret_color", UiKit.AMBER)
@@ -74,8 +77,7 @@ func _ready() -> void:
 		_form_chips.append(chip)
 
 	var badge_column := UiKit.vbox(10)
-	badge_column.custom_minimum_size = Vector2(UiKit.px(170), 0)
-	badge_column.alignment = BoxContainer.ALIGNMENT_CENTER
+	badge_column.custom_minimum_size = Vector2(UiKit.px(196), 0)
 	row.add_child(badge_column)
 	var badge_title := UiKit.kicker("Your coat badge")
 	badge_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -99,22 +101,17 @@ func _ready() -> void:
 	badge_lines.add_child(UiKit.label("INTERN", 12, UiKit.TEAL, UiKit.heavy_font()))
 	badge_lines.add_child(UiKit.label("Riverside City Hospital", 11, Color("#3F5A60")))
 
-	var buttons := UiKit.hbox(12)
-	buttons.alignment = BoxContainer.ALIGNMENT_CENTER
-	buttons.anchor_top = 1.0
-	buttons.anchor_bottom = 1.0
-	buttons.anchor_right = 1.0
-	buttons.offset_top = -UiKit.px(64)
-	buttons.offset_bottom = -UiKit.px(16)
-	add_child(buttons)
-	var back := UiKit.ghost_button("Back")
-	back.name = "Back"
-	back.pressed.connect(func() -> void: back_pressed.emit())
-	buttons.add_child(back)
+	var gap := Control.new()
+	gap.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	badge_column.add_child(gap)
 	next_button = UiKit.primary_button("Next: your look")
 	next_button.name = "Next"
 	next_button.pressed.connect(_on_next)
-	buttons.add_child(next_button)
+	badge_column.add_child(next_button)
+	var back := UiKit.ghost_button("Back")
+	back.name = "Back"
+	back.pressed.connect(func() -> void: back_pressed.emit())
+	badge_column.add_child(back)
 	_refresh()
 
 

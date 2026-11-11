@@ -62,6 +62,7 @@ func _ready() -> void:
 	_build_coach()
 	_build_leave()
 	_build()
+	UiKit.keep_children_off_edges(self)
 	_refresh()
 
 
@@ -135,9 +136,10 @@ func show_result(reward: String) -> void:
 		var reward_label := UiKit.label(reward, 13, UiKit.AMBER, UiKit.heavy_font())
 		reward_label.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		score_row.add_child(reward_label)
+	var notes := _note_list(column)
 	for note in task.notes().slice(0, 4):
 		var row := UiKit.hbox(8)
-		column.add_child(row)
+		notes.add_child(row)
 		var ok := bool(note["ok"])
 		var icon := UiIcon.make("check" if ok else "cross", 18, UiKit.MINT if ok else UiKit.CORAL)
 		icon.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
@@ -158,15 +160,51 @@ func show_result(reward: String) -> void:
 	done.name = "Done"
 	done.pressed.connect(func() -> void: done_pressed.emit())
 	buttons.add_child(done)
+	_fit_notes(notes, UiKit.px(400), 13)
 	_header.visible = false
 	_leave.visible = false
 	_hide_controls()
 	_refresh()
+	UiKit.pop_in(_result)
+	var lit_stars: Array[Control] = []
+	for index in task.stars():
+		lit_stars.append(stars.get_child(index) as Control)
+	UiKit.pop_one_by_one(lit_stars, 0.35)
+	Sfx.play(self, "chime" if task.stars() >= 2 else "buzz", -8.0)
 
 
 ## Views hide their own controls behind the score card.
 func _hide_controls() -> void:
 	pass
+
+
+## A card of notes under the header (the exam and history views), or null.
+func _side_card() -> Control:
+	return null
+
+
+## The score card's notes, in a list that scrolls when the card would be
+## taller than the screen (big text on a small phone).
+func _note_list(column: VBoxContainer) -> VBoxContainer:
+	var scroll := ScrollContainer.new()
+	scroll.name = "Notes"
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	column.add_child(scroll)
+	var list := UiKit.vbox(10)
+	list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	scroll.add_child(list)
+	return list
+
+
+## Gives the notes the height they need, or whatever the screen has left.
+func _fit_notes(list: VBoxContainer, width: float, text_size: float) -> void:
+	var needed := 0.0
+	for row in list.get_children():
+		needed += UiKit.wrapped_height((row.get_child(1) as Label).text, width, text_size)
+	needed += list.get_theme_constant("separation") * maxi(0, list.get_child_count() - 1)
+	var room := UiKit.safe_insets()
+	var left := get_viewport_rect().size.y - UiKit.px(24) - room.y - room.z - _result.get_combined_minimum_size().y
+	(list.get_parent() as ScrollContainer).custom_minimum_size.y = minf(needed, maxf(left, UiKit.px(60)))
 
 
 ## A tap on the 3D scene (not on a panel): views that pick things in the
@@ -286,7 +324,9 @@ func _build_coach() -> void:
 	_coach_box.grow_vertical = Control.GROW_DIRECTION_BEGIN
 	_coach_box.offset_left = UiKit.px(12)
 	_coach_box.offset_bottom = -UiKit.px(12)
-	_coach_box.custom_minimum_size = Vector2(UiKit.px(430), UiKit.px(74))
+	# Narrower by the notch on each side, so it stays clear of the right panels.
+	var narrower := 2.0 * UiKit.safe_insets().x
+	_coach_box.custom_minimum_size = Vector2(UiKit.px(430) - narrower, UiKit.px(74))
 	_coach_box.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(_coach_box)
 	var column := UiKit.vbox(4)
@@ -295,7 +335,7 @@ func _build_coach() -> void:
 	column.add_child(_coach_name)
 	_coach_text = UiKit.label("", 15, UiKit.TEXT, UiKit.heavy_font())
 	_coach_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_coach_text.custom_minimum_size = Vector2(UiKit.px(398), 0)
+	_coach_text.custom_minimum_size = Vector2(UiKit.px(398) - narrower, 0)
 	column.add_child(_coach_text)
 
 
@@ -326,7 +366,11 @@ func _refresh() -> void:
 		_coach_text.add_theme_color_override("font_color", Color("#FFC9B8") if bool(line[1]) else UiKit.TEXT)
 		_typed = 0.0
 		_coach_text.visible_characters = 0
-	_coach_box.visible = not _shown_coach.is_empty() and not result_open()
+	# With big text the case notes can reach down to the coach line, which
+	# then steps aside (the notes already hold what was found).
+	var card := _side_card()
+	var crowded := card != null and card.visible and card.position.y + card.size.y > _coach_box.position.y - UiKit.px(6)
+	_coach_box.visible = not _shown_coach.is_empty() and not result_open() and not crowded
 
 
 func _type_coach(delta: float) -> void:

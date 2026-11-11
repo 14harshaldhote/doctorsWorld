@@ -4,25 +4,67 @@ extends Node
 ## new-career steps (name, look), the opening story and the hospital.
 
 var store := SaveStore.new()
+var settings_path := GameSettings.DEFAULT_PATH
 var profile: PlayerProfile
 var has_save := false
 var screen: Node
+var music: Music
+## A dark curtain that lifts after every change of screen.
+var _curtain: ColorRect
 
 
 func _ready() -> void:
 	var loaded := store.load_or_start()
 	profile = loaded["profile"]
 	has_save = loaded["outcome"] == SaveStore.Outcome.LOADED and profile.created
-	Voice.enabled = profile.sound_on
+	var had_settings := FileAccess.file_exists(settings_path)
+	GameSettings.current = GameSettings.load_from(settings_path)
+	if not had_settings and has_save and not profile.sound_on:
+		# Sound was switched off before there were separate volumes.
+		for bus: String in GameSettings.BUSES:
+			GameSettings.current.set_volume(bus, 0.0)
+	SettingsPanel.save_path = settings_path
+	GameSettings.current.apply(get_window())
+	music = Music.new()
+	music.name = "Music"
+	add_child(music)
+	Music.player = music
+	Sfx.host = self
+	var layer := CanvasLayer.new()
+	layer.name = "Curtain"
+	layer.layer = 100
+	add_child(layer)
+	_curtain = ColorRect.new()
+	_curtain.color = Color(0.02, 0.07, 0.09, 0.0)
+	_curtain.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	layer.add_child(UiKit.fill(_curtain))
 	show_title()
 
 
+func _exit_tree() -> void:
+	if Music.player == music:
+		Music.player = null
+	if Sfx.host == self:
+		Sfx.host = null
+
+
 func _swap(next: Node) -> void:
+	var changing := screen != null
 	if screen != null:
 		remove_child(screen)
 		screen.queue_free()
 	screen = next
 	add_child(next)
+	if _curtain != null and changing:
+		_lift_curtain()
+
+
+## The new screen fades in from dark, quicker with Reduce motion on.
+func _lift_curtain() -> void:
+	_curtain.color.a = 1.0
+	var lift := _curtain.create_tween()
+	lift.tween_property(_curtain, "color:a", 0.0, 0.2 if GameSettings.current.reduce_motion else 0.45) \
+		.set_trans(Tween.TRANS_SINE)
 
 
 func show_title() -> void:
@@ -84,7 +126,6 @@ func show_hospital() -> void:
 		# Day 1 was finished before the skills lab existed.
 		_start_day(2)
 		return
-	Voice.enabled = profile.sound_on
 	if profile.day == 3 and profile.has_flag("op_rohit_done"):
 		# The operation was finished but the day was not.
 		_start_day(4)

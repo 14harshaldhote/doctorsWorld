@@ -93,6 +93,7 @@ func _init(for_profile: PlayerProfile = null) -> void:
 
 func _ready() -> void:
 	StageLighting.add_to(self, Color("#A9C3C8"), Vector3(-55, 28, 0))
+	Music.cue("hospital")
 	walk_area = WalkArea.new(Rect2(-9.6, -3.7, 10.8, 7.2), 0.28)
 	_build_rooms()
 	_build_stations()
@@ -124,6 +125,7 @@ func _ready() -> void:
 	story.actors = _actors()
 	story.finished.connect(_on_talk_finished)
 	_begin_day()
+	StaticBatch.optimise(self)
 	_place_camera(1.0)
 
 
@@ -741,6 +743,7 @@ func _on_done() -> void:
 ## Into Theatre 2: everyone gowned, masked and in place, and Dr. Khan.
 func _enter_theatre() -> void:
 	stage = "theatre"
+	Music.cue("theatre")
 	mode = "story"
 	overlay.fade("black", 0.01)
 	overlay.fade("clear", 0.8)
@@ -760,6 +763,7 @@ func _enter_theatre() -> void:
 
 func _after_operation() -> void:
 	stage = "after"
+	Music.cue("hospital")
 	mode = "story"
 	overlay.fade("black", 0.01)
 	overlay.fade("clear", 0.9)
@@ -841,9 +845,6 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func _on_menu_choice(choice: String) -> void:
-	if choice == "sound":
-		save_requested.emit()
-		return
 	if choice != "resume":
 		menu_choice.emit(choice)
 
@@ -877,7 +878,7 @@ func update(delta: float) -> void:
 		var station: LabStation = stations.get(active)
 		if station != null and view != null:
 			station.show_task(view.task, delta)
-	_place_camera(minf(1.0, delta * 4.0))
+	_place_camera(UiKit.motion_weight(minf(1.0, delta * 4.0)))
 	_update_tags()
 
 

@@ -66,7 +66,7 @@ how you know you're winning.
 ## What works right now
 
 The game is being built in stages, and the old 2D version has been retired
-(it's kept safe on the `swift-prototype` branch). Stages 1 to 5 of the 3D game
+(it's kept safe on the `swift-prototype` branch). Stages 1 to 6 of the 3D game
 are in:
 
 - The title screen: the hospital at dusk, an ambulance, a doctor wandering about.
@@ -140,6 +140,24 @@ are in:
   you've earned it you finish Day 8 as a Junior Resident. Experience now
   shows your level; rank comes from being promoted. The next morning is an
   ordinary day, which is somehow worse.
+- Music. A gentle tune for the title, a busy one for the wards, a tense one
+  with a heartbeat in it for theatre, a lonely one for the night shift, and a
+  fanfare when you're promoted, which is the only time anyone in a hospital
+  gets one. Buttons click, the monitor beeps with the patient's heart (lower
+  when their oxygen drops, so you'll hear it before you see it), and good
+  scores chime.
+- Settings, from the title screen or the pause menu: separate volumes for
+  music, sound effects and voices; bigger text, which grows everywhere at once;
+  Reduce motion, for people who'd rather the camera didn't swoop; a
+  colour-blind-safe monitor in blue and orange with arrows, because "the red
+  number" is not a diagnosis; and Battery saver, which older iPhones pick by
+  themselves.
+- Things move like they mean it: screens fade in, buttons push in when you
+  tap them, score cards pop up and the stars land one at a time, and your
+  promotion comes with confetti.
+- Room for the notch and the home bar on newer iPhones, and older iPhones
+  have about half as much to draw, so the hospital runs smoothly on phones as
+  tired as the staff.
 
 Screenshots of every screen are rebuilt automatically after each change, on
 the [`screenshots` branch](../../tree/screenshots).

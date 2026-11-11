@@ -45,6 +45,7 @@ func _ready() -> void:
 	for spot in [Vector3(-1.4, 0, -1.2), Vector3(-0.4, 0, -2.2), Vector3(10.6, 0, -0.6), Vector3(-3.0, 0, 1.0)]:
 		_tree(spot, 1.0 + fmod(spot.x * 7.3, 0.5))
 	_build_people()
+	StaticBatch.optimise(self)
 	if own_camera:
 		_camera = Camera3D.new()
 		_camera.name = "Camera"
@@ -208,7 +209,7 @@ func _place_camera(sway: float) -> void:
 func _process(delta: float) -> void:
 	_clock += delta
 	if _camera != null:
-		_place_camera(sin(_clock * 0.25) * 0.35)
+		_place_camera(0.0 if GameSettings.current.reduce_motion else sin(_clock * 0.25) * 0.35)
 	if not manual_time:
 		tick(delta)
 	if _walker != null:

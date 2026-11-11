@@ -92,6 +92,7 @@ func _init(for_profile: PlayerProfile = null) -> void:
 
 func _ready() -> void:
 	StageLighting.add_to(self, Color("#A9C3C8"), Vector3(-55, 32, 0))
+	Music.cue("hospital")
 	walk_area = WalkArea.new(Rect2(-6.75, -4.75, 13.5, 9.5), 0.28)
 	_build_room()
 	_build_stations()
@@ -130,6 +131,7 @@ func _ready() -> void:
 	_update_clock()
 	if not profile.has_flag("lab_welcome"):
 		_begin_day()
+	StaticBatch.optimise(self)
 	_place_camera(1.0)
 
 
@@ -859,7 +861,7 @@ func update(delta: float) -> void:
 		_marker.scale = Vector3.ONE * (1.0 + (1.2 - _marker_time) * 0.4)
 		if _marker_time <= 0.0:
 			_marker.visible = false
-	_place_camera(minf(1.0, delta * 4.0))
+	_place_camera(UiKit.motion_weight(minf(1.0, delta * 4.0)))
 	_update_tags()
 
 
@@ -924,9 +926,6 @@ func _update_tags() -> void:
 
 
 func _on_menu_choice(choice: String) -> void:
-	if choice == "sound":
-		save_requested.emit()
-		return
 	if choice != "resume":
 		menu_choice.emit(choice)
 

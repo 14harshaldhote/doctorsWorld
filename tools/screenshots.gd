@@ -22,6 +22,10 @@ func _initialize() -> void:
 		_prefix = args[1]
 	if args.size() > 2:
 		_only = args[2]
+	# The safe area of an iPhone with a notch (or an iPad's home bar), in
+	# landscape, so the shots match the devices.
+	UiKit.inset_override = Vector3(UiKit.px(47), 0, UiKit.px(21)) if _prefix.begins_with("iphone") \
+		else Vector3(0, 0, UiKit.px(20))
 	DirAccess.make_dir_recursive_absolute(_out)
 	_run.call_deferred()
 
@@ -173,6 +177,23 @@ func _ward_shots() -> void:
 		careful)
 	await _ward_shot("51-promoted", 8, past + ["beds_saved"], "review", func(w: Ward) -> bool:
 		return w.mode == "end" and w.overlay.fade_amount() > 0.9, careful)
+
+	# Stage 6: the settings, the largest text and the colour-blind-safe monitor.
+	var settings_title := TitleScreen.new(sample_profile())
+	await _shot("52-settings", settings_title, func() -> void: settings_title.open_settings())
+	var paused := Lobby.new(sample_profile_at_work())
+	await _shot("53-settings-paused", paused, func() -> void:
+		paused.stage_for_screenshot("walk")
+		paused.hud.open_settings())
+	var text_before := GameSettings.current.text_size
+	GameSettings.current.text_size = 2
+	var big_text := Lobby.new(sample_profile_at_work())
+	await _shot("54-larger-text", big_text, func() -> void: big_text.stage_for_screenshot("talk"))
+	GameSettings.current.text_size = text_before
+	GameSettings.current.colour_safe = true
+	await _ward_shot("55-colour-safe", 6, ["beds_checked", "banerjee_room"], "rider", func(w: Ward) -> bool:
+		return w.view is ExamView and (w.view.task as ExamTask).examined.size() >= 2, careful)
+	GameSettings.current.colour_safe = false
 
 
 ## A ward day from a beat (or from the start) played up to a moment.
@@ -357,6 +378,9 @@ func _shot(shot_name: String, node: Node, prepare: Callable = Callable()) -> voi
 		prepare.call()
 	for frame in FRAMES_TO_SETTLE:
 		await process_frame
+	# Finish any fades and pops in the interface.
+	for running in get_processed_tweens():
+		running.custom_step(30.0)
 	# Hold every character still: eyes open, gestures finished.
 	for found in node.find_children("*", "AvatarRig", true, false):
 		var rig := found as AvatarRig

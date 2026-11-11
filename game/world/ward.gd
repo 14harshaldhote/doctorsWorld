@@ -221,6 +221,7 @@ func _ready() -> void:
 	story.actors = _actors()
 	story.finished.connect(_on_talk_finished)
 	_begin_day()
+	StaticBatch.optimise(self)
 	_place_camera(1.0)
 
 
@@ -934,6 +935,8 @@ func _promote() -> void:
 	profile.total_xp += maxi(REVIEW_XP, LevelCurve.total_xp_to_reach(4) - profile.total_xp)
 	profile.promote()
 	profile.set_flag("promoted")
+	Music.fanfare()
+	overlay.celebrate()
 	hud.refresh_profile()
 	hud.toast("+%d XP · %s" % [profile.total_xp - before, Rank.title(profile.rank())])
 
@@ -1132,6 +1135,8 @@ func open_task(task_id: String, which_case: String) -> void:
 			view.trainer = (task as HistoryTask).actor
 		else:
 			var exam := task as ExamTask
+			if exam.body == "trauma":
+				Music.cue("theatre")
 			if exam.body != "wrist":
 				put(exam.actor, active_bed + ":lie")
 				station.uncover(true)
@@ -1201,7 +1206,13 @@ func _on_task_finished(task: TrainingTask) -> void:
 	save_requested.emit()
 
 
+## The music for the ward as it is now: calm by day, quiet at night.
+func _place_music() -> String:
+	return "night" if night else "hospital"
+
+
 func _close_task() -> void:
+	Music.cue(_place_music())
 	if BEDS.has(active_bed):
 		bed(active_bed).uncover(false)
 		var held_out := bed(active_bed).patient
@@ -1233,6 +1244,7 @@ func is_talking() -> bool:
 # --- Night ------------------------------------------------------------------------
 
 func _set_night(on: bool) -> void:
+	Music.cue(_place_music())
 	_environment.background_color = NIGHT_SKY if on else Color("#A9C3C8")
 	_environment.ambient_light_color = Color("#8FA6C8") if on else Color("#DDE8F0")
 	_environment.ambient_light_energy = 0.26 if on else 0.42
@@ -1307,9 +1319,6 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func _on_menu_choice(choice: String) -> void:
-	if choice == "sound":
-		save_requested.emit()
-		return
 	if choice != "resume":
 		menu_choice.emit(choice)
 
@@ -1347,7 +1356,7 @@ func update(delta: float) -> void:
 		var station := station_for(active)
 		if station != null and view != null:
 			station.show_task(view.task, delta)
-	_place_camera(minf(1.0, delta * 4.0))
+	_place_camera(UiKit.motion_weight(minf(1.0, delta * 4.0)))
 	_update_tags()
 
 

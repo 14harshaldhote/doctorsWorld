@@ -80,6 +80,7 @@ func _build() -> void:
 	_build_choices()
 	if exam.has_vitals:
 		monitor = VitalsMonitor.new()
+		monitor.beeping = true
 		monitor.name = "Monitor"
 		monitor.anchor_left = 1.0
 		monitor.anchor_right = 1.0
@@ -253,7 +254,7 @@ func _sync() -> void:
 			line.custom_minimum_size = Vector2(UiKit.px(226), 0)
 			_notes.add_child(line)
 	if _header != null:
-		_notes_card.position = Vector2(UiKit.px(12), _header.position.y + _header.get_combined_minimum_size().y + UiKit.px(8))
+		_notes_card.position = Vector2(_header.position.x, _header.position.y + _header.get_combined_minimum_size().y + UiKit.px(8))
 
 
 func _hide_controls() -> void:
@@ -261,3 +262,7 @@ func _hide_controls() -> void:
 	_notes_card.visible = false
 	_decide.visible = false
 	_choices.visible = false
+
+
+func _side_card() -> Control:
+	return _notes_card

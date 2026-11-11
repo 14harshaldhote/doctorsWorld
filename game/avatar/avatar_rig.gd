@@ -203,13 +203,15 @@ func face_point() -> Vector3:
 func say_syllable(letter: String = "a") -> void:
 	_mouth_open = 1.0
 	_since_syllable = 0.0
-	if not Voice.enabled or not is_inside_tree():
+	if not Voice.enabled or not is_inside_tree() or GameSettings.current.voices <= 0.0:
 		return
 	if _voice == null:
+		GameSettings.ensure_buses()
 		_voice = AudioStreamPlayer3D.new()
 		_voice.name = "Voice"
 		_voice.unit_size = 4.0
 		_voice.max_db = 3.0
+		_voice.bus = &"Voices"
 		add_child(_voice)
 		_voice.position = Vector3(0, 1.5, 0)
 	_voice.stream = Voice.syllable(letter)

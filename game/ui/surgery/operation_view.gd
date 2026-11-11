@@ -51,6 +51,7 @@ func _kicker_text() -> String:
 func _build() -> void:
 	_leave.visible = false
 	monitor = VitalsMonitor.new()
+	monitor.beeping = true
 	monitor.name = "Monitor"
 	monitor.anchor_left = 1.0
 	monitor.anchor_right = 1.0
@@ -154,6 +155,8 @@ func _build_choices() -> void:
 	_choices.offset_bottom = -UiKit.px(12)
 	_choices.custom_minimum_size = Vector2(UiKit.px(252), 0)
 	add_child(_choices)
+	_choices.item_rect_changed.connect(_make_room)
+	_choices.visibility_changed.connect(_make_room)
 	var column := UiKit.vbox(6)
 	_choices.add_child(column)
 	_choice_kicker = UiKit.kicker("", 11)
@@ -259,6 +262,15 @@ func _skin_at(screen_point: Vector2) -> Variant:
 func _tick(delta: float) -> void:
 	monitor.tick(delta)
 	_sync()
+	_make_room()
+
+
+## With big text a tall choice can reach up to the team meter: the monitor
+## still shows how Rohit is, so the meter steps aside.
+func _make_room() -> void:
+	if _result != null or _meters == null:
+		return
+	_meters.visible = not (_choices.visible and _choices.position.y < _meters.position.y + _meters.size.y + UiKit.px(4))
 
 
 func _coach_line() -> Array:
@@ -413,9 +425,10 @@ func show_result(reward: String) -> void:
 		var value := int(entry[1])
 		stack.add_child(UiKit.label(str(value), 17, UiKit.MINT if value >= 70 else (UiKit.AMBER if value >= 40 else UiKit.CORAL),
 			UiKit.heading_font()))
+	var notes := _note_list(column)
 	for note in op.notes().slice(0, 4):
 		var row := UiKit.hbox(8)
-		column.add_child(row)
+		notes.add_child(row)
 		var ok := bool(note["ok"])
 		var icon := UiIcon.make("check" if ok else "cross", 17, UiKit.MINT if ok else UiKit.CORAL)
 		icon.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
@@ -431,6 +444,7 @@ func show_result(reward: String) -> void:
 	done.name = "Done"
 	done.pressed.connect(func() -> void: done_pressed.emit())
 	buttons.add_child(done)
+	_fit_notes(notes, UiKit.px(440), 12)
 	_header.visible = false
 	_leave.visible = false
 	monitor.visible = false

@@ -17,7 +17,7 @@ plan"). This file covers how to build, run and test the game.
 | 3. Training | Day 2 skills lab: six scored, explained practice tasks (scrub in, monitor, history, instruments, IV line, stitching), trainers, best scores, Day 1 to Day 2 | Done |
 | 4. First operation | Day 3: Rohit's consent with his mother, scrubbing in, the time-out, instrument calls with Tom, incision, a complication called by Dr. Khan, the swab count, stitching, the talk with his family and Dr. Iyer's debrief; won, struggled or failed (Dr. Iyer takes over) | Done |
 | 5. Hospital life | Days 4 to 8 on the surgical ward: five patient stories (Lakshmi, Kunal, Aarav, an unknown rider, Mr. Fernandes), examining patients and reading X-rays as new skills, the bed-shortage politics with Mr. Malhotra, an on-call night, Dr. Rao's review and promotion to Junior Resident; an automated run from a new game to promotion | Done |
-| 6. Polish | Sound, animation passes, accessibility (text size, reduced motion, colour-blind-safe monitor), iPad layout, performance on older iPhones | Next |
+| 6. Polish | Settings (music, effects and voice volume, text size, reduce motion, colour-blind-safe monitor, battery saver), music for each place and a promotion fanfare, interface sounds and monitor beeps, screen fades and animated cards, confetti, room for the iPhone notch and home bar, and merged meshes so older iPhones draw about half as much | Done |
 | Later | More operations, more stories, Senior Resident and beyond, the rival and the strike storylines | |
 
 The earlier SwiftUI and SpriteKit prototype is kept on the git branch
@@ -61,15 +61,18 @@ game/main.gd            Screen flow: title, name, look, opening, Day 1 lobby, Da
                         Day 3 theatre, the ward from Day 4; loading and saving
 game/core/              Rules with no visuals: profile (best training scores, the rank
                         held), avatar look, XP curve, ranks, saves, seeded random numbers,
-                        walkable floor and paths, patient vitals
+                        walkable floor and paths, patient vitals, GameSettings
 game/avatar/            LowPoly mesh helpers, AvatarRig (the jointed, animated
                         character with gestures, gaze and lip movement), Props
-                        (things people hold), AvatarSheet (a line-up of looks)
-game/audio/             Voice murmurs and sound effects, synthesised in code
-game/ui/                UiKit (colours, fonts, buttons), title, name and avatar
-                        creator screens, lobby HUD, conversation screen,
-                        story overlay (fades, title cards, the letter), icons,
-                        the patient monitor and the instrument ring (reused in
+                        (things people hold), AvatarSheet (a line-up of looks),
+                        StaticBatch (merges meshes that never change)
+game/audio/             Voice murmurs and sound effects, synthesised in code, and
+                        Music (crossfading tracks, the fanfare)
+game/ui/                UiKit (colours, fonts, buttons, text size, safe area,
+                        animations), title, name and avatar creator screens,
+                        settings, lobby HUD, conversation screen, story overlay
+                        (fades, title cards, the letter, confetti), icons, the
+                        patient monitor and the instrument ring (reused in
                         operations)
 game/ui/training/       One screen per training task, on a shared TrainingView
                         (instructions, coaching, score card), including ExamView
@@ -96,8 +99,9 @@ story/                  The words: cast, opening, Day 1 conversations, banter, t
                         conversations, patient cases (cases.json), the theatre day
                         (theatre.json), the ward days (ward.json)
 assets/fonts/           Fredoka and Nunito (SIL Open Font License)
+assets/music/           The music, made by tools/make_music.py
 tests/                  The test runner and unit tests
-tools/                  Screenshot tool used by CI
+tools/                  Screenshot tool used by CI, and the music generator
 ```
 
 ## Writing story
@@ -152,6 +156,65 @@ corner.
 Rank is no longer worked out from XP. XP sets the level, and the rank only
 rises when someone promotes you (`PlayerProfile.promote()`), which Dr. Rao
 does at the review on Day 8.
+
+## Settings and accessibility
+
+`GameSettings` holds the settings for the device (not the career) in
+`user://settings.json`, written the same safe way as the save. Main loads them
+at start-up; the Settings panel (from the title screen and the pause menu)
+changes them live and saves on Done.
+
+- **Volumes:** the Music, Effects and Voices audio buses, made at run time.
+  Zero mutes a bus, and sound effects and voices are not even started.
+- **Text size:** `UiKit.set_text_size()` records each label's design size, and
+  `UiKit.refresh_text()` resizes every label on screen when the setting
+  changes. Body text grows by up to a quarter; headings of 28 and over stay as
+  they are so screens still fit. Panels grow around the text, score cards
+  scroll when they would be taller than the screen.
+- **Reduce motion:** cameras cut instead of gliding (`UiKit.motion_weight()`),
+  no button dips, pops or confetti, a quicker fade between screens, and the
+  title camera stays still.
+- **Colour-blind-safe monitor:** blue and orange instead of green and red,
+  with up and down arrows beside numbers out of range and a tick or cross on
+  the answer cells, so colour is never the only clue.
+- **Graphics:** Battery saver runs at 30 frames a second at three quarters of
+  the 3D resolution without anti-aliasing. iPhones before the iPhone 11 and
+  iPads before the 8th generation start on it.
+
+Edges of the screen: `UiKit.keep_off_edges()` moves a control in by the
+device's safe area (the notch, rounded corners and the home bar), the same on
+both sides so turning the phone round changes nothing. Screens call
+`UiKit.keep_children_off_edges()` once built; backgrounds that fill the screen
+are left alone. The screenshot tool pretends to be a notched iPhone
+(`UiKit.inset_override`) so the shots match the device.
+
+## Music and sound
+
+The four music tracks (title, hospital, theatre, night) and the fanfare are
+synthesised by `tools/make_music.py` (Python with numpy, and ffmpeg for the
+Ogg Vorbis files), so there are no third-party recordings. Run it again after
+changing a tune:
+
+```sh
+python3 tools/make_music.py
+```
+
+Scenes ask for a track with `Music.cue()`; Main owns the one Music node, which
+crossfades between tracks and dips the music under the promotion fanfare.
+Sound effects (`Sfx`) and voices are still made in code at run time.
+
+## Performance
+
+Everything is built from small meshes, and each costs a draw call.
+`StaticBatch.optimise()` runs at the end of each scene's setup and merges the
+meshes that can never change into one mesh per group and material look,
+coloured per vertex, so the scene looks the same (renders with and without
+it differ in a fraction of a percent of pixels, along a few edges). It leaves alone anything a
+script keeps in a variable, anything named or carrying metadata, hidden,
+see-through or glowing meshes, and characters' joints, so doors, lamps,
+blankets, faces and moving parts keep working. Scenes now draw 90 to 340
+meshes instead of 170 to 640. `tests/unit/test_performance.gd` keeps each
+scene inside a budget of meshes and triangles.
 
 ## Training tasks
 

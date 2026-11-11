@@ -24,6 +24,7 @@ var _card_time := 0.0
 var _card_t := 0.0
 var _letter: PanelContainer
 var _letter_t := -1.0
+var _confetti: Confetti
 
 
 func _init(for_profile: PlayerProfile = null) -> void:
@@ -146,6 +147,20 @@ func card(title: String, sub: String, time: float) -> void:
 	_fade_from = _fade.color
 
 
+## Confetti over everything, for a promotion. Nothing with Reduce motion on.
+func celebrate() -> void:
+	if GameSettings.current.reduce_motion:
+		return
+	if _confetti != null:
+		_confetti.queue_free()
+	_confetti = Confetti.new()
+	add_child(_confetti)
+
+
+func confetti() -> Confetti:
+	return _confetti
+
+
 func show_letter() -> void:
 	_fill_letter()
 	_letter.visible = true
@@ -174,6 +189,11 @@ func tick(delta: float) -> void:
 		var fade_in := clampf(_card_t / 0.5, 0.0, 1.0)
 		var fade_out := clampf((_card_time - _card_t) / 0.5, 0.0, 1.0)
 		_card.modulate.a = minf(fade_in, fade_out)
+	if _confetti != null:
+		_confetti.tick(delta)
+		if _confetti.finished():
+			_confetti.queue_free()
+			_confetti = null
 	if _letter_t >= 0.0:
 		_letter_t += delta
 		_letter.modulate.a = clampf(_letter_t / 0.35, 0.0, 1.0)

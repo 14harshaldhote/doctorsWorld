@@ -25,6 +25,10 @@ const TEXT_KICKER := Color("#A9D8D0")
 const INK := Color("#12333A")
 
 static var _fonts := {}
+static var _textures := {}
+## Stands in for the device's safe area in tests and screenshots (see
+## safe_insets()), or null to ask the device.
+static var inset_override: Variant = null
 
 
 ## Design pixels to canvas units.
@@ -60,9 +64,57 @@ static func heavy_font() -> Font:
 static func theme() -> Theme:
 	var made := Theme.new()
 	made.default_font = body_font()
-	made.default_font_size = int(px(14))
+	made.default_font_size = scaled_text(14)
 	made.set_color("font_color", "Label", TEXT)
 	return made
+
+
+## Sets a control's text size in design pixels, grown by the Text size
+## setting. refresh_text() sets it again when the setting changes.
+static func set_text_size(control: Control, size: float) -> void:
+	control.set_meta(&"text_size", size)
+	control.add_theme_font_size_override("font_size", scaled_text(size))
+
+
+## A text size in canvas units with the Text size setting applied. Body
+## text grows the most; big headings, already easy to read, grow less, and
+## titles of 28 and over not at all, so screens still fit.
+static func scaled_text(size: float) -> int:
+	var weight := clampf((size - 18.0) / 10.0, 0.0, 1.0)
+	return int(px(size) * lerpf(GameSettings.current.text_scale(), 1.0, weight))
+
+
+## Applies the Text size setting to every screen under root at once: the
+## panels and lists grow around the bigger text.
+static func refresh_text(root: Node) -> void:
+	var nodes: Array[Node] = [root]
+	nodes.append_array(root.find_children("*", "Control", true, false))
+	for node in nodes:
+		var control := node as Control
+		if control == null:
+			continue
+		if control.has_meta(&"text_size"):
+			set_text_size(control, float(control.get_meta(&"text_size")))
+		if control.theme != null:
+			control.theme.default_font_size = scaled_text(14)
+
+
+## How tall text wraps to in a given width (canvas units) at a design text
+## size, with the Text size setting applied.
+static func wrapped_height(text: String, width: float, size: float, which: Font = null) -> float:
+	var used := which if which != null else body_font()
+	return used.get_multiline_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, width, scaled_text(size)).y
+
+
+## Keeps a button at least as tall as the column of labels inside it (plus
+## padding top and bottom) as the text wraps or the text size changes.
+static func fit_height(button: Control, content: Control, padding: float) -> void:
+	var fit := func() -> void:
+		# Before the first layout the labels have no width and wrap every word.
+		if content.size.x > 1.0:
+			button.custom_minimum_size.y = content.get_combined_minimum_size().y + px(padding) * 2.0
+	content.minimum_size_changed.connect(fit)
+	content.resized.connect(fit)
 
 
 static func box(colour: Color, radius: float = 14, border: Color = Color.TRANSPARENT, border_width: float = 0,
@@ -84,7 +136,7 @@ static func box(colour: Color, radius: float = 14, border: Color = Color.TRANSPA
 static func label(text: String, size: float = 14, colour: Color = TEXT, which: Font = null) -> Label:
 	var made := Label.new()
 	made.text = text
-	made.add_theme_font_size_override("font_size", int(px(size)))
+	set_text_size(made, size)
 	made.add_theme_color_override("font_color", colour)
 	if which != null:
 		made.add_theme_font_override("font", which)
@@ -113,9 +165,125 @@ static func _style_button(button: Button, normal: StyleBox, pressed: StyleBox, t
 		button.add_theme_color_override(state, text_colour)
 	button.add_theme_color_override("font_disabled_color", Color(text_colour, 0.5))
 	button.add_theme_font_override("font", which)
-	button.add_theme_font_size_override("font_size", int(px(size)))
+	set_text_size(button, size)
 	button.focus_mode = Control.FOCUS_NONE
 	button.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	respond_to_press(button)
+
+
+## A button that dips a little when pressed and makes a soft tap. With
+## Reduce motion on it only changes colour.
+static func respond_to_press(button: BaseButton) -> void:
+	if button.has_meta("responds"):
+		return
+	button.set_meta("responds", true)
+	button.resized.connect(func() -> void: button.pivot_offset = button.size / 2.0)
+	button.button_down.connect(func() -> void:
+		if not GameSettings.current.reduce_motion:
+			button.scale = Vector2.ONE * 0.96)
+	button.button_up.connect(func() -> void:
+		if button.scale == Vector2.ONE or not button.is_inside_tree():
+			button.scale = Vector2.ONE
+			return
+		var back := button.create_tween()
+		back.tween_property(button, "scale", Vector2.ONE, 0.12).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT))
+	button.pressed.connect(func() -> void: Sfx.ui("tap", -14.0))
+
+
+## How far a camera moves towards its goal this frame: weight normally, or
+## all the way (a cut) when Reduce motion is on.
+static func motion_weight(weight: float) -> float:
+	return 1.0 if GameSettings.current.reduce_motion else weight
+
+
+## Fades a panel in, growing it slightly from its middle (just the fade
+## with Reduce motion on).
+static func pop_in(control: Control, seconds: float = 0.28) -> void:
+	if control == null or not control.is_inside_tree():
+		return
+	control.modulate.a = 0.0
+	var appear := control.create_tween().set_parallel(true)
+	appear.tween_property(control, "modulate:a", 1.0, seconds * 0.8)
+	if not GameSettings.current.reduce_motion:
+		control.scale = Vector2.ONE * 0.94
+		_keep_centred(control)
+		appear.tween_property(control, "scale", Vector2.ONE, seconds).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+
+
+## Pops controls (such as stars) in one after another.
+static func pop_one_by_one(controls: Array[Control], delay: float, gap: float = 0.14) -> void:
+	for index in controls.size():
+		var item := controls[index]
+		if item == null or not item.is_inside_tree():
+			continue
+		if GameSettings.current.reduce_motion:
+			continue
+		item.scale = Vector2.ZERO
+		_keep_centred(item)
+		var grow := item.create_tween()
+		grow.tween_interval(delay + gap * index)
+		grow.tween_property(item, "scale", Vector2.ONE, 0.3).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+
+
+## Slides a control in from an edge (by offset, in canvas units) as it fades
+## in; only the fade with Reduce motion on.
+static func slide_in(control: Control, from: Vector2, seconds: float = 0.3) -> void:
+	if control == null or not control.is_inside_tree():
+		return
+	control.modulate.a = 0.0
+	var motion := control.create_tween().set_parallel(true)
+	motion.tween_property(control, "modulate:a", 1.0, seconds)
+	if not GameSettings.current.reduce_motion:
+		var to := control.position
+		control.position = to + from
+		motion.tween_property(control, "position", to, seconds).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+
+
+static func _keep_centred(control: Control) -> void:
+	control.pivot_offset = control.size / 2.0
+	if not control.has_meta("centred"):
+		control.set_meta("centred", true)
+		control.resized.connect(func() -> void: control.pivot_offset = control.size / 2.0)
+
+
+## A volume slider, 0 to 100, with a big round handle for thumbs.
+static func slider() -> HSlider:
+	var made := HSlider.new()
+	made.min_value = 0
+	made.max_value = 100
+	made.step = 5
+	made.custom_minimum_size = Vector2(0, px(30))
+	made.focus_mode = Control.FOCUS_NONE
+	var track := box(Color(1, 1, 1, 0.12), 4)
+	track.content_margin_top = px(3)
+	track.content_margin_bottom = px(3)
+	var filled := box(MINT, 4)
+	filled.content_margin_top = px(3)
+	filled.content_margin_bottom = px(3)
+	made.add_theme_stylebox_override("slider", track)
+	made.add_theme_stylebox_override("grabber_area", filled)
+	made.add_theme_stylebox_override("grabber_area_highlight", filled)
+	var handle := _dot_texture(int(px(11)), AMBER)
+	made.add_theme_icon_override("grabber", handle)
+	made.add_theme_icon_override("grabber_highlight", handle)
+	return made
+
+
+static func _dot_texture(radius: int, colour: Color) -> ImageTexture:
+	var key := "dot%d%s" % [radius, colour.to_html()]
+	if _textures.has(key):
+		return _textures[key]
+	var size := radius * 2 + 2
+	var image := Image.create(size, size, false, Image.FORMAT_RGBA8)
+	var middle := Vector2(size / 2.0, size / 2.0)
+	for y in size:
+		for x in size:
+			var distance := Vector2(x + 0.5, y + 0.5).distance_to(middle)
+			var edge := clampf(radius - distance + 0.5, 0.0, 1.0)
+			image.set_pixel(x, y, Color(colour, edge))
+	var texture := ImageTexture.create_from_image(image)
+	_textures[key] = texture
+	return texture
 
 
 ## The amber call-to-action button with a darker lip underneath.
@@ -220,3 +388,55 @@ static func grid(columns: int, gap: float = 8) -> GridContainer:
 static func fill(control: Control) -> Control:
 	control.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	return control
+
+
+## The room to leave at the screen's edges for an iPhone's notch, rounded
+## corners and home bar, in canvas units: x for the left and right (the
+## same on both sides, so turning the phone round changes nothing), y for
+## the top and z for the bottom. Nothing on computers.
+static func safe_insets() -> Vector3:
+	if inset_override != null:
+		return inset_override
+	var tree := Engine.get_main_loop() as SceneTree
+	if not OS.has_feature("mobile") or tree == null:
+		return Vector3.ZERO
+	var screen := Vector2(DisplayServer.screen_get_size())
+	var safe := DisplayServer.get_display_safe_area()
+	if screen.x <= 0.0 or screen.y <= 0.0 or safe.size.x <= 0 or safe.size.y <= 0:
+		return Vector3.ZERO
+	var units := tree.root.get_visible_rect().size / screen
+	var side := maxf(maxf(safe.position.x, screen.x - safe.end.x), 0.0) * units.x
+	return Vector3(side, maxf(safe.position.y, 0.0) * units.y, maxf(screen.y - safe.end.y, 0.0) * units.y)
+
+
+## Moves a control placed against the screen's edges (by its anchors) in by
+## the safe area, so nothing sits under the notch or the home bar. Call it
+## once the control is placed. Centred edges stay put.
+static func keep_off_edges(control: Control) -> Control:
+	var room := safe_insets()
+	if room == Vector3.ZERO:
+		return control
+	for side: int in [SIDE_LEFT, SIDE_RIGHT, SIDE_TOP, SIDE_BOTTOM]:
+		var anchor := control.get_anchor(side)
+		var horizontal := side == SIDE_LEFT or side == SIDE_RIGHT
+		var amount := room.x if horizontal else (room.y if is_zero_approx(anchor) else room.z)
+		if is_zero_approx(anchor):
+			control.set_offset(side, control.get_offset(side) + amount)
+		elif is_equal_approx(anchor, 1.0):
+			control.set_offset(side, control.get_offset(side) - amount)
+	return control
+
+
+## keep_off_edges() for every control directly under parent, except those
+## that fill it (backgrounds and layers that line up with the 3D view).
+static func keep_children_off_edges(parent: Control) -> void:
+	if safe_insets() == Vector3.ZERO:
+		return
+	for child in parent.get_children():
+		var control := child as Control
+		if control == null:
+			continue
+		var fills := is_zero_approx(control.anchor_left) and is_zero_approx(control.anchor_top) \
+			and is_equal_approx(control.anchor_right, 1.0) and is_equal_approx(control.anchor_bottom, 1.0)
+		if not fills:
+			keep_off_edges(control)

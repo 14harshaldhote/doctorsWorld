@@ -9,12 +9,13 @@ func _main() -> Main:
 	_clear()
 	var main := Main.new()
 	main.store = SaveStore.new(SAVE)
+	main.settings_path = "user://test_flow/settings.json"
 	add_node(main)
 	return main
 
 
 func _clear() -> void:
-	for file: String in ["save.json", "save.json.tmp"]:
+	for file: String in ["save.json", "save.json.tmp", "settings.json", "settings.json.tmp"]:
 		var path := "user://test_flow/" + file
 		if FileAccess.file_exists(path):
 			DirAccess.remove_absolute(path)

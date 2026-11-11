@@ -61,6 +61,14 @@ func value_text(kind: String) -> String:
 	return ""
 
 
+## 1 when a number is too high, -1 when too low, 0 when normal.
+func direction(kind: String) -> int:
+	var words := problem_words(kind)
+	if words.is_empty():
+		return 0
+	return 1 if words in ["too fast", "too high"] else -1
+
+
 ## "too fast", "too low" and so on, or "" when normal.
 func problem_words(kind: String) -> String:
 	if is_normal(kind):

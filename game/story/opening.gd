@@ -129,6 +129,7 @@ func _use_set(new_name: String) -> void:
 	set_name = new_name
 	current_set.name = new_name.capitalize()
 	add_child(current_set)
+	StaticBatch.optimise(current_set)
 	story.actors = current_set.actors
 
 

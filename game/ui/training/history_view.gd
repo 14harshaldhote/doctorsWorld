@@ -44,7 +44,9 @@ func _build() -> void:
 		button.name = question_id.capitalize()
 		button.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		button.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		button.custom_minimum_size = Vector2(UiKit.px(220), UiKit.px(38))
+		var ask_text := str(entry.get("ask", ""))
+		button.custom_minimum_size = Vector2(UiKit.px(220),
+			maxf(UiKit.px(38), UiKit.wrapped_height(ask_text, UiKit.px(220 - 12), 13, UiKit.heading_medium_font()) + UiKit.px(12)))
 		button.pressed.connect(ask.bind(question_id))
 		row.add_child(button)
 		_questions[question_id] = button
@@ -101,7 +103,7 @@ func _tick(_delta: float) -> void:
 
 func _place_notes() -> void:
 	if _header != null and _notes_card != null:
-		_notes_card.position = Vector2(UiKit.px(12), _header.position.y + _header.get_combined_minimum_size().y + UiKit.px(8))
+		_notes_card.position = Vector2(_header.position.x, _header.position.y + _header.get_combined_minimum_size().y + UiKit.px(8))
 
 
 func _sync() -> void:
@@ -143,3 +145,7 @@ func _hide_controls() -> void:
 
 func button_for(question_id: String) -> Button:
 	return _questions.get(question_id)
+
+
+func _side_card() -> Control:
+	return _notes_card

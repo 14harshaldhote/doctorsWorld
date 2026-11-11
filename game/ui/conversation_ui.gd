@@ -72,6 +72,7 @@ func _ready() -> void:
 	_build_subtitle()
 	_build_choices()
 	_build_skip()
+	UiKit.keep_children_off_edges(self)
 	close()
 
 
@@ -129,9 +130,11 @@ func _build_box() -> void:
 	_box.name = "Line"
 	_box.anchor_top = 1.0
 	_box.anchor_bottom = 1.0
+	_box.anchor_right = 1.0
 	_box.grow_vertical = Control.GROW_DIRECTION_BEGIN
 	_box.offset_left = UiKit.px(14)
-	_box.offset_right = UiKit.px(14 + 476)
+	# Up to the replies panel, whatever the screen and the notch leave.
+	_box.offset_right = -UiKit.px(14 + 326 + 14)
 	_box.offset_bottom = -UiKit.px(14)
 	add_child(_box)
 	var column := UiKit.vbox(4)
@@ -145,7 +148,7 @@ func _build_box() -> void:
 	top.add_child(_tap_hint)
 	_text = UiKit.label("", 16, UiKit.TEXT)
 	_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_text.custom_minimum_size = Vector2(UiKit.px(440), UiKit.px(44))
+	_text.custom_minimum_size = Vector2(0, UiKit.px(44))
 	column.add_child(_text)
 
 
@@ -177,16 +180,28 @@ func _build_choices() -> void:
 	_choices = _panel(0.9, 16, Vector2(14, 14))
 	_choices.name = "Choices"
 	_choices.mouse_filter = Control.MOUSE_FILTER_STOP
+	# Top right, as tall as the replies (so it doesn't stand empty on an iPad).
 	_choices.anchor_left = 1.0
 	_choices.anchor_right = 1.0
-	_choices.anchor_bottom = 1.0
 	_choices.offset_left = -UiKit.px(14 + 326)
 	_choices.offset_right = -UiKit.px(14)
 	_choices.offset_top = UiKit.px(14)
-	_choices.offset_bottom = -UiKit.px(14)
+	_choices.offset_bottom = UiKit.px(14)
 	add_child(_choices)
+	# The replies scroll if, with big text, they would run off the screen.
+	var scroll := ScrollContainer.new()
+	scroll.name = "Scroll"
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	_choices.add_child(scroll)
 	_choice_list = UiKit.vbox(10)
-	_choices.add_child(_choice_list)
+	_choice_list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	scroll.add_child(_choice_list)
+	var fit := func() -> void:
+		var room := UiKit.safe_insets()
+		var most := get_viewport_rect().size.y - UiKit.px(28 + 28) - room.y - room.z
+		scroll.custom_minimum_size.y = minf(_choice_list.get_combined_minimum_size().y, most)
+	_choice_list.minimum_size_changed.connect(fit)
+	_choice_list.resized.connect(fit)
 
 
 func _build_skip() -> void:
@@ -252,7 +267,10 @@ func show_choices(options: Array, card: Dictionary = {}) -> void:
 	for index in options.size():
 		var option: Dictionary = options[index]
 		_choice_list.add_child(_choice_button(index, option))
+	var appearing := not _choices.visible
 	_choices.visible = true
+	if appearing:
+		UiKit.pop_in(_choices, 0.24)
 	_skip.visible = false
 	if mode == Mode.CINEMA and _subtitle.visible:
 		# Move the question to the bottom left, clear of the replies.
@@ -394,12 +412,14 @@ func _choice_button(index: int, option: Dictionary) -> Button:
 	words.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	column.add_child(words)
 	# The button is as tall as its words.
-	var words_height := UiKit.body_font().get_multiline_string_size(text, HORIZONTAL_ALIGNMENT_LEFT,
-		UiKit.px(268), int(UiKit.px(13))).y
-	button.custom_minimum_size.y = UiKit.px(9 + 17 + 4 + 9) + words_height
+	var words_height := UiKit.wrapped_height(text, UiKit.px(268), 13)
+	var tone_height := UiKit.wrapped_height("Tone", UiKit.px(268), 12, UiKit.heavy_font())
+	button.custom_minimum_size.y = UiKit.px(9 + 4 + 9) + tone_height + words_height
+	UiKit.fit_height(button, column, 9)
 	for child in column.find_children("*", "Control", true, false):
 		(child as Control).mouse_filter = Control.MOUSE_FILTER_IGNORE
 	button.pressed.connect(_pick.bind(index))
+	UiKit.respond_to_press(button)
 	for child in column.find_children("*", "Label", true, false):
 		(child as Label).mouse_filter = Control.MOUSE_FILTER_IGNORE
 	return button

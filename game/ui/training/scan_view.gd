@@ -120,8 +120,9 @@ func _sync() -> void:
 
 ## The film is as big as the space between the panels allows.
 func _place_film() -> void:
-	var left := UiKit.px(LEFT)
-	var right := UiKit.px(ANSWERS + 24)
+	var room := UiKit.safe_insets().x
+	var left := maxf(UiKit.px(LEFT) + room, _header.position.x + _header.size.x + UiKit.px(12))
+	var right := UiKit.px(ANSWERS + 24) + room
 	var wide := size.x - left - right
 	var tall := size.y - UiKit.px(24) - UiKit.px(36 + 6 + 16)
 	var side := maxf(UiKit.px(160), minf(wide - UiKit.px(16), tall))
