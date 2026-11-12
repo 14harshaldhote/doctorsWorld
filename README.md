@@ -85,8 +85,15 @@ are in:
 - Conversations with replies. Pick how you answer and people trust you more,
   or less, and a little meter shows you exactly how badly that went.
 - People move when they talk: hands, shrugs, nods, turning to look at whoever
-  is speaking, lips that keep time, and a murmur of a voice. Nurses gossip by
-  the vending machine whether you're listening or not.
+  is speaking, and lips that keep time. Nurses gossip by the vending machine
+  whether you're listening or not.
+- Everyone talks out loud. Every line you can read, someone actually says,
+  in their own voice, using the voices already on your phone, and the words
+  appear as they're said instead of racing ahead. Dr. Iyer sounds like Dr.
+  Iyer all game, children sound like children, and your doctor says your
+  replies out loud too, so you can hear exactly how that sounded. The music
+  ducks out of the way while anyone speaks. Too slow? Too fast? There's a
+  setting. Too honest? No setting for that.
 - Day 2, the skills lab. Six stations, three trainers, and a sign promising
   that everything you break is plastic. Scrub in without touching your face
   (you will want to). Read a patient monitor before Dr. Iyer reads you.
@@ -140,14 +147,18 @@ are in:
   you've earned it you finish Day 8 as a Junior Resident. Experience now
   shows your level; rank comes from being promoted. The next morning is an
   ordinary day, which is somehow worse.
-- Music. A gentle tune for the title, a busy one for the wards, a tense one
-  with a heartbeat in it for theatre, a lonely one for the night shift, and a
-  fanfare when you're promoted, which is the only time anyone in a hospital
-  gets one. Buttons click, the monitor beeps with the patient's heart (lower
+- Music. A minute or more of each, so it doesn't loop in your head like a
+  pager: a warm tune for the title, an easy one for the ward, a tense one for
+  theatre (no drums: the heart monitor keeps the beat, and you'd rather it
+  kept going), a lonely piano for the night shift, an urgent one for when the
+  doors bang open, a sad one for when things go wrong, and a fanfare when
+  you're promoted, which is the only time anyone in a hospital gets one. Buttons click, the monitor beeps with the patient's heart (lower
   when their oxygen drops, so you'll hear it before you see it), and good
   scores chime.
 - Settings, from the title screen or the pause menu: separate volumes for
-  music, sound effects and voices; bigger text, which grows everywhere at once;
+  music, sound effects and voices; reading lines aloud (off, slower, normal or
+  faster) and a lighter or deeper voice for your doctor, also offered when you
+  design them; bigger text, which grows everywhere at once;
   Reduce motion, for people who'd rather the camera didn't swoop; a
   colour-blind-safe monitor in blue and orange with arrows, because "the red
   number" is not a diagnosis; and Battery saver, which older iPhones pick by

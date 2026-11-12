@@ -103,7 +103,7 @@ const DAYS := {
 			"page": "Priya: Mrs. Banerjee can't sleep. She's asking for the doctor."},
 		{"id": "late", "card": ["02:10", "The ward is asleep. Then the doors bang open."]},
 		{"id": "rider", "row": "Emergency in admissions", "go": "trolley", "talk": "rider_arrive", "with": "rider",
-			"tasks": [["exam", "rider_exam"]], "after": "rider_after", "coach": "priya",
+			"tasks": [["exam", "rider_exam"]], "after": "rider_after", "coach": "priya", "music": "emergency",
 			"page": "Priya: ADMISSIONS. NOW. He's bleeding."},
 	],
 	7: [
@@ -880,6 +880,8 @@ func _next_beat() -> void:
 		return
 	var current := beat()
 	task_queue = (current.get("tasks", []) as Array).duplicate(true)
+	if place != "theatre":
+		Music.cue(_place_music())
 	_stage_beat(current)
 	if current.has("at"):
 		profile.minutes = maxi(profile.minutes, int(current["at"]))
@@ -1290,7 +1292,7 @@ func open_task(task_id: String, which_case: String) -> void:
 		else:
 			var exam := task as ExamTask
 			if exam.body == "trauma":
-				Music.cue("theatre")
+				Music.cue("emergency")
 			if exam.body != "wrist":
 				put(exam.actor, active_bed + ":lie")
 				station.uncover(true)
@@ -1363,8 +1365,13 @@ func _on_task_finished(task: TrainingTask) -> void:
 	save_requested.emit()
 
 
-## The music for the ward as it is now: calm by day, quiet at night.
+## The music for the ward as it is now: calm by day, quiet at night, or
+## the beat's own ("music": "emergency" for a crash call).
 func _place_music() -> String:
+	if place != "theatre" and place != "seminar":
+		var beat_track := str(beat().get("music", ""))
+		if not beat_track.is_empty():
+			return beat_track
 	return "night" if night else "hospital"
 
 

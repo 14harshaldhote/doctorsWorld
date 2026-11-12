@@ -20,6 +20,7 @@ var _shown_facts := -1
 func _build() -> void:
 	var history := _history()
 	speaker_override = history.patient
+	voice_override = history.actor
 	_panel = _right_panel(330)
 	_panel.name = "Questions"
 	_panel.anchor_bottom = 1.0

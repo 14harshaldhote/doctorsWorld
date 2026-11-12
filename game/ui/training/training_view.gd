@@ -22,6 +22,8 @@ var lab: Node
 var trainer := "iyer"
 ## Who the coach line is from, if not the trainer (an acting patient).
 var speaker_override := ""
+## The cast id whose voice reads the coach line, if not the trainer's.
+var voice_override := ""
 ## The score card's main button.
 var done_text := "Back to the lab"
 ## Real patients can't be examined twice: false hides "Try again".
@@ -41,6 +43,9 @@ var _coach_text: Label
 var _leave: Button
 var _result: PanelContainer
 var _shown_coach := ""
+## The voice reading the coach line aloud, when the device can speak.
+var _coach_voice := SpokenLine.new()
+var _coach_heard := false
 var _typed := 0.0
 var _since_syllable := 1.0
 var _result_in := -1.0
@@ -366,6 +371,11 @@ func _refresh() -> void:
 		_coach_text.add_theme_color_override("font_color", Color("#FFC9B8") if bool(line[1]) else UiKit.TEXT)
 		_typed = 0.0
 		_coach_text.visible_characters = 0
+		_coach_heard = false
+		if _shown_coach.is_empty():
+			_coach_voice.stop()
+		else:
+			_coach_heard = _coach_voice.start(_shown_coach, voice_id())
 	# With big text the case notes can reach down to the coach line, which
 	# then steps aside (the notes already hold what was found).
 	var card := _side_card()
@@ -373,12 +383,34 @@ func _refresh() -> void:
 	_coach_box.visible = not _shown_coach.is_empty() and not result_open() and not crowded
 
 
+## Who reads the coach line aloud: the trainer, or the patient speaking.
+func voice_id() -> String:
+	return voice_override if not voice_override.is_empty() else trainer
+
+
+## The voice for the coach line (for tests).
+func coach_voice() -> SpokenLine:
+	return _coach_voice
+
+
 func _type_coach(delta: float) -> void:
-	if _coach_text == null or _typed >= _shown_coach.length():
-		_set_trainer_talking(false)
+	if _coach_text == null:
+		return
+	var voiced := _coach_heard and not _coach_voice.failed
+	if _typed >= _shown_coach.length():
+		if _coach_voice.speaking:
+			_coach_voice.advance(delta, _typed)
+		_set_trainer_talking(voiced and _coach_voice.speaking)
 		return
 	var before := int(_typed)
-	_typed = minf(_typed + delta * TYPE_SPEED, _shown_coach.length())
+	if voiced:
+		# The words appear as the voice says them.
+		var target := _coach_voice.advance(delta, _typed)
+		voiced = not _coach_voice.failed
+		if voiced:
+			_typed = minf(move_toward(_typed, target, delta * SpokenLine.REVEAL_SPEED), _shown_coach.length())
+	if not voiced:
+		_typed = minf(_typed + delta * TYPE_SPEED, _shown_coach.length())
 	_coach_text.visible_characters = int(_typed)
 	_since_syllable += delta
 	for index in range(before, int(_typed)):
@@ -386,20 +418,24 @@ func _type_coach(delta: float) -> void:
 		if letter in "aeiou" and (index == 0 or _shown_coach[index - 1].to_lower() not in "aeiou") \
 				and _since_syllable >= 0.08:
 			_since_syllable = 0.0
-			_trainer_syllable(letter)
+			_trainer_syllable(letter, not voiced)
 	_set_trainer_talking(_typed < _shown_coach.length())
+
+
+func _exit_tree() -> void:
+	_coach_voice.stop()
 
 
 func _speaking_rig() -> AvatarRig:
 	if lab != null and lab.has_method("rig_for"):
-		return lab.rig_for(trainer)
+		return lab.rig_for(voice_id())
 	return null
 
 
-func _trainer_syllable(letter: String) -> void:
+func _trainer_syllable(letter: String, with_voice: bool = true) -> void:
 	var rig := _speaking_rig()
 	if rig != null:
-		rig.say_syllable(letter)
+		rig.say_syllable(letter, with_voice)
 
 
 func _set_trainer_talking(on: bool) -> void:

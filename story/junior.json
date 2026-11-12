@@ -256,6 +256,10 @@
 			"if": "op_deepa_failed",
 			"then": [
 				{
+					"do": "music",
+					"track": "sad"
+				},
+				{
 					"say": "iyer",
 					"text": "It's closed, Deepa. It took longer than it should. You'll heal, but come back in two days so we can check it.",
 					"mood": "calm",
@@ -987,6 +991,10 @@
 			"if": "op_farida_failed",
 			"then": [
 				{
+					"do": "music",
+					"track": "sad"
+				},
+				{
 					"say": "farida",
 					"text": "Is it done? Why does Dr. Iyer look so tired?",
 					"mood": "tired",
@@ -1651,6 +1659,10 @@
 		{
 			"if": "op_raju_failed",
 			"then": [
+				{
+					"do": "music",
+					"track": "sad"
+				},
 				{
 					"say": "iyer",
 					"text": "He's in intensive care. Dr. Khan is with him. The next twenty-four hours matter.",

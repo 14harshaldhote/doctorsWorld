@@ -216,7 +216,9 @@ func _sync() -> void:
 	var exam := _exam()
 	if exam == null or _decide == null:
 		return
-	speaker_override = exam.patient if not exam.last_said.is_empty() and exam.coach == exam.last_said else ""
+	var patient_speaks := not exam.last_said.is_empty() and exam.coach == exam.last_said
+	speaker_override = exam.patient if patient_speaks else ""
+	voice_override = exam.actor if patient_speaks else ""
 	var cam := view_camera()
 	for spot_id: String in _spots:
 		var holder: Control = _spots[spot_id]

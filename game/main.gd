@@ -41,7 +41,14 @@ func _ready() -> void:
 	show_title()
 
 
+## A line being read aloud stops when the game goes to the background.
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_APPLICATION_PAUSED or what == NOTIFICATION_WM_CLOSE_REQUEST:
+		Speech.stop()
+
+
 func _exit_tree() -> void:
+	Speech.stop()
 	if Music.player == music:
 		Music.player = null
 	if Sfx.host == self:
@@ -49,6 +56,7 @@ func _exit_tree() -> void:
 
 
 func _swap(next: Node) -> void:
+	Speech.stop()
 	var changing := screen != null
 	if screen != null:
 		remove_child(screen)

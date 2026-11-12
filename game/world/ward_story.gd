@@ -73,7 +73,7 @@ const DAYS := {
 			"put": [["rao", "seminar:head"], ["sethi", "seminar:screen"], ["iyer", "seminar:seat1"],
 				["you", "seminar:seat2"], ["grace", "seminar:seat3"], ["malhotra", "seminar:seat4"]]},
 		{"id": "raju", "row": "Emergency: a stuck hernia", "go": "trolley", "talk": "raju_arrive", "with": "raju",
-			"page": "Priya: Admissions, now. Groin lump since last night. And a VIP at the desk.",
+			"music": "emergency", "page": "Priya: Admissions, now. Groin lump since last night. And a VIP at the desk.",
 			"put": [["raju", "trolley:lie"], ["priya", "trolley:other"], ["you", "door"], ["iyer", "desk:left"],
 				["grace", "desk:behind"], ["mehra", "desk:right"], ["malhotra", "desk:far"]]},
 		{"id": "mehra", "row": "Mrs. Mehra in the side room", "if": "mehra_first", "go": "side", "talk": "mehra_seen",

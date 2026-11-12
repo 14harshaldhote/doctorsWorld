@@ -7,7 +7,7 @@ config_version=5
 
 config/name="Doctors World"
 config/description="An original story game about one doctor's career, from first day to Chief of Medicine."
-config/version="0.9.1"
+config/version="0.9.2"
 run/main_scene="res://game/main.tscn"
 config/features=PackedStringArray("4.7", "Mobile")
 config/icon="res://assets/icon.png"
@@ -16,6 +16,8 @@ config/icon="res://assets/icon.png"
 
 ; Play sound with the ring/silent switch on silent; the game has its own volume settings.
 general/ios/session_category=3
+; Characters read their lines aloud with the device's own voices (Speech).
+general/text_to_speech=true
 
 [display]
 

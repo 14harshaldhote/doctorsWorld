@@ -27,6 +27,8 @@ func _initialize() -> void:
 	UiKit.inset_override = Vector3(UiKit.px(47), 0, UiKit.px(21)) if _prefix.begins_with("iphone") \
 		else Vector3(0, 0, UiKit.px(20))
 	DirAccess.make_dir_recursive_absolute(_out)
+	# The shots are taken on story time, without waiting for voices.
+	Speech.enabled = false
 	_run.call_deferred()
 
 

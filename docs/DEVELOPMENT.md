@@ -72,8 +72,9 @@ game/avatar/            LowPoly mesh helpers, AvatarRig (the jointed, animated
                         character with gestures, gaze and lip movement), Props
                         (things people hold), AvatarSheet (a line-up of looks),
                         StaticBatch (merges meshes that never change)
-game/audio/             Voice murmurs and sound effects, synthesised in code, and
-                        Music (crossfading tracks, the fanfare)
+game/audio/             Voice murmurs and sound effects, synthesised in code,
+                        Music (crossfading tracks, the fanfare, ducking) and
+                        Speech (lines read aloud with the device's voices)
 game/ui/                UiKit (colours, fonts, buttons, text size, safe area,
                         animations), title, name and avatar creator screens,
                         settings, lobby HUD, conversation screen, story overlay
@@ -217,6 +218,10 @@ changes them live and saves on Done.
 
 - **Volumes:** the Music, Effects and Voices audio buses, made at run time.
   Zero mutes a bus, and sound effects and voices are not even started.
+- **Read lines aloud:** off, or slower, normal or faster speech
+  (`read_aloud`, `speech_speed`), and the player's doctor's voice, lighter,
+  deeper or silent (`your_voice`, also chosen in the character creator). See
+  Spoken lines below.
 - **Text size:** `UiKit.set_text_size()` records each label's design size, and
   `UiKit.refresh_text()` resizes every label on screen when the setting
   changes. Body text grows by up to a quarter; headings of 28 and over stay as
@@ -241,18 +246,58 @@ are left alone. The screenshot tool pretends to be a notched iPhone
 
 ## Music and sound
 
-The four music tracks (title, hospital, theatre, night) and the fanfare are
-synthesised by `tools/make_music.py` (Python with numpy, and ffmpeg for the
-Ogg Vorbis files), so there are no third-party recordings. Run it again after
-changing a tune:
+The six music tracks (title, hospital, theatre, night, emergency, sad) and
+the fanfare are composed and synthesised by `tools/make_music.py` (Python
+with numpy, and ffmpeg for the Ogg Vorbis files), so there are no third-party
+recordings. Each loop is a minute or more, in stereo, with a reverb; anything
+that rings past the end of a loop wraps round to its start, so the loops join
+without a seam. Loudness is set the way a phone speaker hears it (above about
+250 Hz), a little under the old tracks, so speech stays clear. Run it again
+after changing a tune (about two minutes):
 
 ```sh
-python3 tools/make_music.py
+python3 tools/make_music.py            # all tracks
+python3 tools/make_music.py sad night  # some
 ```
 
 Scenes ask for a track with `Music.cue()`; Main owns the one Music node, which
-crossfades between tracks and dips the music under the promotion fanfare.
-Sound effects (`Sfx`) and voices are still made in code at run time.
+crossfades between tracks, dips the music under the promotion fanfare, and
+dips it under spoken lines (`Music.duck_for_speech()`, a gain effect on the
+Music bus). A ward beat can name its own music (`"music": "emergency"` for a
+crash call), which plays until the beat ends, and a conversation can change
+the music for as long as it lasts with `{"do": "music", "track": "sad"}`.
+Sound effects (`Sfx`) and the fallback murmur are made in code at run time.
+
+## Spoken lines
+
+Every line is read aloud with the device's own text-to-speech (Godot's
+`DisplayServer.tts_*`, which on iOS is `AVSpeechSynthesizer`; it needs
+`audio/general/text_to_speech` in the project settings). It's free, offline,
+and nothing leaves the device.
+
+- `Speech` picks the voices: English ones only, clearer (enhanced or premium)
+  before standard, Indian English before other accents, never the joke voices.
+  They are split into higher and lower voices by name. Each cast member has a
+  `gender` (and `child`, `pace`) in `story/cast.json`; they share out the
+  voices of their kind in cast order, the first being the player's, and their
+  `voice` level sets the pitch on top, so people sharing a voice still sound
+  apart. `Speech.prepare()` turns the shown text into what is said ("Dr." is
+  "Doctor", "120/80" is "120 over 80", shouted capitals are words) and keeps a
+  map back to the shown letters.
+- `SpokenLine` paces one typed line to its voice: the engine reports each
+  word it reaches and the text shows up to the end of that word, so it never
+  runs ahead. If the engine gives no word marks the text creeps on at about
+  speaking pace; if the voice never starts, the line is typed as before.
+- `ConversationUi` and `TrainingView` (coach lines, patients answering in
+  exams and histories) use it; `StoryPlayer` also has the player say their
+  chosen reply before the next line. Lobby banter stays a murmur.
+- Where the device has no English voice (and in headless tests), lines fall
+  back to the murmur. Tests use a fake engine (`tests/unit/fake_speech.gd`)
+  that sends the same events as the real one. The screenshot tool turns
+  speech off (`Speech.enabled`) so shots don't wait on voices.
+- Better voices: on an iPhone, Settings > Accessibility > Spoken Content >
+  Voices > English, where the enhanced voices can be downloaded; the game
+  prefers them by itself.
 
 ## Performance
 

@@ -662,6 +662,10 @@
 	],
 	"after_failed": [
 		{
+			"do": "music",
+			"track": "sad"
+		},
+		{
 			"say": "sunita",
 			"text": "Where is he? Why did Dr. Iyer go back in? Nobody tells me anything!",
 			"mood": "shocked",
@@ -908,6 +912,10 @@
 		}
 	],
 	"debrief_failed": [
+		{
+			"do": "music",
+			"track": "sad"
+		},
 		{
 			"say": "iyer",
 			"text": "Sit down a minute.",

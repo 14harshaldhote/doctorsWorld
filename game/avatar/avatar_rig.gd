@@ -199,11 +199,12 @@ func face_point() -> Vector3:
 	return global_position + Vector3(0, head_height, 0)
 
 
-## Opens the mouth for one spoken syllable and plays the voice murmur.
-func say_syllable(letter: String = "a") -> void:
+## Opens the mouth for one spoken syllable and plays the voice murmur
+## (with_voice false when the line is read aloud by a real voice).
+func say_syllable(letter: String = "a", with_voice: bool = true) -> void:
 	_mouth_open = 1.0
 	_since_syllable = 0.0
-	if not Voice.enabled or not is_inside_tree() or GameSettings.current.voices <= 0.0:
+	if not with_voice or not Voice.enabled or not is_inside_tree() or GameSettings.current.voices <= 0.0:
 		return
 	if _voice == null:
 		GameSettings.ensure_buses()

@@ -1,8 +1,9 @@
 class_name GameSettings
 extends RefCounted
 ## The player's settings for this device: how loud the music, sound effects
-## and voices are, the text size, reduced motion, the colour-blind-safe
-## monitor and the graphics mode. They belong to the device, not the career,
+## and voices are, whether lines are read aloud (how fast, and in which
+## voice for the player's doctor), the text size, reduced motion, the
+## colour-blind-safe monitor and the graphics mode. They belong to the device, not the career,
 ## so a new career keeps them. Kept in their own small JSON file, written
 ## safely the same way as the save.
 
@@ -27,6 +28,12 @@ var text_size := 0
 var reduce_motion := false
 var colour_safe := false
 var graphics := "smooth"
+## Characters read their lines aloud (see Speech).
+var read_aloud := true
+## Index into Speech.SPEEDS: slower, normal, faster.
+var speech_speed := 1
+## The player's doctor's voice: 0 lighter, 1 deeper, 2 silent.
+var your_voice := 0
 
 
 func text_scale() -> float:
@@ -58,7 +65,8 @@ func set_volume(bus: String, value: float) -> void:
 
 func to_dict() -> Dictionary:
 	return {"music": music, "effects": effects, "voices": voices, "text_size": text_size,
-		"reduce_motion": reduce_motion, "colour_safe": colour_safe, "graphics": graphics}
+		"reduce_motion": reduce_motion, "colour_safe": colour_safe, "graphics": graphics,
+		"read_aloud": read_aloud, "speech_speed": speech_speed, "your_voice": your_voice}
 
 
 ## Reads saved settings, keeping the default for anything missing or broken.
@@ -73,7 +81,11 @@ static func from_dict(data: Variant) -> GameSettings:
 			made.set_volume(bus, float(raw[key]))
 	if typeof(raw.get("text_size")) in [TYPE_INT, TYPE_FLOAT]:
 		made.text_size = clampi(int(raw["text_size"]), 0, TEXT_SCALES.size() - 1)
-	for toggle: String in ["reduce_motion", "colour_safe"]:
+	if typeof(raw.get("speech_speed")) in [TYPE_INT, TYPE_FLOAT]:
+		made.speech_speed = clampi(int(raw["speech_speed"]), 0, 2)
+	if typeof(raw.get("your_voice")) in [TYPE_INT, TYPE_FLOAT]:
+		made.your_voice = clampi(int(raw["your_voice"]), 0, 2)
+	for toggle: String in ["reduce_motion", "colour_safe", "read_aloud"]:
 		if typeof(raw.get(toggle)) == TYPE_BOOL:
 			made.set(toggle, raw[toggle])
 	if str(raw.get("graphics", "")) in GRAPHICS:

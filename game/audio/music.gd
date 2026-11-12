@@ -7,11 +7,15 @@ extends Node
 ##
 ## Main adds the one Music node; scenes ask for a track with Music.cue(),
 ## which does nothing in tests and tools where there is no Music node.
+## While someone speaks a line aloud the music dips (duck_for_speech), so
+## every word is clear.
 
-const TRACKS := ["title", "hospital", "theatre", "night"]
+const TRACKS := ["title", "hospital", "theatre", "night", "emergency", "sad"]
 const FADE := 1.4
 ## How far the music dips while the fanfare plays, in dB.
 const DUCK := -14.0
+## How far the music dips under a spoken line, in dB.
+const SPEECH_DUCK := -10.0
 
 static var player: Music
 
@@ -21,6 +25,11 @@ var _players: Array[AudioStreamPlayer] = []
 var _active := 0
 var _fanfare: AudioStreamPlayer
 var _tweens: Array[Tween] = []
+## Lowers the whole Music bus under speech (an effect on the bus, so it
+## leaves the crossfades alone).
+var _speech_gain: AudioEffectAmplify
+var _speech_tween: Tween
+var _speech_ducked := false
 
 
 static func stream(track_name: String) -> AudioStream:
@@ -46,6 +55,19 @@ static func fanfare() -> void:
 		player.play_fanfare()
 
 
+## The track playing now ("" when there is none or no player).
+static func current() -> String:
+	if player != null and is_instance_valid(player):
+		return player.track
+	return ""
+
+
+## Dips the music while a line is spoken aloud, and brings it back after.
+static func duck_for_speech(on: bool) -> void:
+	if player != null and is_instance_valid(player):
+		player.set_speech_duck(on)
+
+
 func _ready() -> void:
 	GameSettings.ensure_buses()
 	for index in 2:
@@ -59,6 +81,46 @@ func _ready() -> void:
 	_fanfare.name = "Fanfare"
 	_fanfare.bus = &"Music"
 	add_child(_fanfare)
+	_speech_gain = _bus_gain()
+	if _speech_gain != null:
+		_speech_gain.volume_db = 0.0
+
+
+## The gain effect on the Music bus that speech ducking turns down.
+static func _bus_gain() -> AudioEffectAmplify:
+	var bus := AudioServer.get_bus_index(&"Music")
+	if bus < 0:
+		return null
+	for index in AudioServer.get_bus_effect_count(bus):
+		var effect := AudioServer.get_bus_effect(bus, index)
+		if effect is AudioEffectAmplify:
+			return effect
+	var made := AudioEffectAmplify.new()
+	AudioServer.add_bus_effect(bus, made)
+	return made
+
+
+func is_ducked_for_speech() -> bool:
+	return _speech_ducked
+
+
+func set_speech_duck(on: bool) -> void:
+	if on == _speech_ducked:
+		return
+	_speech_ducked = on
+	if _speech_gain == null:
+		_speech_gain = _bus_gain()
+	if _speech_gain == null or not is_inside_tree():
+		return
+	if _speech_tween != null:
+		_speech_tween.kill()
+	_speech_tween = create_tween()
+	if on:
+		_speech_tween.tween_property(_speech_gain, "volume_db", SPEECH_DUCK, 0.25)
+	else:
+		# A short wait first, so the music doesn't pump between lines.
+		_speech_tween.tween_interval(0.6)
+		_speech_tween.tween_property(_speech_gain, "volume_db", 0.0, 0.9)
 
 
 func play_track(track_name: String) -> void:

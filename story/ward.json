@@ -97,6 +97,10 @@
 			"if": "op_rohit_failed",
 			"then": [
 				{
+					"do": "music",
+					"track": "sad"
+				},
+				{
 					"say": "sunita",
 					"text": "Doctor. They brought him back from intensive care at six. He's so pale.",
 					"mood": "worried",

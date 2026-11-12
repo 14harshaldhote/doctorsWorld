@@ -1,8 +1,9 @@
 class_name SettingsPanel
 extends Control
 ## The settings, over whatever screen opened them (the title screen or the
-## pause menu): music, sound effects and voice volume, text size, reduced
-## motion, the colour-blind-safe monitor and the graphics mode. Every change
+## pause menu): music, sound effects and voice volume, reading lines aloud
+## (on or off, how fast, your doctor's voice), text size, reduced motion, the
+## colour-blind-safe monitor and the graphics mode. Every change
 ## takes effect at once so you can hear and see it; Done saves them.
 
 signal closed
@@ -89,11 +90,17 @@ func _ready() -> void:
 	# to scroll (with small text) to find it.
 	right.add_child(_section("Reading"))
 	right.add_child(_choice_row("text_size", "Text size", GameSettings.TEXT_SIZE_NAMES, settings.text_size))
+	# Reading aloud and its speed share one row: Off, or how fast.
+	right.add_child(_choice_row("read_aloud", "Read lines aloud", ["Off"] + Speech.SPEED_NAMES,
+		settings.speech_speed + 1 if settings.read_aloud else 0,
+		"Everyone says their lines in this phone's own voices. Clearer voices: iPhone Settings > Accessibility > Spoken Content."))
+	right.add_child(_choice_row("your_voice", "Your doctor's voice", Speech.YOUR_VOICE_NAMES, settings.your_voice))
 	right.add_child(_section("Comfort"))
 	right.add_child(_choice_row("reduce_motion", "Reduce motion", ["Off", "On"], 1 if settings.reduce_motion else 0,
 		"Cuts instead of camera sweeps, and no bouncing."))
 	right.add_child(_choice_row("colour_safe", "Colour-blind-safe monitor", ["Off", "On"], 1 if settings.colour_safe else 0,
 		"Blue and orange instead of green and red, with arrows."))
+
 
 
 func _section(text: String) -> Label:
@@ -171,6 +178,25 @@ func _on_choice(key: String, index: int) -> void:
 			settings.colour_safe = index == 1
 		"graphics":
 			settings.graphics = GameSettings.GRAPHICS[index]
+		"read_aloud":
+			settings.read_aloud = index > 0
+			if index > 0:
+				settings.speech_speed = index - 1
+		"your_voice":
+			settings.your_voice = index
+	if settings == GameSettings.current:
+		# Let the player hear the change.
+		match key:
+			"read_aloud":
+				if settings.read_aloud:
+					Speech.say("This is how fast people will talk.", "iyer")
+				else:
+					Speech.stop()
+			"your_voice":
+				if settings.your_voice == 2:
+					Speech.stop()
+				else:
+					Speech.preview_you()
 	if key == "graphics" and is_inside_tree():
 		settings.apply_display(get_window())
 	if key == "text_size" and is_inside_tree() and settings == GameSettings.current:
@@ -179,6 +205,7 @@ func _on_choice(key: String, index: int) -> void:
 
 ## Saves and closes.
 func close() -> void:
+	Speech.stop()
 	if settings == GameSettings.current and not save_path.is_empty():
 		settings.save_to(save_path)
 	closed.emit()

@@ -7,10 +7,13 @@ extends Control
 ## right. Cinema mode (story scenes): subtitles at the bottom centre, a reply
 ## panel only when the player has to choose, and "hold to skip".
 ##
-## Lines appear letter by letter; each syllable is announced through the
-## syllable signal so the speaker's mouth and voice keep time with the text.
-## A tap finishes the line, the next tap moves on. Time only passes through
-## tick(), which the owning scene calls, so tests can drive it.
+## Lines are read aloud by the speaker's voice (see Speech) and appear word
+## by word as they are said. Where the device can't speak, they appear
+## letter by letter with a murmur instead. Either way each syllable is
+## announced through the syllable signal so the speaker's mouth keeps time
+## (reading_aloud() says whether the murmur should sound). A tap shows the
+## whole line, the next tap moves on. Time only passes through tick(), which
+## the owning scene calls, so tests can drive it.
 
 signal advanced
 signal chosen(index: int)
@@ -52,6 +55,11 @@ var _skip: PanelContainer
 var _skip_ring: Control
 
 var _line := ""
+## The voice reading the line on show.
+var _voice := SpokenLine.new()
+var _voice_words := 0
+## True when the line on show is read aloud (rather than murmured).
+var _heard := false
 var _typed := 0.0
 var _typing := false
 var _read_time := 0.0
@@ -236,7 +244,8 @@ func _draw_ring() -> void:
 # --- Showing lines and replies --------------------------------------------
 
 ## Shows a line. info: role, mood (index), card ({name, role, mood, trust,
-## change} for the person whose card shows; empty hides it).
+## change} for the person whose card shows; empty hides it), voice (the
+## cast id whose voice reads the line aloud; empty for no voice).
 func show_line(speaker_name: String, text: String, info: Dictionary = {}) -> void:
 	visible = true
 	_line = text
@@ -244,6 +253,12 @@ func show_line(speaker_name: String, text: String, info: Dictionary = {}) -> voi
 	_typing = not text.is_empty()
 	_read_time = 0.0
 	_since_syllable = 1.0
+	_voice_words = 0
+	if text.is_empty() or str(info.get("voice", "")).is_empty():
+		_voice.stop()
+		_heard = false
+	else:
+		_heard = _voice.start(text, str(info["voice"]))
 	var cinema := mode == Mode.CINEMA and not _choices.visible
 	_box.visible = not cinema
 	_subtitle.visible = cinema
@@ -320,6 +335,7 @@ func open_cinema() -> void:
 func hide_line() -> void:
 	_line = ""
 	_typing = false
+	_voice.stop()
 	_box.visible = false
 	_subtitle.visible = false
 	if mode == Mode.CINEMA:
@@ -339,6 +355,7 @@ func close() -> void:
 	visible = false
 	_choosing = false
 	_typing = false
+	_voice.stop()
 	_pressing = false
 	_held = 0.0
 
@@ -349,6 +366,17 @@ func is_open() -> bool:
 
 func is_typing() -> bool:
 	return _typing
+
+
+## True while the line on show is being read aloud by a voice (so the
+## speaker's mouth moves without the murmur).
+func reading_aloud() -> bool:
+	return _heard and not _voice.failed
+
+
+## The voice for the line on show (for tests).
+func voice() -> SpokenLine:
+	return _voice
 
 
 func is_choosing() -> bool:
@@ -475,20 +503,39 @@ func _layout_trust() -> void:
 func tick(delta: float) -> void:
 	if not visible:
 		return
+	var voiced := _voice.speaking
 	if _typing:
-		_typed += delta * TYPE_SPEED
-		_since_syllable += delta
 		var before := _visible_count()
+		_since_syllable += delta
+		if voiced:
+			# The words appear as the voice says them.
+			var target := _voice.advance(delta, _typed)
+			if _voice.failed:
+				_typed += delta * TYPE_SPEED
+			else:
+				_typed = minf(move_toward(_typed, target, delta * SpokenLine.REVEAL_SPEED), _line.length())
+		else:
+			_typed += delta * TYPE_SPEED
 		_reveal()
 		for index in range(before, _visible_count()):
 			_maybe_syllable(index)
-		if _typed >= _line.length():
+		if _typed >= _line.length() and _voice.is_done():
 			finish_typing()
-	elif not _choosing and auto_advance >= 0.0 and not _line.is_empty():
-		_read_time += delta
-		if _read_time >= auto_advance + _line.length() * 0.035:
-			_read_time = -INF
-			advanced.emit()
+	else:
+		if voiced:
+			# The whole line shows (a tap); the voice carries on, and the
+			# mouth moves with each word it says.
+			_voice.advance(delta, _line.length())
+			if _voice.words > _voice_words:
+				_voice_words = _voice.words
+				syllable.emit("a")
+		if not _choosing and auto_advance >= 0.0 and not _line.is_empty() and _voice.is_done():
+			_read_time += delta
+			# A line that was heard needs less reading time.
+			var reading := 0.3 if reading_aloud() else _line.length() * 0.035
+			if _read_time >= auto_advance + reading:
+				_read_time = -INF
+				advanced.emit()
 	if _pressing and mode == Mode.CINEMA and skippable:
 		_held += delta
 		_skip_ring.queue_redraw()
