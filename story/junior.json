@@ -1,0 +1,2229 @@
+{
+	"handover9": [
+		{
+			"say": "grace",
+			"text": "Morning, {called}. Eight months, and you've finally stopped writing your name on your coffee cup.",
+			"mood": "happy",
+			"gesture": "fold_arms"
+		},
+		{
+			"say": "grace",
+			"text": "Post first. Rohit Kulkarni sent sweets.",
+			"mood": "calm",
+			"gesture": "offer"
+		},
+		{
+			"if": "rohit_honest",
+			"then": [
+				{
+					"say": "grace",
+					"text": "He passed every exam. The note says: 'For the doctor who said no.'",
+					"mood": "happy",
+					"gesture": "explain"
+				}
+			],
+			"else": [
+				{
+					"say": "grace",
+					"text": "He sat his exam a week after his operation and failed one paper. He's re-sitting. The sweets are still good.",
+					"mood": "calm",
+					"gesture": "shrug"
+				}
+			]
+		},
+		{
+			"if": "rider_treated",
+			"then": [
+				{
+					"say": "grace",
+					"text": "And Salim Sheikh brought Pooja in again. She drew you a picture. You have three arms in it.",
+					"mood": "happy",
+					"gesture": "point"
+				}
+			],
+			"else": [
+				{
+					"say": "grace",
+					"text": "Salim Sheikh came for his clinic. Walks with a stick now. He asked if you were on.",
+					"mood": "calm",
+					"head": "tilt"
+				}
+			]
+		},
+		{
+			"if": "beds_saved",
+			"then": [
+				{
+					"say": "grace",
+					"text": "Ward 4 still has six beds. Mr. Malhotra still counts them every morning, like a man checking his pockets.",
+					"mood": "happy",
+					"gesture": "shrug"
+				}
+			],
+			"else": [
+				{
+					"say": "grace",
+					"text": "And we're down to four real beds and two 'day-care chairs'. Mr. Malhotra calls that efficiency.",
+					"mood": "tired",
+					"gesture": "fold_arms"
+				}
+			]
+		},
+		{
+			"say": "iyer",
+			"text": "News of my own. From today, the minor cases are yours, {called}. You operate. I watch and keep my hands in my pockets.",
+			"mood": "focused",
+			"gesture": "explain",
+			"to": "you"
+		},
+		{
+			"say": "iyer",
+			"text": "Also, Dr. Sethi is applying for the consultant post. Expect him to be... very visible this month.",
+			"mood": "calm",
+			"gesture": "shrug"
+		},
+		{
+			"choose": [
+				{
+					"tone": "Ready",
+					"text": "Then give me a case.",
+					"trust": {
+						"iyer": 2
+					},
+					"then": [
+						{
+							"say": "iyer",
+							"text": "Careful what you ask for. Priya's paging already.",
+							"mood": "happy",
+							"gesture": "point"
+						}
+					]
+				},
+				{
+					"tone": "Honest",
+					"text": "Operating while you watch is scarier than operating alone.",
+					"trust": {
+						"iyer": 3,
+						"grace": 1
+					},
+					"then": [
+						{
+							"say": "iyer",
+							"text": "Good. Fear keeps your hands slow. Slow is safe.",
+							"mood": "calm",
+							"head": "nod"
+						}
+					]
+				},
+				{
+					"tone": "Curious",
+					"text": "Sethi, a consultant? Should I be worried?",
+					"trust": {
+						"grace": 2
+					},
+					"then": [
+						{
+							"say": "grace",
+							"text": "Worried, no. Awake, yes. He likes credit the way Mr. Malhotra likes beds.",
+							"mood": "focused",
+							"gesture": "wag"
+						},
+						{
+							"say": "iyer",
+							"text": "Grace.",
+							"mood": "focused",
+							"head": "shake",
+							"to": "grace"
+						},
+						{
+							"say": "grace",
+							"text": "What? I'm a nurse. I see everything.",
+							"mood": "happy",
+							"gesture": "shrug",
+							"to": "iyer"
+						}
+					]
+				}
+			]
+		},
+		{
+			"do": "page",
+			"text": "Priya: Admissions. Kitchen accident. Her hand's wrapped in a tea towel."
+		}
+	],
+	"deepa_arrive": [
+		{
+			"say": "priya",
+			"text": "Deepa Rawat, thirty-four. Cook at the Punjab Dhaba on Station Road. A glass bowl broke in her hand.",
+			"mood": "focused",
+			"gesture": "explain"
+		},
+		{
+			"say": "deepa",
+			"text": "It's nothing. A cut. Stitch it and I'll go back. Lunch rush is at twelve and Babu can't make dal to save his life.",
+			"mood": "worried",
+			"gesture": "open_hands"
+		},
+		{
+			"say": "priya",
+			"text": "It went through the tea towel, {called}. And two of my gauze pads.",
+			"mood": "calm",
+			"gesture": "point",
+			"to": "you"
+		},
+		{
+			"choose": [
+				{
+					"tone": "Calm",
+					"text": "Let's look properly first. A glass cut can hide more than blood.",
+					"trust": {
+						"deepa": 2,
+						"iyer": 2
+					},
+					"then": [
+						{
+							"say": "deepa",
+							"text": "Hide? It's a cut. ...Fine. Look. Quickly.",
+							"mood": "worried",
+							"head": "nod"
+						}
+					]
+				},
+				{
+					"tone": "Brisk",
+					"text": "Sit still, and we'll have you back for the lunch rush.",
+					"flag": "deepa_rushed",
+					"trust": {
+						"deepa": 3,
+						"iyer": -2
+					},
+					"then": [
+						{
+							"say": "iyer",
+							"text": "Don't promise the lunch rush before you've seen the wound, {called}.",
+							"mood": "focused",
+							"gesture": "wag",
+							"to": "you"
+						}
+					]
+				}
+			]
+		},
+		{
+			"say": "iyer",
+			"text": "Your case. History first: what she can tell you that the wound can't. Then the minor theatre.",
+			"mood": "calm",
+			"gesture": "explain",
+			"to": "you"
+		}
+	],
+	"deepa_brief": [
+		{
+			"say": "tom",
+			"text": "Minor theatre's ready. Local anaesthetic, saline, the fine instruments. Glass makes me nervous.",
+			"mood": "focused",
+			"gesture": "explain"
+		},
+		{
+			"say": "deepa",
+			"text": "Is she going to put me to sleep?",
+			"mood": "worried",
+			"gesture": "chest"
+		},
+		{
+			"say": "iyer",
+			"text": "No. You'll be awake, and you won't feel a thing once the edges are numb. {called} is operating. I'm only watching.",
+			"mood": "calm",
+			"gesture": "open_hands",
+			"to": "deepa"
+		},
+		{
+			"say": "deepa",
+			"text": "Only watching. Like my mother-in-law in my kitchen.",
+			"mood": "worried",
+			"gesture": "shrug"
+		},
+		{
+			"say": "tom",
+			"text": "Time-out first, Doctor. I'll read the board.",
+			"mood": "calm",
+			"gesture": "point",
+			"to": "you"
+		}
+	],
+	"deepa_after": [
+		{
+			"if": "op_deepa_failed",
+			"then": [
+				{
+					"say": "iyer",
+					"text": "It's closed, Deepa. It took longer than it should. You'll heal, but come back in two days so we can check it.",
+					"mood": "calm",
+					"gesture": "explain",
+					"to": "deepa"
+				},
+				{
+					"say": "deepa",
+					"text": "The young doctor's hands were shaking. I saw.",
+					"mood": "worried",
+					"head": "down"
+				},
+				{
+					"choose": [
+						{
+							"tone": "Honest",
+							"text": "They were. Dr. Iyer finished it. I'm sorry it was hard.",
+							"trust": {
+								"deepa": 2,
+								"iyer": 3
+							},
+							"then": [
+								{
+									"say": "deepa",
+									"text": "At least you say it. Babu breaks a plate and blames the plate.",
+									"mood": "calm",
+									"gesture": "shrug"
+								}
+							]
+						},
+						{
+							"tone": "Defensive",
+							"text": "It was a difficult wound.",
+							"trust": {
+								"deepa": -2,
+								"iyer": -2
+							},
+							"then": [
+								{
+									"say": "iyer",
+									"text": "It was. And next time it'll be less difficult. Say that part too.",
+									"mood": "focused",
+									"gesture": "wag",
+									"to": "you"
+								}
+							]
+						}
+					]
+				}
+			],
+			"else": [
+				{
+					"if": "op_deepa_trap_tendon",
+					"then": [
+						{
+							"say": "deepa",
+							"text": "Something pulled, in there. My finger jumped by itself.",
+							"mood": "worried",
+							"gesture": "chest"
+						},
+						{
+							"say": "iyer",
+							"text": "That was a tendon. It's fine, but it was closer than I like. Bend your fingers for me... good.",
+							"mood": "calm",
+							"gesture": "explain",
+							"to": "deepa"
+						}
+					],
+					"else": [
+						{
+							"say": "deepa",
+							"text": "That's it? Stitched? I didn't feel anything after the first needle.",
+							"mood": "happy",
+							"gesture": "open_hands"
+						}
+					]
+				},
+				{
+					"say": "iyer",
+					"text": "There was a sliver of glass in there the size of a rice grain. It would have festered for months.",
+					"mood": "calm",
+					"gesture": "explain",
+					"to": "deepa"
+				}
+			]
+		},
+		{
+			"if": "deepa_history_tetanus",
+			"then": [
+				{
+					"say": "iyer",
+					"text": "And a tetanus booster before you go. Twenty years since the last one, in a kitchen wound.",
+					"mood": "focused",
+					"gesture": "point",
+					"to": "deepa"
+				},
+				{
+					"flag": "deepa_booster"
+				}
+			],
+			"else": [
+				{
+					"say": "grace",
+					"text": "Did anybody ask about her tetanus? No? Then I'll give the booster. Kitchens, Doctor.",
+					"mood": "focused",
+					"gesture": "wag",
+					"to": "you"
+				},
+				{
+					"flag": "deepa_booster"
+				}
+			]
+		},
+		{
+			"if": "deepa_rushed",
+			"then": [
+				{
+					"say": "deepa",
+					"text": "So. Lunch rush?",
+					"mood": "happy",
+					"gesture": "point"
+				},
+				{
+					"say": "iyer",
+					"text": "No chopping for ten days. Supervise Babu. Let him suffer.",
+					"mood": "happy",
+					"gesture": "shrug",
+					"to": "deepa"
+				}
+			],
+			"else": [
+				{
+					"say": "deepa",
+					"text": "Ten days without chopping. Babu will poison half of Station Road.",
+					"mood": "worried",
+					"gesture": "shrug"
+				}
+			]
+		},
+		{
+			"say": "deepa",
+			"text": "Come to the dhaba, Doctor. Dal makhani. On the house. Not on Babu's days.",
+			"mood": "happy",
+			"gesture": "offer",
+			"to": "you"
+		}
+	],
+	"morning10": [
+		{
+			"say": "sethi",
+			"text": "Handover, {called}, quickly. I've been here since yesterday and my coffee has its own pulse.",
+			"mood": "tired",
+			"gesture": "explain"
+		},
+		{
+			"say": "sethi",
+			"text": "Bed three, Mr. Bansal, sixty-seven. Came in at two with back pain going to his groin. Blood in his urine. Kidney stone.",
+			"mood": "tired",
+			"gesture": "point"
+		},
+		{
+			"say": "sethi",
+			"text": "Painkillers, scan when radiology wakes up. He'll pass it by lunch. Easy one.",
+			"mood": "calm",
+			"gesture": "shrug"
+		},
+		{
+			"say": "iyer",
+			"text": "Did you examine his belly, Kabir?",
+			"mood": "calm",
+			"head": "tilt",
+			"to": "sethi"
+		},
+		{
+			"say": "sethi",
+			"text": "At two in the morning? He had a kidney stone at two in the morning.",
+			"mood": "tired",
+			"gesture": "open_hands",
+			"to": "iyer"
+		},
+		{
+			"say": "iyer",
+			"text": "{called}. Bed three. Look at him yourself. Always look.",
+			"mood": "focused",
+			"gesture": "point",
+			"to": "you"
+		},
+		{
+			"choose": [
+				{
+					"tone": "Careful",
+					"text": "I'll examine him properly. Painkillers can hide a lot.",
+					"trust": {
+						"iyer": 2,
+						"sethi": -1
+					},
+					"then": [
+						{
+							"say": "sethi",
+							"text": "Be my guest. Hide-and-seek with a kidney stone.",
+							"mood": "tired",
+							"gesture": "shrug",
+							"to": "you"
+						}
+					]
+				},
+				{
+					"tone": "Polite",
+					"text": "Thanks, Dr. Sethi. Go and sleep.",
+					"trust": {
+						"sethi": 2
+					},
+					"then": [
+						{
+							"say": "sethi",
+							"text": "Finally. Someone with manners.",
+							"mood": "happy",
+							"gesture": "point",
+							"to": "you"
+						}
+					]
+				}
+			]
+		},
+		{
+			"do": "leave",
+			"who": "sethi"
+		}
+	],
+	"bansal_arrive": [
+		{
+			"say": "bansal",
+			"text": "Doctor. My back. Like someone is twisting a knife, then the knife goes down into my groin.",
+			"mood": "tired",
+			"gesture": "chest"
+		},
+		{
+			"say": "bansal",
+			"text": "The night doctor said a stone. Forty years of cigarettes, and I get a stone? I thought it would be my lungs.",
+			"mood": "tired",
+			"gesture": "shrug"
+		},
+		{
+			"say": "bansal",
+			"text": "My wife is bringing my reading glasses. And my will, she says. She's joking. I think.",
+			"mood": "worried",
+			"gesture": "open_hands"
+		},
+		{
+			"say": "iyer",
+			"text": "Examine him, {called}. All of him, not only the part with the label.",
+			"mood": "focused",
+			"gesture": "explain",
+			"to": "you"
+		}
+	],
+	"bansal_after": [
+		{
+			"if": "bansal_exam_right",
+			"then": [
+				{
+					"say": "you",
+					"text": "Dr. Iyer, there's a pulsing mass above his navel. His pressure's low and his pulse is fast. It's not a stone.",
+					"mood": "worried",
+					"gesture": "point"
+				},
+				{
+					"say": "iyer",
+					"text": "A leaking aneurysm. Good. Get the vascular team, cross-match six units, and don't let him sit up.",
+					"mood": "focused",
+					"gesture": "point",
+					"to": "you"
+				},
+				{
+					"say": "bansal",
+					"text": "Aneurysm. That's the bad word, isn't it? On the TV it's always the bad word.",
+					"mood": "worried",
+					"gesture": "chest"
+				},
+				{
+					"choose": [
+						{
+							"tone": "Honest",
+							"text": "It's serious, Mr. Bansal. But we found it in time, and the team that fixes it is on its way.",
+							"trust": {
+								"bansal": 4,
+								"iyer": 2
+							},
+							"then": [
+								{
+									"say": "bansal",
+									"text": "In time. I like those two words. Tell my wife those two words.",
+									"mood": "calm",
+									"head": "nod"
+								}
+							]
+						},
+						{
+							"tone": "Soothe",
+							"text": "Don't worry. It's routine.",
+							"trust": {
+								"bansal": 1,
+								"iyer": -3
+							},
+							"then": [
+								{
+									"say": "iyer",
+									"text": "It is not routine, {called}. He deserves to know he's having a big operation.",
+									"mood": "focused",
+									"gesture": "wag",
+									"to": "you"
+								}
+							]
+						}
+					]
+				},
+				{
+					"do": "arrive",
+					"who": "sethi",
+					"at": "bed3:foot"
+				},
+				{
+					"say": "sethi",
+					"text": "I heard the overhead call. An aneurysm? He was fine at two. He was... he had blood in his urine!",
+					"mood": "shocked",
+					"gesture": "open_hands",
+					"to": "you"
+				},
+				{
+					"choose": [
+						{
+							"tone": "Plain",
+							"text": "A leaking aneurysm can look like a stone, Dr. Sethi. His belly told me, not his urine.",
+							"flag": "bansal_sethi_told",
+							"trust": {
+								"sethi": -2,
+								"iyer": 2
+							},
+							"then": [
+								{
+									"say": "sethi",
+									"text": "...Right. Right. I'll take him to vascular. I know the team.",
+									"mood": "focused",
+									"head": "nod"
+								}
+							]
+						},
+						{
+							"tone": "Tactful",
+							"text": "It's easy to miss at two in the morning. Can you take him to vascular?",
+							"flag": "bansal_sethi_skipped",
+							"trust": {
+								"sethi": 3
+							},
+							"then": [
+								{
+									"say": "sethi",
+									"text": "Leave it with me. I'll handle it from here.",
+									"mood": "focused",
+									"gesture": "point"
+								}
+							]
+						}
+					]
+				},
+				{
+					"say": "iyer",
+					"text": "Notice who's pushing the trolley, {called}. Remember it.",
+					"mood": "calm",
+					"head": "tilt",
+					"to": "you"
+				}
+			],
+			"else": [
+				{
+					"say": "you",
+					"text": "It fits a kidney stone. Painkillers and the scan.",
+					"mood": "calm",
+					"gesture": "explain"
+				},
+				{
+					"say": "bansal",
+					"text": "Doctor... the room is going grey. Is the room going grey?",
+					"mood": "tired",
+					"head": "down"
+				},
+				{
+					"say": "grace",
+					"text": "His pressure's eighty over fifty! Dr. Iyer!",
+					"mood": "shocked",
+					"gesture": "point"
+				},
+				{
+					"say": "iyer",
+					"text": "Feel here, {called}. Above the navel. Feel it push against your hand? That's his aorta, leaking.",
+					"mood": "focused",
+					"gesture": "explain",
+					"to": "you"
+				},
+				{
+					"say": "iyer",
+					"text": "Vascular team, now. Six units of blood. Lie him flat.",
+					"mood": "focused",
+					"gesture": "point",
+					"to": "grace"
+				},
+				{
+					"do": "arrive",
+					"who": "sethi",
+					"at": "bed3:foot"
+				},
+				{
+					"say": "sethi",
+					"text": "I heard the call. An aneurysm? Then the junior missed it on the morning round. Unlucky.",
+					"mood": "shocked",
+					"gesture": "open_hands",
+					"to": "iyer"
+				},
+				{
+					"say": "iyer",
+					"text": "Somebody missed it, Kabir. Take him to vascular. We'll talk later.",
+					"mood": "focused",
+					"gesture": "fold_arms",
+					"to": "sethi"
+				},
+				{
+					"say": "iyer",
+					"text": "A man over sixty with his first 'kidney stone' is an aneurysm until you've felt his belly. Every time.",
+					"mood": "calm",
+					"gesture": "wag",
+					"to": "you"
+				}
+			]
+		}
+	],
+	"farida_arrive": [
+		{
+			"say": "farida",
+			"text": "Mrs. Ansari, yes. Chemistry teacher, Class Ten. They'll be setting fire to the lab without me.",
+			"mood": "calm",
+			"gesture": "explain"
+		},
+		{
+			"say": "farida",
+			"text": "Tomorrow's the keyhole surgery. Tiny holes, they said. I googled it. I wish I hadn't.",
+			"mood": "worried",
+			"gesture": "open_hands"
+		},
+		{
+			"say": "grace",
+			"text": "Pre-op check, {called}. Ask her everything that could hurt her on the table.",
+			"mood": "focused",
+			"gesture": "point",
+			"to": "you"
+		}
+	],
+	"farida_after": [
+		{
+			"if": "farida_history_medicines",
+			"then": [
+				{
+					"say": "iyer",
+					"text": "Aspirin this morning. Well found. I'll tell Dr. Khan; she'll want platelets in the fridge, just in case.",
+					"mood": "focused",
+					"head": "nod",
+					"to": "you"
+				}
+			],
+			"else": [
+				{
+					"say": "farida",
+					"text": "Oh, I took an aspirin this morning, for my headache. Does that matter? Nobody asked.",
+					"mood": "calm",
+					"gesture": "shrug"
+				},
+				{
+					"say": "iyer",
+					"text": "It matters. It thins the blood. Ask about medicines every time, {called}. Every single time.",
+					"mood": "focused",
+					"gesture": "wag",
+					"to": "you"
+				}
+			]
+		},
+		{
+			"say": "farida",
+			"text": "Doctor. Tell me honestly. Can I die tomorrow?",
+			"mood": "worried",
+			"gesture": "chest"
+		},
+		{
+			"choose": [
+				{
+					"tone": "Honest",
+					"text": "Any operation carries a small risk. Yours is a common one, and we're careful. I'll be there all the way.",
+					"flag": "farida_reassured",
+					"trust": {
+						"farida": 4,
+						"iyer": 2
+					},
+					"then": [
+						{
+							"say": "farida",
+							"text": "Small risk. Careful. All the way. Three facts. I can work with facts.",
+							"mood": "calm",
+							"head": "nod"
+						}
+					]
+				},
+				{
+					"tone": "Promise",
+					"text": "No. Nothing will go wrong. I promise.",
+					"flag": "farida_scared",
+					"trust": {
+						"farida": 2,
+						"iyer": -3
+					},
+					"then": [
+						{
+							"say": "iyer",
+							"text": "Never promise an outcome, {called}. Promise effort. Effort is yours to give.",
+							"mood": "focused",
+							"gesture": "wag",
+							"to": "you"
+						}
+					]
+				}
+			]
+		}
+	],
+	"morning11": [
+		{
+			"say": "iyer",
+			"text": "Morning. Mr. Bansal first.",
+			"mood": "calm",
+			"gesture": "explain"
+		},
+		{
+			"if": "bansal_exam_right",
+			"then": [
+				{
+					"say": "iyer",
+					"text": "New piece of aorta sewn in at midnight. He's in intensive care, sitting up and asking for a cigarette.",
+					"mood": "happy",
+					"gesture": "explain"
+				},
+				{
+					"say": "iyer",
+					"text": "Dr. Sethi went to theatre with him. I hear he's telling the story at lunch. Loudly.",
+					"mood": "calm",
+					"gesture": "shrug"
+				}
+			],
+			"else": [
+				{
+					"say": "iyer",
+					"text": "He made it. Just. He lost a lot of blood waiting for us to feel his belly.",
+					"mood": "calm",
+					"head": "down"
+				},
+				{
+					"say": "iyer",
+					"text": "Dr. Sethi is telling everyone the morning round missed it. Never mind who admitted him as a stone.",
+					"mood": "focused",
+					"gesture": "fold_arms"
+				}
+			]
+		},
+		{
+			"say": "iyer",
+			"text": "Now. Mrs. Ansari's gallbladder. Keyhole. You lead, I assist, Dr. Khan keeps her asleep.",
+			"mood": "focused",
+			"gesture": "point",
+			"to": "you"
+		},
+		{
+			"say": "iyer",
+			"text": "Three ports, gas, the critical view. Clip the wrong tube and her liver can't drain for the rest of her life. No pressure.",
+			"mood": "calm",
+			"gesture": "shrug"
+		},
+		{
+			"choose": [
+				{
+					"tone": "Ready",
+					"text": "Critical view before any clip. I know.",
+					"trust": {
+						"iyer": 2
+					},
+					"then": [
+						{
+							"say": "iyer",
+							"text": "Then let's see if your hands know it too.",
+							"mood": "happy",
+							"gesture": "point"
+						}
+					]
+				},
+				{
+					"tone": "Nervous",
+					"text": "Can we go over the tubes once more?",
+					"trust": {
+						"iyer": 3
+					},
+					"then": [
+						{
+							"say": "iyer",
+							"text": "The one you clip runs INTO the gallbladder. The fat one carries on past it. Leave the fat one alone.",
+							"mood": "calm",
+							"gesture": "explain"
+						}
+					]
+				}
+			]
+		}
+	],
+	"farida_consent": [
+		{
+			"say": "farida",
+			"text": "Consent form. I've read it three times. It has the word 'death' on page two.",
+			"mood": "worried",
+			"gesture": "open_hands"
+		},
+		{
+			"choose": [
+				{
+					"tone": "Explain",
+					"text": "Let me go through it. Bleeding, infection, a leak of bile. Rarely we have to open up properly. Very rarely, an injury to the main bile duct.",
+					"flag": "farida_consented_honest",
+					"trust": {
+						"farida": 3,
+						"iyer": 2
+					},
+					"then": [
+						{
+							"say": "farida",
+							"text": "Rarely and very rarely. You chose those words carefully.",
+							"mood": "calm",
+							"head": "tilt"
+						},
+						{
+							"say": "farida",
+							"text": "Good. I teach my students that words are measurements.",
+							"mood": "calm",
+							"head": "nod"
+						}
+					]
+				},
+				{
+					"tone": "Quick",
+					"text": "It's standard. Sign at the bottom and we'll get started.",
+					"flag": "farida_consented_quick",
+					"trust": {
+						"farida": -2,
+						"iyer": -3
+					},
+					"then": [
+						{
+							"say": "iyer",
+							"text": "Consent is understanding, not a signature, {called}. Go through it with her.",
+							"mood": "focused",
+							"gesture": "wag",
+							"to": "you"
+						},
+						{
+							"say": "farida",
+							"text": "Thank you, Doctor Iyer. I'd like the long version.",
+							"mood": "calm",
+							"gesture": "fold_arms"
+						}
+					]
+				}
+			]
+		},
+		{
+			"if": "farida_scared",
+			"then": [
+				{
+					"say": "farida",
+					"text": "Yesterday you promised me nothing would go wrong. I'm holding you to it.",
+					"mood": "worried",
+					"gesture": "point",
+					"to": "you"
+				}
+			]
+		},
+		{
+			"say": "farida",
+			"text": "If my students ask, tell them I was brave.",
+			"mood": "calm",
+			"gesture": "offer"
+		}
+	],
+	"farida_brief": [
+		{
+			"say": "khan",
+			"text": "She's asleep. Breathing tube in, all steady.",
+			"mood": "focused",
+			"gesture": "explain"
+		},
+		{
+			"if": "farida_history_medicines",
+			"then": [
+				{
+					"say": "khan",
+					"text": "Thank you for the note about the aspirin. Platelets are in the fridge.",
+					"mood": "calm",
+					"head": "nod",
+					"to": "you"
+				}
+			]
+		},
+		{
+			"say": "tom",
+			"text": "Ports, camera, gas, clips, the hook. Bag for the stones. All counted.",
+			"mood": "happy",
+			"gesture": "explain"
+		},
+		{
+			"say": "iyer",
+			"text": "Your lead, {called}. Time-out first. Read every line like it's lying to you.",
+			"mood": "focused",
+			"gesture": "point",
+			"to": "you"
+		}
+	],
+	"farida_after_op": [
+		{
+			"if": "op_farida_failed",
+			"then": [
+				{
+					"say": "farida",
+					"text": "Is it done? Why does Dr. Iyer look so tired?",
+					"mood": "tired",
+					"head": "tilt"
+				},
+				{
+					"choose": [
+						{
+							"tone": "Honest",
+							"text": "It got difficult and Dr. Iyer took over. Your gallbladder is out and you're safe.",
+							"trust": {
+								"farida": 3,
+								"iyer": 3
+							},
+							"then": [
+								{
+									"say": "farida",
+									"text": "The truth, even when it's dull. Thank you.",
+									"mood": "calm",
+									"head": "nod"
+								}
+							]
+						},
+						{
+							"tone": "Vague",
+							"text": "It went fine. Rest now.",
+							"trust": {
+								"farida": -3,
+								"iyer": -3
+							},
+							"then": [
+								{
+									"say": "iyer",
+									"text": "She has a right to know who finished her operation. Tell her.",
+									"mood": "focused",
+									"gesture": "wag",
+									"to": "you"
+								}
+							]
+						}
+					]
+				}
+			],
+			"else": [
+				{
+					"if": "op_farida_struggled",
+					"then": [
+						{
+							"say": "farida",
+							"text": "It took longer than they said. My husband counted the minutes on his phone.",
+							"mood": "tired",
+							"gesture": "shrug"
+						},
+						{
+							"say": "iyer",
+							"text": "It did. Some bleeding, nothing worse. Her gallbladder's out and her bile ducts are untouched.",
+							"mood": "calm",
+							"gesture": "explain"
+						}
+					],
+					"else": [
+						{
+							"say": "farida",
+							"text": "Over already? I dreamt about Class Ten setting the lab on fire.",
+							"mood": "happy",
+							"gesture": "open_hands"
+						},
+						{
+							"say": "iyer",
+							"text": "Textbook critical view, {called}. I kept my hands in my pockets the whole time. Nearly.",
+							"mood": "happy",
+							"head": "nod",
+							"to": "you"
+						}
+					]
+				}
+			]
+		},
+		{
+			"if": "op_farida_trap_cbd",
+			"then": [
+				{
+					"say": "iyer",
+					"text": "One thing. You reached for the main duct. You didn't clip it, but you reached. Think about why.",
+					"mood": "focused",
+					"gesture": "wag",
+					"to": "you"
+				}
+			]
+		},
+		{
+			"say": "farida",
+			"text": "Four little plasters. My students will want to see. I won't let them.",
+			"mood": "calm",
+			"gesture": "point"
+		}
+	],
+	"meeting": [
+		{
+			"say": "rao",
+			"text": "Morning, everyone. One case today. Dr. Sethi.",
+			"mood": "calm",
+			"gesture": "open_hands"
+		},
+		{
+			"if": "bansal_exam_right",
+			"then": [
+				{
+					"say": "sethi",
+					"text": "Thank you, sir. Mr. Bansal, sixty-seven. Back pain, blood in the urine. A textbook kidney stone.",
+					"mood": "happy",
+					"gesture": "explain",
+					"to": "rao"
+				},
+				{
+					"say": "sethi",
+					"text": "But something didn't fit. I kept him under close watch, I arranged the vascular team, and we got him to theatre in time.",
+					"mood": "happy",
+					"gesture": "point",
+					"to": "rao"
+				},
+				{
+					"say": "malhotra",
+					"text": "Excellent. A leaking aneurysm, saved. The board will love this for the newsletter.",
+					"mood": "happy",
+					"gesture": "clap",
+					"to": "sethi"
+				},
+				{
+					"say": "iyer",
+					"text": "...",
+					"mood": "calm",
+					"head": "tilt",
+					"to": "you"
+				},
+				{
+					"choose": [
+						{
+							"tone": "Speak up",
+							"text": "That's not quite how it happened. He was admitted as a kidney stone. I examined him at ten and found the aneurysm.",
+							"flag": "credit_called_out",
+							"trust": {
+								"sethi": -12,
+								"rao": 1,
+								"grace": 3,
+								"malhotra": -2
+							},
+							"then": [
+								{
+									"say": "rao",
+									"text": "Is that true, Kabir?",
+									"mood": "focused",
+									"head": "tilt",
+									"to": "sethi"
+								},
+								{
+									"say": "sethi",
+									"text": "The junior examined him. Under my supervision. Broadly. I was... nearby.",
+									"mood": "worried",
+									"gesture": "open_hands",
+									"to": "rao"
+								},
+								{
+									"say": "rao",
+									"text": "Broadly. I see. We'll talk after, Dr. Sethi.",
+									"mood": "focused",
+									"gesture": "fold_arms",
+									"to": "sethi"
+								},
+								{
+									"say": "grace",
+									"text": "...",
+									"mood": "happy",
+									"head": "nod",
+									"to": "you"
+								}
+							]
+						},
+						{
+							"tone": "Question",
+							"text": "Dr. Sethi, what was his blood pressure when you admitted him?",
+							"flag": "credit_proof",
+							"trust": {
+								"sethi": -5,
+								"rao": 3,
+								"iyer": 3
+							},
+							"then": [
+								{
+									"say": "sethi",
+									"text": "His... it was normal. Probably. I'd have to check the notes.",
+									"mood": "worried",
+									"gesture": "shrug",
+									"to": "you"
+								},
+								{
+									"say": "rao",
+									"text": "Then check them. Sister Grace, the admission notes for Mr. Bansal, please. With the times.",
+									"mood": "focused",
+									"gesture": "point",
+									"to": "grace"
+								},
+								{
+									"say": "grace",
+									"text": "With pleasure, Doctor. Every time is written down. I made sure.",
+									"mood": "happy",
+									"gesture": "offer",
+									"to": "rao"
+								}
+							]
+						},
+						{
+							"tone": "Let it go",
+							"text": "Say nothing. It's his presentation.",
+							"flag": "credit_let_go",
+							"trust": {
+								"sethi": 4,
+								"iyer": -2,
+								"grace": -1
+							},
+							"then": [
+								{
+									"say": "sethi",
+									"text": "Thank you. Questions? No? Lovely.",
+									"mood": "happy",
+									"gesture": "clap"
+								},
+								{
+									"say": "iyer",
+									"text": "...",
+									"mood": "tired",
+									"head": "down",
+									"to": "you"
+								}
+							]
+						}
+					]
+				}
+			],
+			"else": [
+				{
+					"say": "sethi",
+					"text": "Thank you, sir. A near miss. Mr. Bansal, sixty-seven, leaking aneurysm. Sadly the morning round treated it as a kidney stone.",
+					"mood": "calm",
+					"gesture": "explain",
+					"to": "rao"
+				},
+				{
+					"say": "sethi",
+					"text": "A pulsating mass, missed by the junior. He nearly bled to death. A lesson for us all.",
+					"mood": "focused",
+					"gesture": "point",
+					"to": "you"
+				},
+				{
+					"say": "malhotra",
+					"text": "Missed? We can't have that in the newsletter.",
+					"mood": "worried",
+					"gesture": "fold_arms",
+					"to": "rao"
+				},
+				{
+					"choose": [
+						{
+							"tone": "Own it",
+							"text": "I missed it, and I'll never miss it again. But he was admitted as a stone, and nobody examined his belly overnight.",
+							"flag": "credit_called_out",
+							"trust": {
+								"sethi": -10,
+								"rao": 3,
+								"iyer": 2
+							},
+							"then": [
+								{
+									"say": "rao",
+									"text": "Who admitted him, Kabir?",
+									"mood": "focused",
+									"head": "tilt",
+									"to": "sethi"
+								},
+								{
+									"say": "sethi",
+									"text": "...I did. At two. It looked like a stone.",
+									"mood": "worried",
+									"head": "down",
+									"to": "rao"
+								},
+								{
+									"say": "rao",
+									"text": "It looked like a stone to both of you. Then it's both your lesson. We'll talk after.",
+									"mood": "focused",
+									"gesture": "fold_arms"
+								}
+							]
+						},
+						{
+							"tone": "Question",
+							"text": "Could we look at the admission notes, with the times? I'd like to learn from the whole night.",
+							"flag": "credit_proof",
+							"trust": {
+								"sethi": -5,
+								"rao": 3,
+								"iyer": 3
+							},
+							"then": [
+								{
+									"say": "rao",
+									"text": "Sensible. Sister Grace, the notes for Mr. Bansal, with the times.",
+									"mood": "calm",
+									"gesture": "point",
+									"to": "grace"
+								},
+								{
+									"say": "sethi",
+									"text": "Is that necessary, sir? It's a teaching case.",
+									"mood": "worried",
+									"gesture": "open_hands",
+									"to": "rao"
+								},
+								{
+									"say": "rao",
+									"text": "Then let it teach us properly.",
+									"mood": "calm",
+									"head": "nod",
+									"to": "sethi"
+								}
+							]
+						},
+						{
+							"tone": "Take it",
+							"text": "Say nothing. You did miss it.",
+							"flag": "credit_let_go",
+							"trust": {
+								"sethi": 3,
+								"iyer": -3
+							},
+							"then": [
+								{
+									"say": "sethi",
+									"text": "Lessons learnt. Thank you, everyone.",
+									"mood": "happy",
+									"gesture": "clap"
+								},
+								{
+									"say": "iyer",
+									"text": "...",
+									"mood": "tired",
+									"head": "down",
+									"to": "you"
+								}
+							]
+						}
+					]
+				}
+			]
+		},
+		{
+			"say": "rao",
+			"text": "That's all. Back to work. The patients don't wait for meetings.",
+			"mood": "calm",
+			"gesture": "open_hands"
+		}
+	],
+	"raju_arrive": [
+		{
+			"say": "priya",
+			"text": "Raju Yadav, thirty-eight. Bricklayer. Lump in his left groin since last night. It won't go back in. He's vomited three times.",
+			"mood": "focused",
+			"gesture": "explain"
+		},
+		{
+			"say": "raju",
+			"text": "Doctor, it was always there, it always went back. Last night it didn't. Now it burns. Please.",
+			"mood": "worried",
+			"gesture": "chest"
+		},
+		{
+			"do": "arrive",
+			"who": "malhotra",
+			"at": "trolley:foot"
+		},
+		{
+			"say": "malhotra",
+			"text": "Doctor! A moment, please. Mrs. Kamala Mehra is at the desk. Her son, Mr. Suresh Mehra, is on the hospital board.",
+			"mood": "worried",
+			"gesture": "open_hands",
+			"to": "you"
+		},
+		{
+			"say": "malhotra",
+			"text": "She has... heartburn. And a sore knee. She'd like to be seen. First. Now. In the side room.",
+			"mood": "worried",
+			"gesture": "explain",
+			"to": "you"
+		},
+		{
+			"say": "mehra",
+			"text": "Eleven minutes I've been standing here, young doctor. Eleven. My son will hear about this.",
+			"mood": "angry",
+			"gesture": "point",
+			"to": "you"
+		},
+		{
+			"choose": [
+				{
+					"tone": "Patient first",
+					"text": "Raju first, he's an emergency. Mrs. Mehra, I'll come to you straight after.",
+					"flag": "raju_first",
+					"trust": {
+						"raju": 4,
+						"iyer": 3,
+						"mehra": -4,
+						"malhotra": -4
+					},
+					"then": [
+						{
+							"say": "mehra",
+							"text": "After a bricklayer. I see. I'll remember your name.",
+							"mood": "angry",
+							"gesture": "fold_arms"
+						},
+						{
+							"say": "malhotra",
+							"text": "Doctor, please, the board...",
+							"mood": "worried",
+							"gesture": "open_hands"
+						},
+						{
+							"say": "iyer",
+							"text": "A stuck hernia goes first, Vikram. That's not my rule. It's the bowel's.",
+							"mood": "focused",
+							"gesture": "wag",
+							"to": "malhotra"
+						}
+					]
+				},
+				{
+					"tone": "Delegate",
+					"text": "Priya, a heart tracing and a pain check for Mrs. Mehra right now, please. Raju first. Then I'll see her.",
+					"flag": "raju_first",
+					"trust": {
+						"raju": 4,
+						"iyer": 4,
+						"priya": 3,
+						"mehra": -1,
+						"malhotra": -2
+					},
+					"then": [
+						{
+							"flag": "mehra_ecg"
+						},
+						{
+							"say": "priya",
+							"text": "On it. Heartburn at seventy-one could be her heart. Tracing in five minutes.",
+							"mood": "focused",
+							"head": "nod"
+						},
+						{
+							"say": "mehra",
+							"text": "A heart tracing? For me? ...Well. At least someone takes me seriously.",
+							"mood": "calm",
+							"gesture": "fold_arms"
+						},
+						{
+							"say": "iyer",
+							"text": "Good thinking. Heartburn in a woman her age gets a tracing. Now, the hernia.",
+							"mood": "happy",
+							"head": "nod",
+							"to": "you"
+						}
+					]
+				},
+				{
+					"tone": "VIP first",
+					"text": "Mrs. Mehra first. It'll only take ten minutes, Raju.",
+					"flag": "mehra_first",
+					"trust": {
+						"mehra": 4,
+						"malhotra": 5,
+						"raju": -5,
+						"iyer": -5
+					},
+					"then": [
+						{
+							"say": "raju",
+							"text": "Ten minutes. Okay. Okay. I can... okay.",
+							"mood": "worried",
+							"head": "down"
+						},
+						{
+							"say": "iyer",
+							"text": "{called}. Trapped bowel doesn't wait ten minutes. It doesn't wait at all.",
+							"mood": "angry",
+							"gesture": "wag",
+							"to": "you"
+						}
+					]
+				}
+			]
+		},
+		{
+			"do": "leave",
+			"who": "malhotra"
+		}
+	],
+	"mehra_seen": [
+		{
+			"say": "mehra",
+			"text": "Finally. A private room, as it should be. My son pays for half this hospital's air conditioning.",
+			"mood": "calm",
+			"gesture": "fold_arms"
+		},
+		{
+			"say": "mehra",
+			"text": "It burns, here, after my lunch. And my knee clicks on the stairs. Forty years it's clicked.",
+			"mood": "calm",
+			"gesture": "chest"
+		},
+		{
+			"say": "malhotra",
+			"text": "Take all the time you need, Doctor. All the time.",
+			"mood": "happy",
+			"gesture": "open_hands",
+			"to": "you"
+		},
+		{
+			"choose": [
+				{
+					"tone": "Thorough",
+					"text": "Any chest pain with walking? Sweating? Breathless?",
+					"trust": {
+						"mehra": 3
+					},
+					"then": [
+						{
+							"say": "mehra",
+							"text": "No, no. Only after spicy food. My cook is a criminal.",
+							"mood": "calm",
+							"gesture": "shrug"
+						},
+						{
+							"say": "you",
+							"text": "It sounds like acid. An antacid, a heart tracing to be safe, and smaller meals."
+						}
+					]
+				},
+				{
+					"tone": "Quick",
+					"text": "It's acid. An antacid and you'll be fine.",
+					"trust": {
+						"mehra": 1
+					},
+					"then": [
+						{
+							"say": "mehra",
+							"text": "That's it? I waited for that?",
+							"mood": "angry",
+							"gesture": "open_hands"
+						}
+					]
+				}
+			]
+		},
+		{
+			"flag": "mehra_charmed"
+		},
+		{
+			"say": "mehra",
+			"text": "Well. You listened. That's more than most. Suresh will hear good things.",
+			"mood": "happy",
+			"head": "nod"
+		},
+		{
+			"do": "card",
+			"title": "Fifty minutes later",
+			"text": "Raju has been waiting. The lump is darker now."
+		}
+	],
+	"raju_back": [
+		{
+			"if": "mehra_first",
+			"then": [
+				{
+					"say": "raju",
+					"text": "Doctor... where did you go? It's gone dark. Purple. The pain is... everywhere now.",
+					"mood": "worried",
+					"gesture": "chest"
+				},
+				{
+					"say": "priya",
+					"text": "Pulse a hundred and twenty. He's vomiting green, {called}.",
+					"mood": "worried",
+					"gesture": "point",
+					"to": "you"
+				}
+			],
+			"else": [
+				{
+					"say": "raju",
+					"text": "Doctor, please. My wife thinks I'm at the site. I can't lose this job.",
+					"mood": "worried",
+					"gesture": "open_hands"
+				}
+			]
+		},
+		{
+			"say": "iyer",
+			"text": "Quick history, then theatre. Dr. Khan will want to know one thing above all.",
+			"mood": "focused",
+			"gesture": "point",
+			"to": "you"
+		}
+	],
+	"raju_brief": [
+		{
+			"say": "khan",
+			"text": "He's vomiting, so I'm treating him as a full stomach whatever the board says. Fast tube, pressure on his throat.",
+			"mood": "focused",
+			"gesture": "explain"
+		},
+		{
+			"if": "raju_history_meal",
+			"then": [
+				{
+					"say": "khan",
+					"text": "And you found out he ate at five. Thank you. That's exactly why.",
+					"mood": "calm",
+					"head": "nod",
+					"to": "you"
+				}
+			]
+		},
+		{
+			"say": "tom",
+			"text": "Mesh is open. Warm swabs ready, in case the bowel's sulking.",
+			"mood": "focused",
+			"gesture": "explain"
+		},
+		{
+			"if": "mehra_first",
+			"then": [
+				{
+					"say": "iyer",
+					"text": "This waited an hour, {called}. Be ready for what we find in that sac.",
+					"mood": "focused",
+					"gesture": "fold_arms",
+					"to": "you"
+				}
+			],
+			"else": [
+				{
+					"say": "iyer",
+					"text": "We're quick. That's in his favour. Your lead.",
+					"mood": "calm",
+					"gesture": "point",
+					"to": "you"
+				}
+			]
+		}
+	],
+	"raju_after": [
+		{
+			"if": "op_raju_failed",
+			"then": [
+				{
+					"say": "iyer",
+					"text": "He's in intensive care. Dr. Khan is with him. The next twenty-four hours matter.",
+					"mood": "tired",
+					"head": "down"
+				}
+			],
+			"else": [
+				{
+					"if": "op_raju_chose_resect",
+					"then": [
+						{
+							"say": "iyer",
+							"text": "We took out a short piece of dead bowel and joined the ends. He'll eat again in a few days.",
+							"mood": "calm",
+							"gesture": "explain",
+							"to": "raju"
+						}
+					],
+					"else": [
+						{
+							"if": "op_raju_chose_warm",
+							"then": [
+								{
+									"say": "iyer",
+									"text": "The bowel was bruised. Warmth brought it back. He keeps all of it.",
+									"mood": "calm",
+									"gesture": "explain",
+									"to": "raju"
+								}
+							],
+							"else": [
+								{
+									"say": "iyer",
+									"text": "Pink, healthy bowel. Back where it belongs, and a mesh to keep it there.",
+									"mood": "happy",
+									"gesture": "explain",
+									"to": "raju"
+								}
+							]
+						}
+					]
+				},
+				{
+					"say": "raju",
+					"text": "Six weeks no bricks? The contractor will give my job away.",
+					"mood": "worried",
+					"gesture": "open_hands"
+				},
+				{
+					"choose": [
+						{
+							"tone": "Help",
+							"text": "I'll write a letter for your contractor. Light work in four weeks, full work in six.",
+							"trust": {
+								"raju": 4
+							},
+							"then": [
+								{
+									"say": "raju",
+									"text": "A doctor's letter. He'll frame it. He's never seen one.",
+									"mood": "happy",
+									"head": "nod"
+								}
+							]
+						},
+						{
+							"tone": "Firm",
+							"text": "Lift a brick before six weeks and you'll be back on this table.",
+							"trust": {
+								"raju": 2
+							},
+							"then": [
+								{
+									"say": "raju",
+									"text": "Okay. Okay. Six weeks. My wife will make sure. She's scarier than you.",
+									"mood": "calm",
+									"gesture": "shrug"
+								}
+							]
+						}
+					]
+				}
+			]
+		},
+		{
+			"if": "mehra_first",
+			"then": [
+				{
+					"say": "iyer",
+					"text": "Fifty minutes, {called}. That's what heartburn cost him. Remember it the next time someone important is waiting.",
+					"mood": "focused",
+					"gesture": "wag",
+					"to": "you"
+				}
+			]
+		}
+	],
+	"mehra_waited": [
+		{
+			"if": "mehra_ecg",
+			"then": [
+				{
+					"say": "mehra",
+					"text": "Two hours. But your nurse did a heart tracing in five minutes. Nobody has ever done that for me so fast.",
+					"mood": "calm",
+					"gesture": "fold_arms"
+				},
+				{
+					"say": "mehra",
+					"text": "Normal, she said. So. My heartburn waited for a bricklayer.",
+					"mood": "angry",
+					"head": "tilt"
+				}
+			],
+			"else": [
+				{
+					"say": "mehra",
+					"text": "Two hours! Two hours in a side room with a broken television, young doctor!",
+					"mood": "angry",
+					"gesture": "point"
+				}
+			]
+		},
+		{
+			"say": "malhotra",
+			"text": "Mrs. Mehra, I'm so very sorry. Doctor, please explain.",
+			"mood": "worried",
+			"gesture": "open_hands",
+			"to": "you"
+		},
+		{
+			"choose": [
+				{
+					"tone": "Explain",
+					"text": "His bowel was trapped and dying. An hour more and he'd have lost it. Your tracing was normal, and I'm sorry you waited.",
+					"flag": "mehra_charmed",
+					"trust": {
+						"mehra": 5,
+						"malhotra": 2
+					},
+					"then": [
+						{
+							"say": "mehra",
+							"text": "Dying. In front of me, and I was complaining about my lunch.",
+							"mood": "worried",
+							"head": "down"
+						},
+						{
+							"say": "mehra",
+							"text": "My husband was a bricklayer. Before Suresh got rich. Did you know that? No. Why would you.",
+							"mood": "calm",
+							"gesture": "open_hands"
+						},
+						{
+							"say": "mehra",
+							"text": "You did right, young doctor. I'll tell my son so. He won't like it. Good.",
+							"mood": "happy",
+							"gesture": "point"
+						}
+					]
+				},
+				{
+					"tone": "Defend",
+					"text": "He was an emergency. You weren't.",
+					"flag": "mehra_complaint",
+					"trust": {
+						"mehra": -6,
+						"malhotra": -5
+					},
+					"then": [
+						{
+							"say": "mehra",
+							"text": "Then I'll write to the board about manners. They're an emergency too.",
+							"mood": "angry",
+							"gesture": "fold_arms"
+						},
+						{
+							"say": "malhotra",
+							"text": "Doctor... true is not the same as wise.",
+							"mood": "worried",
+							"gesture": "wag",
+							"to": "you"
+						}
+					]
+				}
+			]
+		},
+		{
+			"flag": "mehra_home"
+		}
+	],
+	"letters13": [
+		{
+			"say": "grace",
+			"text": "Post again. You're popular this week, {called}. Mostly.",
+			"mood": "happy",
+			"gesture": "offer"
+		},
+		{
+			"if": "op_raju_failed",
+			"then": [
+				{
+					"say": "grace",
+					"text": "Raju's wife came by. He's off the ventilator. She brought laddoos and cried on my desk.",
+					"mood": "calm",
+					"gesture": "explain"
+				}
+			],
+			"else": [
+				{
+					"say": "grace",
+					"text": "Raju's contractor phoned to check the letter's real. It's on his wall now.",
+					"mood": "happy",
+					"gesture": "shrug"
+				}
+			]
+		},
+		{
+			"if": "mehra_charmed",
+			"then": [
+				{
+					"say": "grace",
+					"text": "And Mrs. Kamala Mehra wrote to the board. About you. Nicely. Mr. Malhotra read it twice. Out loud.",
+					"mood": "happy",
+					"gesture": "explain"
+				}
+			],
+			"else": [
+				{
+					"if": "mehra_complaint",
+					"then": [
+						{
+							"say": "grace",
+							"text": "And Mrs. Mehra wrote to the board. About your manners. Mr. Malhotra has the letter. He's 'concerned'.",
+							"mood": "tired",
+							"gesture": "fold_arms"
+						}
+					]
+				}
+			]
+		},
+		{
+			"if": "credit_called_out",
+			"then": [
+				{
+					"say": "grace",
+					"text": "Dr. Sethi hasn't said a word to anyone since the meeting. The ward has never been so quiet.",
+					"mood": "calm",
+					"head": "tilt"
+				}
+			]
+		},
+		{
+			"if": "credit_proof",
+			"then": [
+				{
+					"say": "grace",
+					"text": "Dr. Rao kept the admission notes. Times and all. Dr. Sethi went in to see him yesterday. He came out pale.",
+					"mood": "calm",
+					"head": "tilt"
+				}
+			]
+		},
+		{
+			"say": "grace",
+			"text": "Review at three. Seminar room. Wear the clean coat.",
+			"mood": "focused",
+			"gesture": "point"
+		},
+		{
+			"choose": [
+				{
+					"tone": "Nervous",
+					"text": "What if it goes badly?",
+					"trust": {
+						"grace": 2
+					},
+					"then": [
+						{
+							"say": "grace",
+							"text": "Then you'll still be a doctor at four o'clock. Go.",
+							"mood": "happy",
+							"gesture": "shrug"
+						}
+					]
+				},
+				{
+					"tone": "Ready",
+					"text": "I'm ready.",
+					"trust": {
+						"grace": 1
+					},
+					"then": [
+						{
+							"say": "grace",
+							"text": "Good. Clean coat anyway.",
+							"mood": "happy",
+							"gesture": "wag"
+						}
+					]
+				}
+			]
+		}
+	],
+	"review_senior": [
+		{
+			"say": "rao",
+			"text": "Sit, {called}. Eight months as a Junior Resident. Dr. Iyer.",
+			"mood": "calm",
+			"gesture": "open_hands"
+		},
+		{
+			"if": "op_deepa_failed",
+			"then": [
+				{
+					"say": "iyer",
+					"text": "Deepa's hand: hard going, and I finished it. But {called} told her the truth about it.",
+					"mood": "calm",
+					"gesture": "explain",
+					"to": "rao"
+				}
+			],
+			"else": [
+				{
+					"say": "iyer",
+					"text": "Deepa's hand: neat work, and the glass found before it festered.",
+					"mood": "happy",
+					"gesture": "explain",
+					"to": "rao"
+				}
+			]
+		},
+		{
+			"if": "bansal_exam_right",
+			"then": [
+				{
+					"say": "iyer",
+					"text": "Mr. Bansal: a 'kidney stone' that was a leaking aorta. Found by looking. That man is alive because of one examination.",
+					"mood": "happy",
+					"gesture": "point",
+					"to": "rao"
+				}
+			],
+			"else": [
+				{
+					"say": "iyer",
+					"text": "Mr. Bansal: missed, and owned. {called} has examined every 'kidney stone' since like it's a bomb.",
+					"mood": "calm",
+					"gesture": "explain",
+					"to": "rao"
+				}
+			]
+		},
+		{
+			"if": "op_farida_won",
+			"then": [
+				{
+					"say": "iyer",
+					"text": "And a keyhole gallbladder with a textbook critical view. I kept my hands in my pockets.",
+					"mood": "happy",
+					"head": "nod",
+					"to": "rao"
+				}
+			],
+			"else": [
+				{
+					"say": "iyer",
+					"text": "And a keyhole gallbladder that taught us both something. Safely.",
+					"mood": "calm",
+					"head": "nod",
+					"to": "rao"
+				}
+			]
+		},
+		{
+			"say": "rao",
+			"text": "The meeting.",
+			"mood": "focused",
+			"head": "tilt"
+		},
+		{
+			"if": "credit_proof",
+			"then": [
+				{
+					"say": "rao",
+					"text": "You asked one question and let the notes speak. Dr. Sethi has apologised to me. He'll apologise to you.",
+					"mood": "calm",
+					"gesture": "explain"
+				},
+				{
+					"say": "rao",
+					"text": "That's how you win a fight in a hospital, {called}. Quietly, with the facts, and nobody humiliated.",
+					"mood": "happy",
+					"gesture": "wag"
+				}
+			],
+			"else": [
+				{
+					"if": "credit_called_out",
+					"then": [
+						{
+							"say": "rao",
+							"text": "You challenged a senior in front of the department. You were right. You were also loud.",
+							"mood": "focused",
+							"gesture": "fold_arms"
+						},
+						{
+							"say": "rao",
+							"text": "Next time, come to my office first. Being right is half of it. The other half is how.",
+							"mood": "calm",
+							"gesture": "explain"
+						}
+					],
+					"else": [
+						{
+							"say": "rao",
+							"text": "You let a colleague take your work, or your blame, and said nothing.",
+							"mood": "focused",
+							"gesture": "fold_arms"
+						},
+						{
+							"say": "rao",
+							"text": "Generous. And dangerous. Credit is how a hospital decides whom to trust with the next patient.",
+							"mood": "calm",
+							"gesture": "wag"
+						}
+					]
+				}
+			]
+		},
+		{
+			"say": "malhotra",
+			"text": "If I may. Mrs. Mehra.",
+			"mood": "calm",
+			"gesture": "open_hands",
+			"to": "rao"
+		},
+		{
+			"if": "mehra_first",
+			"then": [
+				{
+					"say": "malhotra",
+					"text": "The board was very pleased that her son's mother was seen promptly.",
+					"mood": "happy",
+					"gesture": "explain",
+					"to": "rao"
+				},
+				{
+					"say": "rao",
+					"text": "And Raju Yadav lost fifty minutes and a loop of bowel for her heartburn.",
+					"mood": "angry",
+					"gesture": "point",
+					"to": "malhotra"
+				},
+				{
+					"say": "rao",
+					"text": "We don't run a hospital for the board, Vikram. Neither will you, {called}. Not again.",
+					"mood": "focused",
+					"gesture": "wag",
+					"to": "you"
+				}
+			],
+			"else": [
+				{
+					"if": "mehra_charmed",
+					"then": [
+						{
+							"say": "malhotra",
+							"text": "She wrote to the board. She says you were the only one who explained anything. Most... irregular.",
+							"mood": "happy",
+							"gesture": "shrug",
+							"to": "rao"
+						},
+						{
+							"say": "rao",
+							"text": "A stuck hernia first, and the VIP won over anyway. That's the job, done well.",
+							"mood": "happy",
+							"head": "nod"
+						}
+					],
+					"else": [
+						{
+							"say": "malhotra",
+							"text": "She wrote to the board about your manners, Doctor.",
+							"mood": "worried",
+							"gesture": "fold_arms",
+							"to": "you"
+						},
+						{
+							"say": "rao",
+							"text": "And I wrote back. A stuck hernia beats heartburn. Always. Your manners we can work on.",
+							"mood": "calm",
+							"gesture": "shrug"
+						}
+					]
+				}
+			]
+		},
+		{
+			"if": "beds_saved",
+			"then": [
+				{
+					"say": "rao",
+					"text": "Eight months ago you spoke up for six beds. You've kept speaking up. That's rarer than good hands.",
+					"mood": "calm",
+					"gesture": "explain"
+				}
+			]
+		},
+		{
+			"say": "rao",
+			"text": "Senior Resident, {called}. Nights in charge of the whole surgical floor. An intern of your own. And a seat at the budget meeting.",
+			"mood": "happy",
+			"gesture": "offer"
+		},
+		{
+			"choose": [
+				{
+					"tone": "Grateful",
+					"text": "Thank you. Both of you. Dr. Iyer, for keeping your hands in your pockets.",
+					"trust": {
+						"iyer": 3,
+						"rao": 2
+					},
+					"then": [
+						{
+							"say": "iyer",
+							"text": "It was very hard. Remember that when you have an intern.",
+							"mood": "happy",
+							"head": "nod"
+						}
+					]
+				},
+				{
+					"tone": "Ambitious",
+					"text": "I'll be ready for the budget meeting.",
+					"trust": {
+						"rao": 3,
+						"malhotra": 2
+					},
+					"then": [
+						{
+							"say": "malhotra",
+							"text": "Wonderful. I'll send you forty pages of spreadsheets.",
+							"mood": "happy",
+							"gesture": "clap"
+						}
+					]
+				},
+				{
+					"tone": "Humble",
+					"text": "I made mistakes this year.",
+					"trust": {
+						"rao": 3,
+						"iyer": 2
+					},
+					"then": [
+						{
+							"say": "rao",
+							"text": "So did I, in my year. Some of them I still dream about. Learn from yours faster than I did.",
+							"mood": "calm",
+							"head": "down"
+						}
+					]
+				}
+			]
+		},
+		{
+			"say": "iyer",
+			"text": "Senior Resident. Which means my nights get quieter and yours don't. Congratulations, Doctor.",
+			"mood": "happy",
+			"gesture": "clap"
+		}
+	]
+}

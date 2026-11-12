@@ -1,9 +1,13 @@
 class_name OperatingTable
 extends LabStation
-## Theatre 2's operating table with Rohit on it under blue drapes, the
-## anaesthetic screen at his head, a window of skin over the lower right of
-## his belly, big lights overhead, Dr. Khan's machine and monitor, and the
-## doctor's own gloved hands in first person.
+## The operating table with the patient under blue drapes, the anaesthetic
+## screen at their head, a window of skin, big lights overhead, Dr. Khan's
+## machine and monitor, and the doctor's own gloved hands in first person.
+##
+## Rohit's appendectomy has its own hand-made parts (below). Every other
+## operation is drawn from the parts its OperationTask lays out: discs,
+## tubes, blobs, slivers and rings in skin centimetres, each shown while a
+## condition about the operation holds (see OperationTask.condition_met).
 ##
 ## The skin shows the operation as it goes: the dotted line, the cut, the
 ## wound held open with the bowel and the appendix inside, the appendix
@@ -78,6 +82,18 @@ var _clock := 0.0
 var _shown_stitches := -1
 var _shown_trace := -1
 var _guide_shown := ""
+## The operation on the table now, and its own parts (not the appendix).
+var _op: OperationTask
+var _generic: Node3D
+var _generic_parts := {}
+var _appendix_nodes: Array[Node3D] = []
+
+
+## Points the close-up camera at a spot on the skin (the middle of the work).
+func _frame_work(centre: Vector2) -> void:
+	var work := skin_local(centre)
+	close_from = work + Vector3(0.0, 0.29, 0.21)
+	close_at = work + Vector3(-0.022, 0.0, -0.016)
 
 
 func _init(for_look: AvatarConfig = null) -> void:
@@ -261,6 +277,7 @@ func _build_wound() -> void:
 	LowPoly.put(_swab, LowPoly.box(Vector3(0.026, 0.004, 0.004), Color("#4FA0D8")), Vector3(0, 0.0105, 0.004), Vector3(0, 0.4, 0.2))
 	_swab.visible = false
 	_stitches = LowPoly.joint(self, "Stitches", Vector3.ZERO)
+	_appendix_nodes = [_guide_line, _cut, _wound, _appendix_in, bowel, colon, _appendix_up, _clamp, _tie, _blood, _pus, _swab]
 
 
 ## The doctor's gloved hands and forearms in gown sleeves, reaching in from
@@ -324,8 +341,23 @@ func skin_point(camera: Camera3D, screen_point: Vector2) -> Variant:
 
 ## Where a tap target is drawn, in the theatre.
 func target_point(which: String) -> Vector3:
+	if _generic_on():
+		var spot_now: Vector2 = _op.targets.get(which, _op.procedure.get("wound_centre", Vector2(13, 9.5)))
+		return skin_world(spot_now, _generic_lift(which))
 	var spot: Vector2 = TARGETS.get(which, Vector2(13, 9.5))
 	return skin_world(spot, float(TARGET_DEPTH.get(which, 0.0)))
+
+
+func _generic_on() -> bool:
+	return _op != null and _op.id != "appendix"
+
+
+## How far above the skin a generic target sits (its part's height).
+func _generic_lift(which: String) -> float:
+	for part: Dictionary in _op.parts:
+		if str(part["id"]) == which:
+			return float(part.get("lift", 0.012)) + (0.01 if part.has("lifted") and _op.condition_met(str(part["lifted"])) else 0.0)
+	return 0.012
 
 
 ## The tap target nearest a screen point (only those that show now), or "".
@@ -341,6 +373,8 @@ func targets_shown(task: OperationTask) -> Array[String]:
 	var found: Array[String] = []
 	if task == null:
 		return found
+	if task.id != "appendix":
+		return _generic_targets(task)
 	var opened := "retract" in task.done_steps
 	var lifted := "find" in task.done_steps
 	if opened and not lifted:
@@ -356,9 +390,26 @@ func targets_shown(task: OperationTask) -> Array[String]:
 	return found
 
 
+func _generic_targets(task: OperationTask) -> Array[String]:
+	var found: Array[String] = []
+	for part: Dictionary in task.parts:
+		if (bool(part.get("tap", false)) or part.has("tap_at")) and task.condition_met(str(part.get("show", ""))):
+			found.append(str(part["id"]))
+	if task.phase == "act" and task.action == "tap" and not task.target.is_empty() and task.target not in found:
+		found.append(task.target)
+	if task.active_complication == "bleeding" and "bleeder" not in found:
+		found.append("bleeder")
+	if task.phase == "search":
+		found.append("swab")
+	return found
+
+
 # --- Showing the task -------------------------------------------------------
 
-func reset_task(_task: TrainingTask) -> void:
+func reset_task(task: TrainingTask) -> void:
+	_op = task as OperationTask
+	_frame_work(_op.procedure.get("view_centre", _op.procedure.get("wound_centre", WORK_CENTRE)) if _generic_on() else WORK_CENTRE)
+	_build_generic()
 	_clock = 0.0
 	_shown_stitches = -1
 	_shown_trace = -1
@@ -373,6 +424,10 @@ func reset_task(_task: TrainingTask) -> void:
 func show_task(task: TrainingTask, delta: float) -> void:
 	var op := task as OperationTask
 	if op == null:
+		return
+	if op.id != "appendix":
+		_clock += delta
+		_show_generic(op, delta)
 		return
 	_clock += delta
 	var done := op.done_steps
@@ -468,6 +523,17 @@ func _show_hands(op: OperationTask, delta: float) -> void:
 				goal = TARGETS.get(op.target, WORK_CENTRE)
 				lift = 0.01
 				steady = Vector2(10.6, 11.8)
+	if op.id != "appendix" and op.phase in ["act", "beat", "search"] and op.step != "incision":
+		var centre: Vector2 = op.procedure.get("wound_centre", WORK_CENTRE)
+		match op.action:
+			"tap":
+				goal = op.targets.get(op.target, centre)
+				lift = 0.012
+				steady = centre + Vector2(-2.6, 2.0)
+			"hold", "fill":
+				goal = centre + Vector2(1.4, 1.6)
+				lift = 0.01
+				steady = centre + Vector2(-1.8, 2.0)
 			"close":
 				var next := clampf(0.08 + 0.84 * op.stitches.size() / 5.0, 0.0, 1.0)
 				goal = op.guide_point(next) + Vector2(0.3, 0.1)
@@ -494,3 +560,202 @@ func _ribbon_on_skin(parent: Node3D, points: PackedVector2Array, width: float, c
 
 func _place_on_skin(node: Node3D, spot: Vector2, lift: float) -> void:
 	node.position = skin_local(spot, lift)
+
+
+# --- Any other operation ----------------------------------------------------
+
+const BOWEL_COLOURS := {"pink": Color("#E8A4A0"), "dusky": Color("#8E5A86"), "dead": Color("#3D4A2E")}
+
+
+## Swaps the appendix's parts for the operation's own, or back again.
+func _build_generic() -> void:
+	if _generic != null:
+		remove_child(_generic)
+		_generic.queue_free()
+		_generic = null
+	_generic_parts.clear()
+	var generic := _generic_on()
+	for node in _appendix_nodes:
+		node.visible = false
+	if not generic:
+		_rebuild_line(OperationTask.new())
+		return
+	_rebuild_line(_op)
+	_generic = LowPoly.joint(self, "Parts", Vector3.ZERO)
+	var shown: Array[Dictionary] = _op.parts.duplicate()
+	var centre: Vector2 = _op.procedure.get("wound_centre", WORK_CENTRE)
+	if _op.targets.has("bleeder"):
+		shown.append({"id": "bleed", "kind": "bleed", "at": _op.targets["bleeder"], "show": "comp:bleeding"})
+	shown.append({"id": "bile", "kind": "disc", "at": centre + Vector2(0.8, -0.4), "size": Vector2(0.04, 0.028),
+		"colour": Color("#7C8A2C"), "show": "comp:bile", "lift": 0.013})
+	shown.append({"id": "swab", "kind": "swab", "at": centre + Vector2(1.2, 0.5), "show": "phase:search"})
+	_op.targets["swab"] = centre + Vector2(1.2, 0.5)
+	for part in shown:
+		var node := _make_part(part)
+		if node != null:
+			_generic.add_child(node)
+			_generic_parts[str(part["id"])] = {"node": node, "part": part}
+
+
+## The dotted line and the cut for this operation's guide.
+func _rebuild_line(op: OperationTask) -> void:
+	for node: Node3D in [_guide_line, _cut]:
+		for child in node.get_children():
+			node.remove_child(child)
+			child.queue_free()
+	var guide := op.guide()
+	for index in range(0, guide.size(), 3):
+		var dot := LowPoly.cylinder(0.0028, 0.0028, 0.002, 6, Color("#4B2F86"))
+		LowPoly.put(_guide_line, dot, skin_local(guide[index], 0.002))
+	_ribbon_on_skin(_cut, guide, 0.006, WOUND, 0.004)
+
+
+func _part_colour(part: Dictionary) -> Color:
+	var colour: Variant = part.get("colour", Color.WHITE)
+	if colour is String and str(colour) == "bowel":
+		return BOWEL_COLOURS.get(str(_op.variants.get("bowel", "pink")), BOWEL_COLOURS["pink"])
+	return colour as Color
+
+
+func _make_part(part: Dictionary) -> Node3D:
+	var kind := str(part.get("kind", "blob"))
+	var colour := _part_colour(part)
+	var size: Vector2 = part.get("size", Vector2(0.01, 0.0))
+	var lift := float(part.get("lift", 0.012))
+	var root := Node3D.new()
+	root.name = str(part["id"]).to_pascal_case()
+	var at_value: Variant = part.get("at", Vector2.ZERO)
+	var at: Vector2 = at_value if at_value is Vector2 else Vector2.ZERO
+	var angle := 0.0
+	if bool(part.get("angle", false)):
+		var along := _op.guide()[_op.guide().size() - 1] - _op.guide()[0]
+		angle = -atan2(along.y, along.x)
+	match kind:
+		"disc":
+			root.position = skin_local(at, lift)
+			root.rotation.y = angle
+			LowPoly.put(root, LowPoly.cylinder(size.x, size.x, 0.004, 16, colour), Vector3.ZERO, Vector3.ZERO,
+				Vector3(1.0, 1.0, size.y / maxf(0.0001, size.x)))
+		"scope":
+			# The camera's round picture: black all round it, like a screen.
+			root.position = skin_local(at, 0.006)
+			LowPoly.put(root, LowPoly.torus(size.x, size.x + 0.26, colour, 32, 4), Vector3.ZERO, Vector3.ZERO, Vector3(1.0, 0.05, 0.86))
+		"dots":
+			var points: Array[Vector2] = []
+			if str(part.get("at", "")) == "edges" or part.has("points"):
+				for key: String in part.get("points", ["edge_a", "edge_b"]):
+					points.append(_op.targets.get(key, at))
+			else:
+				for index in 7:
+					points.append(at + Vector2(cos(index * 2.4) * (0.6 + 0.3 * (index % 3)), sin(index * 2.4) * 0.5))
+			for point in points:
+				LowPoly.put(root, LowPoly.cylinder(0.004, 0.004, 0.003, 6, colour), skin_local(point, lift))
+		"tube":
+			var from: Vector2 = part.get("from", at - Vector2(cos(-angle), sin(-angle)) * size.y / SCALE / 2.0)
+			var to: Vector2 = part.get("to", at + Vector2(cos(-angle), sin(-angle)) * size.y / SCALE / 2.0)
+			var length := from.distance_to(to)
+			var count := maxi(3, int(length / maxf(0.08, size.x / SCALE * 1.1)))
+			for index in count + 1:
+				var t := float(index) / count
+				LowPoly.put(root, LowPoly.sphere(size.x, colour, 6, 4), skin_local(from.lerp(to, t), lift))
+		"blob", "sack":
+			root.position = skin_local(at, lift)
+			var flat := size.y if size.y > 0.0 else 0.6
+			LowPoly.put(root, LowPoly.sphere(size.x, colour, 9, 6), Vector3.ZERO, Vector3.ZERO, Vector3(1.0, flat, 0.8))
+			if kind == "sack":
+				LowPoly.put(root, LowPoly.torus(size.x * 0.7, size.x * 0.95, colour.darkened(0.2), 12, 3), Vector3(0, size.x * 0.4, 0))
+		"pear":
+			var neck: Vector2 = part.get("to", at)
+			root.position = skin_local(at, lift)
+			LowPoly.put(root, LowPoly.sphere(size.x, colour, 9, 6), Vector3.ZERO, Vector3.ZERO, Vector3(1.2, 0.6, 0.9))
+			for index in 3:
+				var t := (index + 1) / 3.5
+				var point := skin_local(at.lerp(neck, t), lift) - root.position
+				LowPoly.put(root, LowPoly.sphere(size.x * (0.75 - 0.15 * index), colour.darkened(0.05 * index), 7, 5), point,
+					Vector3.ZERO, Vector3(1.0, 0.6, 1.0))
+		"sliver":
+			root.position = skin_local(at, lift)
+			root.rotation.y = 0.7 + at.x
+			var piece := LowPoly.box(Vector3(size.x, 0.002, size.y), colour)
+			if bool(part.get("glow", false)):
+				piece.material_override = LowPoly.glow(colour, 1.6)
+			LowPoly.put(root, piece, Vector3.ZERO)
+		"ring":
+			root.position = skin_local(at, lift)
+			LowPoly.put(root, LowPoly.torus(size.x, size.y, colour, 12, 5), Vector3.ZERO, Vector3.ZERO, Vector3(1.0, 0.6, 1.0))
+		"clips":
+			root.position = skin_local(at, lift + 0.004)
+			for side: int in [-1, 1]:
+				LowPoly.put(root, LowPoly.box(Vector3(0.012, 0.003, 0.003), colour), Vector3(0, 0, 0.006 * side), Vector3(0, 0.6, 0))
+		"mark":
+			root.position = skin_local(at, lift + 0.004)
+			var mark := LowPoly.torus(0.004, 0.006, colour, 10, 3)
+			mark.material_override = LowPoly.glow(colour, 0.8)
+			LowPoly.put(root, mark, Vector3.ZERO)
+		"ports":
+			for key: String in part.get("points", []):
+				LowPoly.put(root, LowPoly.cylinder(0.009, 0.009, 0.012, 8, colour), skin_local(_op.targets.get(key, at), 0.006))
+				LowPoly.put(root, LowPoly.cylinder(0.005, 0.005, 0.014, 8, Color("#4FA0D8")), skin_local(_op.targets.get(key, at), 0.008))
+		"marks":
+			for key: String in part.get("points", []):
+				LowPoly.put(root, LowPoly.torus(0.009, 0.013, colour, 12, 3), skin_local(_op.targets.get(key, at), 0.002))
+				LowPoly.put(root, LowPoly.cylinder(0.003, 0.003, 0.002, 6, colour), skin_local(_op.targets.get(key, at), 0.002))
+		"bleed":
+			root.position = skin_local(at, 0.0)
+			LowPoly.put(root, LowPoly.cylinder(0.04, 0.04, 0.006, 12, BLOOD), Vector3(0, 0.012, 0), Vector3.ZERO, Vector3(1.0, 1.0, 0.7))
+			var spurt := LowPoly.sphere(0.008, Color("#D22B2B"), 6, 4)
+			spurt.name = "Spurt"
+			spurt.material_override = LowPoly.glow(Color("#D22B2B"), 0.6)
+			LowPoly.put(root, spurt, Vector3(0, 0.024, 0))
+		"swab":
+			root.position = skin_local(at, 0.012)
+			LowPoly.put(root, LowPoly.box(Vector3(0.026, 0.008, 0.02), Color("#F4F4F0")), Vector3.ZERO, Vector3(0, 0.4, 0.2))
+			LowPoly.put(root, LowPoly.box(Vector3(0.026, 0.004, 0.004), Color("#4FA0D8")), Vector3(0, 0.0045, 0.004), Vector3(0, 0.4, 0.2))
+		_:
+			return null
+	root.visible = false
+	return root
+
+
+func _show_generic(op: OperationTask, delta: float) -> void:
+	var has_trace := false
+	var trace_step := ""
+	for entry: Dictionary in op.procedure["steps"]:
+		if str(entry.get("act", "")) == "trace":
+			has_trace = true
+			trace_step = str(entry["id"])
+	var keyhole := bool(op.procedure.get("keyhole", false))
+	var closing := op.is_closing()
+	var opened := op.is_open()
+	_guide_line.visible = has_trace and trace_step not in op.done_steps
+	if keyhole:
+		_cut.visible = closing
+	elif has_trace:
+		_cut.visible = trace_step in op.done_steps and (not opened or closing)
+	else:
+		_cut.visible = not opened or closing
+	for id: String in _generic_parts:
+		var entry: Dictionary = _generic_parts[id]
+		var node: Node3D = entry["node"]
+		var part: Dictionary = entry["part"]
+		node.visible = op.condition_met(str(part.get("show", "")))
+		if not node.visible:
+			continue
+		if part.has("lifted"):
+			node.position.y = skin_local(Vector2.ZERO, float(part.get("lift", 0.012))).y + (0.01 if op.condition_met(str(part["lifted"])) else 0.0)
+		if bool(part.get("pulse", false)):
+			node.scale = Vector3.ONE * (1.0 + 0.12 * absf(sin(_clock * 6.0)))
+		if str(part.get("kind", "")) == "bleed":
+			node.scale = Vector3.ONE * (1.0 + 0.25 * sin(_clock * 7.0))
+			var spurt := node.get_node_or_null("Spurt") as Node3D
+			if spurt != null:
+				spurt.position.y = 0.024 + 0.015 * absf(sin(_clock * 7.0))
+		if str(part.get("colour", "")) == "bowel":
+			for child in node.get_children():
+				LabStation.set_colour(child as MeshInstance3D, _part_colour(part))
+	_show_trace(op)
+	_show_stitches(op)
+	_show_hands(op, delta)
+	if _monitor_light != null:
+		var alarm := not op.active_complication.is_empty() or op.stability < 50.0
+		_monitor_light.visible = alarm and fmod(_clock, 0.6) < 0.35

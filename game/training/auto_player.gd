@@ -45,8 +45,9 @@ func step(view: TrainingView, delta: float) -> void:
 			_exam(view as ExamView)
 		"scan":
 			_scan(view as ScanView)
-		"appendix":
-			_operation(view as OperationView, delta)
+		_:
+			if view is OperationView:
+				_operation(view as OperationView, delta)
 
 
 func _act() -> bool:
@@ -288,12 +289,12 @@ func _operation(view: OperationView, delta: float) -> void:
 			var key := "decide" + op.step
 			var tries := int(_done.get(key, 0))
 			_done[key] = tries + 1
-			var wrong := {"pressure": ["carry_on", "deeper"], "reaction": ["fluids", "carry_on"]}
+			var wrong := op.wrong_options()
 			var answer := op.right_option()
-			if quality == "bad":
-				answer = str(wrong[op.step][1])
-			elif quality == "shaky" and tries == 0:
-				answer = str(wrong[op.step][0])
+			if quality == "bad" and not wrong.is_empty():
+				answer = str(wrong[mini(1, wrong.size() - 1)])
+			elif quality == "shaky" and tries == 0 and not wrong.is_empty():
+				answer = str(wrong[0])
 			view.answer(answer)
 		"count":
 			if not _act():
@@ -329,7 +330,8 @@ func _op_call(view: OperationView, op: OperationTask) -> void:
 				return
 	var pick := op.wanted
 	if (quality == "shaky" and wrong_picks == 0) or quality == "bad":
-		var others: Array = Instruments.ALL.filter(func(item: String) -> bool:
+		var tray: Array = op.procedure.get("tray", Instruments.ALL)
+		var others: Array = tray.filter(func(item: String) -> bool:
 			return item != op.wanted and item not in ["suction", "swab"])
 		pick = str(others[(wrong_picks + op.calls) % others.size()])
 	_done[key] = wrong_picks + 1
@@ -360,12 +362,27 @@ func _op_act(view: OperationView, op: OperationTask, delta: float) -> void:
 				return
 			_done[key] = tries + 1
 			var miss := (quality == "shaky" and tries == 0 and op.step == "find") or (quality == "bad" and tries < 4)
-			_tap_target(view, op, "bowel" if miss else op.target)
+			var traps: Dictionary = op._data(op.step).get("traps", {})
+			var slip := str(traps.keys()[0]) if not traps.is_empty() else "bowel"
+			_tap_target(view, op, slip if miss else op.target)
+		"fill":
+			var aim := 13.5
+			if quality == "bad":
+				aim = 18.0
+			elif quality == "shaky" and op.fill_tries == 0:
+				aim = 9.0
+			if not op.holding:
+				if _act():
+					view.hold()
+				return
+			if op.fill_level >= aim:
+				view.release()
 		"stitch":
 			if not _act():
 				return
-			var wanted := {"good": 6, "shaky": 4, "bad": 3}
-			var count := int(wanted.get(quality, 6))
+			var full := op.stitch_target()
+			var wanted := {"good": full, "shaky": maxi(2, full - 2), "bad": maxi(2, full - 3)}
+			var count := int(wanted.get(quality, full))
 			if op.stitches.size() >= count:
 				view.tie_off()
 				return

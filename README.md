@@ -66,7 +66,7 @@ how you know you're winning.
 ## What works right now
 
 The game is being built in stages, and the old 2D version has been retired
-(it's kept safe on the `swift-prototype` branch). Stages 1 to 6 of the 3D game
+(it's kept safe on the `swift-prototype` branch). Stages 1 to 7 of the 3D game
 are in:
 
 - The title screen: the hospital at dusk, an ambulance, a doctor wandering about.
@@ -157,7 +157,36 @@ are in:
   promotion comes with confetti.
 - Room for the notch and the home bar on newer iPhones, and older iPhones
   have about half as much to draw, so the hospital runs smoothly on phones as
-  tired as the staff.
+  tired as the staff. The sound plays even with the silent switch on, because
+  the game has its own volume settings and you'd only turn them all off anyway.
+- Eight months later. You're a Junior Resident now, which means the pager no
+  longer makes you jump, mostly, and the cases come with real operating
+  theatres attached. The team walks you in, gowns up, and Dr. Khan briefs you
+  with whatever you did or didn't ask on the ward.
+- Deepa cut her hand on a broken glass while cooking, and the glass is still
+  in there somewhere. Find it before you find a tendon. Did you ask about her
+  last tetanus jab? The time-out board will.
+- Mr. Bansal was admitted overnight by Dr. Sethi as a kidney stone. Examine
+  him properly and you find a pulsing lump that is very much not a stone.
+  Skip it and he collapses at noon, and everyone wants to know who saw him
+  last.
+- Your first keyhole operation: Mrs. Ansari's gallbladder. Put the ports in,
+  fill her belly with gas (between 12 and 15, not "a bit more"), find the
+  green pear under the liver and keep well away from the duct that looks
+  exactly like the one you want.
+- The department meeting, in a seminar room with a projector and a photo
+  nobody remembers posing for. Dr. Sethi presents "his" case. It was yours.
+  Speak up, ask him an awkward question, or let it go and watch it come back.
+- Raju, a builder with a stuck hernia, arrives at the same moment as a board
+  member's mother with heartburn and opinions. One of them is an emergency.
+  See the wrong one first and you'll see exactly what fifty minutes does to a
+  loop of bowel.
+- Every operation is random, and every case can be easy, hard (ask for a
+  hint, pay for it in points) or extreme (the board is wrong, two things go
+  wrong at once, and nobody is giving you hints).
+- The review, with Dr. Rao, Dr. Iyer and an empty chair. Yours. They
+  remember the hand, the lump, the credit and the VIP, and if you've earned
+  it you walk out a Senior Resident.
 
 Screenshots of every screen are rebuilt automatically after each change, on
 the [`screenshots` branch](../../tree/screenshots).

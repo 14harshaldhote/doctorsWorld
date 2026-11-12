@@ -18,7 +18,8 @@ plan"). This file covers how to build, run and test the game.
 | 4. First operation | Day 3: Rohit's consent with his mother, scrubbing in, the time-out, instrument calls with Tom, incision, a complication called by Dr. Khan, the swab count, stitching, the talk with his family and Dr. Iyer's debrief; won, struggled or failed (Dr. Iyer takes over) | Done |
 | 5. Hospital life | Days 4 to 8 on the surgical ward: five patient stories (Lakshmi, Kunal, Aarav, an unknown rider, Mr. Fernandes), examining patients and reading X-rays as new skills, the bed-shortage politics with Mr. Malhotra, an on-call night, Dr. Rao's review and promotion to Junior Resident; an automated run from a new game to promotion | Done |
 | 6. Polish | Settings (music, effects and voice volume, text size, reduce motion, colour-blind-safe monitor, battery saver), music for each place and a promotion fanfare, interface sounds and monitor beeps, screen fades and animated cards, confetti, room for the iPhone notch and home bar, and merged meshes so older iPhones draw about half as much | Done |
-| Later | More operations, more stories, Senior Resident and beyond, the rival and the strike storylines | |
+| 7. Junior Resident | "Eight months later": Days 9 to 13 as a Junior Resident. The team walks into a real operating theatre and the department's seminar room. Three new operations: a cut hand in the minor theatre, a keyhole gallbladder (fill the belly with gas, read the camera) and a stuck hernia whose bowel you must judge. Each case is random within its difficulty (easy; hard, with hints that cost points; extreme, with stacked problems and no hints) and shaped by what you asked on the ward. Also a missed aneurysm, Dr. Sethi taking the credit at the department meeting, a VIP's mother against an emergency, and the review that makes a Senior Resident | Done |
+| Later | Senior Resident (nights in charge, an intern, the budget vote), Surgeon (your own team, mass casualties, Dr. Rao's old mistake), Head of Department (the strike, the board) and the ending | |
 
 The earlier SwiftUI and SpriteKit prototype is kept on the git branch
 `swift-prototype`.
@@ -35,7 +36,9 @@ use WASD / arrow keys. On a phone or tablet: tap.
 
 ## Run it on your iPhone or iPad
 
-You need a Mac with Xcode 16 or newer.
+You need a Mac with Xcode 26 or newer, because Godot 4.7's iOS library is
+built with the iOS 26 SDK. There is no simulator build (Godot's simulator
+library is Intel only), so run it on a real iPhone or iPad.
 
 1. In Godot, open **Editor > Manage Export Templates** and download the
    templates for 4.7.2.
@@ -47,6 +50,9 @@ You need a Mac with Xcode 16 or newer.
    `build/ios/`.
 4. Open `build/ios/DoctorsWorld.xcodeproj`, choose your team under
    **Signing & Capabilities**, plug in the device and press Run.
+5. The first time, turn on **Developer Mode** on the device (Settings >
+   Privacy & Security), and trust your developer profile under Settings >
+   General > VPN & Device Management.
 
 With a free Apple ID the installed app expires after 7 days; run it from Xcode
 again to renew. The Apple Developer Program removes that limit and enables
@@ -85,19 +91,23 @@ game/training/          The training tasks' rules and scoring (no visuals), the
                         badly, for tests and screenshots)
 game/training/stations/ The six stations in 3D: sink, monitor bed, history chair,
                         instrument trolley, practice arm, suture pad
-game/surgery/           OperationTask (the appendectomy's rules: time-out, calls,
-                        traced and held actions, complications, the count,
-                        scoring) and OperatingTable (the table, the wound and the
-                        first-person hands in 3D)
+game/surgery/           Procedures (every operation as data), OperationTask (plays
+                        any of them: time-out, calls, traced, held and filled
+                        actions, decisions, complications, the count, difficulty,
+                        hints, scoring) and OperatingTable (the table, the wound,
+                        the keyhole view and the first-person hands in 3D)
 game/story/             StoryBook (loads story files), StoryRunner (steps,
                         replies, trust), StoryPlayer (puts a story on stage),
                         Opening and its sets (graduation hall, home, morning)
 game/world/             StageLighting, the hospital front, the Day 1 lobby, the Day 2
                         skills lab, the Day 3 ward and Theatre 2, and Ward (Days 4 to
-                        8 and after) with WardBed and Lightbox
+                        8 and after) with WardBed and Lightbox; WardStory (Days 9
+                        to 13 as data), TheatreSet (the operating room the ward's
+                        team walks into) and SeminarRoom (meetings and reviews)
 story/                  The words: cast, opening, Day 1 conversations, banter, training
                         conversations, patient cases (cases.json), the theatre day
-                        (theatre.json), the ward days (ward.json)
+                        (theatre.json), the ward days (ward.json), the Junior
+                        Resident's days (junior.json)
 assets/fonts/           Fredoka and Nunito (SIL Open Font License)
 assets/music/           The music, made by tools/make_music.py
 tests/                  The test runner and unit tests
@@ -155,7 +165,48 @@ corner.
 
 Rank is no longer worked out from XP. XP sets the level, and the rank only
 rises when someone promotes you (`PlayerProfile.promote()`), which Dr. Rao
-does at the review on Day 8.
+does at the reviews on Day 8 and Day 13 (`Ward.REVIEWS`).
+
+From Day 9 the days come from `game/world/ward_story.gd`, so new chapters
+are data, not code. `WardStory.DAYS` uses the same beats plus:
+
+- `where: "seminar"` for a beat in the seminar room, with a `slide`;
+- `at` to move the clock on, and `card` before a conversation;
+- `put`, `put_talked`, `put_back` and `put_end` to place people as the beat
+  starts, after the first conversation, back from theatre and at the end
+  (`["mehra", "side:sit", "!mehra_home"]`: a condition is optional);
+- a task `["operate", "hernia"]`, which walks the `team` (lead, scrub nurse,
+  anaesthetist) into theatre for a `brief`, then plays the operation.
+  `op_flags` hands the team what the doctor found on the ward
+  (`{"ate_known": "raju_history_meal"}`), and `levels` lists the
+  difficulties the case can be: one is picked from a seed made of the
+  career, the day and the case, so it stays the same until the day is
+  played again.
+
+After an operation the ward sets `op_<patient>_done`, `op_<patient>_won`
+(or `struggled`, `failed`) and one flag per thing that happened
+(`op_raju_chose_warm`, `op_farida_gas`), so later conversations remember it.
+Conditions in WardStory may join flags with `&` and `|`. `TIME_JUMPS` puts a
+card such as "Eight months later" before a day, and `STAGING`, `DAY_LINES`,
+`END_LINES`, `DAY_FLAGS` and `DAY_CASES` hold the rest of each day. Story
+conversations for these days are in a chapter listed in `WardStory.CHAPTERS`.
+
+## Operations
+
+`game/surgery/procedures.gd` holds the appendix, the wound, the gallbladder
+and the hernia as data. Each has steps (what Tom hands over, what the doctor
+does), a time-out board, a pool of complications and, for some, insides that
+vary (`variants`: the hernia's bowel is pink, dusky or dead). A step id must
+never match a complication id; a test checks it.
+
+Difficulty changes the same operation. On **easy** the board is right, the
+insides are the gentlest, a hint shows by itself under each step and
+problems hurt the patient slowly. On **hard**
+the board may be wrong, the insides are a coin toss, and the doctor can ask
+the lead surgeon for a hint at 5 points each. On **extreme** the board is
+wrong, the insides are the worst, a second problem lands on top of the first,
+the patient worsens faster and there are no hints. A case is laid out from a
+seed, so the same seed gives the same case.
 
 ## Settings and accessibility
 

@@ -176,7 +176,7 @@ func test_the_review_promotes_the_doctor_to_junior_resident() -> void:
 
 
 func test_quiet_days_after_the_review_have_teaching_films() -> void:
-	var ward := _ward(9, ["promoted"])
+	var ward := _ward(14, ["promoted", "jump_9"])
 	expect(_play_day(ward, CAREFUL))
 	expect(ward.profile.has_flag("teaching_scan_right"), "the coin is read as a coin")
 

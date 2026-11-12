@@ -18,6 +18,8 @@ var limit := 5
 ## How the coach refers to the patient: "him" and "his", or "her" and "her".
 var him := "him"
 var his := "his"
+## What the questions are about, for the coach's "nothing about his belly".
+var part := "belly"
 ## The case's questions, in the order they are offered.
 var questions: Array[Dictionary] = []
 var asked: Array[String] = []
@@ -38,6 +40,7 @@ func _init(which_case: String = "training_history") -> void:
 	limit = int(data.get("limit", 5))
 	him = str(data.get("him", "him"))
 	his = str(data.get("his", "his"))
+	part = str(data.get("part", "belly"))
 	for entry: Variant in data.get("questions", []):
 		if typeof(entry) == TYPE_DICTIONARY:
 			questions.append(entry)
@@ -76,7 +79,7 @@ func ask(question_id: String) -> String:
 		"useful":
 			_say("Useful. Not the most important thing.")
 		_:
-			_say("That told you nothing about %s belly." % his, true)
+			_say("That told you nothing about %s %s." % [his, part], true)
 	if remaining() <= 0:
 		_end()
 	else:

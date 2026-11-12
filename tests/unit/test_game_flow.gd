@@ -289,3 +289,53 @@ func test_a_whole_career_from_new_game_to_junior_resident() -> void:
 	print("    career: %d XP, level %d, %s, day %d %s" % [profile.total_xp, profile.level(),
 		Rank.title(profile.rank()), profile.day, profile.clock_text()])
 	_clear()
+
+
+func test_an_old_save_past_day_nine_still_sees_the_time_jump() -> void:
+	var main := _main()
+	main.profile.name = "Kiran Rao"
+	main.profile.created = true
+	main.profile.opening_seen = true
+	main.profile.day = 15
+	main.profile.rank_held = Rank.JUNIOR_RESIDENT
+	main.profile.total_xp = 2600
+	for flag in ["met_iyer", "day1_iyer", "training_done", "op_rohit_done", "promoted", "ward_day8"]:
+		main.profile.set_flag(flag)
+	main.show_hospital()
+	expect(main.screen is Ward, "the ward")
+	expect_equal(main.profile.day, WardStory.FIRST_DAY, "back to the first Junior Resident day")
+	expect(main.profile.has_flag("jump_9"), "eight months later")
+	_clear()
+
+
+func test_a_junior_resident_year_ends_as_senior_resident() -> void:
+	var main := _main()
+	main.profile.name = "Asha Verma"
+	main.profile.created = true
+	main.profile.opening_seen = true
+	main.profile.day = Ward.REVIEW_DAY + 1
+	main.profile.rank_held = Rank.JUNIOR_RESIDENT
+	main.profile.total_xp = 2600
+	for flag in ["met_iyer", "day1_iyer", "training_done", "op_rohit_done", "op_rohit_won", "promoted", "beds_saved",
+			"rider_treated", "ward_day8"]:
+		main.profile.set_flag(flag)
+	main.show_hospital()
+	var days_seen := []
+	var careful := Ward.pick_tones(["Ready", "Calm", "Honest", "Careful", "Plain", "Explain", "Question",
+		"Patient first", "Help", "Grateful", "Thorough"])
+	for attempt in 6:
+		var ward := main.screen as Ward
+		if ward == null or main.profile.has_flag("ward_day13"):
+			break
+		days_seen.append(main.profile.day)
+		ward.play_until(func() -> bool: return main.screen != ward, careful, AutoPlayer.new(), 1500.0)
+	expect_equal(days_seen, [9, 10, 11, 12, 13], "every Junior Resident day is played once, in order")
+	var profile := main.profile
+	expect_equal(profile.rank(), Rank.SENIOR_RESIDENT, "promoted at the second review")
+	for flag: String in ["jump_9", "op_deepa_won", "bansal_exam_right", "op_farida_won", "op_raju_won", "raju_first"]:
+		expect(profile.has_flag(flag), flag)
+	expect(main.screen is Ward and profile.day == 14, "the next morning is an ordinary day")
+	var saved: PlayerProfile = SaveStore.new(SAVE).load_or_start()["profile"]
+	expect_equal(saved.rank(), Rank.SENIOR_RESIDENT, "the promotion is saved")
+	print("    junior year: %d XP, level %d, %s" % [profile.total_xp, profile.level(), Rank.title(profile.rank())])
+	_clear()

@@ -254,6 +254,8 @@ func _build_stations() -> void:
 
 
 func station_for(id: String) -> LabStation:
+	if not stations.has(id) and id in Procedures.ids():
+		return stations.get("appendix")
 	return stations.get(id)
 
 

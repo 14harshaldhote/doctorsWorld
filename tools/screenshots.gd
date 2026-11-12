@@ -195,6 +195,38 @@ func _ward_shots() -> void:
 		return w.view is ExamView and (w.view.task as ExamTask).examined.size() >= 2, careful)
 	GameSettings.current.colour_safe = false
 
+	# Stage 7: the Junior Resident's week, eight months later.
+	var junior := Ward.pick_tones(["Ready", "Calm", "Honest", "Careful", "Plain", "Explain", "Question", "Patient first",
+		"Help", "Grateful", "Thorough"])
+	var year := ["bansal_exam_right", "bansal_sethi_told", "farida_history_medicines", "farida_history_allergy",
+		"farida_reassured", "op_deepa_won", "op_farida_won"]
+	await _ward_shot("56-time-jump", 9, [], "", func(w: Ward) -> bool:
+		return w._day_card_in > 0.0 and w._day_card_in < 2.0, junior)
+	await _ward_shot("57-cut-hand", 9, [], "deepa", func(w: Ward) -> bool:
+		return w.conversation == "deepa_arrive" and w.talk_ui.is_choosing(), junior)
+	await _ward_shot("58-minor-theatre", 9, [], "deepa", func(w: Ward) -> bool:
+		return w.conversation == "deepa_brief" and w.story.runner.history.size() >= 3 and not w.talk_ui.is_typing(), junior)
+	await _ward_shot("59-wound-repair", 9, [], "deepa", func(w: Ward) -> bool:
+		return w.operation != null and w.operation.step == "explore" and w.operation.phase == "act", junior)
+	await _ward_shot("60-aneurysm", 10, [], "bansal", func(w: Ward) -> bool:
+		return w.view is ExamView and (w.view.task as ExamTask).examined.size() >= 3, junior)
+	await _ward_shot("61-keyhole-team", 11, year, "farida", func(w: Ward) -> bool:
+		return w.conversation == "farida_brief" and w.story.runner.history.size() >= 2 and not w.talk_ui.is_typing(), junior)
+	await _ward_shot("62-keyhole", 11, year, "farida", func(w: Ward) -> bool:
+		return w.operation != null and w.operation.step == "find" and w.operation.phase == "act", junior)
+	await _ward_shot("63-meeting", 12, year, "meeting", func(w: Ward) -> bool:
+		return w.conversation == "meeting" and w.talk_ui.is_choosing(), junior)
+	await _ward_shot("64-vip", 12, year, "raju", func(w: Ward) -> bool:
+		return w.conversation == "raju_arrive" and w.talk_ui.is_choosing(), junior)
+	await _ward_shot("65-bowel", 12, year + ["credit_proof", "raju_first"], "raju_op", func(w: Ward) -> bool:
+		return w.operation != null and w.operation.step == "check" and w.operation.phase == "decide", junior)
+	var reviewed := year + ["credit_proof", "raju_first", "op_raju_won", "mehra_charmed", "mehra_home"]
+	await _ward_shot("66-senior-review", 13, reviewed, "review", func(w: Ward) -> bool:
+		return w.conversation == "review_senior" and w.talk_ui.line_text().contains("Senior Resident") and not w.talk_ui.is_typing(),
+		junior)
+	await _ward_shot("67-senior-promoted", 13, reviewed, "review", func(w: Ward) -> bool:
+		return w.mode == "end" and w.overlay.fade_amount() > 0.9, junior)
+
 
 ## A ward day from a beat (or from the start) played up to a moment.
 func _ward_shot(shot_name: String, day: int, flags: Array, from_beat: String, moment: Callable, picker: Callable) -> void:
@@ -223,6 +255,12 @@ static func sample_profile_on_ward(day: int, flags: Array = []) -> PlayerProfile
 	doctor.day = day
 	doctor.minutes = PlayerProfile.DAY_START
 	doctor.total_xp = 760 + 260 * (day - 4)
+	if day >= WardStory.FIRST_DAY:
+		# Eight months on: a Junior Resident with the first week behind them.
+		for flag: String in ["promoted", "rohit_honest", "rider_treated", "beds_saved", "jump_%d" % WardStory.FIRST_DAY]:
+			doctor.set_flag(flag)
+		doctor.rank_held = Rank.JUNIOR_RESIDENT
+		doctor.total_xp = 2400 + 250 * (day - WardStory.FIRST_DAY)
 	return doctor
 
 

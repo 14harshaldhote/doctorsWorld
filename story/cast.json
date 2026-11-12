@@ -26,5 +26,10 @@
 	"peter": {"name": "Peter Fernandes", "role": "Joseph's son", "voice": 0.94, "trust": 35},
 	"rao": {"name": "Dr. Anand Rao", "role": "Head of Surgery", "voice": 0.86, "trust": 45},
 	"sethi": {"name": "Dr. Kabir Sethi", "role": "Senior Resident", "voice": 0.98, "trust": 45},
-	"banerjee": {"name": "Mrs. Banerjee", "role": "Patient · 77, pneumonia", "voice": 1.16, "trust": 50}
+	"banerjee": {"name": "Mrs. Banerjee", "role": "Patient · 77, pneumonia", "voice": 1.16, "trust": 50},
+	"deepa": {"name": "Deepa Rawat", "role": "Patient · 34, dhaba cook", "voice": 1.12, "trust": 45},
+	"bansal": {"name": "Mr. Ramesh Bansal", "role": "Patient · 67, retired bank manager", "voice": 0.8, "trust": 45},
+	"farida": {"name": "Farida Ansari", "role": "Patient · 45, chemistry teacher", "voice": 1.08, "trust": 45},
+	"raju": {"name": "Raju Yadav", "role": "Patient · 38, bricklayer", "voice": 0.9, "trust": 45},
+	"mehra": {"name": "Mrs. Kamala Mehra", "role": "A board member's mother", "voice": 1.0, "trust": 35}
 }

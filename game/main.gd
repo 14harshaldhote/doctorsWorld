@@ -117,7 +117,8 @@ func _on_opening_finished(_skipped: bool) -> void:
 ## Day 1 starts with Dr. Iyer at the door until the player has met her.
 ## Day 2 is the skills lab, Day 3 is Rohit's operation, and from Day 4 the
 ## doctor works on the surgical ward: a week of patients, a night on call
-## and the review that makes them a Junior Resident.
+## and the review that makes them a Junior Resident, then (Day 9, eight
+## months later) the Junior Resident's operations, up to Senior Resident.
 func show_hospital() -> void:
 	if not profile.opening_seen:
 		show_opening()
@@ -132,6 +133,11 @@ func show_hospital() -> void:
 		return
 	if profile.day == 3:
 		show_theatre()
+		return
+	if profile.day > WardStory.FIRST_DAY and not profile.has_flag("jump_%d" % WardStory.FIRST_DAY):
+		# Saved on a quiet day before the Junior Resident's months existed:
+		# start them from their first day.
+		_start_day(WardStory.FIRST_DAY)
 		return
 	if profile.day >= Ward.FIRST_DAY:
 		show_ward()

@@ -1,6 +1,9 @@
 class_name Ward
 extends Node3D
-## Days 4 to 8: a week on the surgical ward, then quiet days after it.
+## Days 4 to 8: a week on the surgical ward. Then, eight months later,
+## Days 9 to 13 as a Junior Resident (their beats are in WardStory), with
+## operations in the theatre and meetings in the seminar room, and quiet
+## days after the last story day.
 ##
 ## Each day is a list of beats (DAYS): a conversation, somewhere to walk
 ## to, work with a patient (take a history, examine them, read an X-ray)
@@ -11,7 +14,9 @@ extends Node3D
 ##
 ## Floor: x runs from the X-ray viewer's wall (left) past six beds to the
 ## side room and the door (right); z from the back wall (-4) towards the
-## camera (+4). Time passes only through update().
+## camera (+4). The theatre and the seminar room are built far below the
+## ward (THEATRE_AT, SEMINAR_AT) and shown only while the story is in them.
+## Time passes only through update().
 
 signal save_requested
 signal menu_choice(choice: String)
@@ -23,6 +28,14 @@ const PEOPLE_SPEED := 1.5
 const FIRST_DAY := 4
 const NIGHT_DAY := 6
 const REVIEW_DAY := 8
+## The review conversation on each review day.
+const REVIEWS := {8: "review", 13: "review_senior"}
+## Experience for an operation, by outcome, plus this much per star.
+const OP_XP := {"won": 120, "struggled": 80, "failed": 40}
+const OP_XP_PER_STAR := 10
+## The theatre's table and the seminar room, out of sight below the ward.
+const THEATRE_AT := Vector3(0, -40, 0)
+const SEMINAR_AT := Vector3(0, -80, 0)
 ## Experience for a day's work, on top of each task's.
 const SHIFT_XP := 120
 ## Each task gives this much experience plus half its score.
@@ -167,6 +180,13 @@ var task_queue: Array = []
 ## Every task finished today, as {id, case, score}.
 var results: Array[Dictionary] = []
 var shift_xp := 0
+## Where the story is: "ward", "theatre" or "seminar".
+var place := "ward"
+var theatre_set: TheatreSet
+var table: OperatingTable
+var seminar: SeminarRoom
+## The operation under way (or last played today).
+var operation: OperationTask
 
 var _layer: CanvasLayer
 var _environment: Environment
@@ -182,6 +202,8 @@ var _intro_in := -1.0
 var _clear_in := -1.0
 var _beat_in := -1.0
 var _end_in := -1.0
+var _day_card_in := -1.0
+var _queued_procedure := ""
 
 
 func _init(for_profile: PlayerProfile = null) -> void:
@@ -338,6 +360,19 @@ func _build_stations() -> void:
 	box.rotation.y = PI / 2
 	add_child(box)
 	stations["scan"] = box
+	theatre_set = TheatreSet.new()
+	theatre_set.position = THEATRE_AT
+	theatre_set.visible = false
+	add_child(theatre_set)
+	table = OperatingTable.new(profile.avatar)
+	table.position = THEATRE_AT
+	table.visible = false
+	add_child(table)
+	stations["table"] = table
+	seminar = SeminarRoom.new()
+	seminar.position = SEMINAR_AT
+	seminar.visible = false
+	add_child(seminar)
 	# Night: warm lamps at the desk and along the beds.
 	for at: Vector3 in [DESK + Vector3(0, 1.9, 0), Vector3(-4.0, 2.3, -2.0), Vector3(3.0, 2.3, -2.0),
 			Vector3(-5.6, 2.2, 1.6)]:
@@ -354,6 +389,8 @@ func _build_stations() -> void:
 func station_for(id: String) -> LabStation:
 	if id in ["exam", "history"]:
 		return stations.get(active_bed)
+	if id in Procedures.ids():
+		return table
 	return stations.get(id)
 
 
@@ -399,6 +436,21 @@ func _build_people() -> void:
 	var child := _person("aarav", {"skin": 4, "face": 0, "eyes": 4, "hair_style": 3, "hair_colour": 0, "scrubs": 7,
 		"coat": false, "stethoscope": false}, AvatarConfig.Mood.HAPPY, "casual")
 	child.scale = Vector3.ONE * 0.64
+	_person("tom", {"skin": 3, "face": 2, "hair_style": 2, "hair_colour": 0, "facial_hair": 1, "scrubs": 1, "coat": false,
+		"stethoscope": false, "height": 3}, AvatarConfig.Mood.HAPPY)
+	_person("khan", {"skin": 4, "face": 4, "hair_style": 10, "hair_colour": 0, "brows": 1, "scrubs": 3, "coat": false,
+		"height": 2}, AvatarConfig.Mood.FOCUSED)
+	# Eight months later: the Junior Resident's patients.
+	_person("deepa", {"skin": 5, "face": 3, "body": 1, "height": 2, "hair_style": 8, "hair_colour": 0, "brows": 2,
+		"scrubs": 2, "coat": false, "stethoscope": false}, AvatarConfig.Mood.WORRIED, "kurta")
+	_person("bansal", {"skin": 3, "face": 5, "body": 2, "height": 2, "hair_style": 1, "hair_colour": 6, "glasses": 3,
+		"facial_hair": 2, "brows": 4, "coat": false, "stethoscope": false}, AvatarConfig.Mood.TIRED, "patient")
+	_person("farida", {"skin": 4, "face": 1, "body": 1, "height": 1, "hair_style": 9, "hair_colour": 1, "brows": 1,
+		"glasses": 1, "coat": false, "stethoscope": false}, AvatarConfig.Mood.CALM, "patient")
+	_person("raju", {"skin": 7, "face": 2, "body": 1, "height": 3, "hair_style": 0, "hair_colour": 0, "facial_hair": 4,
+		"brows": 3, "coat": false, "stethoscope": false}, AvatarConfig.Mood.WORRIED, "patient")
+	_person("mehra", {"skin": 2, "face": 0, "body": 2, "height": 1, "hair_style": 7, "hair_colour": 6, "brows": 4,
+		"glasses": 5, "scrubs": 5, "coat": false, "stethoscope": false, "watch": true}, AvatarConfig.Mood.ANGRY, "kurta")
 	# Patients who sleep through the week, so the ward is full.
 	_person("bg1", {"skin": 8, "face": 5, "body": 2, "hair_style": 1, "hair_colour": 5, "facial_hair": 5,
 		"coat": false, "stethoscope": false}, AvatarConfig.Mood.TIRED, "patient")
@@ -484,10 +536,10 @@ func put(id: String, where: String) -> void:
 	rig.lying = false
 	rig.sitting = false
 	var parts := where.split(":")
-	var place := parts[0]
+	var place_name := parts[0]
 	var how := parts[1] if parts.size() > 1 else ""
-	if BEDS.has(place):
-		var station := bed(place)
+	if BEDS.has(place_name):
+		var station := bed(place_name)
 		match how:
 			"lie":
 				station.lay_down(rig)
@@ -510,6 +562,8 @@ func put(id: String, where: String) -> void:
 	if where.begins_with("family"):
 		rig.sitting = true
 		rig.rotation.y = PI
+	if place_name == "seminar" and seminar.is_seat(how):
+		rig.sitting = true
 
 
 func _face(rig: AvatarRig, point: Vector3) -> void:
@@ -517,10 +571,15 @@ func _face(rig: AvatarRig, point: Vector3) -> void:
 
 
 ## Named places on the floor, for put() and for stories ("walk" to a mark).
+## "theatre:lead" and "seminar:seat2" are places in those rooms.
 func mark(mark_name: String) -> Variant:
 	var parts := mark_name.split(":")
 	if BEDS.has(parts[0]):
 		return bed(parts[0]).mark(parts[1] if parts.size() > 1 else "side")
+	if parts[0] == "theatre" and parts.size() > 1:
+		return _theatre_mark(parts[1])
+	if parts[0] == "seminar" and parts.size() > 1:
+		return seminar.mark(parts[1])
 	match mark_name:
 		"desk":
 			return DESK + Vector3(0, 0, 0.85)
@@ -552,6 +611,10 @@ func mark(mark_name: String) -> Variant:
 
 
 func _mark_facing(mark_name: String) -> Variant:
+	if mark_name.begins_with("theatre:"):
+		return table.at(Vector3(0.2, 0, 0)) if not mark_name.ends_with("door") else table.at(Vector3(0, 0, 3))
+	if mark_name.begins_with("seminar:"):
+		return seminar.facing(mark_name.substr(8))
 	match mark_name:
 		"desk", "desk:far":
 			return DESK
@@ -564,6 +627,44 @@ func _mark_facing(mark_name: String) -> Variant:
 		"door":
 			return Vector3(0, 0, 0)
 	return null
+
+
+## Where the theatre team stands round the table: "you" (the operating
+## doctor), "lead" (across the table), "scrub" (Tom, by his trolley),
+## "anaesthetist" (at the head) and "door".
+func _theatre_mark(which: String) -> Variant:
+	match which:
+		"you":
+			return table.at(table.spot + Vector3(0, 0, 0.12))
+		"lead":
+			return table.at(Vector3(0.18, 0, -0.66))
+		"scrub":
+			return table.at(Vector3(0.95, 0, 0.62))
+		"anaesthetist":
+			return table.at(Vector3(-1.3, 0, 0.3))
+		"door":
+			return table.at(Vector3(-3.6, 0, 1.6))
+	return null
+
+
+## Applies a list of [who, where, condition?] placements (see WardStory).
+## where can also be "hold:item[:L]" or "drop" for what someone carries.
+func _apply_puts(list: Array) -> void:
+	for entry: Array in list:
+		if entry.size() > 2 and not WardStory.holds(profile, str(entry[2])):
+			continue
+		var who := str(entry[0])
+		var where := str(entry[1])
+		var rig := rig_for(who)
+		if rig == null:
+			continue
+		if where.begins_with("hold:"):
+			var held := where.split(":")
+			rig.hold(held[1], held[2] if held.size() > 2 else "R")
+		elif where == "drop":
+			rig.drop()
+		else:
+			put(who, where)
 
 
 ## Where each patient is at the start of a day, following the story.
@@ -625,21 +726,30 @@ func _stage_day() -> void:
 			put("iyer", "desk:left")
 			put("you", "desk")
 		_:
-			put("bg1", "bed1:lie")
-			put("bg2", "bed3:lie")
-			put("joseph", "bed6:lie")
-			put("banerjee", "side:sit" if banerjee_side else "bed5:sit")
-			if profile.has_flag("rider_treated"):
-				put("salim", "bed4:sit")
-			put("grace", "desk:behind")
-			put("iyer", "desk:left")
-			put("you", "desk")
+			if WardStory.STAGING.has(profile.day):
+				_apply_puts(WardStory.STAGING[profile.day])
+			elif profile.day > WardStory.FIRST_DAY:
+				_apply_puts(WardStory.QUIET_STAGING)
+			else:
+				put("bg1", "bed1:lie")
+				put("bg2", "bed3:lie")
+				put("joseph", "bed6:lie")
+				put("banerjee", "side:sit" if banerjee_side else "bed5:sit")
+				if profile.has_flag("rider_treated"):
+					put("salim", "bed4:sit")
+				put("grace", "desk:behind")
+				put("iyer", "desk:left")
+				put("you", "desk")
 	var you := rig_for("you")
 	_face(you, DESK)
 
 
 ## Who moves where as a beat starts.
 func _stage_beat(entry: Dictionary) -> void:
+	_go_to_place(str(entry.get("where", "ward")))
+	if entry.has("slide"):
+		seminar.slide.text = str(entry["slide"])
+	_apply_puts(entry.get("put", []))
 	match "%d:%s" % [profile.day, entry.get("id", "")]:
 		"4:rohit":
 			_send("iyer", bed("bed1").mark("other"), PEOPLE_SPEED)
@@ -686,9 +796,9 @@ func _stage_beat(entry: Dictionary) -> void:
 # --- The day ----------------------------------------------------------------------
 
 func _begin_day() -> void:
-	for flag: String in DAY_FLAGS.get(profile.day, []):
+	for flag: String in DAY_FLAGS.get(profile.day, WardStory.DAY_FLAGS.get(profile.day, [])):
 		profile.set_flag(flag, false)
-	for case_id: String in DAY_CASES.get(profile.day, []):
+	for case_id: String in DAY_CASES.get(profile.day, WardStory.DAY_CASES.get(profile.day, [])):
 		for flag: String in profile.flags.keys():
 			if flag.begins_with(case_id + "_"):
 				profile.set_flag(flag, false)
@@ -702,17 +812,34 @@ func _begin_day() -> void:
 	results.clear()
 	shift_xp = 0
 	mode = "story"
+	place = ""
+	_go_to_place("ward")
+	operation = null
 	_stage_day()
 	hud.set_talking(true)
-	overlay.card("Day %d · %s" % [profile.day, profile.clock_text()], _day_line(), 2.6)
-	_clear_in = 2.0
-	_intro_in = 2.5
+	if WardStory.TIME_JUMPS.has(profile.day):
+		# Months pass between ranks: say so before the day starts.
+		var jump: Array = WardStory.TIME_JUMPS[profile.day]
+		profile.set_flag("jump_%d" % profile.day)
+		overlay.fade("black", 0.01)
+		overlay.card(str(jump[0]), str(jump[1]), 3.2)
+		_day_card_in = 3.4
+		_clear_in = 5.2
+		_intro_in = 5.8
+	else:
+		_show_day_card()
+		_clear_in = 2.0
+		_intro_in = 2.5
 	_refresh_hud()
+
+
+func _show_day_card() -> void:
+	overlay.card("Day %d · %s" % [profile.day, profile.clock_text()], _day_line(), 2.6)
 
 
 func _beats_for(day: int) -> Array[Dictionary]:
 	var found: Array[Dictionary] = []
-	var source: Array = DAYS.get(day, QUIET)
+	var source: Array = DAYS.get(day, WardStory.DAYS.get(day, QUIET))
 	for beat: Dictionary in source:
 		found.append(beat)
 	return found
@@ -730,7 +857,7 @@ func _day_line() -> String:
 			return "Surgical ward · Dr. Rao's round"
 		8:
 			return "Review day"
-	return "Surgical ward · A quiet day"
+	return str(WardStory.DAY_LINES.get(profile.day, "Surgical ward · A quiet day"))
 
 
 func beat() -> Dictionary:
@@ -740,8 +867,7 @@ func beat() -> Dictionary:
 func _beat_open(entry: Dictionary) -> bool:
 	if not entry.has("if"):
 		return true
-	var test := str(entry["if"])
-	return not profile.has_flag(test.substr(1)) if test.begins_with("!") else profile.has_flag(test)
+	return WardStory.holds(profile, str(entry["if"]))
 
 
 ## Starts the next beat whose condition holds, or ends the day.
@@ -755,6 +881,8 @@ func _next_beat() -> void:
 	var current := beat()
 	task_queue = (current.get("tasks", []) as Array).duplicate(true)
 	_stage_beat(current)
+	if current.has("at"):
+		profile.minutes = maxi(profile.minutes, int(current["at"]))
 	if current.has("card"):
 		var lines: Array = current["card"]
 		mode = "story"
@@ -797,15 +925,25 @@ func _refresh_hud() -> void:
 		if index > beat_index:
 			break
 		rows.append([str(entry["row"]), str(entry.get("id", "")) in done_beats])
-	hud.set_tasks(rows, "On call" if night else ("Review day" if profile.day == REVIEW_DAY else "Ward round"))
+	hud.set_tasks(rows, "On call" if night else ("Review day" if REVIEWS.has(profile.day) else "Ward round"))
 	var current := beat()
 	var walking := mode == "walk" or mode == "approach"
 	hud.set_pager(str(current.get("page", "")) if walking else "")
-	hud.set_clock("Day %d · %s · %s" % [profile.day, profile.clock_text(), "On call" if night else "Ward 4"])
+	hud.set_clock("Day %d · %s · %s" % [profile.day, profile.clock_text(), _place_title()])
 	if walking and current.has("go"):
 		hud.set_hint("Tap %s · tap the floor to walk" % _place_phrase(_go_place()))
 	else:
 		hud.set_hint("")
+
+
+## Where the doctor is, for the clock line.
+func _place_title() -> String:
+	match place:
+		"theatre":
+			return str(operation.procedure.get("theatre", "Theatre 2")) if operation != null else "Theatre 2"
+		"seminar":
+			return "Seminar room"
+	return "On call" if night else "Ward 4"
 
 
 ## Where the current beat sends the doctor: a bed id, "desk" or "lightbox".
@@ -853,6 +991,9 @@ func _tag_text(place: String) -> String:
 
 func _talk(key: String, partner: String) -> void:
 	var steps := StoryBook.conversation("ward", key)
+	for chapter: String in WardStory.CHAPTERS:
+		if steps.is_empty():
+			steps = StoryBook.conversation(chapter, key)
 	mode = "story"
 	conversation = key
 	talking_with = partner
@@ -871,8 +1012,12 @@ func _on_talk_finished(_skipped: bool) -> void:
 	var current := beat()
 	_after_talk(finished)
 	if finished == str(current.get("talk", "")):
+		_apply_puts(current.get("put_talked", []))
 		_run_tasks()
+	elif finished == str(current.get("brief", "")) and place == "theatre":
+		open_operation(_queued_procedure)
 	elif finished == str(current.get("after", "")):
+		_apply_puts(current.get("put_end", []))
 		_finish_beat()
 	save_requested.emit()
 
@@ -905,7 +1050,7 @@ func _after_talk(key: String) -> void:
 		"joseph_family":
 			put("maria", "bed6:chair")
 			put("peter", "bed6:other")
-		"review":
+		"review", "review_senior":
 			_promote()
 
 
@@ -913,12 +1058,16 @@ func _after_talk(key: String) -> void:
 func _run_tasks() -> void:
 	if not task_queue.is_empty():
 		var next: Array = task_queue.pop_front()
-		open_task(str(next[0]), str(next[1]))
+		if str(next[0]) == "operate":
+			_enter_theatre(str(next[1]))
+		else:
+			open_task(str(next[0]), str(next[1]))
 		return
 	var current := beat()
 	if current.has("after"):
 		_talk(str(current["after"]), str(current.get("with", "iyer")))
 	else:
+		_apply_puts(current.get("put_end", []))
 		_finish_beat()
 
 
@@ -930,9 +1079,13 @@ func _back_to_walking() -> void:
 	_refresh_hud()
 
 
+## The review's promotion: up a rank, with experience topped up to the new
+## rank's first level if the work so far fell short of it.
 func _promote() -> void:
 	var before := profile.total_xp
-	profile.total_xp += maxi(REVIEW_XP, LevelCurve.total_xp_to_reach(4) - profile.total_xp)
+	var next := Rank.next(profile.rank_held)
+	var needed := LevelCurve.total_xp_to_reach(Rank.FIRST_LEVELS[next]) if next >= 0 else 0
+	profile.total_xp += maxi(REVIEW_XP, needed - profile.total_xp)
 	profile.promote()
 	profile.set_flag("promoted")
 	Music.fanfare()
@@ -950,7 +1103,7 @@ func _end_day() -> void:
 	if not night:
 		profile.minutes = maxi(profile.minutes, 18 * 60 + 30)
 	var title := "Day %d · %s" % [profile.day, "07:00" if night else profile.clock_text()]
-	if profile.day == REVIEW_DAY:
+	if REVIEWS.has(profile.day):
 		title = "%s · %s" % [profile.full_title(), Rank.title(profile.rank())]
 	overlay.card(title, _end_line() + "   +%d XP" % SHIFT_XP, DAY_END_DELAY)
 	_end_in = DAY_END_DELAY
@@ -979,7 +1132,8 @@ func _end_line() -> String:
 			return "Mr. Fernandes has a tube and a plan. Ward 4's beds are on the board's agenda."
 		8:
 			return "Junior Resident, from Monday."
-	return "A quiet day. Quiet days are rare."
+	var story_line := WardStory.end_line(profile, profile.day)
+	return story_line if not story_line.is_empty() else "A quiet day. Quiet days are rare."
 
 
 # --- Walking ----------------------------------------------------------------------
@@ -1169,6 +1323,9 @@ func open_task(task_id: String, which_case: String) -> void:
 
 
 func _on_task_finished(task: TrainingTask) -> void:
+	if task is OperationTask:
+		_on_operation_finished(task as OperationTask)
+		return
 	var case_id := ""
 	var right := false
 	var seen: Array[String] = []
@@ -1212,7 +1369,8 @@ func _place_music() -> String:
 
 
 func _close_task() -> void:
-	Music.cue(_place_music())
+	if place == "ward":
+		Music.cue(_place_music())
 	if BEDS.has(active_bed):
 		bed(active_bed).uncover(false)
 		var held_out := bed(active_bed).patient
@@ -1227,8 +1385,11 @@ func _close_task() -> void:
 
 
 func _on_done() -> void:
+	var was := active
 	_close_task()
 	_camera_mode = "talk"
+	if was in Procedures.ids():
+		_leave_theatre()
 	_run_tasks()
 
 
@@ -1241,10 +1402,153 @@ func is_talking() -> bool:
 	return story.is_playing()
 
 
+# --- Theatre and meetings ---------------------------------------------------------
+
+## Moves the story to "ward", "theatre" or "seminar": only that room shows,
+## with its own light and music, after a quick fade.
+func _go_to_place(where: String) -> void:
+	if where == place:
+		return
+	var was := place
+	place = where
+	theatre_set.visible = where == "theatre"
+	table.visible = where == "theatre"
+	seminar.visible = where == "seminar"
+	_light(night and where == "ward")
+	if not was.is_empty():
+		overlay.fade("black", 0.01)
+		overlay.fade("clear", 0.8)
+		Music.cue("theatre" if where == "theatre" else _place_music())
+		_camera_mode = "talk" if where != "ward" else "follow"
+		settle_camera.call_deferred()
+
+
+## The doctor and the team walk into theatre for the beat's operation:
+## gowned, masked, in place round the table, and the brief before it starts.
+func _enter_theatre(procedure: String) -> void:
+	var entry := beat()
+	_queued_procedure = procedure
+	var data := Procedures.get_procedure(procedure)
+	mode = "story"
+	hud.set_talking(true)
+	var patient := str(entry.get("patient", ""))
+	if not patient.is_empty():
+		put(patient, "off")
+	var team: Array = entry.get("team", ["iyer", "tom", "khan"])
+	var spots := ["lead", "scrub", "anaesthetist"]
+	for index in spots.size():
+		var who := str(team[index]) if index < team.size() else ""
+		if who.is_empty():
+			continue
+		put(who, "theatre:" + spots[index])
+		Theatre.dress_for_theatre(rig_for(who), spots[index] != "anaesthetist")
+	put("you", "theatre:you")
+	Theatre.dress_for_theatre(player)
+	_go_to_place("theatre")
+	theatre_set.show_operation(str(data.get("theatre", "Theatre 2")), "%s · %s" % [data.get("title", ""), data.get("patient", "")])
+	_refresh_hud()
+	if entry.has("brief"):
+		_talk(str(entry["brief"]), str(team[2]) if team.size() > 2 and not str(team[2]).is_empty() else str(team[0]))
+	else:
+		open_operation(procedure)
+
+
+## Opens the operation on the table with its screen. What the team knows
+## (what the doctor found out on the ward) and how hard the case is come
+## from the beat; the case itself is laid out at random.
+func open_operation(procedure: String) -> void:
+	var entry := beat()
+	active = procedure
+	mode = "task"
+	var setup := {"procedure": procedure, "called": profile.called(), "difficulty": _case_level(entry)}
+	var known: Dictionary = entry.get("op_flags", {})
+	for key: String in known:
+		setup[key] = WardStory.holds(profile, str(known[key]))
+	var team: Array = entry.get("team", ["iyer"])
+	setup["lead"] = str(team[0]) if not team.is_empty() else "iyer"
+	operation = OperationTask.new(_case_seed(procedure), setup)
+	view = OperationView.new(operation, self, profile)
+	view.name = "Training"
+	view.done_text = "Back to the ward"
+	_layer.add_child(view)
+	_layer.move_child(view, talk_ui.get_index())
+	view.done_pressed.connect(_on_done)
+	view.task_finished.connect(_on_task_finished)
+	table.reset_task(operation)
+	player.visible = false
+	hud.set_talking(true)
+	_camera_mode = "close"
+	Music.cue("theatre")
+	_refresh_hud()
+
+
+## A number that is the same for this career, day and case, so a case is
+## laid out the same way until the day is played again.
+func _case_seed(procedure: String) -> int:
+	return absi(hash("%s|%d|%s|%d" % [profile.name, profile.day, procedure, profile.total_xp])) % 1000003 + 1
+
+
+## The case's difficulty: one of the beat's "levels", picked by the seed.
+func _case_level(entry: Dictionary) -> String:
+	var levels: Array = entry.get("levels", [])
+	if levels.is_empty():
+		return ""
+	var dice := SeededRandom.new(_case_seed("level" + str(entry.get("id", ""))))
+	return str(dice.pick(levels))
+
+
+func _on_operation_finished(op: OperationTask) -> void:
+	var patient := str(beat().get("patient", op.patient_first().to_lower()))
+	var xp := int(OP_XP[op.outcome]) + OP_XP_PER_STAR * op.stars()
+	profile.total_xp += xp
+	var best := profile.record_score(op.id, op.score())
+	profile.set_flag("op_%s_done" % patient)
+	for outcome: String in OP_XP:
+		profile.set_flag("op_%s_%s" % [patient, outcome], outcome == op.outcome)
+	for which: String in op.happened:
+		profile.set_flag("op_%s_%s" % [patient, which])
+	var lead := str(op.setup.get("lead", "iyer"))
+	var trust := {"won": 4, "struggled": 1, "failed": -3}
+	profile.change_trust(lead, int(trust[op.outcome]), story.runner.start_trust(lead))
+	if op.decisions_wrong == 0 and ("pressure" in op.happened or "reaction" in op.happened):
+		profile.change_trust("khan", 3, story.runner.start_trust("khan"))
+	if story.runner.start_trust(patient) >= 0:
+		profile.change_trust(patient, {"won": 5, "struggled": 1, "failed": -2}[op.outcome], story.runner.start_trust(patient))
+	results.append({"id": op.id, "case": patient, "score": op.score(), "right": op.outcome == "won"})
+	profile.pass_minutes(55 if op.outcome == "won" else 80)
+	view.show_result("+%d XP%s" % [xp, " · new best" if best else ""])
+	hud.refresh_profile()
+	_refresh_hud()
+	save_requested.emit()
+
+
+## Out of theatre, back on the ward: everyone in their own clothes, and
+## the patient where the beat puts them after the operation.
+func _leave_theatre() -> void:
+	var entry := beat()
+	for who: String in ["you", "iyer", "tom", "khan", "sethi", "rao"]:
+		var rig := rig_for(who)
+		if rig != null:
+			Theatre.undress_from_theatre(rig)
+	for who: String in ["tom", "khan"]:
+		put(who, "off")
+	_go_to_place("ward")
+	_apply_puts(entry.get("put_back", []))
+	var partner := rig_for(str(entry.get("with", "")))
+	if partner != null and partner.visible:
+		_face(player, partner.position)
+
+
 # --- Night ------------------------------------------------------------------------
 
 func _set_night(on: bool) -> void:
 	Music.cue(_place_music())
+	_light(on)
+
+
+## The light: the ward by day or at night. The theatre and the seminar room
+## always have their own lights on.
+func _light(on: bool) -> void:
 	_environment.background_color = NIGHT_SKY if on else Color("#A9C3C8")
 	_environment.ambient_light_color = Color("#8FA6C8") if on else Color("#DDE8F0")
 	_environment.ambient_light_energy = 0.26 if on else 0.42
@@ -1340,10 +1644,18 @@ func update(delta: float) -> void:
 		_intro_in -= delta
 		if _intro_in <= 0.0:
 			_next_beat()
+	if _day_card_in > 0.0:
+		_day_card_in -= delta
+		if _day_card_in <= 0.0:
+			_show_day_card()
 	if _beat_in > 0.0:
 		_beat_in -= delta
 		if _beat_in <= 0.0:
-			_finish_beat()
+			var current := beat()
+			if current.has("talk") and not current.has("go"):
+				_talk(str(current["talk"]), str(current.get("with", "")))
+			else:
+				_finish_beat()
 	if _end_in > 0.0:
 		_end_in -= delta
 		if _end_in <= 0.0:
@@ -1361,6 +1673,8 @@ func update(delta: float) -> void:
 
 
 func settle_camera() -> void:
+	if not is_inside_tree():
+		return
 	_place_camera(1.0)
 	_update_tags()
 
@@ -1377,6 +1691,16 @@ func _place_camera(weight: float) -> void:
 		target = station.at(station.close_at)
 		fov = station.close_fov
 		offset = station.close_offset
+	elif place != "ward":
+		# The theatre team round the table, or the meeting round its table,
+		# leaning a little towards whoever speaks.
+		var pose := _room_pose()
+		goal = pose[0]
+		target = pose[1]
+		var speaker := rig_for(_camera_speaker)
+		if speaker != null and speaker.visible and speaker.position.y < -10.0:
+			target = target.lerp(speaker.position + Vector3(0, 1.1 if speaker.sitting else 1.3, 0), 0.3)
+		fov = 44.0
 	elif _camera_mode == "talk" and partner != null and partner.visible and _bed_of(partner) != null:
 		# A patient in bed: from the end of the bed, everyone round it.
 		var home := _bed_of(partner)
@@ -1419,6 +1743,12 @@ func _place_camera(weight: float) -> void:
 	camera.look_at(_camera_target)
 
 
+func _room_pose() -> Array:
+	if place == "seminar":
+		return seminar.camera_pose()
+	return [table.at(Vector3(-1.6, 2.5, 3.3)), table.at(Vector3(0.2, 1.0, -0.2))]
+
+
 ## The bed someone is lying or sitting on, or null.
 func _bed_of(rig: AvatarRig) -> WardBed:
 	for bed_id: String in BEDS:
@@ -1458,6 +1788,7 @@ func skip_to(beat_id: String, flags: Array = []) -> void:
 		story.skip()
 	for flag: String in flags:
 		profile.set_flag(flag)
+	_day_card_in = -1.0
 	_stage_day()
 	for index in beats.size():
 		if str(beats[index].get("id", "")) == beat_id:
@@ -1468,6 +1799,8 @@ func skip_to(beat_id: String, flags: Array = []) -> void:
 			_stage_beat(beats[index])
 			_pass_card_time(beats[index])
 			_after_talk(str(beats[index].get("after", beats[index].get("talk", ""))))
+			_apply_puts(beats[index].get("put_back", []))
+			_apply_puts(beats[index].get("put_end", []))
 	_next_beat()
 	settle_camera()
 

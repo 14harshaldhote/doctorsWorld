@@ -14,7 +14,16 @@ const NAMES := {
 	"clamp": "Clamp",
 	"suction": "Suction",
 	"swab": "Swab",
+	"syringe": "Syringe",
+	"port": "Port",
+	"camera": "Camera",
+	"clip": "Clip applier",
+	"hook": "Hook",
+	"mesh": "Mesh",
 }
+## Instruments only some operations use (keyhole, wound care, hernias). Not
+## in training, and not on every tray.
+const EXTRA := ["syringe", "port", "camera", "clip", "hook", "mesh"]
 const JOBS := {
 	"scalpel": "Cut through skin",
 	"forceps": "Hold tissue, gently",
@@ -24,6 +33,12 @@ const JOBS := {
 	"clamp": "Close off a bleeding vessel",
 	"suction": "Clear blood so you can see",
 	"swab": "Soak up blood and press on oozing",
+	"syringe": "Numb the skin, or wash a wound out",
+	"port": "A tube through the skin for keyhole tools",
+	"camera": "Look inside, with the gas to make room",
+	"clip": "Close a duct or a vessel with metal clips",
+	"hook": "Burn through tissue to peel it free",
+	"mesh": "Patch a weak spot in the muscle",
 }
 ## What a surgeon says when they need it.
 const CALLS := {
@@ -52,7 +67,8 @@ static func job_of(instrument: String) -> String:
 
 ## How far along -z each model's working tip reaches, in metres.
 const TIPS := {"scalpel": 0.062, "forceps": 0.07, "retractor": 0.057, "needle_holder": 0.039, "scissors": 0.07,
-	"clamp": 0.062, "suction": 0.1, "swab": 0.0}
+	"clamp": 0.062, "suction": 0.1, "swab": 0.0, "syringe": 0.075, "port": 0.06, "camera": 0.1, "clip": 0.08,
+	"hook": 0.09, "mesh": 0.0}
 
 
 ## A model lying flat, pointing along -z (tip away), about 14 cm long.
@@ -84,6 +100,29 @@ static func make(instrument: String) -> Node3D:
 		"swab":
 			LowPoly.put(root, LowPoly.box(Vector3(0.06, 0.012, 0.06), Color("#F7F7F2")), Vector3(0, 0.006, 0))
 			LowPoly.put(root, LowPoly.box(Vector3(0.062, 0.002, 0.006), Color("#4FA0D8")), Vector3(0, 0.013, 0.012))
+		"syringe":
+			LowPoly.put(root, LowPoly.cylinder(0.008, 0.008, 0.08, 8, Color("#EEF4F6")), Vector3(0, 0.008, 0.01),
+				Vector3(PI / 2, 0, 0))
+			LowPoly.put(root, LowPoly.cylinder(0.0015, 0.0015, 0.035, 5, STEEL), Vector3(0, 0.008, -0.05),
+				Vector3(PI / 2, 0, 0))
+			LowPoly.put(root, LowPoly.box(Vector3(0.024, 0.004, 0.006), HANDLE), Vector3(0, 0.008, 0.052))
+		"port":
+			LowPoly.put(root, LowPoly.cylinder(0.006, 0.006, 0.1, 8, STEEL), Vector3(0, 0.006, -0.01), Vector3(PI / 2, 0, 0))
+			LowPoly.put(root, LowPoly.cylinder(0.012, 0.012, 0.022, 8, Color("#4FA0D8")), Vector3(0, 0.008, 0.045),
+				Vector3(PI / 2, 0, 0))
+		"camera", "hook":
+			LowPoly.put(root, LowPoly.cylinder(0.005, 0.005, 0.15, 8, STEEL), Vector3(0, 0.005, -0.02), Vector3(PI / 2, 0, 0))
+			LowPoly.put(root, LowPoly.box(Vector3(0.02, 0.016, 0.04), Color("#2B2F33") if instrument == "camera" else HANDLE),
+				Vector3(0, 0.008, 0.07))
+			if instrument == "hook":
+				LowPoly.put(root, LowPoly.box(Vector3(0.008, 0.003, 0.003), STEEL_DARK), Vector3(0.004, 0.005, -0.095))
+		"clip":
+			_hinged(root, "clamp")
+			LowPoly.put(root, LowPoly.box(Vector3(0.006, 0.006, 0.01), Color("#E0E6EA")), Vector3(0.004, 0.004, -0.068))
+		"mesh":
+			LowPoly.put(root, LowPoly.box(Vector3(0.07, 0.003, 0.05), Color("#DDE8F0")), Vector3(0, 0.002, 0))
+			for line in 3:
+				LowPoly.put(root, LowPoly.box(Vector3(0.07, 0.004, 0.002), Color("#A9BCCB")), Vector3(0, 0.003, -0.015 + 0.015 * line))
 	return root
 
 
