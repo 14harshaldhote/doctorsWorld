@@ -30,6 +30,7 @@ var _shown_call := ""
 var _hint_card: PanelContainer
 var _hint_text: Label
 var _hint_button: Button
+var _hiss_in := 0.0
 
 
 func _init(for_task: TrainingTask = null, in_lab: Node = null, for_profile: PlayerProfile = null) -> void:
@@ -149,7 +150,8 @@ func _corner(control: Control, width: float) -> void:
 	control.grow_vertical = Control.GROW_DIRECTION_BEGIN
 	control.offset_right = -UiKit.px(16)
 	control.offset_bottom = -UiKit.px(16)
-	control.custom_minimum_size = Vector2(UiKit.px(width), 0)
+	# Keep the button's own height: a big, easy target for a thumb.
+	control.custom_minimum_size = Vector2(UiKit.px(width), control.custom_minimum_size.y)
 
 
 func _build_meters() -> void:
@@ -306,6 +308,19 @@ func _tick(delta: float) -> void:
 	monitor.tick(delta)
 	_sync()
 	_make_room()
+	_hiss(delta)
+
+
+## Gas hisses in while the doctor holds to fill the belly.
+func _hiss(delta: float) -> void:
+	var op := _op()
+	if op == null or not op.holding or op.phase != "act" or op.action != "fill":
+		_hiss_in = 0.0
+		return
+	_hiss_in -= delta
+	if _hiss_in <= 0.0:
+		_hiss_in = 0.4
+		Sfx.play(self, "hiss", -20.0)
 
 
 ## With big text a tall choice can reach up to the team meter: the monitor

@@ -2,11 +2,12 @@ class_name Sfx
 extends RefCounted
 ## Sound effects made in code: applause, a knock at the door, an ambulance
 ## siren, the pager, button taps, a chime for a job well done, a buzz for a
-## mistake, the monitor's beep and a level-up flourish. No sound files to
+## mistake, the monitor's beep, gas hissing into a keyhole port and a
+## level-up flourish. No sound files to
 ## ship or license. Effects play on the Effects bus, so the Sound effects
 ## setting controls them.
 
-const NAMES := ["applause", "knock", "siren", "pager", "tap", "chime", "buzz", "beep", "levelup"]
+const NAMES := ["applause", "knock", "siren", "pager", "tap", "chime", "buzz", "beep", "hiss", "levelup"]
 
 ## A node that outlives screen changes (Main), for sounds like button taps
 ## that should keep playing when the screen that made them goes away.
@@ -115,6 +116,15 @@ static func _samples(sound: String) -> PackedFloat32Array:
 			for index in out.size():
 				var time := index / rate
 				out[index] = sin(TAU * 980.0 * time) * minf(1.0, time * 300.0) * minf(1.0, (0.12 - time) * 120.0)
+		"hiss":
+			# Soft, breathy noise that fades in and out, so repeats blend.
+			out.resize(int(rate * 0.5))
+			var low := 0.0
+			for index in out.size():
+				var time := index / rate
+				var noise := rng.randf_range(-1.0, 1.0)
+				low = low * 0.7 + noise * 0.3
+				out[index] = (noise - low) * 0.5 * sin(PI * time / 0.5)
 		"levelup":
 			out.resize(int(rate * 1.3))
 			for step in 4:

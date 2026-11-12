@@ -1466,6 +1466,7 @@ func open_operation(procedure: String) -> void:
 		setup[key] = WardStory.holds(profile, str(known[key]))
 	var team: Array = entry.get("team", ["iyer"])
 	setup["lead"] = str(team[0]) if not team.is_empty() else "iyer"
+	setup["anaesthetist"] = str(team[2]) if team.size() > 2 else "khan"
 	operation = OperationTask.new(_case_seed(procedure), setup)
 	view = OperationView.new(operation, self, profile)
 	view.name = "Training"
@@ -1510,7 +1511,8 @@ func _on_operation_finished(op: OperationTask) -> void:
 	var lead := str(op.setup.get("lead", "iyer"))
 	var trust := {"won": 4, "struggled": 1, "failed": -3}
 	profile.change_trust(lead, int(trust[op.outcome]), story.runner.start_trust(lead))
-	if op.decisions_wrong == 0 and ("pressure" in op.happened or "reaction" in op.happened):
+	if op.decisions_wrong == 0 and str(op.setup.get("anaesthetist", "khan")) == "khan" \
+			and ("pressure" in op.happened or "reaction" in op.happened):
 		profile.change_trust("khan", 3, story.runner.start_trust("khan"))
 	if story.runner.start_trust(patient) >= 0:
 		profile.change_trust(patient, {"won": 5, "struggled": 1, "failed": -2}[op.outcome], story.runner.start_trust(patient))

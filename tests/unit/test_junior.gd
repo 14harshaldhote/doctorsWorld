@@ -253,3 +253,29 @@ func test_the_end_lines_follow_what_happened() -> void:
 	expect(WardStory.end_line(profile, 12).contains("intensive care"))
 	expect(WardStory.holds(profile, "mehra_first&!raju_first"))
 	expect(not WardStory.holds(profile, "raju_first|mehra_home"))
+
+
+func test_with_no_anaesthetist_the_lead_reads_the_monitor() -> void:
+	var minor := OperationTask.new(6, {"procedure": "wound", "difficulty": "easy", "lead": "iyer", "anaesthetist": ""})
+	minor._start_complication("faint")
+	expect_equal(minor.speaker, "iyer", "Dr. Khan isn't in the minor theatre")
+	var main := OperationTask.new(6, {"procedure": "gallbladder", "difficulty": "easy", "lead": "iyer", "anaesthetist": "khan"})
+	main._start_complication("gas")
+	expect_equal(main.speaker, "khan", "in Theatre 2 she is")
+
+
+func test_the_hold_and_tie_buttons_keep_their_full_height() -> void:
+	var ward := _ward(11, ["farida_history_done", "farida_history_medicines", "farida_history_allergy"])
+	ward.play_until(func() -> bool: return ward.view is OperationView, Ward.pick_tones(CAREFUL))
+	var view := ward.view as OperationView
+	expect(view != null, "the operation opens")
+	if view == null:
+		return
+	for button: Button in [view._hold, view._tie]:
+		expect(button.custom_minimum_size.y >= UiKit.px(52), "%s is a full-size button" % button.name)
+		expect(button.custom_minimum_size.x > 0.0, "%s keeps its width" % button.name)
+
+
+func test_gas_hisses_while_the_belly_fills() -> void:
+	expect("hiss" in Sfx.NAMES)
+	expect(Sfx.stream("hiss").data.size() > 1000, "a real sound")

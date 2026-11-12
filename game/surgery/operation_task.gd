@@ -59,7 +59,8 @@ var procedure := {}
 ## Its step ids, in order.
 var steps: Array[String] = []
 ## What happened before: allergy_known, delayed, scrub (0 to 100),
-## complication ("" to roll), lose_swab (-1 roll, 0, 1), difficulty, and
+## complication ("" to roll), lose_swab (-1 roll, 0, 1), difficulty, the
+## team (lead, and anaesthetist: "" when there is none in the room), and
 ## anything a procedure's time-out asks about (tetanus_known...).
 var setup := {}
 var difficulty := ""
@@ -1620,5 +1621,9 @@ func _fill(line: String) -> String:
 
 
 func _say_by(who: String, line: String, warns: bool = false) -> void:
+	# With no anaesthetist in the room (an awake patient in the minor
+	# theatre), the lead surgeon watches the monitor and says it instead.
+	if who == "khan" and str(setup.get("anaesthetist", "khan")).is_empty():
+		who = _lead()
 	speaker = who
 	_say(_fill(line).replace("{called}", str(setup.get("called", "Doctor"))), warns)

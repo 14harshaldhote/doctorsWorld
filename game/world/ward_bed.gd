@@ -177,14 +177,17 @@ func frame_for(body: String) -> void:
 			close_offset = -0.12
 		"trauma":
 			close_from = Vector3(0.95, 2.3, 0.3)
-			close_at = Vector3(0.2, 0.72, -0.05)
-			close_fov = 50.0
+			# Looking a little higher and wider keeps the head clear of the
+			# monitor in the corner.
+			close_at = Vector3(0.2, 0.86, -0.05)
+			close_fov = 55.0
 			close_offset = -0.25
 		_:
 			close_from = Vector3(0.75, 2.15, 0.05)
-			close_at = Vector3(0.2, 0.75, -0.2)
+			close_at = Vector3(0.2, 0.7, -0.2)
 			close_fov = 46.0
-			close_offset = -0.2
+			# The patient sits right of centre, clear of the notes card.
+			close_offset = -0.3
 
 
 ## A case spot's place on the patient: "at" is [joint, x, y, z], a point in
