@@ -42,7 +42,7 @@ func _extra_runs() -> void:
 		for complication: String in ["bleeding", "pressure", "none"]:
 			_play_theatre(quality, complication)
 		for doctor_name: String in NAMES:
-			for day in [9, 10, 11, 12, 15, 16]:
+			for day in [9, 10, 11, 12, 15, 16, 19, 22]:
 				_play_ward(day, doctor_name, quality)
 		# The Senior Resident's operations at every difficulty, on two days
 		# (each day rolls its own case).
@@ -51,6 +51,16 @@ func _extra_runs() -> void:
 				for day in [3, 4]:
 					_play_theatre(quality, "", {"procedure": procedure, "difficulty": level,
 						"lead": "bhatt" if procedure == "hip" else "sethi"}, day)
+		# The Surgeon's blocked bowel with either team, and the crash's
+		# triage at every difficulty (each seed brings different casualties).
+		for level: String in OperationTask.DIFFICULTIES:
+			for team: Array in [["tom", "khan"], ["neha", "bose"]]:
+				for chest_safe: bool in [true, false]:
+					_play_theatre(quality, "", {"procedure": "obstruction", "difficulty": level, "scrub_nurse": team[0],
+						"anaesthetist": team[1], "chest_safe": chest_safe, "lungs_known": chest_safe,
+						"lose_swab": 1 if team[0] == "tom" else 0}, 3 + int(chest_safe))
+			for with_seed in [1, 2, 3, 4, 5, 6]:
+				_play_triage(level, with_seed, quality)
 	print("The extra runs noted %d more lines." % (Speech.heard.size() - before))
 
 
@@ -80,13 +90,15 @@ func _play_ward(day: int, doctor_name: String, quality: String) -> void:
 	doctor.day = day
 	doctor.opening_seen = true
 	doctor.created = true
-	var rank := Rank.SENIOR_RESIDENT if day >= 14 else Rank.JUNIOR_RESIDENT
+	var rank := Rank.SURGEON if day >= 19 else (Rank.SENIOR_RESIDENT if day >= 14 else Rank.JUNIOR_RESIDENT)
 	doctor.total_xp = LevelCurve.total_xp_to_reach(Rank.FIRST_LEVELS[rank]) + 400
 	doctor.rank_held = rank
 	for flag: String in ["op_rohit_done", "op_rohit_won", "promoted", "beds_saved", "rider_treated", "jump_9"]:
 		doctor.set_flag(flag)
 	if day >= 14:
 		doctor.set_flag("jump_14")
+	if day >= 19:
+		doctor.set_flag("jump_19")
 	var ward := Ward.new(doctor)
 	root.add_child(ward)
 	var finished := [false]
@@ -95,3 +107,20 @@ func _play_ward(day: int, doctor_name: String, quality: String) -> void:
 	bot.quality = quality
 	ward.play_until(func() -> bool: return finished[0], Callable(), bot, 1500.0)
 	ward.free()
+
+
+func _play_triage(level: String, with_seed: int, quality: String) -> void:
+	var task := TriageTask.new("bus_triage", with_seed, level)
+	var view := TriageView.new(task)
+	root.add_child(view)
+	var bot := AutoPlayer.new()
+	bot.quality = quality
+	bot.pace = 0.1
+	var waited := 0.0
+	while not task.finished and waited < 120.0:
+		if quality == "shaky" and level != "extreme" and int(waited * 10.0) % 37 == 0:
+			view.ask_hint()
+		bot.step(view, 0.1)
+		view.tick(0.1)
+		waited += 0.1
+	view.free()

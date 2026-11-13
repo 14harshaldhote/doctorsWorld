@@ -66,7 +66,7 @@ how you know you're winning.
 ## What works right now
 
 The game is being built in stages, and the old 2D version has been retired
-(it's kept safe on the `swift-prototype` branch). Stages 1 to 8 of the 3D game
+(it's kept safe on the `swift-prototype` branch). Stages 1 to 9 of the 3D game
 are in:
 
 - The title screen: the hospital at dusk, an ambulance, a doctor wandering about.
@@ -225,6 +225,29 @@ are in:
   doctor at night. You were alone on Tuesday night. Dr. Rao lets you decide.
 - The review, again. Same table, different chair. Earn it and you walk out
   a Surgeon.
+- Three months later. Surgeon. Your name on the theatre door, in capitals,
+  laminated by someone who should have been doing something else. Pick your
+  own team: the scrub nurse who's been awake since yesterday and swears he's
+  fine, or the new one who counts like a bank cashier. The anaesthetist who
+  reads everything, two hours from now, or the quick one who reads the notes
+  in the lift. Both choices come back to bite you, in different places.
+- Mrs. Kurup, sixty-four, can't stop being sick and hasn't passed wind since
+  Friday (she'll tell you, at length). Open her belly, follow the swollen
+  bowel down to where it goes flat, and find what's been strangling it.
+  It's a swab. From her last operation. In 2004. In this hospital.
+- The 2004 notes have a name on them, and it's your boss's. He asks you,
+  nicely, to write "adhesions". You can stand beside him while he tells her
+  the truth, let him tell it, or do as he asks. The board reads lab reports
+  more often than he thinks.
+- A city bus comes off the flyover and you're the senior surgeon on the
+  floor. A new puzzle at the ambulance bay: check each casualty in order
+  (can they walk, are they breathing, how fast, how pink, can they squeeze
+  your hand) and tag them red, yellow, green or black. The loud ones grab
+  your sleeve. The quiet ones are the ones who die. Hard puts the numbers
+  right on the line; extreme takes the nurse's hints away.
+- Dr. Rao retires, and the Head of Department job is you or Dr. Sethi, who
+  has done the management course twice and mentions it. The interview panel
+  includes a retired judge. She can tell when an answer's been rehearsed.
 
 Screenshots of every screen are rebuilt automatically after each change, on
 the [`screenshots` branch](../../tree/screenshots).

@@ -270,6 +270,52 @@ func _ward_shots() -> void:
 	await _ward_shot("82-surgeon", 18, year_done, "review", func(w: Ward) -> bool:
 		return w.mode == "end" and w.overlay.fade_amount() > 0.9, senior)
 
+	# Stage 9: the Surgeon's first months, three months later.
+	var surgeon := Ward.pick_tones(["Fresh hands", "Start now", "Patient first", "Plain", "Truth now", "Together", "Truth",
+		"Listen", "Promise", "Explain", "Fair fight", "Call in", "Own it", "Credit Priya", "Ready", "Count rule", "Talk"])
+	var kurup := ["team_neha", "team_bose", "kurup_history_done", "kurup_history_lungs", "kurup_history_surgery",
+		"kurup_history_allergy", "kurup_consent_plain"]
+	await _ward_shot("83-three-months", 19, [], "", func(w: Ward) -> bool:
+		return w._day_card_in > 0.0 and w._day_card_in < 2.0, surgeon)
+	await _ward_shot("84-your-team", 19, [], "", func(w: Ward) -> bool:
+		return w.conversation == "handover19" and w.talk_ui.is_choosing(), surgeon)
+	await _ward_shot("85-blocked-bowel", 19, ["team_neha", "team_bose"], "", func(w: Ward) -> bool:
+		return w.view is HistoryView and (w.view.task as HistoryTask).asked.size() >= 2, surgeon)
+	await _ward_shot("86-find-the-block", 19, kurup, "", func(w: Ward) -> bool:
+		return w.operation != null and w.operation.step == "run" and w.operation.phase == "act", surgeon)
+	await _ward_shot("87-old-swab", 19, kurup, "", func(w: Ward) -> bool:
+		return w.operation != null and w.operation.step == "look" and w.operation.phase == "decide", surgeon)
+	await _ward_shot("88-cut-the-band", 19, kurup, "", func(w: Ward) -> bool:
+		return w.operation != null and w.operation.step == "free" and w.operation.phase == "act", surgeon)
+	await _ward_shot("89-the-2004-notes", 19, kurup, "", func(w: Ward) -> bool:
+		return w.conversation == "kurup_after_op" and w.talk_ui.is_choosing(), surgeon)
+	var told := kurup + ["op_kurup_done", "op_kurup_won", "kurup_told_now"]
+	await _ward_shot("90-dr-rao", 20, told, "rao", func(w: Ward) -> bool:
+		return w.conversation == "rao_swab" and w.talk_ui.is_choosing(), surgeon)
+	await _ward_shot("91-side-by-side", 20, told + ["candour_together"], "", func(w: Ward) -> bool:
+		return w.conversation == "kurup_truth" and w.talk_ui.is_choosing(), surgeon)
+	var listened := told + ["candour_together", "kurup_promise"]
+	await _ward_shot("92-rao-retires", 21, listened, "rao", func(w: Ward) -> bool:
+		return w.conversation == "rao_retires" and w.talk_ui.is_choosing(), surgeon)
+	var crash := listened + ["count_rule", "sethi_fair"]
+	await _ward_shot("93-triage", 22, crash, "triage", func(w: Ward) -> bool:
+		return w.view is TriageView and (w.view.task as TriageTask).tags.size() >= 2 \
+			and (w.view.task as TriageTask).selected.is_empty(), surgeon)
+	await _ward_shot("94-triage-checks", 22, crash, "triage", func(w: Ward) -> bool:
+		if not w.view is TriageView:
+			return false
+		var triage := w.view.task as TriageTask
+		return triage.tags.size() >= 1 and not triage.selected.is_empty() and triage.checks_done(triage.selected).size() >= 2,
+		surgeon)
+	await _ward_shot("95-after-the-crash", 22, crash + ["crash_called", "bus_triage_done", "bus_triage_right"], "evening",
+		func(w: Ward) -> bool:
+			return w.conversation == "crash_evening" and w.talk_ui.is_choosing(), surgeon)
+	var months := crash + ["crash_called", "bus_triage_done", "bus_triage_right", "crash_credit_priya"]
+	await _ward_shot("96-interview", 23, months, "interview", func(w: Ward) -> bool:
+		return w.conversation == "review_hod" and w.talk_ui.is_choosing(), surgeon)
+	await _ward_shot("97-head-of-department", 23, months, "interview", func(w: Ward) -> bool:
+		return w.mode == "end" and w.overlay.fade_amount() > 0.9, surgeon)
+
 
 ## The drug chart with a line already flagged: the list, or the reasons.
 static func _chart_at(ward: Ward, picking: bool) -> bool:
@@ -318,6 +364,12 @@ static func sample_profile_on_ward(day: int, flags: Array = []) -> PlayerProfile
 			doctor.set_flag(flag)
 		doctor.rank_held = Rank.SENIOR_RESIDENT
 		doctor.total_xp = LevelCurve.total_xp_to_reach(Rank.FIRST_LEVELS[Rank.SENIOR_RESIDENT]) + 300 * (day - 14)
+	if day >= 19:
+		# Three months on: a Surgeon, the Senior year behind them.
+		for flag: String in ["op_gomes_won", "nanda_called", "op_imran_won", "mm_credit_zoya", "vote_night_doctor", "jump_19"]:
+			doctor.set_flag(flag)
+		doctor.rank_held = Rank.SURGEON
+		doctor.total_xp = LevelCurve.total_xp_to_reach(Rank.FIRST_LEVELS[Rank.SURGEON]) + 400 * (day - 19)
 	return doctor
 
 

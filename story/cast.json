@@ -24,7 +24,7 @@
 	"joseph": {"name": "Mr. Joseph Fernandes", "role": "Patient · 81, retired teacher", "voice": 0.82, "trust": 50, "gender": "male", "pace": 0.9},
 	"maria": {"name": "Maria Fernandes", "role": "Joseph's daughter", "voice": 1.1, "trust": 40, "gender": "female"},
 	"peter": {"name": "Peter Fernandes", "role": "Joseph's son", "voice": 0.94, "trust": 35, "gender": "male"},
-	"rao": {"name": "Dr. Anand Rao", "role": "Head of Surgery", "voice": 0.86, "trust": 45, "gender": "male"},
+	"rao": {"name": "Dr. Anand Rao", "role": "Head of Surgery", "voice": 0.86, "trust": 45, "gender": "male", "later_roles": {"21": "Head of Surgery · retiring"}},
 	"sethi": {"name": "Dr. Kabir Sethi", "role": "Senior Resident", "voice": 0.98, "trust": 45, "gender": "male", "later_roles": {"14": "Consultant surgeon"}},
 	"banerjee": {"name": "Mrs. Banerjee", "role": "Patient · 77, pneumonia", "voice": 1.16, "trust": 50, "gender": "female", "pace": 0.9},
 	"deepa": {"name": "Deepa Rawat", "role": "Patient · 34, dhaba cook", "voice": 1.12, "trust": 45, "gender": "female"},
@@ -38,5 +38,10 @@
 	"francis": {"name": "Francis Gomes", "role": "Her son", "voice": 0.92, "trust": 40, "gender": "male"},
 	"nanda": {"name": "Mr. Harish Nanda", "role": "Patient · 58, Dr. Sethi's", "voice": 0.9, "trust": 45, "gender": "male"},
 	"imran": {"name": "Imran Ali", "role": "Patient · 24, scaffolder", "voice": 1.0, "trust": 45, "gender": "male"},
-	"rubina": {"name": "Rubina Ali", "role": "His wife", "voice": 1.2, "trust": 45, "gender": "female"}
+	"rubina": {"name": "Rubina Ali", "role": "His wife", "voice": 1.2, "trust": 45, "gender": "female"},
+	"kurup": {"name": "Mrs. Shanta Kurup", "role": "Patient · 64, retired postmistress", "voice": 1.06, "trust": 45, "gender": "female", "pace": 0.95},
+	"venu": {"name": "Venu Kurup", "role": "Her husband", "voice": 0.84, "trust": 40, "gender": "male", "pace": 0.95},
+	"neha": {"name": "Neha Joshi", "role": "Scrub nurse", "voice": 1.16, "gender": "female"},
+	"bose": {"name": "Dr. Arindam Bose", "role": "Anaesthetist", "voice": 0.94, "trust": 45, "gender": "male"},
+	"rajan": {"name": "Mrs. Nirmala Rajan", "role": "Chair of the hospital board", "voice": 0.98, "trust": 40, "gender": "female", "pace": 0.95}
 }

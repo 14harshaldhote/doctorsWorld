@@ -20,7 +20,8 @@ plan"). This file covers how to build, run and test the game.
 | 6. Polish | Settings (music, effects and voice volume, text size, reduce motion, colour-blind-safe monitor, battery saver), music for each place and a promotion fanfare, interface sounds and monitor beeps, screen fades and animated cards, confetti, room for the iPhone notch and home bar, and merged meshes so older iPhones draw about half as much | Done |
 | 7. Junior Resident | "Eight months later": Days 9 to 13 as a Junior Resident. The team walks into a real operating theatre and the department's seminar room. Three new operations: a cut hand in the minor theatre, a keyhole gallbladder (fill the belly with gas, read the camera) and a stuck hernia whose bowel you must judge. Each case is random within its difficulty (easy; hard, with hints that cost points; extreme, with stacked problems and no hints) and shaped by what you asked on the ward. Also a missed aneurysm, Dr. Sethi taking the credit at the department meeting, a VIP's mother against an emergency, and the review that makes a Senior Resident | Done |
 | 8. Senior Resident | "A year later": Days 14 to 18 as a Senior Resident with an intern of your own (Dr. Zoya Qureshi). A new puzzle, checking her drug chart (`ChartTask`, `ChartView`), whose wrong lines can come from what you missed on the ward and carry into theatre. Two new operations: hip fixation with Dr. Bhatt (read the X-ray, aim a guide wire, measure, drill, plate) and an emergency laparotomy for a torn spleen (find the bleeding corner, save or remove the spleen, clamp clear of the pancreas). Also a son who wants to sign for his capable mother, a night in charge where your teaching decides when Zoya calls you, the M&M meeting, the budget vote and the review that makes a Surgeon | Done |
-| Later | Surgeon (your own team, mass casualties, Dr. Rao's old mistake), Head of Department (the strike, the board) and the ending | |
+| 9. Surgeon | "Three months later": Days 19 to 23 as a Surgeon with a list and a team of your own. You pick the scrub nurse and the anaesthetist (`team_swap`), and each pick changes the operation: a tired nurse loses a swab in the count, a quick anaesthetist who wasn't told about her asthma meets a wheeze, waiting for the careful one makes the bowel worse. A new operation, an open belly for a blocked bowel (find where fat loops turn flat, read what an old swab has done, cut the scar band). Dr. Rao's 2004 swab and the choice to tell her, hide it or let him tell it. A new puzzle, triage at a bus crash (`TriageTask`, `TriageView`, START rules, borderline numbers on hard and extreme). Dr. Rao retires and the interview makes a Head of Department | Done |
+| Later | Head of Department (the strike, the board) and the ending | |
 
 The earlier SwiftUI and SpriteKit prototype is kept on the git branch
 `swift-prototype`.
@@ -109,8 +110,9 @@ game/world/             StageLighting, the hospital front, the Day 1 lobby, the 
 story/                  The words: cast, opening, Day 1 conversations, banter, training
                         conversations, patient cases (cases.json), the theatre day
                         (theatre.json), the ward days (ward.json), the Junior
-                        Resident's days (junior.json) and the Senior
-                        Resident's (senior.json)
+                        Resident's days (junior.json), the Senior
+                        Resident's (senior.json) and the Surgeon's
+                        (surgeon.json)
 assets/fonts/           Fredoka and Nunito (SIL Open Font License)
 assets/music/           The music, made by tools/make_music.py
 assets/voices/          Recorded voices, made by tools/make_voices.py (Kokoro, Apache 2.0)
@@ -169,7 +171,8 @@ corner.
 
 Rank is no longer worked out from XP. XP sets the level, and the rank only
 rises when someone promotes you (`PlayerProfile.promote()`), which Dr. Rao
-does at the reviews on Day 8, Day 13 and Day 18 (`Ward.REVIEWS`).
+does at the reviews on Day 8, Day 13 and Day 18, and the board does at the
+interview on Day 23 (`Ward.REVIEWS`).
 
 From Day 9 the days come from `game/world/ward_story.gd`, so new chapters
 are data, not code. `WardStory.DAYS` uses the same beats plus:
@@ -188,7 +191,11 @@ are data, not code. `WardStory.DAYS` uses the same beats plus:
   played again;
 - a task `["chart", "gomes_chart"]` for a drug chart, with `chart_force`
   deciding lines from flags (`{"warfarin": "!gomes_history_medicines"}`:
-  the warfarin line is wrong if nobody asked about her tablets).
+  the warfarin line is wrong if nobody asked about her tablets);
+- `team_swap` to put the doctor's own picks into the team
+  (`[[1, "neha", "team_neha"]]`: Neha scrubs if `team_neha` is set). The
+  operation names whoever is there (`scrub_name()`, `anaesthetist_name()`);
+- a task `["triage", "bus_triage"]` for sorting casualties at a crash.
 
 `WardStory.NIGHTS` lists days that are night shifts, and a cast entry's
 `later_roles` changes the role shown from a day on (Dr. Sethi becomes a
@@ -206,7 +213,7 @@ conversations for these days are in a chapter listed in `WardStory.CHAPTERS`.
 ## Operations
 
 `game/surgery/procedures.gd` holds the appendix, the wound, the gallbladder,
-the hernia, the hip and the spleen as data. Each has steps (what Tom hands over, what the doctor
+the hernia, the hip, the spleen and the blocked bowel as data. Each has steps (what Tom hands over, what the doctor
 does), a time-out board, a pool of complications and, for some, insides that
 vary (`variants`: the hernia's bowel is pink, dusky or dead). A step id must
 never match a complication id; a test checks it.
@@ -232,6 +239,22 @@ difficulty pick which lines are wrong: two plain ones on easy, plus one
 subtle on hard and two on extreme. Flag a line with a reason and the intern
 agrees, half agrees (right line, wrong reason) or explains why it was right.
 Hints come from Dr. Iyer (5 points each on hard, none on extreme).
+
+## Triage
+
+`TriageTask` reads a `"kind": "triage"` case: a place, the nurse who runs
+the line (`actor`), what she says as each tag is given, and casualty
+templates. Each template says whether they walk, breathe, breathe once the
+airway is opened, and the ranges for breaths a minute (`rate`) and nail bed
+refill (`refill`) on each difficulty, so hard and extreme can put a number
+right on the line (30 breaths is yellow, 31 is red). The seed picks six,
+eight or ten of them, always with a red, a yellow and a green. The START
+rules decide the true tag (`start_tag`) and which checks it takes to know
+(`needed_checks`): a check past that wastes time, and a right tag without
+its deciding check counts as a guess. Tagging someone red as yellow or green
+is under-triage, and the ward sets `<case>_under` and `<case>_under_<id>`.
+Easy shows the rules on a card; hints cost 5 points on hard; extreme has
+none.
 
 ## Settings and accessibility
 

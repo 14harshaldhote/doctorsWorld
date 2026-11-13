@@ -92,6 +92,12 @@ VOICES = {
     "francis": {"mix": {"hm_psi": 0.55, "bm_lewis": 0.45}, "speed": 1.0},
     "nanda": {"mix": {"hm_omega": 0.55, "am_eric": 0.45}, "speed": 0.94},
     "imran": {"mix": {"hm_psi": 0.6, "am_adam": 0.4}, "speed": 0.95},
+    # Three months later: the Surgeon's patient, team and board chair.
+    "kurup": {"mix": {"hf_alpha": 0.55, "bf_emma": 0.25, "af_heart": 0.2}, "speed": 0.94},
+    "venu": {"mix": {"hm_omega": 0.6, "bm_fable": 0.4}, "speed": 0.94},
+    "neha": {"mix": {"hf_beta": 0.6, "af_nicole": 0.4}, "speed": 1.03},
+    "bose": {"mix": {"hm_psi": 0.55, "bm_daniel": 0.45}, "speed": 1.04},
+    "rajan": {"mix": {"hf_alpha": 0.6, "bf_isabella": 0.4}, "speed": 0.93},
 }
 # The player's doctor: never voiced.
 PLAYER = "you"
@@ -111,6 +117,9 @@ RESPELL = {
     "Imran": "Imraan", "Rubina": "Roo-beena", "Margao": "Mar-gow", "Nagpur": "Naag-poor", "Pune": "Poona",
     "idli": "idlee", "Harish": "Hareesh", "Vivek": "Viveyk", "Zoya": "Zoyaa",
     "co-amoxiclav": "co-amoxi-clav", "Co-amoxiclav": "Co-amoxi-clav", "eGFR": "e G F R",
+    "Kurup": "Koo-roop", "Shanta": "Shaanta", "Venu": "Vay-noo", "Neha": "Nay-ha", "Arindam": "Ah-rin-dum",
+    "Bose": "Bohs", "Nirmala": "Nir-mala", "Rajan": "Raajan", "Ernakulam": "Er-naa-kulam", "Rehan": "Ray-haan",
+    "Joshi": "Joe-shee", "Anand": "Aanand",
 }
 TITLES = {"Dr.": "Doctor", "Mr.": "Mister", "Mrs.": "Missus", "Ms.": "Miz"}
 ACRONYMS = ["ICU", "VIP", "MBBS", "ECG", "CPR", "OPD", "MRI", "HIV", "IVF", "DNA", "CCTV", "ENT", "NICU", "HR", "INR", "CT", "MDT"]
@@ -183,6 +192,17 @@ def case_lines(heard):
                 found.append((actor, line.get("ok", {}).get("defend", "")))
                 found.append((actor, line.get("wrong", {}).get("found", "")))
                 found.append(("iyer", line.get("wrong", {}).get("hint", "")))
+            continue
+        if case.get("kind") == "triage":
+            # The nurse running the line says everything: what each casualty
+            # looks like, what a check finds, and each tag as it's given.
+            for text in list(case.get("brief", {}).values()) + list(case.get("sent", {}).values()):
+                found.append((actor, text))
+            for casualty in case.get("casualties", []):
+                for key in ("looks", "walks", "stays"):
+                    found.append((actor, casualty.get(key, "")))
+                for text in case.get("tagged", {}).values():
+                    found.append((actor, text.replace("{who}", casualty.get("short", "them"))))
             continue
         found.append((host, case.get("opening", "")))
         for spot in case.get("spots", []):

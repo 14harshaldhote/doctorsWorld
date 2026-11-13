@@ -29,7 +29,7 @@ const FIRST_DAY := 4
 const NIGHT_DAY := 6
 const REVIEW_DAY := 8
 ## The review conversation on each review day.
-const REVIEWS := {8: "review", 13: "review_senior", 18: "review_surgeon"}
+const REVIEWS := {8: "review", 13: "review_senior", 18: "review_surgeon", 23: "review_hod"}
 ## Experience for an operation, by outcome, plus this much per star.
 const OP_XP := {"won": 120, "struggled": 80, "failed": 40}
 const OP_XP_PER_STAR := 10
@@ -466,6 +466,18 @@ func _build_people() -> void:
 		"brows": 2, "coat": false, "stethoscope": false}, AvatarConfig.Mood.WORRIED, "patient")
 	_person("rubina", {"skin": 6, "face": 1, "height": 1, "hair_style": 10, "hair_colour": 0, "eyes": 1, "brows": 1,
 		"scrubs": 4, "coat": false, "stethoscope": false}, AvatarConfig.Mood.WORRIED, "kurta")
+	# Three months a surgeon: the first patient on your own list, your own
+	# theatre team, and the chair of the board.
+	_person("kurup", {"skin": 6, "face": 5, "body": 2, "height": 1, "hair_style": 7, "hair_colour": 6, "brows": 4,
+		"glasses": 1, "coat": false, "stethoscope": false}, AvatarConfig.Mood.TIRED, "patient")
+	_person("venu", {"skin": 6, "face": 4, "body": 1, "height": 2, "hair_style": 1, "hair_colour": 6, "facial_hair": 2,
+		"glasses": 3, "brows": 3, "scrubs": 5, "coat": false, "stethoscope": false}, AvatarConfig.Mood.WORRIED, "casual")
+	_person("neha", {"skin": 3, "face": 1, "height": 2, "hair_style": 10, "hair_colour": 0, "eyes": 3, "brows": 1,
+		"scrubs": 2, "coat": false, "stethoscope": false}, AvatarConfig.Mood.FOCUSED)
+	_person("bose", {"skin": 4, "face": 2, "body": 1, "height": 3, "hair_style": 2, "hair_colour": 1, "facial_hair": 3,
+		"glasses": 2, "brows": 2, "scrubs": 3, "coat": false}, AvatarConfig.Mood.HAPPY)
+	_person("rajan", {"skin": 5, "face": 0, "body": 1, "height": 2, "hair_style": 7, "hair_colour": 6, "brows": 3,
+		"glasses": 4, "scrubs": 6, "coat": false, "stethoscope": false, "watch": true}, AvatarConfig.Mood.CALM, "kurta")
 	# Patients who sleep through the week, so the ward is full.
 	_person("bg1", {"skin": 8, "face": 5, "body": 2, "hair_style": 1, "hair_colour": 5, "facial_hair": 5,
 		"coat": false, "stethoscope": false}, AvatarConfig.Mood.TIRED, "patient")
@@ -1067,7 +1079,7 @@ func _after_talk(key: String) -> void:
 		"joseph_family":
 			put("maria", "bed6:chair")
 			put("peter", "bed6:other")
-		"review", "review_senior", "review_surgeon":
+		"review", "review_senior", "review_surgeon", "review_hod":
 			_promote()
 
 
@@ -1301,6 +1313,8 @@ func open_task(task_id: String, which_case: String) -> void:
 		for line_id: String in rules:
 			forced[line_id] = WardStory.holds(profile, str(rules[line_id]))
 		task = ChartTask.new(which_case, _case_seed("chart"), _case_level(beat()), forced)
+	elif task_id == "triage":
+		task = TriageTask.new(which_case, _case_seed("triage"), _case_level(beat()))
 	else:
 		task = TrainingTask.make(task_id, 7 + profile.day * 3, which_case)
 	if task_id == "scan":
@@ -1310,6 +1324,12 @@ func open_task(task_id: String, which_case: String) -> void:
 		view = ChartView.new(task, self)
 		talking_with = (task as ChartTask).actor
 		_camera_speaker = talking_with
+	elif task_id == "triage":
+		# Out at the ambulance bay, with the nurse running the line.
+		view = TriageView.new(task, self)
+		talking_with = (task as TriageTask).actor
+		_camera_speaker = talking_with
+		Music.cue("emergency")
 	else:
 		var station := bed(active_bed)
 		if task_id == "history":
@@ -1344,7 +1364,10 @@ func open_task(task_id: String, which_case: String) -> void:
 		spot = "X-ray viewer"
 	elif task_id == "chart":
 		spot = "Nurses' station"
-	view.kicker_override = "%s · %s" % ["On call" if night else "Ward round", spot]
+	elif task_id == "triage":
+		spot = "Ambulance bay"
+	var shift := "Major incident" if task_id == "triage" else ("On call" if night else "Ward round")
+	view.kicker_override = "%s · %s" % [shift, spot]
 	_layer.add_child(view)
 	_layer.move_child(view, talk_ui.get_index())
 	view.done_pressed.connect(_on_done)
@@ -1352,9 +1375,9 @@ func open_task(task_id: String, which_case: String) -> void:
 	var station_now := station_for(task_id)
 	if station_now != null:
 		station_now.reset_task(task)
-	player.visible = task_id == "chart"
+	player.visible = task_id in ["chart", "triage"]
 	hud.set_talking(true)
-	_camera_mode = "talk" if task_id == "chart" else "close"
+	_camera_mode = "talk" if task_id in ["chart", "triage"] else "close"
 
 
 func _on_task_finished(task: TrainingTask) -> void:
@@ -1389,6 +1412,14 @@ func _on_task_finished(task: TrainingTask) -> void:
 		# What reaches the patient: the theatre team only knows what was fixed.
 		for line_id in chart.missed():
 			profile.set_flag(case_id + "_missed_" + line_id)
+	elif task is TriageTask:
+		var triage := task as TriageTask
+		case_id = triage.case_id
+		right = triage.all_right()
+		# Who was sent to wait when they couldn't, for the story after.
+		for casualty_id in triage.under_triaged():
+			seen.append("under_" + casualty_id)
+		profile.set_flag(case_id + "_under", not triage.under_triaged().is_empty())
 	profile.set_flag(case_id + "_done")
 	profile.set_flag(case_id + "_right", right)
 	for item: String in seen:
@@ -1482,7 +1513,7 @@ func _enter_theatre(procedure: String) -> void:
 	var patient := str(entry.get("patient", ""))
 	if not patient.is_empty():
 		put(patient, "off")
-	var team: Array = entry.get("team", ["iyer", "tom", "khan"])
+	var team := _team(entry)
 	var spots := ["lead", "scrub", "anaesthetist"]
 	for index in spots.size():
 		var who := str(team[index]) if index < team.size() else ""
@@ -1512,8 +1543,9 @@ func open_operation(procedure: String) -> void:
 	var known: Dictionary = entry.get("op_flags", {})
 	for key: String in known:
 		setup[key] = WardStory.holds(profile, str(known[key]))
-	var team: Array = entry.get("team", ["iyer"])
+	var team := _team(entry)
 	setup["lead"] = str(team[0]) if not team.is_empty() else "iyer"
+	setup["scrub_nurse"] = str(team[1]) if team.size() > 1 else "tom"
 	setup["anaesthetist"] = str(team[2]) if team.size() > 2 else "khan"
 	operation = OperationTask.new(_case_seed(procedure), setup)
 	view = OperationView.new(operation, self, profile)
@@ -1529,6 +1561,16 @@ func open_operation(procedure: String) -> void:
 	_camera_mode = "close"
 	Music.cue("theatre")
 	_refresh_hud()
+
+
+## The beat's theatre team (lead, scrub nurse, anaesthetist), with the
+## doctor's own picks swapped in: "team_swap": [[1, "neha", "team_neha"]].
+func _team(entry: Dictionary) -> Array:
+	var team: Array = (entry.get("team", ["iyer", "tom", "khan"]) as Array).duplicate()
+	for swap: Array in entry.get("team_swap", []):
+		if int(swap[0]) < team.size() and WardStory.holds(profile, str(swap[2])):
+			team[int(swap[0])] = str(swap[1])
+	return team
 
 
 ## A number that is the same for this career, day and case, so a case is
@@ -1576,11 +1618,11 @@ func _on_operation_finished(op: OperationTask) -> void:
 ## the patient where the beat puts them after the operation.
 func _leave_theatre() -> void:
 	var entry := beat()
-	for who: String in ["you", "iyer", "tom", "khan", "sethi", "rao", "bhatt"]:
+	for who: String in ["you", "iyer", "tom", "khan", "sethi", "rao", "bhatt", "neha", "bose"]:
 		var rig := rig_for(who)
 		if rig != null:
 			Theatre.undress_from_theatre(rig)
-	for who: String in ["tom", "khan"]:
+	for who: String in ["tom", "khan", "neha", "bose"]:
 		put(who, "off")
 	_go_to_place("ward")
 	_apply_puts(entry.get("put_back", []))

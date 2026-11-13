@@ -16,7 +16,8 @@ extends RefCounted
 ##       An action for the scene to perform (walk, give, shot, card...).
 ##   {"trust": {"grace": 2}}, {"flag": "met_grace"}, {"unflag": "x"}, {"xp": 10}, {"minutes": 5}
 ##       Silent changes to the career.
-##   {"if": "flag_name", "then": [...], "else": [...]}   ("!flag" means not set)
+##   {"if": "flag_name", "then": [...], "else": [...]}   ("!flag" means not set;
+##   "a&b" both, "a|b" either)
 ##   {"end": true}
 ##
 ## Text can use {name}, {first}, {last}, {called} (how people address the
@@ -222,10 +223,19 @@ func _offered(options: Array) -> Array:
 	return found
 
 
+## "flag", "!flag", and flags joined with "&" (all) or "|" (any; "a|b&c" is
+## a, or b and c).
 func _condition(test: String) -> bool:
-	if test.begins_with("!"):
-		return not profile.has_flag(test.substr(1))
-	return profile.has_flag(test)
+	if "|" in test:
+		for part in test.split("|"):
+			if _condition(part):
+				return true
+		return false
+	for part in test.split("&"):
+		var wanted := not part.begins_with("!")
+		if profile.has_flag(part.trim_prefix("!")) != wanted:
+			return false
+	return true
 
 
 ## Applies a step's or reply's effects. Returns trust changes {id: [change, new value]}.

@@ -168,6 +168,18 @@ func test_questions_can_be_asked_again_and_hidden_once_answered() -> void:
 	expect("\n".join(problems).contains("a reply that always moves on"), "a choice that could loop forever is caught")
 
 
+func test_conditions_can_join_flags_with_and_and_or() -> void:
+	var player := PlayerProfile.new()
+	player.set_flag("told")
+	player.set_flag("kind")
+	var runner := _runner(player)
+	var cases := {"told": true, "!told": false, "missing|told": true, "missing|other": false, "told&kind": true,
+		"told&!kind": false, "missing|told&kind": true, "missing&told|other": false, "!missing&told": true}
+	for test: String in cases:
+		runner.start([{"if": test, "then": [{"say": "iyer", "text": "Yes."}], "else": [{"say": "iyer", "text": "No."}]}])
+		expect_equal(runner.next()["text"], "Yes." if cases[test] else "No.", test)
+
+
 func test_cases_have_patients_and_explained_questions() -> void:
 	var cases := StoryBook.chapter("cases")
 	expect(cases.has("training_history"), "the training history case exists")

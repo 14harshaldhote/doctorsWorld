@@ -182,6 +182,8 @@ static func get_procedure(id: String) -> Dictionary:
 			made = _hip()
 		"spleen":
 			made = _spleen()
+		"obstruction":
+			made = _obstruction()
 		_:
 			made = _appendix()
 	var defaults := {
@@ -196,7 +198,7 @@ static func get_procedure(id: String) -> Dictionary:
 
 
 static func ids() -> Array[String]:
-	return ["appendix", "wound", "gallbladder", "hernia", "hip", "spleen"]
+	return ["appendix", "wound", "gallbladder", "hernia", "hip", "spleen", "obstruction"]
 
 
 ## A complication's data, with the procedure's own lines laid over it.
@@ -980,5 +982,176 @@ static func _spleen() -> Dictionary:
 			"won": "Imran stopped bleeding, and he's alive.",
 			"struggled": "Alive. It was close.",
 			"failed": "Dr. Sethi had to take over.",
+		},
+	}
+
+
+# --- Mrs. Kurup's blocked bowel (Day 19) ---------------------------------------
+# The doctor's first list as a Surgeon: their own patient, their own team,
+# Dr. Iyer assisting and keeping quiet, mostly. The bowel is blocked by scar
+# from an operation in this hospital in 2004, and by what was left behind.
+
+static func _obstruction() -> Dictionary:
+	return {
+		"id": "obstruction",
+		"title": "Laparotomy: blocked bowel",
+		"patient": "Shanta Kurup",
+		"first": "Mrs. Kurup",
+		"pronoun": "she",
+		"theatre": "Theatre 2",
+		"lead": "iyer",
+		"tray": ["scalpel", "retractor", "forceps", "scissors", "clamp", "needle_holder", "swab", "suction"],
+		"pool": ["bleeding", "pressure"],
+		# Nobody careful at the head end and nobody asked about her chest: her
+		# asthma and two days of vomiting catch up with her under the gas.
+		"unknown_brings": {"chest_safe": "pressure"},
+		"complication_after": "free",
+		"extreme_after": "retract",
+		"antibiotic": "co-amoxiclav",
+		"guide": [Vector2(7.4, 7.6), Vector2(16.6, 7.6), Vector2(0.0, 0.1)],
+		"wound_centre": Vector2(12.0, 7.6),
+		# Framed up and left of the wound, so the loops clear the panels.
+		"view_centre": Vector2(11.1, 7.0),
+		"count_line": "Count before closing. Swabs: all ours, out and counted. Plus one from 2004, in a pot, labelled.",
+		"steps": [
+			{"id": "incision", "tool": "scalpel", "title": "Open the belly", "act": "trace", "swab": true,
+				"call": "Your list, your patient, your cut. I'm only holding things today. Down the middle, beside her old scar.",
+				"instruction": "Trace the dotted line in one stroke, end to end",
+				"hint": "Scalpel, then the line down the middle in one stroke. Old scars hide stuck bowel, so go steady."},
+			{"id": "retract", "tool": "retractor", "title": "Hold it open", "act": "hold", "seconds": 2.0, "swab": true,
+				"call": "Open it up. Gently; the bowel's swollen and thin, and it's stuck to everything.",
+				"start": "Steady. There's the bowel.", "let_go": "Keep it open. We can't see where it's stuck.",
+				"hold_label": "Hold it open", "instruction": "Press and hold to keep it open",
+				"hint": "Hold the edges apart until it's done."},
+			{"id": "run", "tool": "forceps", "title": "Find where it's blocked", "act": "tap", "target": "transition",
+				"call": "Run the bowel. Follow the fat loops down until they go flat. Where fat meets flat, that's where it's stuck.",
+				"hit": "There. Fat above, flat below. And something hard in the middle of it.",
+				"miss": "Where the fat loops turn flat, {called}. That's the blockage.",
+				"traps": {"loop_fat": 8.0, "colon": 5.0},
+				"trap_lines": {
+					"loop_fat": "Careful! That loop's stretched thin as a balloon. Grab it and it splits. Follow it down, don't squeeze it.",
+					"colon": "That's the large bowel, and it's empty. The block is before it. Follow the fat loops.",
+				},
+				"trap_notes": {"loop_fat": "You grabbed a swollen loop of bowel. Stretched bowel tears; you follow it, you don't squeeze it."},
+				"instruction": "Tap where the fat loops turn flat",
+				"hint": "Blocked bowel is fat before the block and flat after it. Find the place where one turns into the other."},
+			{"id": "look", "tool": "", "title": "What's blocking it?", "act": "decide", "variant": "swab",
+				"call": "Scar, wrapped round something. Cotton threads. A swab. An old one.",
+				"instruction": "Read what you've found. Then decide",
+				"hint": "Pink and whole: peel it. Thin but whole: peel and stitch. Worn through: cut that piece out."},
+			{"id": "free", "tool": "scissors", "title": "Cut the band", "act": "tap", "target": "band",
+				"call": "Cut the band of scar that's strangling the loop. Close to the swab, away from the bowel wall.",
+				"call_after": {
+					"peel": "Cut the band of scar that's holding it. Close to the swab, away from the bowel wall.",
+					"repair": "Cut the band first, so the loop comes free. Then peel, then stitch. Away from the thin patch.",
+					"resect": "Cut the band so the loop comes up, swab and all. Then we take that piece out and join the ends.",
+				},
+				"hit": "Band's cut. Look: the loop's filling, pinking up. It can breathe again.",
+				"miss": "On the band, {called}: the white strip of scar across the loop.",
+				"traps": {"bowel_wall": 14.0},
+				"trap_lines": {"bowel_wall": "Not the bowel! That's the wall, not the band. A hole there spills into her belly."},
+				"trap_notes": {"bowel_wall": "You cut into the bowel wall instead of the scar band. A hole in the bowel leaks into the belly."},
+				"instruction": "Tap the band of scar to cut it",
+				"hint": "The band is the tight white strip across the loop. The bowel wall is pink and soft beside it."},
+			{"id": "remove", "tool": "forceps", "title": "Ease it out", "act": "hold", "seconds": 2.5,
+				"call": "Now ease it out. Slowly. It's been in there twenty-two years; it can take ten more seconds.",
+				"call_after": {
+					"peel": "Now ease it off. Slowly. It's been in there twenty-two years; it can take ten more seconds.",
+					"repair": "Peel it off, slowly, then I'll hold while you stitch over the thin patch.",
+					"resect": "Lift the piece out, swab and all. Slowly. Then we join the ends.",
+				},
+				"start": "Slowly. It's coming.", "let_go": "Don't stop halfway. Keep a steady pull.",
+				"hold_label": "Hold to ease it out", "instruction": "Press and hold to ease it out",
+				"hint": "Slow, steady, and don't let go until it's free."},
+			{"id": "wash", "tool": "suction", "title": "Wash out", "act": "hold", "seconds": 2.5,
+				"call": "Warm water in, suction out. Then run the whole bowel again, end to end. Twice, today.",
+				"start": "Keep going. Look as you go.", "let_go": "Keep going until it runs clear.",
+				"hold_label": "Hold the suction", "instruction": "Hold the suction on until it runs clear",
+				"hint": "Hold the suction on until the water runs clear."},
+			{"id": "close", "tool": "needle_holder", "title": "Close", "act": "stitch",
+				"call": "Close her. And then, Doctor, we need to talk about whose name is on her 2004 notes.",
+				"hint": "Across the cut, evenly, end to end."},
+		],
+		"timeout": [
+			{"id": "patient", "label": "Patient", "reads": "Shanta Kurup, 64", "said": "Patient: Shanta Kurup, sixty-four.",
+				"right": "confirm", "wrong_reads": "Shanta Kurup, 46", "wrong_said": "Patient: Shanta Kurup, forty-six.",
+				"wrong_note": "The board had her as 46. She's 64. A wrong age means somebody opened the wrong file."},
+			{"id": "procedure", "label": "Operation", "reads": "Open the belly: blocked bowel", "said": "Operation: open the belly for a blocked bowel.",
+				"right": "confirm", "wrong_reads": "Keyhole: gallbladder", "wrong_said": "Operation: keyhole gallbladder.",
+				"wrong_note": "The board named her old operation, not today's, and you confirmed it. Her gallbladder came out in 2004."},
+			{"id": "chest", "label": "Chest", "reads": "No problems", "said": "Chest: no problems.", "right": "known",
+				"kind": "known", "known": "lungs_known",
+				"stop_known": "Asthma, two inhalers? Then I go gently, her inhaler goes down the tube, and I keep her well filled. Thank you.",
+				"unsure": "Not sure? Then I'll listen to her chest myself before she sleeps... There. A wheeze. Inhaler first.",
+				"unsure_known": "You asked her: asthma, two inhalers. Say so! Inhaler first, then sleep.",
+				"confirm": "Clear chest. Good.",
+				"note_confirm_known": "She told you about her asthma, and you confirmed 'no problems'. The anaesthetist found out when she wheezed.",
+				"note_confirm": "Nobody asked about her chest, and the board said 'no problems'. She has asthma and two inhalers.",
+				"note_known": "You knew about her asthma and told the anaesthetist. Her chest was ready before she slept."},
+			{"id": "allergy", "label": "Allergies", "reads": "None known", "said": "Allergies: none known.", "right": "allergy",
+				"kind": "allergy", "allergic": false, "asked": "allergy_asked"},
+		],
+		"variants": {
+			"swab": {
+				"loose": {"say": "It sits on the bowel. The bowel under it is pink and whole.", "right": "peel",
+					"look": "The swab: wrapped in scar, sitting on the bowel. The bowel under it: pink, shiny, whole."},
+				"stuck": {"say": "It's stuck to the wall. The wall's paper-thin there, but whole.", "right": "repair",
+					"look": "The swab: stuck to the bowel wall. The wall under it: thin as paper, but whole. No leak."},
+				"eroded": {"say": "It's worn right through. Cotton inside the bowel, and the loop's grey.", "right": "resect",
+					"look": "The swab: worn through the wall, cotton inside the bowel. The loop round it: grey, soft, leaking."},
+			},
+		},
+		"decisions": {
+			"look": {
+				"options": [
+					{"id": "peel", "text": "Peel it off and let the bowel go"},
+					{"id": "repair", "text": "Peel it, then stitch over the thin patch"},
+					{"id": "resect", "text": "Cut out that piece of bowel and join the ends"},
+				],
+				"right_lines": {
+					"peel": "Agreed. Pink, shiny, whole. Peel it and the bowel will forgive us.",
+					"repair": "Agreed. Peel it, and a row of stitches over the thin patch so it can't give way next week.",
+					"resect": "Agreed. That piece can't be saved. Out it comes, and we join healthy bowel to healthy bowel.",
+				},
+				"wrong_lines": {
+					"loose:repair": [3.0, "Stitch what? The wall's whole and healthy. Extra stitches are extra holes."],
+					"loose:resect": [12.0, "Cut out healthy bowel? It's pink and whole! Look before you cut."],
+					"stuck:peel": [10.0, "And leave a paper-thin patch? It'll split when she eats her first meal. Stitch over it."],
+					"stuck:resect": [7.0, "Thin isn't dead. Peel it and protect the patch; she keeps her bowel."],
+					"eroded:peel": [18.0, "Peel it off a hole? It's worn through! She'd be leaking into her belly by tonight."],
+					"eroded:repair": [12.0, "Stitch grey, soft bowel? Stitches won't hold in that. That piece has to come out."],
+				},
+				"notes": {
+					"right": "You read what the old swab had done to the bowel, and made the right call.",
+					"wrong": "You misjudged the bowel under the swab. Whole and pink: peel. Thin but whole: peel and stitch. Worn through: cut it out.",
+				},
+			},
+		},
+		"parts": [
+			{"id": "gape", "kind": "disc", "at": "wound", "size": Vector2(0.105, 0.05), "colour": Color("#8E2626"), "show": "open&!closing", "angle": true},
+			{"id": "gape_deep", "kind": "disc", "at": "wound", "size": Vector2(0.095, 0.043), "colour": Color("#5A1414"), "show": "open&!closing", "angle": true, "lift": 0.013},
+		],
+		"lines": {
+			"bleeding": {"call": "Bleeding from the scar tissue! Find the vessel and clamp it!",
+				"start": "There, where it's pumping. Clamp it!", "hit": "Got it. Dry."},
+			"pressure": {"line": "Her pressure's falling. {bp}. And she's wheezing: the gas has tightened her chest. What do you want?",
+				"options": [
+					{"id": "fluids", "text": "Her inhaler down the tube, and fluids"},
+					{"id": "sedate", "text": "Deeper gas, to settle her"},
+					{"id": "carry_on", "text": "Carry on, it'll settle"},
+				],
+				"wrong": {"sedate": [14.0, "Deeper gas drops her pressure further! Open her airways and fill her up."]},
+				"bot_wrong": ["carry_on", "sedate"],
+				"fixed": "Inhaler in, fluids running... the wheeze is easing, pressure's back. Asthma and two days of vomiting. Good call."},
+		},
+		"end_lines": {
+			"won": "Clean, dry, and the bowel's moving again. Your first list, Surgeon. Well done.",
+			"struggled": "Done. Harder than it had to be. She'll heal. So will you.",
+			"failed": "It's done.",
+		},
+		"outcome_lines": {
+			"won": "Mrs. Kurup's bowel is free, and the 2004 swab is in a pot.",
+			"struggled": "Free, the hard way.",
+			"failed": "Dr. Iyer had to take over.",
 		},
 	}

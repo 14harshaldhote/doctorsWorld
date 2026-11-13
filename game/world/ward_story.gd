@@ -4,7 +4,9 @@ extends RefCounted
 ## 13, eight months later, as a Junior Resident (stage 7), ending with the
 ## review that makes the doctor a Senior Resident; then Days 14 to 18, a year
 ## on, as a Senior Resident with an intern of their own (stage 8), ending
-## with the review that makes a Surgeon.
+## with the review that makes a Surgeon; then Days 19 to 23, three months
+## on, as a Surgeon with a list and a team of their own (stage 9), ending with
+## the interview that makes a Head of Department.
 ##
 ## Beats use the Ward's keys (see Ward.DAYS) plus:
 ##   "where"     "seminar" for a beat in the seminar room (no walking)
@@ -16,6 +18,7 @@ extends RefCounted
 ##   "put_end"   the same, after the last conversation
 ##   "brief"     a conversation in theatre before the operation
 ##   "team"      who is in theatre: [lead, scrub nurse, anaesthetist or ""]
+##   "team_swap" [[index, who, condition], ...]: the doctor's own picks
 ##   "patient"   the operation's patient (for flags: op_<patient>_won...)
 ##   "op_flags"  {setup key: condition}, what the team knows going in
 ##   "levels"    the difficulties this case can be, one picked at random
@@ -32,9 +35,10 @@ const FIRST_DAY := 9
 const TIME_JUMPS := {
 	9: ["Eight months later", "Junior Resident now. The pager no longer makes you jump. Mostly."],
 	14: ["A year later", "Senior Resident. An intern of your own, and nights in charge of the whole floor."],
+	19: ["Three months later", "Surgeon. Your own list, your own team, and nobody's hands over yours."],
 }
 ## The story chapters the Ward reads conversations from, after "ward".
-const CHAPTERS := ["junior", "senior"]
+const CHAPTERS := ["junior", "senior", "surgeon"]
 ## Story days that are night shifts (the first week's night is Ward.NIGHT_DAY).
 const NIGHTS := [16]
 
@@ -189,6 +193,70 @@ const DAYS := {
 			"put": [["rao", "seminar:head"], ["iyer", "seminar:seat1"], ["bhatt", "seminar:seat2"], ["you", "seminar:seat5"],
 				["malhotra", "seminar:seat4"]]},
 	],
+	# --- Three months later: the Surgeon -----------------------------------------
+	19: [
+		{"id": "handover", "talk": "handover19", "with": "grace", "put_end": [["tom", "off"]]},
+		{"id": "kurup", "row": "Your first patient: Mrs. Kurup", "go": "trolley", "talk": "kurup_arrive", "with": "kurup",
+			"page": "Priya: Admissions. Sixty-four, vomiting since Saturday, belly like a drum.",
+			"put": [["kurup", "trolley:lie"], ["priya", "trolley:other"], ["venu", "trolley:foot"]],
+			"tasks": [["history", "kurup_history"]], "after": "kurup_after",
+			"put_end": [["kurup", "bed2:lie"], ["venu", "bed2:chair"], ["priya", "off"]]},
+		{"id": "kurup_op", "row": "Operate: Mrs. Kurup", "go": "bed2", "talk": "kurup_ready", "with": "kurup",
+			"page": "Priya: Theatre 2 is ready for Mrs. Kurup. Your name's on the door. In capitals.",
+			"tasks": [["operate", "obstruction"]],
+			"brief": "obstruction_brief", "team": ["iyer", "tom", "khan"], "patient": "kurup",
+			"team_swap": [[1, "neha", "team_neha"], [2, "bose", "team_bose"]],
+			# A tired nurse loses count; a quick anaesthetist doesn't ask about
+			# her chest; waiting for the careful one costs her bowel two hours.
+			"op_flags": {"lungs_known": "kurup_history_lungs", "allergy_asked": "kurup_history_allergy",
+				"chest_safe": "!team_bose|kurup_history_lungs", "delayed": "!team_bose", "lose_swab": "!team_neha"},
+			"levels": ["easy", "hard", "extreme"],
+			"put_back": [["kurup", "bed2:lie"], ["venu", "bed2:chair"], ["you", "bed2:side"], ["iyer", "bed2:foot"]],
+			"after": "kurup_after_op",
+			"put_end": [["iyer", "desk:right"]]},
+	],
+	20: [
+		{"id": "notes", "talk": "morning20", "with": "iyer"},
+		{"id": "rao", "row": "Dr. Rao and the 2004 notes", "go": "desk", "talk": "rao_swab", "with": "rao",
+			"page": "Dr. Rao: Could you come to the desk? Before you see Mrs. Kurup. Please.",
+			"put": [["rao", "desk:right"], ["iyer", "off"]],
+			"put_end": [["rao", "bed2:other", "candour_together"], ["rao", "off", "!candour_together"]]},
+		{"id": "kurup", "row": "Bed two: Mrs. Kurup", "go": "bed2", "talk": "kurup_truth", "with": "kurup",
+			"page": "Priya: Mrs. Kurup's awake and asking questions. Lots of them.",
+			"put_end": [["rao", "off"]]},
+	],
+	21: [
+		{"id": "news", "talk": "morning21", "with": "grace"},
+		{"id": "kurup", "row": "Bed two: good news", "go": "bed2", "talk": "kurup_wind", "with": "kurup",
+			"page": "Priya: Bed two. Mrs. Kurup has news. She's very proud of it.",
+			"put": [["priya", "bed2:other"]], "put_end": [["priya", "off"]]},
+		{"id": "rao", "row": "Dr. Rao's meeting", "where": "seminar", "at": 16 * 60,
+			"card": ["Seminar room · 16:00", "Dr. Rao asked for everyone. He has never asked for everyone."],
+			"talk": "rao_retires", "with": "rao", "slide": "SURGERY\nA word from the Head of Department",
+			"put": [["rao", "seminar:head"], ["malhotra", "seminar:screen"], ["sethi", "seminar:seat1"], ["iyer", "seminar:seat2"],
+				["grace", "seminar:seat3"], ["you", "seminar:seat5"]]},
+	],
+	22: [
+		{"id": "crash", "talk": "crash22", "with": "priya", "music": "emergency"},
+		{"id": "triage", "row": "The ambulance bay: sort the casualties", "go": "trolley", "at": 10 * 60 + 5,
+			"talk": "triage_arrive", "with": "priya", "music": "emergency",
+			"page": "Priya: AMBULANCE BAY. NOW. The first ones are off.",
+			"put": [["priya", "trolley:other"], ["grace", "off"], ["bg3", "trolley:lie"]],
+			"tasks": [["triage", "bus_triage"]], "coach": "priya", "after": "triage_after",
+			"levels": ["easy", "hard", "extreme"],
+			"put_end": [["priya", "off"], ["bg3", "bed6:lie"]]},
+		{"id": "evening", "row": "Evening, after the crash", "go": "desk", "at": 18 * 60, "talk": "crash_evening", "with": "iyer",
+			"page": "Dr. Iyer: Desk, when you can. Everyone's alive who can be. Come and sit down.",
+			"put": [["iyer", "desk:right"], ["sethi", "desk:left"], ["malhotra", "desk:behind"]],
+			"put_end": [["malhotra", "off"], ["sethi", "off"]]},
+	],
+	23: [
+		{"id": "letter", "talk": "morning23", "with": "grace"},
+		{"id": "interview", "row": "Interview: Head of Department", "where": "seminar",
+			"card": ["Seminar room · 11:00", "Three chairs on one side of the table. One on the other. Yours."], "at": 11 * 60,
+			"talk": "review_hod", "with": "rajan", "slide": "INTERVIEW\nHead of Department, Surgery",
+			"put": [["rajan", "seminar:head"], ["rao", "seminar:seat1"], ["malhotra", "seminar:seat2"], ["you", "seminar:seat5"]]},
+	],
 }
 
 ## Where everyone is as each day starts.
@@ -213,6 +281,16 @@ const STAGING := {
 		["nanda", "bed5:lie", "!nanda_icu"], ["priya", "desk:behind"], ["zoya", "desk:left"], ["you", "desk"]],
 	18: [["bg1", "bed1:lie"], ["gomes", "bed2:sit"], ["imran", "bed4:sit"], ["bg3", "bed6:lie"],
 		["nanda", "bed5:sit", "!nanda_icu"], ["grace", "desk:behind"], ["iyer", "desk:right"], ["zoya", "desk:left"], ["you", "desk"]],
+	19: [["bg1", "bed1:lie"], ["bg2", "bed3:lie"], ["bg3", "bed6:lie"],
+		["grace", "desk:behind"], ["iyer", "desk:right"], ["tom", "desk:left"], ["you", "desk"]],
+	20: [["bg1", "bed1:lie"], ["kurup", "bed2:lie"], ["venu", "bed2:chair"], ["bg2", "bed3:lie"], ["bg3", "bed6:lie"],
+		["grace", "desk:behind"], ["iyer", "desk:right"], ["you", "desk"]],
+	21: [["bg1", "bed1:lie"], ["kurup", "bed2:sit"], ["venu", "bed2:chair"], ["bg2", "bed3:lie"], ["bg3", "bed6:lie"],
+		["grace", "desk:behind"], ["you", "desk"]],
+	22: [["bg1", "bed1:lie"], ["kurup", "bed2:sit"], ["bg2", "bed3:lie"], ["bg3", "bed6:lie"],
+		["grace", "desk:behind"], ["priya", "desk:left"], ["you", "desk"]],
+	23: [["bg1", "bed1:lie"], ["kurup", "bed2:sit"], ["venu", "bed2:chair"], ["bg2", "bed3:lie"], ["bg3", "bed6:lie"],
+		["grace", "desk:behind"], ["iyer", "desk:right"], ["you", "desk"]],
 }
 
 ## Where everyone is on a quiet day after the story.
@@ -231,6 +309,11 @@ const DAY_LINES := {
 	16: "Night shift · You're in charge",
 	17: "Meeting day · Two of them",
 	18: "Review day",
+	19: "Theatre day · Your list, your team",
+	20: "Surgical ward · An old set of notes",
+	21: "Surgical ward · News from the top floor",
+	22: "Major incident · The flyover",
+	23: "Interview day",
 }
 
 ## The day's last line: the first whose condition holds.
@@ -260,6 +343,18 @@ const END_LINES := {
 	17: [["vote_night_doctor", "From April, nobody is alone at night. Mr. Malhotra will need a new brochure."],
 		["", "The robot arrives in April. The nights stay as they are."]],
 	18: [["", "Surgeon, from Monday."]],
+	19: [["op_kurup_failed", "Mrs. Kurup's bowel is free. Dr. Iyer finished it. Your first list, and a hard lesson."],
+		["kurup_told_now", "Mrs. Kurup is asleep. Venu knows. The pot is on Dr. Iyer's desk."],
+		["", "Mrs. Kurup is asleep. The pot is on Dr. Iyer's desk, with the 2004 notes beside it."]],
+	20: [["candour_together", "Dr. Rao said sorry to her face. You stood beside him."],
+		["candour_rao", "Dr. Rao said sorry to her face, before the tea round."],
+		["candour_late", "She knows. You nearly didn't tell her."],
+		["", "Her notes say 'adhesions'. The pot says otherwise."]],
+	21: [["count_rule", "Dr. Rao is retiring. The count rule goes up on Monday."],
+		["", "Dr. Rao is retiring. Interviews on Friday: you, or Dr. Sethi."]],
+	22: [["bus_triage_under", "Twenty-three in, nine operations. One waited who shouldn't have."],
+		["", "Twenty-three in, nine operations. Nobody waited who couldn't."]],
+	23: [["", "Head of Department, from the first of the month."]],
 }
 
 ## The story's choices on each day, cleared when an unfinished day starts again.
@@ -278,6 +373,11 @@ const DAY_FLAGS := {
 	17: ["imran_truth", "imran_vague", "mm_credit_zoya", "mm_took_credit", "mm_culture", "mm_own", "mm_blame_zoya",
 		"vote_night_doctor", "vote_robot"],
 	18: ["zoya_thanked"],
+	19: ["jump_19", "team_neha", "team_bose", "kurup_consent_plain", "kurup_consent_quick", "kurup_told_now", "kurup_told_later"],
+	20: ["candour_together", "candour_rao", "candour_hidden", "candour_late", "candour_lied", "kurup_promise"],
+	21: ["count_rule", "sethi_fair", "sethi_dig"],
+	22: ["crash_beds", "crash_called", "crash_no_photo", "crash_credit_priya", "crash_photo"],
+	23: ["hod_owned", "hod_blamed", "hod_nurses", "hod_talk", "hod_board"],
 }
 ## The cases worked each day, whose task flags are cleared with them.
 const DAY_CASES := {
@@ -287,6 +387,8 @@ const DAY_CASES := {
 	14: ["gomes_history"],
 	15: ["gomes_chart"],
 	16: ["nanda_exam", "imran_exam"],
+	19: ["kurup_history"],
+	22: ["bus_triage"],
 }
 
 

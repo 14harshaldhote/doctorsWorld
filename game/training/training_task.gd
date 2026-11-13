@@ -23,6 +23,7 @@ const TITLES := {
 	"exam": "Examine",
 	"scan": "Read the X-ray",
 	"chart": "Check the drug chart",
+	"triage": "Sort the casualties",
 }
 ## Who runs each station.
 const TRAINERS := {
@@ -35,6 +36,7 @@ const TRAINERS := {
 	"exam": "iyer",
 	"scan": "iyer",
 	"chart": "zoya",
+	"triage": "priya",
 }
 
 var id := ""
@@ -75,6 +77,8 @@ static func make(task_id: String, with_seed: int = 1, which_case: String = "") -
 			return StitchTask.new()
 		"chart":
 			return ChartTask.new("gomes_chart" if which_case.is_empty() else which_case, with_seed)
+		"triage":
+			return TriageTask.new("bus_triage" if which_case.is_empty() else which_case, with_seed)
 	push_error("Unknown training task: %s" % task_id)
 	return null
 

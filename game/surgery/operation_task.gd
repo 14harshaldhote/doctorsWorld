@@ -60,7 +60,8 @@ var procedure := {}
 var steps: Array[String] = []
 ## What happened before: allergy_known, delayed, scrub (0 to 100),
 ## complication ("" to roll), lose_swab (-1 roll, 0, 1), difficulty, the
-## team (lead, and anaesthetist: "" when there is none in the room), and
+## team (lead, scrub_nurse, and anaesthetist: "" when there is none in the
+## room), and
 ## anything a procedure's time-out asks about (tetanus_known...).
 var setup := {}
 var difficulty := ""
@@ -173,7 +174,7 @@ func _init(with_seed: int = 1, with_setup: Dictionary = {}) -> void:
 	_snap_vitals()
 	phase = "timeout"
 	step = "timeout"
-	_say_by(_lead(), "Time-out. Everyone stops. Tom, read it out. {called}, check every line.")
+	_say_by(_lead(), "Time-out. Everyone stops. %s, read it out. {called}, check every line." % scrub_name())
 	_next_timeout_line()
 
 
@@ -217,6 +218,28 @@ func outcome_line() -> String:
 
 func _lead() -> String:
 	return str(setup.get("lead", procedure.get("lead", "iyer")))
+
+
+## Who is scrubbed at the ring, handing instruments and counting: Tom, unless
+## the doctor picked their own team.
+func _scrub() -> String:
+	return str(setup.get("scrub_nurse", "tom"))
+
+
+func _anaesthetist() -> String:
+	return str(setup.get("anaesthetist", "khan"))
+
+
+## The scrub nurse's first name, "Tom".
+func scrub_name() -> String:
+	return str(StoryBook.cast().get(_scrub(), {}).get("name", "Tom")).split(" ")[0]
+
+
+## The anaesthetist as named in notes, "Dr. Khan".
+func anaesthetist_name() -> String:
+	var full := str(StoryBook.cast().get(_anaesthetist(), {}).get("name", "Dr. Khan"))
+	var words := full.split(" ")
+	return "Dr. " + words[words.size() - 1] if full.begins_with("Dr. ") else full
 
 
 ## How the doctor leading the operation is named: "Dr. Iyer", "Dr. Bhatt".
@@ -332,6 +355,8 @@ func _lay_out() -> void:
 			_lay_out_hip()
 		"spleen":
 			_lay_out_spleen()
+		"obstruction":
+			_lay_out_obstruction()
 	for entry: Dictionary in procedure.get("parts", []):
 		if bool(entry.get("extreme", false)) and difficulty != "extreme":
 			continue
@@ -560,6 +585,49 @@ func _lay_out_spleen() -> void:
 	])
 
 
+## A blocked bowel: fat, stretched loops on one side, flat ones beyond the
+## block, the empty large bowel down the right, and at the block a nest of old
+## scar round a swab left in 2004, held by a tight band. Where the block sits,
+## and which way its band runs, are rolled from the seed.
+func _lay_out_obstruction() -> void:
+	var centre: Vector2 = procedure["wound_centre"]
+	var block := centre + Vector2(_rng.range_float(-0.3, 1.0), _rng.range_float(-0.5, 0.3))
+	var side := -1.0 if _rng.chance(0.5) else 1.0
+	targets["transition"] = block
+	targets["band"] = block + Vector2(0.0, side * 0.75)
+	targets["bowel_wall"] = block + Vector2(-0.9, -side * 0.5)
+	targets["loop_fat"] = centre + Vector2(-2.4, 0.9)
+	targets["colon"] = centre + Vector2(2.6, 0.9)
+	targets["bleeder"] = centre + Vector2(-1.3, -1.2)
+	var fat := Color("#D47A70")
+	var flat := Color("#EBC0B6")
+	var opened := "open&!closing"
+	parts.append_array([
+		{"id": "loop_fat", "kind": "ring", "at": targets["loop_fat"], "size": Vector2(0.016, 0.042), "colour": fat, "show": opened,
+			"tap_at": targets["loop_fat"], "lift": 0.014},
+		{"id": "fat2", "kind": "ring", "at": centre + Vector2(-1.6, -0.8), "size": Vector2(0.015, 0.04), "colour": fat, "show": opened, "lift": 0.015},
+		{"id": "fat3", "kind": "ring", "at": centre + Vector2(-1.1, 0.8), "size": Vector2(0.013, 0.034), "colour": fat,
+			"show": "open&!done:free&!closing", "lift": 0.016},
+		{"id": "fat3_eased", "kind": "ring", "at": centre + Vector2(-1.1, 0.8), "size": Vector2(0.011, 0.028), "colour": Color("#E3A096"),
+			"show": "done:free&!closing", "lift": 0.016},
+		{"id": "flat1", "kind": "ring", "at": block + Vector2(1.4, -0.6), "size": Vector2(0.007, 0.02), "colour": flat, "show": opened, "lift": 0.014},
+		{"id": "flat2", "kind": "ring", "at": block + Vector2(1.1, 0.8), "size": Vector2(0.007, 0.018), "colour": flat, "show": opened, "lift": 0.015},
+		{"id": "colon", "kind": "tube", "from": centre + Vector2(2.0, 1.7), "to": centre + Vector2(3.2, 0.1), "size": Vector2(0.009, 0.0),
+			"colour": Color("#C7A28A"), "show": opened, "tap_at": targets["colon"], "lift": 0.013},
+		{"id": "scar", "kind": "blob", "at": block, "size": Vector2(0.014, 0.4), "colour": Color("#E6D8C6"), "show": "open&!done:remove&!closing",
+			"lift": 0.017},
+		{"id": "swab_old", "kind": "sliver", "at": block + Vector2(0.15, 0.0), "size": Vector2(0.013, 0.009), "colour": Color("#F4F1E6"),
+			"show": "done:run&!done:remove&!closing", "lift": 0.02},
+		{"id": "band", "kind": "tube", "from": block + Vector2(-0.1, side * 0.3), "to": block + Vector2(0.1, side * 1.25),
+			"size": Vector2(0.0035, 0.0), "colour": Color("#F7F2EA"), "show": "done:run&!done:free&!closing", "tap_at": targets["band"], "lift": 0.021},
+		{"id": "bowel_wall", "kind": "blob", "at": targets["bowel_wall"], "size": Vector2(0.012, 0.5), "colour": Color("#E08F86"),
+			"show": "done:run&!done:remove&!closing", "tap_at": targets["bowel_wall"], "lift": 0.016},
+		{"id": "patch", "kind": "dots", "at": block, "colour": Color("#2E3A44"), "show": "done:remove&had:chose_repair&!closing", "lift": 0.018},
+		{"id": "join", "kind": "ring", "at": block, "size": Vector2(0.006, 0.016), "colour": Color("#B35F58"),
+			"show": "done:remove&had:chose_resect&!closing", "lift": 0.018},
+	])
+
+
 # --- The incision line -------------------------------------------------------
 
 func _build_guide() -> void:
@@ -643,7 +711,7 @@ func tick(delta: float) -> void:
 			if call_time >= SLOW_CALL and not _slow_said:
 				_slow_said = true
 				slow_calls += 1
-				_say_by("tom", "Doctor? What do you need?", true)
+				_say_by(_scrub(), "Doctor? What do you need?", true)
 			if call_time >= HAND_OVER:
 				handed_over += 1
 				_hand(wanted, "Here. You want the %s." % Instruments.name_of(wanted).to_lower())
@@ -694,7 +762,7 @@ func _next_timeout_line() -> void:
 	phase = "timeout"
 	var line := timeout_lines[timeout_index]
 	var lead := "Thank you, Doctor. " if timeout_index == 0 else ""
-	_say_by("tom", lead + str(line["said"]))
+	_say_by(_scrub(), lead + str(line["said"]))
 
 
 ## The line on the board waiting for an answer, or {}.
@@ -729,21 +797,21 @@ func answer_timeout(choice: String) -> void:
 				_say_by(_lead(), str(line["catch"]))
 			else:
 				wrong_side = true
-				_say_by("tom", str(line.get("confirmed", "%s Confirmed." % str(line["said"]).trim_prefix("Side: "))))
+				_say_by(_scrub(), str(line.get("confirmed", "%s Confirmed." % str(line["said"]).trim_prefix("Side: "))))
 		"allergy" when not bool(line.get("allergic", true)):
 			var asked := bool(setup.get(str(line.get("asked", "allergy_asked")), false))
 			var drug := str(procedure["antibiotic"])
 			if choice == "confirm":
 				timeout_points += 1.0 if asked else 0.0
-				_say_by("khan", ("No allergies, {he} told you {him}self. Starting the %s." if asked
+				_say_by(_anaesthetist(), ("No allergies, {he} told you {him}self. Starting the %s." if asked
 					else "No allergies. Starting the %s.") % drug)
 			elif choice == "unsure":
 				timeout_points += 0.5 if asked else 1.0
-				_say_by("khan", "You asked {him}, didn't you? Fine. I'll use one that's safe either way." if asked
+				_say_by(_anaesthetist(), "You asked {him}, didn't you? Fine. I'll use one that's safe either way." if asked
 					else "Nobody asked {him}? Then I'll use one that's safe either way.")
 			else:
 				timeout_points += 0.0 if asked else 0.5
-				_say_by("khan", "Stop? {He} told you no allergies. Starting the %s." % drug if asked
+				_say_by(_anaesthetist(), "Stop? {He} told you no allergies. Starting the %s." % drug if asked
 					else "Stop? Then I'll use one that's safe either way.", asked)
 		"allergy":
 			var known := bool(setup.get(str(line.get("known", "allergy_known")), false))
@@ -754,16 +822,16 @@ func answer_timeout(choice: String) -> void:
 				var list: Array = later.get(first, [])
 				list.append("reaction")
 				later[first] = list
-				_say_by("khan", "No allergies. Starting the antibiotic, %s." % drug)
+				_say_by(_anaesthetist(), "No allergies. Starting the antibiotic, %s." % drug)
 			elif choice == "stop" and known:
 				timeout_points += 1.0
-				_say_by("khan", "Penicillin? Then no %s. Swapping to one that's safe. Thank you." % drug)
+				_say_by(_anaesthetist(), "Penicillin? Then no %s. Swapping to one that's safe. Thank you." % drug)
 			elif known:
 				timeout_points += 0.5
-				_say_by("khan", "Not sure? Then I'll use one that's safe either way.")
+				_say_by(_anaesthetist(), "Not sure? Then I'll use one that's safe either way.")
 			else:
 				timeout_points += 1.0
-				_say_by("khan", "Nobody asked {him}? Then I'll use one that's safe either way.")
+				_say_by(_anaesthetist(), "Nobody asked {him}? Then I'll use one that's safe either way.")
 		"known":
 			var knew := bool(setup.get(str(line["known"]), false))
 			var who := str(line.get("speaker", "khan"))
@@ -784,11 +852,11 @@ func answer_timeout(choice: String) -> void:
 		_:
 			if choice == right:
 				timeout_points += 1.0
-				_say_by("tom", "Good eyes. I'll fix the board." if right == "stop" else "Confirmed.")
+				_say_by(_scrub(), "Good eyes. I'll fix the board." if right == "stop" else "Confirmed.")
 			elif right == "stop":
-				_say_by("tom", "Confirmed.")
+				_say_by(_scrub(), "Confirmed.")
 			else:
-				_say_by("tom", "It's right, Doctor. I checked it twice.", true)
+				_say_by(_scrub(), "It's right, Doctor. I checked it twice.", true)
 	timeout_index += 1
 	_beat(BEAT, _next_timeout_line)
 
@@ -846,7 +914,7 @@ func _begin_call(instrument: String, line: String, by: String = "") -> void:
 	_say_by(by if not by.is_empty() else _lead(), line, urgent)
 
 
-## Asks Tom for an instrument on the ring.
+## Asks the scrub nurse for an instrument on the ring.
 func call_for(instrument: String) -> void:
 	if phase != "call" or finished:
 		return
@@ -874,7 +942,7 @@ func call_for(instrument: String) -> void:
 		_hand(wanted, "Here. You want the %s." % Instruments.name_of(wanted).to_lower())
 		return
 	var lines := ["A %s? Are you sure, Doctor?" % picked_name, "That's a %s. Think about what she's doing." % picked_name]
-	_say_by("tom", str(lines[mini(wrong_this_call - 1, lines.size() - 1)]), true)
+	_say_by(_scrub(), str(lines[mini(wrong_this_call - 1, lines.size() - 1)]), true)
 
 
 ## True when a wrong instrument still helps (a swab on a bleed).
@@ -894,7 +962,7 @@ func _hand_line(instrument: String) -> String:
 
 func _hand(instrument: String, line: String) -> void:
 	in_hand = instrument
-	_say_by("tom", line)
+	_say_by(_scrub(), line)
 	_beat(SHORT_BEAT, _begin_act)
 
 
@@ -1030,7 +1098,7 @@ func _judge_fill() -> void:
 		if not list.has("gas"):
 			list.push_front("gas")
 		later[step] = list
-		_say_by("khan", str(data.get("over", "Too much!")), true)
+		_say_by(_anaesthetist(), str(data.get("over", "Too much!")), true)
 		fill_level = 14.0
 		_beat(SHORT_BEAT, _act_done)
 		return
@@ -1047,7 +1115,7 @@ func tap(spot: String) -> void:
 			swab_found = true
 			swabs_back = swabs_out
 			counted = true
-			_say_by("tom", "There it is. %d out, %d back. Count's right." % [swabs_out, swabs_back])
+			_say_by(_scrub(), "There it is. %d out, %d back. Count's right." % [swabs_out, swabs_back])
 			_beat(BEAT, _start_step.bind(steps.find(_closing_step())))
 		else:
 			tap_misses += 1
@@ -1284,9 +1352,9 @@ func _start_count() -> void:
 		{"id": "look", "text": "Look in the wound"},
 	]
 	if procedure.has("count_line") and not swab_missing:
-		_say_by("tom", str(procedure["count_line"]))
+		_say_by(_scrub(), str(procedure["count_line"]))
 	else:
-		_say_by("tom", "Count before closing. Swabs: %d out, %d back. Instruments: all eight." % [swabs_out, swabs_back])
+		_say_by(_scrub(), "Count before closing. Swabs: %d out, %d back. Instruments: all eight." % [swabs_out, swabs_back])
 
 
 ## Answers the count: "close", "recount" or "look".
@@ -1298,21 +1366,21 @@ func count(choice: String) -> void:
 		"close":
 			if missing:
 				closed_on_bad_count = true
-				_say_by("tom", "Doctor, the count is wrong. I'm not handing you a needle.", true)
+				_say_by(_scrub(), "Doctor, the count is wrong. I'm not handing you a needle.", true)
 				_beat(BEAT, func() -> void:
 					_say_by(_lead(), "Nobody closes on a wrong count. Ever. Look in the wound.", true)
 					phase = "search")
 				return
 			swabs_back = swabs_out
 			counted = true
-			_say_by("tom", "Count's right. Needle holder coming.")
+			_say_by(_scrub(), "Count's right. Needle holder coming.")
 			_beat(SHORT_BEAT, _start_step.bind(steps.find(_closing_step())))
 		"recount":
 			recounts += 1
 			if missing:
-				_say_by("tom", "Again... %d out, %d back. One's missing. It's somewhere." % [swabs_out, swabs_back], true)
+				_say_by(_scrub(), "Again... %d out, %d back. One's missing. It's somewhere." % [swabs_out, swabs_back], true)
 			else:
-				_say_by("tom", "Same numbers. It's right, Doctor.")
+				_say_by(_scrub(), "Same numbers. It's right, Doctor.")
 		"look":
 			if missing:
 				phase = "search"
@@ -1390,7 +1458,7 @@ func _outcome() -> String:
 	return "struggled"
 
 
-## 0 to 100: how well the doctor worked with Tom.
+## 0 to 100: how well the doctor worked with the scrub nurse.
 func teamwork() -> int:
 	var points := 100 - 8 * wrong_calls - 5 * slow_calls - 12 * handed_over - 5 * recounts
 	if closed_on_bad_count:
@@ -1536,10 +1604,10 @@ func _write_notes() -> void:
 	elif swab_found:
 		_note(true, "The count was off and you found the missing swab before closing.")
 	if wrong_calls == 0 and handed_over == 0 and slow_calls == 0:
-		_note(true, "Every instrument called right and on time. Tom never had to guess.")
+		_note(true, "Every instrument called right and on time. %s never had to guess." % scrub_name())
 	else:
-		_note(false, "%d wrong call%s and %d slow. Each one costs seconds and Tom's trust." %
-			[wrong_calls, "" if wrong_calls == 1 else "s", slow_calls + handed_over])
+		_note(false, "%d wrong call%s and %d slow. Each one costs seconds and %s's trust." %
+			[wrong_calls, "" if wrong_calls == 1 else "s", slow_calls + handed_over, scrub_name()])
 	for which: String in step_decisions:
 		var decision: Dictionary = (procedure.get("decisions", {}) as Dictionary).get(which, {})
 		var said: Dictionary = decision.get("notes", {})
@@ -1556,7 +1624,7 @@ func _write_notes() -> void:
 	if complication_wrong > 0 and not decide_names.is_empty():
 		_note(false, "A wrong decision during the %s. Read the monitor, then act on what it says." % decide_names[0])
 	elif not decide_names.is_empty():
-		_note(true, "You read Dr. Khan's call right and acted at once.")
+		_note(true, "You read %s's call right and acted at once." % anaesthetist_name())
 	if overfilled:
 		_note(false, "You filled the belly past 15. Too much gas squeezes the big veins and drops the pressure.")
 	elif fill_tries == 1:
@@ -1604,7 +1672,7 @@ func instruction() -> String:
 				return str(_data(step).get("instruction", "Decide"))
 			return "Read the monitor. Then decide"
 		"count":
-			return "Check Tom's count before closing"
+			return "Check %s's count before closing" % scrub_name()
 		"search":
 			return "Find the missing swab in the wound"
 		"done":

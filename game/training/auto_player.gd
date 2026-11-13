@@ -47,6 +47,8 @@ func step(view: TrainingView, delta: float) -> void:
 			_scan(view as ScanView)
 		"chart":
 			_chart(view as ChartView)
+		"triage":
+			_triage(view as TriageView)
 		_:
 			if view is OperationView:
 				_operation(view as OperationView, delta)
@@ -156,6 +158,45 @@ func _chart(view: ChartView) -> void:
 		view.flag(reason)
 		return
 	view.sign()
+
+
+## Sorts casualties by the rules: each check START needs, in order, then the
+## right tag, then sends them in. "shaky" checks one sign too many on
+## everyone and tags the last casualty a colour too calm; "bad" tags on looks
+## alone (loud ones red, quiet ones green) without checking.
+func _triage(view: TriageView) -> void:
+	if not _act():
+		return
+	var triage := view.task as TriageTask
+	var untagged: Array = []
+	for entry in triage.casualties:
+		if not triage.tags.has(str(entry["id"])):
+			untagged.append(entry)
+	if untagged.is_empty():
+		view.send()
+		return
+	var entry: Dictionary = untagged[0]
+	var casualty_id := str(entry["id"])
+	if triage.selected != casualty_id:
+		view.pick(casualty_id)
+		return
+	if quality != "bad":
+		var plan: Array = TriageTask.needed_checks(entry)
+		if quality == "shaky":
+			for extra: String in TriageTask.CHECKS:
+				if extra not in plan and triage.can_check(casualty_id, extra):
+					plan = plan + [extra]
+					break
+		for check: String in plan:
+			if triage.can_check(casualty_id, check):
+				view.check_sign(check)
+				return
+	var tag := str(entry["truth"])
+	if quality == "bad":
+		tag = "green" if bool(entry.get("walk", false)) or str(entry.get("looks", "")).contains("quiet") else "red"
+	elif quality == "shaky" and untagged.size() == 1 and tag == "red":
+		tag = "yellow"
+	view.give_tag(tag)
 
 
 ## Examines like a careful doctor: a bleed first, then gentle places
