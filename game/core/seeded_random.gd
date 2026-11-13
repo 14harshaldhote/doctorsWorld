@@ -64,6 +64,11 @@ func next_float() -> float:
 	return float(shift_right(next(), 11)) / 9007199254740992.0
 
 
+## A float between low and high.
+func range_float(low: float, high: float) -> float:
+	return low + (high - low) * next_float()
+
+
 ## True with the given probability (clamped to 0 ... 1).
 func chance(probability: float) -> bool:
 	return next_float() < clampf(probability, 0.0, 1.0)

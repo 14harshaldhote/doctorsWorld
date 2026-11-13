@@ -229,6 +229,55 @@ func _ward_shots() -> void:
 	await _ward_shot("67-senior-promoted", 13, reviewed, "review", func(w: Ward) -> bool:
 		return w.mode == "end" and w.overlay.fade_amount() > 0.9, junior)
 
+	# Stage 8: the Senior Resident's week, a year later.
+	var senior := Ward.pick_tones(["Open door", "Patient first", "Honest", "Explain", "Plain", "Check", "Own it", "Report",
+		"Night doctor", "Together", "Call senior", "Ask", "Theatre", "Zoya holds", "Thank", "Truth", "Credit", "Speak up",
+		"Grateful", "Her call"])
+	var gomes := ["zoya_ask", "gomes_history_done", "gomes_history_medicines", "gomes_history_allergy", "gomes_faced",
+		"gomes_own_consent", "francis_explained"]
+	await _ward_shot("68-year-later", 14, [], "", func(w: Ward) -> bool:
+		return w._day_card_in > 0.0 and w._day_card_in < 2.0, senior)
+	await _ward_shot("69-broken-hip", 14, ["zoya_ask"], "gomes", func(w: Ward) -> bool:
+		return w.conversation == "gomes_arrive" and w.talk_ui.is_choosing(), senior)
+	await _ward_shot("70-her-son", 14, gomes.slice(0, 6), "francis", func(w: Ward) -> bool:
+		return w.conversation == "francis_talk" and w.talk_ui.is_choosing(), senior)
+	await _ward_shot("71-drug-chart", 15, gomes, "chart", func(w: Ward) -> bool:
+		return _chart_at(w, false) and not w.talk_ui.is_typing(), senior)
+	await _ward_shot("72-chart-reason", 15, gomes, "chart", func(w: Ward) -> bool:
+		return _chart_at(w, true), senior)
+	await _ward_shot("73-hip-xray", 15, gomes + ["gomes_chart_done", "chart_kind"], "gomes_op", func(w: Ward) -> bool:
+		return w.operation != null and w.operation.step == "xray" and w.operation.phase == "decide", senior)
+	await _ward_shot("74-hip-wire", 15, gomes + ["gomes_chart_done", "chart_kind"], "gomes_op", func(w: Ward) -> bool:
+		return w.operation != null and w.operation.step == "wire" and w.operation.phase == "act", senior)
+	var night := gomes + ["gomes_chart_done", "op_gomes_done", "op_gomes_won"]
+	await _ward_shot("75-night-round", 16, night, "nanda", func(w: Ward) -> bool:
+		return w.view is ExamView and (w.view.task as ExamTask).examined.size() >= 2, senior)
+	await _ward_shot("76-scaffold-fall", 16, night + ["nanda_called"], "imran", func(w: Ward) -> bool:
+		return w.view is ExamView and (w.view.task as ExamTask).examined.size() >= 3, senior)
+	await _ward_shot("77-spleen-pack", 16, night + ["nanda_called", "imran_allergy_asked"], "imran_op", func(w: Ward) -> bool:
+		return w.operation != null and w.operation.step == "pack" and w.operation.phase == "act", senior)
+	await _ward_shot("78-spleen-decide", 16, night + ["nanda_called", "imran_allergy_asked"], "imran_op", func(w: Ward) -> bool:
+		return w.operation != null and w.operation.step == "look" and w.operation.phase == "decide", senior)
+	var week := night + ["nanda_called", "imran_allergy_asked", "op_imran_done", "op_imran_won", "night_round_together"]
+	await _ward_shot("79-m-and-m", 17, week, "mm", func(w: Ward) -> bool:
+		return w.conversation == "mm" and w.talk_ui.is_choosing(), senior)
+	await _ward_shot("80-budget-vote", 17, week + ["mm_credit_zoya"], "vote", func(w: Ward) -> bool:
+		return w.conversation == "vote" and w.talk_ui.is_choosing(), senior)
+	var year_done := week + ["mm_credit_zoya", "vote_night_doctor", "imran_truth"]
+	await _ward_shot("81-surgeon-review", 18, year_done, "review", func(w: Ward) -> bool:
+		return w.conversation == "review_surgeon" and w.talk_ui.line_text().contains("Surgeon") and not w.talk_ui.is_typing(),
+		senior)
+	await _ward_shot("82-surgeon", 18, year_done, "review", func(w: Ward) -> bool:
+		return w.mode == "end" and w.overlay.fade_amount() > 0.9, senior)
+
+
+## The drug chart with a line already flagged: the list, or the reasons.
+static func _chart_at(ward: Ward, picking: bool) -> bool:
+	if not ward.view is ChartView:
+		return false
+	var chart := ward.view.task as ChartTask
+	return chart.verdicts.size() >= 1 and chart.selected.is_empty() != picking
+
 
 ## A ward day from a beat (or from the start) played up to a moment.
 func _ward_shot(shot_name: String, day: int, flags: Array, from_beat: String, moment: Callable, picker: Callable) -> void:
@@ -263,6 +312,12 @@ static func sample_profile_on_ward(day: int, flags: Array = []) -> PlayerProfile
 			doctor.set_flag(flag)
 		doctor.rank_held = Rank.JUNIOR_RESIDENT
 		doctor.total_xp = 2400 + 250 * (day - WardStory.FIRST_DAY)
+	if day >= 14:
+		# A year on: a Senior Resident, the Junior year behind them.
+		for flag: String in ["op_raju_won", "credit_proof", "sethi_apology", "jump_14"]:
+			doctor.set_flag(flag)
+		doctor.rank_held = Rank.SENIOR_RESIDENT
+		doctor.total_xp = LevelCurve.total_xp_to_reach(Rank.FIRST_LEVELS[Rank.SENIOR_RESIDENT]) + 300 * (day - 14)
 	return doctor
 
 

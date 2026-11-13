@@ -42,19 +42,26 @@ func _extra_runs() -> void:
 		for complication: String in ["bleeding", "pressure", "none"]:
 			_play_theatre(quality, complication)
 		for doctor_name: String in NAMES:
-			for day in [9, 10, 11, 12]:
+			for day in [9, 10, 11, 12, 15, 16]:
 				_play_ward(day, doctor_name, quality)
+		# The Senior Resident's operations at every difficulty, on two days
+		# (each day rolls its own case).
+		for procedure: String in ["hip", "spleen"]:
+			for level: String in OperationTask.DIFFICULTIES:
+				for day in [3, 4]:
+					_play_theatre(quality, "", {"procedure": procedure, "difficulty": level,
+						"lead": "bhatt" if procedure == "hip" else "sethi"}, day)
 	print("The extra runs noted %d more lines." % (Speech.heard.size() - before))
 
 
-func _play_theatre(quality: String, complication: String) -> void:
+func _play_theatre(quality: String, complication: String, setup: Dictionary = {}, day: int = 3) -> void:
 	var doctor := PlayerProfile.new()
 	doctor.name = "Asha Verma"
-	doctor.day = 3
+	doctor.day = day
 	doctor.opening_seen = true
 	var theatre := Theatre.new(doctor)
 	root.add_child(theatre)
-	theatre.operation_setup = {"complication": complication}
+	theatre.operation_setup = {"complication": complication} if setup.is_empty() else setup
 	theatre.skip_to("operation", [], 90)
 	var bot := AutoPlayer.new()
 	bot.quality = quality
@@ -73,10 +80,13 @@ func _play_ward(day: int, doctor_name: String, quality: String) -> void:
 	doctor.day = day
 	doctor.opening_seen = true
 	doctor.created = true
-	doctor.total_xp = LevelCurve.total_xp_to_reach(Rank.FIRST_LEVELS[Rank.JUNIOR_RESIDENT]) + 400
-	doctor.rank_held = Rank.JUNIOR_RESIDENT
+	var rank := Rank.SENIOR_RESIDENT if day >= 14 else Rank.JUNIOR_RESIDENT
+	doctor.total_xp = LevelCurve.total_xp_to_reach(Rank.FIRST_LEVELS[rank]) + 400
+	doctor.rank_held = rank
 	for flag: String in ["op_rohit_done", "op_rohit_won", "promoted", "beds_saved", "rider_treated", "jump_9"]:
 		doctor.set_flag(flag)
+	if day >= 14:
+		doctor.set_flag("jump_14")
 	var ward := Ward.new(doctor)
 	root.add_child(ward)
 	var finished := [false]

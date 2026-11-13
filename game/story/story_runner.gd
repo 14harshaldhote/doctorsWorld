@@ -151,10 +151,20 @@ func display_name(id: String) -> String:
 	return fill(str(cast.get(id, {}).get("name", id.capitalize())))
 
 
+## A character's role, which can change as the years pass ("later_roles":
+## {"14": "Consultant surgeon"} from Day 14 on).
 func role(id: String) -> String:
 	if id == "you":
 		return "You"
-	return fill(str(cast.get(id, {}).get("role", "")))
+	var entry: Dictionary = cast.get(id, {})
+	var text := str(entry.get("role", ""))
+	var from_day := 0
+	var later: Dictionary = entry.get("later_roles", {})
+	for day_text: String in later:
+		if profile != null and profile.day >= int(day_text) and int(day_text) > from_day:
+			from_day = int(day_text)
+			text = str(later[day_text])
+	return fill(text)
 
 
 ## The trust a character starts with before the player has met them, or -1

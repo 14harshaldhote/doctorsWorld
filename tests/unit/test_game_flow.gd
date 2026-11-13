@@ -334,8 +334,60 @@ func test_a_junior_resident_year_ends_as_senior_resident() -> void:
 	expect_equal(profile.rank(), Rank.SENIOR_RESIDENT, "promoted at the second review")
 	for flag: String in ["jump_9", "op_deepa_won", "bansal_exam_right", "op_farida_won", "op_raju_won", "raju_first"]:
 		expect(profile.has_flag(flag), flag)
-	expect(main.screen is Ward and profile.day == 14, "the next morning is an ordinary day")
+	expect(main.screen is Ward and profile.day == 14, "the next morning is a year later")
 	var saved: PlayerProfile = SaveStore.new(SAVE).load_or_start()["profile"]
 	expect_equal(saved.rank(), Rank.SENIOR_RESIDENT, "the promotion is saved")
 	print("    junior year: %d XP, level %d, %s" % [profile.total_xp, profile.level(), Rank.title(profile.rank())])
 	_clear()
+
+
+func test_an_old_save_past_day_fourteen_sees_a_year_later() -> void:
+	var main := _main()
+	main.profile.name = "Kiran Rao"
+	main.profile.created = true
+	main.profile.opening_seen = true
+	main.profile.day = 16
+	main.profile.rank_held = Rank.SENIOR_RESIDENT
+	main.profile.total_xp = 6000
+	for flag in ["met_iyer", "day1_iyer", "training_done", "op_rohit_done", "promoted", "ward_day8", "jump_9", "ward_day13"]:
+		main.profile.set_flag(flag)
+	main.show_hospital()
+	expect(main.screen is Ward, "the ward")
+	expect_equal(main.profile.day, 14, "back to the first Senior Resident day")
+	expect(main.profile.has_flag("jump_14"), "a year later")
+	_clear()
+
+
+func test_a_senior_resident_year_ends_as_surgeon() -> void:
+	var main := _main()
+	main.profile.name = "Asha Verma"
+	main.profile.created = true
+	main.profile.opening_seen = true
+	main.profile.day = 14
+	main.profile.rank_held = Rank.SENIOR_RESIDENT
+	main.profile.total_xp = LevelCurve.total_xp_to_reach(Rank.FIRST_LEVELS[Rank.SENIOR_RESIDENT]) + 200
+	for flag in ["met_iyer", "day1_iyer", "training_done", "op_rohit_done", "op_rohit_won", "promoted", "beds_saved",
+			"rider_treated", "ward_day8", "jump_9", "ward_day13", "op_raju_won", "credit_proof"]:
+		main.profile.set_flag(flag)
+	main.show_hospital()
+	var days_seen := []
+	var careful := Ward.pick_tones(["Open door", "Patient first", "Honest", "Explain", "Plain", "Check", "Own it", "Report",
+		"Night doctor", "Together", "Call senior", "Ask", "Theatre", "Zoya holds", "Thank", "Truth", "Credit", "Grateful"])
+	for attempt in 6:
+		var ward := main.screen as Ward
+		if ward == null or main.profile.has_flag("ward_day18"):
+			break
+		days_seen.append(main.profile.day)
+		ward.play_until(func() -> bool: return main.screen != ward, careful, AutoPlayer.new(), 1800.0)
+	expect_equal(days_seen, [14, 15, 16, 17, 18], "every Senior Resident day is played once, in order")
+	var profile := main.profile
+	expect_equal(profile.rank(), Rank.SURGEON, "promoted at the third review")
+	for flag: String in ["jump_14", "gomes_own_consent", "gomes_chart_right", "op_gomes_won", "nanda_called", "op_imran_won",
+			"mm_credit_zoya", "vote_night_doctor"]:
+		expect(profile.has_flag(flag), flag)
+	expect(main.screen is Ward and profile.day == 19, "the next morning is an ordinary day")
+	var saved: PlayerProfile = SaveStore.new(SAVE).load_or_start()["profile"]
+	expect_equal(saved.rank(), Rank.SURGEON, "the promotion is saved")
+	print("    senior year: %d XP, level %d, %s" % [profile.total_xp, profile.level(), Rank.title(profile.rank())])
+	_clear()
+

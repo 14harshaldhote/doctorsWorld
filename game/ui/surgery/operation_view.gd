@@ -119,7 +119,7 @@ func _build_hint() -> void:
 	_hint_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_hint_text.custom_minimum_size = Vector2(UiKit.px(278), 0)
 	column.add_child(_hint_text)
-	_hint_button = small_button("Ask Dr. Iyer · costs %d points" % OperationTask.HINT_COST, 32, 12)
+	_hint_button = small_button("Ask %s · costs %d points" % [_op().lead_name(), OperationTask.HINT_COST], 32, 12)
 	_hint_button.name = "AskHint"
 	_hint_button.pressed.connect(ask_hint)
 	column.add_child(_hint_button)

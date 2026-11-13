@@ -19,7 +19,8 @@ plan"). This file covers how to build, run and test the game.
 | 5. Hospital life | Days 4 to 8 on the surgical ward: five patient stories (Lakshmi, Kunal, Aarav, an unknown rider, Mr. Fernandes), examining patients and reading X-rays as new skills, the bed-shortage politics with Mr. Malhotra, an on-call night, Dr. Rao's review and promotion to Junior Resident; an automated run from a new game to promotion | Done |
 | 6. Polish | Settings (music, effects and voice volume, text size, reduce motion, colour-blind-safe monitor, battery saver), music for each place and a promotion fanfare, interface sounds and monitor beeps, screen fades and animated cards, confetti, room for the iPhone notch and home bar, and merged meshes so older iPhones draw about half as much | Done |
 | 7. Junior Resident | "Eight months later": Days 9 to 13 as a Junior Resident. The team walks into a real operating theatre and the department's seminar room. Three new operations: a cut hand in the minor theatre, a keyhole gallbladder (fill the belly with gas, read the camera) and a stuck hernia whose bowel you must judge. Each case is random within its difficulty (easy; hard, with hints that cost points; extreme, with stacked problems and no hints) and shaped by what you asked on the ward. Also a missed aneurysm, Dr. Sethi taking the credit at the department meeting, a VIP's mother against an emergency, and the review that makes a Senior Resident | Done |
-| Later | Senior Resident (nights in charge, an intern, the budget vote), Surgeon (your own team, mass casualties, Dr. Rao's old mistake), Head of Department (the strike, the board) and the ending | |
+| 8. Senior Resident | "A year later": Days 14 to 18 as a Senior Resident with an intern of your own (Dr. Zoya Qureshi). A new puzzle, checking her drug chart (`ChartTask`, `ChartView`), whose wrong lines can come from what you missed on the ward and carry into theatre. Two new operations: hip fixation with Dr. Bhatt (read the X-ray, aim a guide wire, measure, drill, plate) and an emergency laparotomy for a torn spleen (find the bleeding corner, save or remove the spleen, clamp clear of the pancreas). Also a son who wants to sign for his capable mother, a night in charge where your teaching decides when Zoya calls you, the M&M meeting, the budget vote and the review that makes a Surgeon | Done |
+| Later | Surgeon (your own team, mass casualties, Dr. Rao's old mistake), Head of Department (the strike, the board) and the ending | |
 
 The earlier SwiftUI and SpriteKit prototype is kept on the git branch
 `swift-prototype`.
@@ -108,7 +109,8 @@ game/world/             StageLighting, the hospital front, the Day 1 lobby, the 
 story/                  The words: cast, opening, Day 1 conversations, banter, training
                         conversations, patient cases (cases.json), the theatre day
                         (theatre.json), the ward days (ward.json), the Junior
-                        Resident's days (junior.json)
+                        Resident's days (junior.json) and the Senior
+                        Resident's (senior.json)
 assets/fonts/           Fredoka and Nunito (SIL Open Font License)
 assets/music/           The music, made by tools/make_music.py
 assets/voices/          Recorded voices, made by tools/make_voices.py (Kokoro, Apache 2.0)
@@ -167,7 +169,7 @@ corner.
 
 Rank is no longer worked out from XP. XP sets the level, and the rank only
 rises when someone promotes you (`PlayerProfile.promote()`), which Dr. Rao
-does at the reviews on Day 8 and Day 13 (`Ward.REVIEWS`).
+does at the reviews on Day 8, Day 13 and Day 18 (`Ward.REVIEWS`).
 
 From Day 9 the days come from `game/world/ward_story.gd`, so new chapters
 are data, not code. `WardStory.DAYS` uses the same beats plus:
@@ -183,7 +185,15 @@ are data, not code. `WardStory.DAYS` uses the same beats plus:
   (`{"ate_known": "raju_history_meal"}`), and `levels` lists the
   difficulties the case can be: one is picked from a seed made of the
   career, the day and the case, so it stays the same until the day is
-  played again.
+  played again;
+- a task `["chart", "gomes_chart"]` for a drug chart, with `chart_force`
+  deciding lines from flags (`{"warfarin": "!gomes_history_medicines"}`:
+  the warfarin line is wrong if nobody asked about her tablets).
+
+`WardStory.NIGHTS` lists days that are night shifts, and a cast entry's
+`later_roles` changes the role shown from a day on (Dr. Sethi becomes a
+consultant on Day 14). A drug chart sets `<case>_done`, `<case>_right` and
+`<case>_missed_<line>` for each wrong line left on it.
 
 After an operation the ward sets `op_<patient>_done`, `op_<patient>_won`
 (or `struggled`, `failed`) and one flag per thing that happened
@@ -195,8 +205,8 @@ conversations for these days are in a chapter listed in `WardStory.CHAPTERS`.
 
 ## Operations
 
-`game/surgery/procedures.gd` holds the appendix, the wound, the gallbladder
-and the hernia as data. Each has steps (what Tom hands over, what the doctor
+`game/surgery/procedures.gd` holds the appendix, the wound, the gallbladder,
+the hernia, the hip and the spleen as data. Each has steps (what Tom hands over, what the doctor
 does), a time-out board, a pool of complications and, for some, insides that
 vary (`variants`: the hernia's bowel is pink, dusky or dead). A step id must
 never match a complication id; a test checks it.
@@ -208,7 +218,20 @@ the board may be wrong, the insides are a coin toss, and the doctor can ask
 the lead surgeon for a hint at 5 points each. On **extreme** the board is
 wrong, the insides are the worst, a second problem lands on top of the first,
 the patient worsens faster and there are no hints. A case is laid out from a
-seed, so the same seed gives the same case.
+seed, so the same seed gives the same case. `unknown_brings` ties a
+complication to something the team wasn't told (`{"warfarin_known":
+"bleeding"}`), and `view_centre` moves the close-up camera so the work sits
+between the screen's panels.
+
+## Drug charts
+
+`ChartTask` (in `game/training/`) reads a `"kind": "chart"` case from
+`story/cases.json`: the patient card, and lines that each have a right and
+a wrong version (`"subtle": true` for the harder ones). The seed and the
+difficulty pick which lines are wrong: two plain ones on easy, plus one
+subtle on hard and two on extreme. Flag a line with a reason and the intern
+agrees, half agrees (right line, wrong reason) or explains why it was right.
+Hints come from Dr. Iyer (5 points each on hard, none on extreme).
 
 ## Settings and accessibility
 

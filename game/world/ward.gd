@@ -29,7 +29,7 @@ const FIRST_DAY := 4
 const NIGHT_DAY := 6
 const REVIEW_DAY := 8
 ## The review conversation on each review day.
-const REVIEWS := {8: "review", 13: "review_senior"}
+const REVIEWS := {8: "review", 13: "review_senior", 18: "review_surgeon"}
 ## Experience for an operation, by outcome, plus this much per star.
 const OP_XP := {"won": 120, "struggled": 80, "failed": 40}
 const OP_XP_PER_STAR := 10
@@ -451,6 +451,21 @@ func _build_people() -> void:
 		"brows": 3, "coat": false, "stethoscope": false}, AvatarConfig.Mood.WORRIED, "patient")
 	_person("mehra", {"skin": 2, "face": 0, "body": 2, "height": 1, "hair_style": 7, "hair_colour": 6, "brows": 4,
 		"glasses": 5, "scrubs": 5, "coat": false, "stethoscope": false, "watch": true}, AvatarConfig.Mood.ANGRY, "kurta")
+	# A year later: the Senior Resident's intern, patients and colleagues.
+	_person("zoya", {"skin": 3, "face": 3, "height": 1, "hair_style": 6, "hair_colour": 1, "eyes": 7, "brows": 1,
+		"scrubs": 2, "watch": true}, AvatarConfig.Mood.WORRIED)
+	_person("bhatt", {"skin": 5, "face": 2, "body": 2, "height": 4, "hair_style": 1, "hair_colour": 0, "facial_hair": 4,
+		"brows": 2, "scrubs": 3}, AvatarConfig.Mood.HAPPY)
+	_person("gomes", {"skin": 4, "face": 5, "body": 0, "height": 0, "hair_style": 7, "hair_colour": 6, "brows": 4,
+		"glasses": 5, "coat": false, "stethoscope": false}, AvatarConfig.Mood.CALM, "patient")
+	_person("francis", {"skin": 4, "face": 2, "body": 2, "height": 3, "hair_style": 2, "hair_colour": 5, "facial_hair": 2,
+		"brows": 3, "scrubs": 1, "coat": false, "stethoscope": false, "watch": true}, AvatarConfig.Mood.WORRIED, "casual")
+	_person("nanda", {"skin": 3, "face": 5, "body": 2, "height": 2, "hair_style": 0, "hair_colour": 5, "facial_hair": 2,
+		"glasses": 2, "brows": 3, "coat": false, "stethoscope": false}, AvatarConfig.Mood.TIRED, "patient")
+	_person("imran", {"skin": 6, "face": 4, "body": 0, "height": 3, "hair_style": 3, "hair_colour": 0, "facial_hair": 1,
+		"brows": 2, "coat": false, "stethoscope": false}, AvatarConfig.Mood.WORRIED, "patient")
+	_person("rubina", {"skin": 6, "face": 1, "height": 1, "hair_style": 10, "hair_colour": 0, "eyes": 1, "brows": 1,
+		"scrubs": 4, "coat": false, "stethoscope": false}, AvatarConfig.Mood.WORRIED, "kurta")
 	# Patients who sleep through the week, so the ward is full.
 	_person("bg1", {"skin": 8, "face": 5, "body": 2, "hair_style": 1, "hair_colour": 5, "facial_hair": 5,
 		"coat": false, "stethoscope": false}, AvatarConfig.Mood.TIRED, "patient")
@@ -802,7 +817,7 @@ func _begin_day() -> void:
 		for flag: String in profile.flags.keys():
 			if flag.begins_with(case_id + "_"):
 				profile.set_flag(flag, false)
-	night = profile.day == NIGHT_DAY
+	night = profile.day == NIGHT_DAY or profile.day in WardStory.NIGHTS
 	if night:
 		profile.minutes = maxi(profile.minutes, NIGHT_START)
 	_set_night(night)
@@ -1052,7 +1067,7 @@ func _after_talk(key: String) -> void:
 		"joseph_family":
 			put("maria", "bed6:chair")
 			put("peter", "bed6:other")
-		"review", "review_senior":
+		"review", "review_senior", "review_surgeon":
 			_promote()
 
 
@@ -1278,9 +1293,23 @@ func _update_routes(delta: float) -> void:
 func open_task(task_id: String, which_case: String) -> void:
 	active = task_id
 	mode = "task"
-	var task := TrainingTask.make(task_id, 7 + profile.day * 3, which_case)
+	var task: TrainingTask
+	if task_id == "chart":
+		# What the doctor found out before the chart was written decides some lines.
+		var forced := {}
+		var rules: Dictionary = beat().get("chart_force", {})
+		for line_id: String in rules:
+			forced[line_id] = WardStory.holds(profile, str(rules[line_id]))
+		task = ChartTask.new(which_case, _case_seed("chart"), _case_level(beat()), forced)
+	else:
+		task = TrainingTask.make(task_id, 7 + profile.day * 3, which_case)
 	if task_id == "scan":
 		view = ScanView.new(task, self)
+	elif task_id == "chart":
+		# At the nurses' station, side by side with the intern who wrote it.
+		view = ChartView.new(task, self)
+		talking_with = (task as ChartTask).actor
+		_camera_speaker = talking_with
 	else:
 		var station := bed(active_bed)
 		if task_id == "history":
@@ -1310,8 +1339,12 @@ func open_task(task_id: String, which_case: String) -> void:
 	view.name = "Training"
 	view.can_retry = false
 	view.done_text = "Back to the ward"
-	view.kicker_override = "%s · %s" % ["On call" if night else "Ward round",
-		"X-ray viewer" if task_id == "scan" else str(BEDS.get(active_bed, ["", "", "Ward"])[2])]
+	var spot := str(BEDS.get(active_bed, ["", "", "Ward"])[2])
+	if task_id == "scan":
+		spot = "X-ray viewer"
+	elif task_id == "chart":
+		spot = "Nurses' station"
+	view.kicker_override = "%s · %s" % ["On call" if night else "Ward round", spot]
 	_layer.add_child(view)
 	_layer.move_child(view, talk_ui.get_index())
 	view.done_pressed.connect(_on_done)
@@ -1319,9 +1352,9 @@ func open_task(task_id: String, which_case: String) -> void:
 	var station_now := station_for(task_id)
 	if station_now != null:
 		station_now.reset_task(task)
-	player.visible = false
+	player.visible = task_id == "chart"
 	hud.set_talking(true)
-	_camera_mode = "close"
+	_camera_mode = "talk" if task_id == "chart" else "close"
 
 
 func _on_task_finished(task: TrainingTask) -> void:
@@ -1348,6 +1381,14 @@ func _on_task_finished(task: TrainingTask) -> void:
 		var scan := task as ScanTask
 		case_id = scan.case_id
 		right = scan.answered_right()
+	elif task is ChartTask:
+		var chart := task as ChartTask
+		case_id = chart.case_id
+		seen = chart.found()
+		right = chart.all_right()
+		# What reaches the patient: the theatre team only knows what was fixed.
+		for line_id in chart.missed():
+			profile.set_flag(case_id + "_missed_" + line_id)
 	profile.set_flag(case_id + "_done")
 	profile.set_flag(case_id + "_right", right)
 	for item: String in seen:
@@ -1535,7 +1576,7 @@ func _on_operation_finished(op: OperationTask) -> void:
 ## the patient where the beat puts them after the operation.
 func _leave_theatre() -> void:
 	var entry := beat()
-	for who: String in ["you", "iyer", "tom", "khan", "sethi", "rao"]:
+	for who: String in ["you", "iyer", "tom", "khan", "sethi", "rao", "bhatt"]:
 		var rig := rig_for(who)
 		if rig != null:
 			Theatre.undress_from_theatre(rig)

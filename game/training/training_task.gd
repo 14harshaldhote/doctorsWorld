@@ -22,6 +22,7 @@ const TITLES := {
 	"stitch": "Stitching",
 	"exam": "Examine",
 	"scan": "Read the X-ray",
+	"chart": "Check the drug chart",
 }
 ## Who runs each station.
 const TRAINERS := {
@@ -33,6 +34,7 @@ const TRAINERS := {
 	"stitch": "iyer",
 	"exam": "iyer",
 	"scan": "iyer",
+	"chart": "zoya",
 }
 
 var id := ""
@@ -71,6 +73,8 @@ static func make(task_id: String, with_seed: int = 1, which_case: String = "") -
 			return IvTask.new(with_seed)
 		"stitch":
 			return StitchTask.new()
+		"chart":
+			return ChartTask.new("gomes_chart" if which_case.is_empty() else which_case, with_seed)
 	push_error("Unknown training task: %s" % task_id)
 	return null
 

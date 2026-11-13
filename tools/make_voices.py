@@ -84,6 +84,14 @@ VOICES = {
     "peter": {"mix": {"hm_psi": 0.5, "bm_daniel": 0.5}, "speed": 1.0},
     "bansal": {"mix": {"hm_omega": 0.6, "bm_lewis": 0.4}, "speed": 0.92},
     "raju": {"mix": {"hm_omega": 0.7, "am_echo": 0.3}, "speed": 1.0},
+    # A year later: the Senior Resident's intern, patients and colleagues.
+    "zoya": {"mix": {"hf_beta": 0.55, "af_bella": 0.45}, "speed": 1.06},
+    "gomes": {"mix": {"hf_alpha": 0.5, "bf_lily": 0.3, "bf_emma": 0.2}, "speed": 0.9},
+    "rubina": {"mix": {"hf_beta": 0.6, "af_alloy": 0.4}, "speed": 1.04},
+    "bhatt": {"mix": {"hm_omega": 0.55, "am_michael": 0.45}, "speed": 1.0},
+    "francis": {"mix": {"hm_psi": 0.55, "bm_lewis": 0.45}, "speed": 1.0},
+    "nanda": {"mix": {"hm_omega": 0.55, "am_eric": 0.45}, "speed": 0.94},
+    "imran": {"mix": {"hm_psi": 0.6, "am_adam": 0.4}, "speed": 0.95},
 }
 # The player's doctor: never voiced.
 PLAYER = "you"
@@ -99,9 +107,13 @@ RESPELL = {
     "Farida": "Fareeda", "Prakash": "Prakaash", "Ramesh": "Raamesh", "Kabir": "Kabeer", "Rawat": "Raawat",
     "Dubai": "Doo-bye", "Asha": "Aasha", "ji": "jee", "Arre": "Arey", "arre": "arey", "Achha": "Achcha",
     "achha": "achcha", "Bhaiya": "Bhaiyya", "Menon": "Maynon", "Fernandes": "Fernandez", "D'Souza": "D Souza",
+    "Qureshi": "Koo-ray-shee", "Gomes": "Gomez", "Philomena": "Fillo-meena", "Bhatt": "Bhutt", "Nanda": "Nunda",
+    "Imran": "Imraan", "Rubina": "Roo-beena", "Margao": "Mar-gow", "Nagpur": "Naag-poor", "Pune": "Poona",
+    "idli": "idlee", "Harish": "Hareesh", "Vivek": "Viveyk", "Zoya": "Zoyaa",
+    "co-amoxiclav": "co-amoxi-clav", "Co-amoxiclav": "Co-amoxi-clav", "eGFR": "e G F R",
 }
 TITLES = {"Dr.": "Doctor", "Mr.": "Mister", "Mrs.": "Missus", "Ms.": "Miz"}
-ACRONYMS = ["ICU", "VIP", "MBBS", "ECG", "CPR", "OPD", "MRI", "HIV", "IVF", "DNA", "CCTV", "ENT", "NICU", "HR"]
+ACRONYMS = ["ICU", "VIP", "MBBS", "ECG", "CPR", "OPD", "MRI", "HIV", "IVF", "DNA", "CCTV", "ENT", "NICU", "HR", "INR", "CT", "MDT"]
 # Test players' names, which turn back into {called} in the catalogue. (Not
 # "Rao" or "Joseph": the cast has a Dr. Rao and a Mr. Joseph.)
 TEST_NAMES = ["Verma", "Asha", "Kiran", "Mei", "Lin", "Kofi", "Mensah", "Ravi", "Das", "Nila"]
@@ -160,6 +172,17 @@ def case_lines(heard):
             for question in case["questions"]:
                 found.append((actor or host, question["answer"]))
             found.append((actor or host, case.get("opening", "")))
+            continue
+        if case.get("kind") == "chart":
+            # The intern who wrote the chart answers for it; Dr. Iyer gives hints.
+            for text in list(case.get("brief", {}).values()) + list(case.get("signed", {}).values()):
+                found.append((actor, text))
+            found.append((actor, case.get("half", "")))
+            found.append(("iyer", case.get("no_more", "")))
+            for line in case.get("lines", []):
+                found.append((actor, line.get("ok", {}).get("defend", "")))
+                found.append((actor, line.get("wrong", {}).get("found", "")))
+                found.append(("iyer", line.get("wrong", {}).get("hint", "")))
             continue
         found.append((host, case.get("opening", "")))
         for spot in case.get("spots", []):

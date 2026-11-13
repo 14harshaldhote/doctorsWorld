@@ -142,11 +142,12 @@ func show_hospital() -> void:
 	if profile.day == 3:
 		show_theatre()
 		return
-	if profile.day > WardStory.FIRST_DAY and not profile.has_flag("jump_%d" % WardStory.FIRST_DAY):
-		# Saved on a quiet day before the Junior Resident's months existed:
-		# start them from their first day.
-		_start_day(WardStory.FIRST_DAY)
-		return
+	for jump_day: int in WardStory.jump_days():
+		if profile.day > jump_day and not profile.has_flag("jump_%d" % jump_day):
+			# Saved on a quiet day before these months existed (the Junior
+			# Resident's, the Senior Resident's): start them from their first day.
+			_start_day(jump_day)
+			return
 	if profile.day >= Ward.FIRST_DAY:
 		show_ward()
 		return

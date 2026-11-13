@@ -2,7 +2,9 @@ class_name WardStory
 extends RefCounted
 ## The ward's story after the first week, as data the Ward plays: Days 9 to
 ## 13, eight months later, as a Junior Resident (stage 7), ending with the
-## review that makes the doctor a Senior Resident.
+## review that makes the doctor a Senior Resident; then Days 14 to 18, a year
+## on, as a Senior Resident with an intern of their own (stage 8), ending
+## with the review that makes a Surgeon.
 ##
 ## Beats use the Ward's keys (see Ward.DAYS) plus:
 ##   "where"     "seminar" for a beat in the seminar room (no walking)
@@ -18,6 +20,8 @@ extends RefCounted
 ##   "op_flags"  {setup key: condition}, what the team knows going in
 ##   "levels"    the difficulties this case can be, one picked at random
 ##   "slide"     the seminar room's slide
+##   "chart_force" {line id: condition} for a drug chart: true makes that
+##               line wrong this time, false keeps it right
 ## A task ["operate", procedure] walks the team into theatre.
 ## Conditions: "flag", "!flag", joined with "&".
 
@@ -27,9 +31,12 @@ const FIRST_DAY := 9
 ## A card before the day's own card: the time between ranks.
 const TIME_JUMPS := {
 	9: ["Eight months later", "Junior Resident now. The pager no longer makes you jump. Mostly."],
+	14: ["A year later", "Senior Resident. An intern of your own, and nights in charge of the whole floor."],
 }
 ## The story chapters the Ward reads conversations from, after "ward".
-const CHAPTERS := ["junior"]
+const CHAPTERS := ["junior", "senior"]
+## Story days that are night shifts (the first week's night is Ward.NIGHT_DAY).
+const NIGHTS := [16]
 
 const DAYS := {
 	9: [
@@ -100,6 +107,88 @@ const DAYS := {
 			"put": [["rao", "seminar:head"], ["iyer", "seminar:seat1"], ["you", "seminar:seat5"],
 				["malhotra", "seminar:seat4"]]},
 	],
+	# --- A year later: the Senior Resident ---------------------------------------
+	14: [
+		{"id": "handover", "talk": "handover14", "with": "zoya"},
+		{"id": "gomes", "row": "A broken hip in admissions", "go": "trolley", "talk": "gomes_arrive", "with": "gomes",
+			"page": "Priya: Admissions. Eighty-one, fell at home. She wants someone who doesn't whisper.",
+			"put": [["gomes", "trolley:lie"], ["priya", "trolley:other"], ["zoya", "trolley:foot"]],
+			"tasks": [["history", "gomes_history"]], "after": "gomes_after",
+			"put_end": [["gomes", "bed2:lie"], ["priya", "off"], ["zoya", "desk:left"]]},
+		{"id": "francis", "row": "Her son, from Pune", "go": "desk", "at": 17 * 60 + 30, "talk": "francis_talk", "with": "francis",
+			"page": "Grace: Mrs. Gomes's son drove five hours from Pune. He wants the consent forms. Now.",
+			"put": [["francis", "desk:right"], ["grace", "desk:behind"]],
+			"put_end": [["francis", "bed2:chair"]]},
+	],
+	15: [
+		{"id": "chart", "row": "Check Zoya's drug chart", "talk": "morning15", "with": "zoya",
+			"tasks": [["chart", "gomes_chart"]], "coach": "zoya", "after": "chart_after",
+			"chart_force": {"warfarin": "!gomes_history_medicines"}, "levels": ["easy", "hard", "extreme"]},
+		{"id": "gomes_op", "row": "Operate: Mrs. Gomes's hip", "go": "bed2", "talk": "gomes_consent", "with": "gomes",
+			"page": "Dr. Bhatt: Theatre 3's ready for Mrs. Gomes. Bring her consent, and yourself.",
+			"put": [["francis", "bed2:chair"]],
+			"tasks": [["operate", "hip"]],
+			"brief": "hip_brief", "team": ["bhatt", "tom", "khan"], "patient": "gomes",
+			"op_flags": {"warfarin_known": "!gomes_chart_missed_warfarin", "allergy_known": "gomes_history_allergy|gomes_chart_done"},
+			"levels": ["easy", "hard", "extreme"],
+			"put_back": [["gomes", "bed2:lie"], ["you", "bed2:side"], ["bhatt", "bed2:foot"]],
+			"after": "gomes_after_op",
+			"put_end": [["bhatt", "off"]]},
+		{"id": "budget", "row": "Mr. Malhotra's budget", "go": "desk", "talk": "budget_preview", "with": "malhotra",
+			"page": "Mr. Malhotra: Five minutes, Doctor. About Thursday's vote. I brought a brochure.",
+			"put": [["malhotra", "desk:right"]],
+			"put_end": [["malhotra", "off"]]},
+	],
+	16: [
+		{"id": "night", "talk": "night16", "with": "sethi"},
+		{"id": "nanda", "row": "Bed five: Mr. Nanda", "if": "zoya_ask|night_round_together", "go": "bed5", "at": 23 * 60,
+			"talk": "nanda_round", "with": "nanda", "page": "Zoya: Bed five's pulse is 112. You said any time. So... it's any time.",
+			"put": [["zoya", "bed5:foot"]],
+			"tasks": [["exam", "nanda_exam"]], "after": "nanda_call", "put_end": [["nanda", "off", "nanda_called"]]},
+		{"id": "nanda_late", "row": "Bed five: Mr. Nanda", "if": "!zoya_ask&!night_round_together", "go": "bed5", "at": 24 * 60 + 40,
+			"talk": "nanda_round", "with": "nanda",
+			"page": "Priya: Bed five. Your intern's been watching his pulse climb since ten. She didn't want to bother you.",
+			"put": [["zoya", "bed5:foot"]],
+			"tasks": [["exam", "nanda_exam"]], "after": "nanda_call", "put_end": [["nanda", "off", "nanda_called"]]},
+		{"id": "late", "card": ["02:10", "Mr. Nanda's monitor beeps softly. Then the doors bang open."]},
+		{"id": "imran", "row": "Emergency: a fall from scaffolding", "go": "trolley", "talk": "imran_arrive", "with": "imran",
+			"page": "Priya: ADMISSIONS. Fell two floors. His friends carried him in.", "music": "emergency",
+			"put": [["imran", "trolley:lie"], ["priya", "trolley:other"], ["zoya", "trolley:foot"]],
+			"tasks": [["exam", "imran_exam"]], "coach": "priya", "after": "imran_plan"},
+		{"id": "imran_op", "row": "Operate: Imran's spleen", "talk": "imran_ready", "with": "priya", "music": "emergency",
+			"tasks": [["operate", "spleen"]],
+			"brief": "spleen_brief", "team": ["sethi", "tom", "khan"], "patient": "imran",
+			"op_flags": {"allergy_asked": "imran_allergy_asked", "delayed": "imran_ct"},
+			"levels": ["easy", "hard", "extreme"],
+			"put_back": [["imran", "bed4:lie"], ["you", "bed4:side"], ["sethi", "bed4:foot"], ["priya", "off"]],
+			"after": "imran_after"},
+		{"id": "dawn", "row": "Dawn: Mr. Nanda", "go": "bed5", "at": 30 * 60, "talk": "nanda_dawn", "with": "zoya",
+			"page": "Priya: It's six. Come and see bed five before the day team arrives.",
+			"put": [["nanda", "bed5:lie", "!nanda_icu"], ["nanda", "off", "nanda_icu"], ["zoya", "bed5:foot"], ["sethi", "bed5:other"]]},
+	],
+	17: [
+		{"id": "imran", "row": "Imran and his wife", "go": "bed4", "talk": "imran_visit", "with": "rubina",
+			"page": "Priya: Bed four is awake. His wife's been here since five. She has questions.",
+			"put": [["rubina", "bed4:chair"]]},
+		{"id": "mm", "row": "M&M meeting: Mr. Nanda", "where": "seminar", "at": 16 * 60,
+			"card": ["Seminar room · 16:00", "Morbidity and mortality. Where doctors talk about what went wrong."],
+			"talk": "mm", "with": "rao", "slide": "M&M · MR. H. NANDA, 58\nA leak after a bowel join\nPresented by Dr. Z. Qureshi",
+			"put": [["rao", "seminar:head"], ["zoya", "seminar:screen"], ["sethi", "seminar:seat1"], ["iyer", "seminar:seat2"],
+				["grace", "seminar:seat3"], ["you", "seminar:seat5"]]},
+		{"id": "vote", "row": "The budget vote", "where": "seminar", "at": 17 * 60,
+			"card": ["Seminar room · 17:00", "The budget committee. One robot, or one more doctor at night."],
+			"talk": "vote", "with": "malhotra", "slide": "BUDGET 2027 · SURGERY\nA: Surgical robot\nB: A second night doctor",
+			"put": [["malhotra", "seminar:screen"], ["zoya", "off"], ["grace", "off"], ["bhatt", "seminar:seat3"],
+				["rao", "seminar:head"], ["sethi", "seminar:seat1"], ["iyer", "seminar:seat2"], ["you", "seminar:seat5"]]},
+	],
+	18: [
+		{"id": "letters", "talk": "letters18", "with": "grace"},
+		{"id": "review", "row": "Your review with Dr. Rao", "where": "seminar",
+			"card": ["Seminar room · 15:00", "The same table. A different chair this time: the one by the window."], "at": 15 * 60,
+			"talk": "review_surgeon", "with": "rao", "slide": "ANNUAL REVIEW\nSenior Residents",
+			"put": [["rao", "seminar:head"], ["iyer", "seminar:seat1"], ["bhatt", "seminar:seat2"], ["you", "seminar:seat5"],
+				["malhotra", "seminar:seat4"]]},
+	],
 }
 
 ## Where everyone is as each day starts.
@@ -114,6 +203,16 @@ const STAGING := {
 		["grace", "desk:behind"], ["you", "desk"]],
 	13: [["bg1", "bed1:lie"], ["raju", "bed4:sit"], ["bg3", "bed5:lie"], ["bg2", "bed6:lie"],
 		["mehra", "side:sit", "!mehra_home"], ["grace", "desk:behind"], ["iyer", "desk:left"], ["you", "desk"]],
+	14: [["bg1", "bed1:lie"], ["bg2", "bed3:lie"], ["nanda", "bed5:sit"], ["bg3", "bed6:lie"],
+		["grace", "desk:behind"], ["iyer", "desk:right"], ["zoya", "desk:left"], ["you", "desk"]],
+	15: [["bg1", "bed1:lie"], ["gomes", "bed2:lie"], ["bg2", "bed3:lie"], ["nanda", "bed5:lie"], ["bg3", "bed6:lie"],
+		["grace", "desk:behind"], ["iyer", "desk:right"], ["zoya", "desk:left"], ["you", "desk"]],
+	16: [["bg1", "bed1:lie"], ["gomes", "bed2:lie"], ["bg2", "bed3:lie"], ["nanda", "bed5:lie"], ["bg3", "bed6:lie"],
+		["priya", "desk:behind"], ["sethi", "desk:right"], ["zoya", "desk:left"], ["you", "desk"]],
+	17: [["bg1", "bed1:lie"], ["gomes", "bed2:sit"], ["imran", "bed4:lie"], ["bg3", "bed6:lie"],
+		["nanda", "bed5:lie", "!nanda_icu"], ["priya", "desk:behind"], ["zoya", "desk:left"], ["you", "desk"]],
+	18: [["bg1", "bed1:lie"], ["gomes", "bed2:sit"], ["imran", "bed4:sit"], ["bg3", "bed6:lie"],
+		["nanda", "bed5:sit", "!nanda_icu"], ["grace", "desk:behind"], ["iyer", "desk:right"], ["zoya", "desk:left"], ["you", "desk"]],
 }
 
 ## Where everyone is on a quiet day after the story.
@@ -127,6 +226,11 @@ const DAY_LINES := {
 	11: "Theatre day · Your first keyhole operation",
 	12: "Meeting day · Then whatever comes through the door",
 	13: "Review day",
+	14: "Surgical ward · Senior Resident",
+	15: "Theatre day · Borrowed by the bone team",
+	16: "Night shift · You're in charge",
+	17: "Meeting day · Two of them",
+	18: "Review day",
 }
 
 ## The day's last line: the first whose condition holds.
@@ -144,6 +248,18 @@ const END_LINES := {
 		["mehra_complaint", "Raju is on the ward. Mrs. Mehra is writing a letter."],
 		["", "Raju is on the ward. Mrs. Mehra has forgiven you. Mostly."]],
 	13: [["", "Senior Resident, from Monday."]],
+	14: [["gomes_own_consent", "Mrs. Gomes will sign her own form tomorrow. Francis is sleeping in the chair."],
+		["gomes_son_signed", "Francis signed the form. His mother hasn't been told."],
+		["", "Mrs. Gomes is on the ward, first on tomorrow's list."]],
+	15: [["op_gomes_failed", "Mrs. Gomes's hip is fixed. Dr. Bhatt finished it. She'll stand tomorrow, slowly."],
+		["op_gomes_bleeding&gomes_chart_missed_warfarin", "Mrs. Gomes needed two units of blood. Her warfarin was never stopped."],
+		["", "Mrs. Gomes's hip is fixed. She's asked for tea and a hearing aid battery."]],
+	16: [["nanda_called", "Seven a.m. Two emergencies, two patients alive. Handover, then sleep."],
+		["nanda_zoya_called", "Seven a.m. Mr. Nanda is in intensive care. Zoya made the call you didn't."],
+		["", "Seven a.m. Mr. Nanda is on a ventilator in intensive care. The M&M is tomorrow."]],
+	17: [["vote_night_doctor", "From April, nobody is alone at night. Mr. Malhotra will need a new brochure."],
+		["", "The robot arrives in April. The nights stay as they are."]],
+	18: [["", "Surgeon, from Monday."]],
 }
 
 ## The story's choices on each day, cleared when an unfinished day starts again.
@@ -154,12 +270,23 @@ const DAY_FLAGS := {
 	12: ["credit_called_out", "credit_let_go", "credit_proof", "mehra_first", "raju_first", "mehra_home",
 		"mehra_charmed", "mehra_complaint"],
 	13: ["sethi_apology"],
+	14: ["jump_14", "zoya_watch", "zoya_lead", "zoya_ask", "gomes_faced", "gomes_rushed", "gomes_own_consent", "gomes_son_signed",
+		"gomes_aid_found_late", "francis_explained"],
+	15: ["chart_kind", "chart_firm", "chart_reported", "gomes_reconsented", "lean_night", "lean_robot"],
+	16: ["night_round_together", "nanda_called", "nanda_waited", "nanda_pain", "nanda_zoya_called", "nanda_icu",
+		"imran_ct", "imran_allergy_asked", "ward_zoya", "ward_priya", "sethi_thanked"],
+	17: ["imran_truth", "imran_vague", "mm_credit_zoya", "mm_took_credit", "mm_culture", "mm_own", "mm_blame_zoya",
+		"vote_night_doctor", "vote_robot"],
+	18: ["zoya_thanked"],
 }
 ## The cases worked each day, whose task flags are cleared with them.
 const DAY_CASES := {
 	9: ["deepa_history"],
 	10: ["bansal_exam", "farida_history"],
 	12: ["raju_history"],
+	14: ["gomes_history"],
+	15: ["gomes_chart"],
+	16: ["nanda_exam", "imran_exam"],
 }
 
 
@@ -178,6 +305,15 @@ static func holds(profile: PlayerProfile, test: String) -> bool:
 		if profile.has_flag(flag) == negated:
 			return false
 	return true
+
+
+## The days a time jump starts on, earliest first.
+static func jump_days() -> Array[int]:
+	var found: Array[int] = []
+	for day: int in TIME_JUMPS:
+		found.append(day)
+	found.sort()
+	return found
 
 
 static func end_line(profile: PlayerProfile, day: int) -> String:

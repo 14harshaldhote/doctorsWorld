@@ -178,6 +178,10 @@ static func get_procedure(id: String) -> Dictionary:
 			made = _gallbladder()
 		"hernia":
 			made = _hernia()
+		"hip":
+			made = _hip()
+		"spleen":
+			made = _spleen()
 		_:
 			made = _appendix()
 	var defaults := {
@@ -192,7 +196,7 @@ static func get_procedure(id: String) -> Dictionary:
 
 
 static func ids() -> Array[String]:
-	return ["appendix", "wound", "gallbladder", "hernia"]
+	return ["appendix", "wound", "gallbladder", "hernia", "hip", "spleen"]
 
 
 ## A complication's data, with the procedure's own lines laid over it.
@@ -635,5 +639,346 @@ static func _hernia() -> Dictionary:
 			"won": "Raju's hernia is fixed for good.",
 			"struggled": "Fixed. It took a while.",
 			"failed": "Dr. Iyer had to take over.",
+		},
+	}
+
+
+# --- Mrs. Gomes's broken hip (Day 15) -----------------------------------------
+# Dr. Bhatt's bone team borrows the general surgery senior: a sliding screw and
+# plate through the side of the thigh, under X-ray, with her awake on a spinal.
+
+static func _hip() -> Dictionary:
+	return {
+		"id": "hip",
+		"title": "Hip fixation",
+		"patient": "Philomena Gomes",
+		"first": "Mrs. Gomes",
+		"pronoun": "she",
+		"theatre": "Theatre 3",
+		"lead": "bhatt",
+		"awake": true,
+		"tray": ["scalpel", "retractor", "wire", "drill", "plate", "clamp", "swab", "needle_holder"],
+		"pool": ["bleeding", "pressure"],
+		"unknown_brings": {"warfarin_known": "bleeding"},
+		"complication_after": "drill",
+		"extreme_after": "retract",
+		"antibiotic": "co-amoxiclav",
+		"guide": [Vector2(8.6, 10.6), Vector2(16.4, 10.6), Vector2(0.0, 0.2)],
+		"wound_centre": Vector2(12.5, 10.6),
+		"view_centre": Vector2(12.4, 8.6),
+		"count_line": "Count before closing. Swabs all back. Wire, drill bit, screwdriver: all on the tray.",
+		"steps": [
+			{"id": "incision", "tool": "scalpel", "title": "Open the side of the thigh", "act": "trace", "swab": true,
+				"call": "She's awake behind the screen, with the spinal working. Straight down the side of the thigh, along my line.",
+				"instruction": "Trace the dotted line in one stroke, end to end",
+				"hint": "Scalpel, then the line down the side of the thigh, in one stroke."},
+			{"id": "retract", "tool": "retractor", "title": "Down to the bone", "act": "hold", "seconds": 2.0, "swab": true,
+				"call": "Through the muscle to the bone. Hold it open while I bring the X-ray in.",
+				"start": "Hold. The X-ray's coming over.", "let_go": "Keep it open! I've lost the bone.",
+				"hold_label": "Hold it open", "instruction": "Press and hold to keep the bone in view",
+				"hint": "The retractor holds the muscle apart. Hold it until the X-ray is in."},
+			{"id": "xray", "tool": "", "title": "Is the break lined up?", "act": "decide", "variant": "film",
+				"call": "X-ray on. Front view, then side view. Is the break lined up?",
+				"instruction": "Read both X-ray views. Then decide",
+				"hint": "A break can look fine from the front and gape from the side. Check both views before you fix anything."},
+			{"id": "wire", "tool": "wire", "title": "Aim the guide wire", "act": "tap", "target": "aim_centre",
+				"call": "Guide wire. The big screw will follow it exactly, so put its tip where the screw should end.",
+				"hit": "Dead centre, and deep. In old bone, that's the only place a screw holds.",
+				"miss": "On one of the marks, {called}. Where should the tip end?",
+				"traps": {"aim_high": 10.0, "aim_joint": 18.0, "aim_neck": 8.0},
+				"trap_lines": {
+					"aim_high": "Too high. In soft old bone a screw up there cuts out through the top of the head.",
+					"aim_joint": "That's out through the joint! The tip would grind her hip socket every step she takes.",
+					"aim_neck": "Too short. Only in the neck, the threads never reach the head, so nothing holds the break.",
+				},
+				"trap_notes": {
+					"aim_high": "You aimed the wire high in the head. In soft bone, a high screw cuts out.",
+					"aim_joint": "You aimed the wire out through the joint. It would have ground into the socket.",
+					"aim_neck": "You aimed the wire short, in the neck. The screw has to reach deep into the head to hold.",
+				},
+				"instruction": "Tap where the wire's tip should end",
+				"hint": "Dead centre of the head, and deep, just short of the joint. Not high, not short, never through."},
+			{"id": "measure", "tool": "", "title": "Pick the screw", "act": "decide", "variant": "gauge",
+				"call": "Measure. The screw stops five millimetres short of the wire tip. What length?",
+				"instruction": "Read the gauge. Then pick the screw",
+				"hint": "Take five off what the gauge reads. Longer pokes into the joint as the break settles; much shorter barely grips."},
+			{"id": "drill", "tool": "drill", "title": "Drill over the wire", "act": "hold", "seconds": 2.5,
+				"call": "Drill over the wire, to that depth. Steady. Don't push the wire through ahead of you.",
+				"start": "Steady. Let the drill do the work.", "let_go": "Don't stop halfway! The wire bends if you stop and start.",
+				"hold_label": "Hold the drill", "instruction": "Press and hold to drill over the wire",
+				"hint": "Hold it steady until the channel is done. Stopping halfway bends the wire."},
+			{"id": "plate", "tool": "plate", "title": "Screw and plate", "act": "hold", "seconds": 2.0,
+				"call": "Screw in, then the plate slides over it. Hold the plate flat on the bone while Tom drives the screws.",
+				"start": "Flat. Hold it there.", "let_go": "Keep it flat! A tilted plate pulls out.",
+				"hold_label": "Hold the plate", "instruction": "Press and hold the plate against the bone",
+				"hint": "Hold the plate flat on the side of the bone until all the screws are in."},
+			{"id": "close", "tool": "needle_holder", "title": "Close", "act": "stitch",
+				"call": "Last X-ray: perfect. Close her up. She wants to walk to her son's wedding in March.",
+				"hint": "Across the cut, evenly, end to end."},
+		],
+		"timeout": [
+			{"id": "patient", "label": "Patient", "reads": "Philomena Gomes, 81", "said": "Patient: Philomena Gomes, eighty-one.",
+				"right": "confirm", "wrong_reads": "Philomena Gomes, 61", "wrong_said": "Patient: Philomena Gomes, sixty-one.",
+				"wrong_note": "The board had her as 61. She's 81. At her age, twenty years changes every dose."},
+			{"id": "side", "label": "Side", "reads": "LEFT hip", "said": "Side: left hip.", "right": "confirm",
+				"kind": "side", "wrong_reads": "RIGHT hip", "wrong_said": "Side: right hip.",
+				"catch": "Left. Her left leg is the short one, turned out. Tom, fix the board, and mark the leg again.",
+				"stopped": "Stop! It's her LEFT hip. Look at the arrow on her leg, not the board.",
+				"note": "The board said RIGHT and you confirmed it. Dr. Bhatt stopped you before the cut.",
+				"note_caught": "You caught the wrong side on the board at the time-out."},
+			{"id": "thinners", "label": "Blood thinners", "reads": "None", "said": "Blood thinners: none.", "right": "known",
+				"kind": "known", "known": "warfarin_known",
+				"stop_known": "Warfarin, stopped yesterday, with vitamin K. Her clotting this morning is 1.4. Good enough to cut.",
+				"unsure": "Not sure? Then nobody cuts until I've checked her clotting... 2.6. She had her warfarin last night. Vitamin K, plasma, and blood in the room.",
+				"unsure_known": "You checked her chart yourself. Warfarin, stopped. Say so! Clotting's 1.4. We can go.",
+				"confirm": "None. Good.",
+				"note_confirm_known": "You knew she was on warfarin and confirmed 'none'. Her clotting was only checked after she started bleeding.",
+				"note_confirm": "Her warfarin was still on the chart, and the board said 'none'. She bled more than she should have.",
+				"note_known": "You knew her warfarin had been stopped and told the team. Her clotting was checked before the cut.",
+				"confirm_effect": "bleeding"},
+			{"id": "allergy", "label": "Allergies", "reads": "None known", "said": "Allergies: none known.", "right": "allergy",
+				"kind": "allergy", "allergic": true, "known": "allergy_known"},
+		],
+		"variants": {
+			"film": {
+				"lined": {"say": "Front view: the break is closed. Side view: the head sits straight on the neck.", "right": "fix",
+					"look": "Front view: break closed. Side view: head straight on the neck. Angle: matches her good hip."},
+				"rotated": {"say": "Front view looks fine. But on the side view the head is tipped back, and the break gapes.", "right": "reduce",
+					"look": "Front view: looks lined up. Side view: head tipped back, break gaping.", "after": "lined"},
+				"stuck": {"say": "They pulled and turned the leg once already. Still gaping, on both views. Something's caught in the break.",
+					"right": "open", "look": "Front view: gaping. Side view: gaping. Pulled and turned once already: no change.",
+					"after": "lined"},
+			},
+			"gauge": {
+				"g100": {"say": "Wire tip just under the joint. The gauge reads 100.", "right": "95",
+					"look": "Gauge on the wire: 100 mm. The screw stops 5 mm short of the tip."},
+				"g105": {"say": "Wire tip just under the joint. The gauge reads 105.", "right": "100",
+					"look": "Gauge on the wire: 105 mm. The screw stops 5 mm short of the tip."},
+				"g95": {"say": "Small bones, small hip. Wire tip just under the joint. The gauge reads 95.", "right": "90",
+					"look": "Gauge on the wire: 95 mm. The screw stops 5 mm short of the tip."},
+			},
+		},
+		"decisions": {
+			"xray": {
+				"options": [
+					{"id": "fix", "text": "Lined up. Fix it as it is"},
+					{"id": "reduce", "text": "Pull the leg, turn the foot in, look again"},
+					{"id": "open", "text": "Lever it into place through the cut"},
+				],
+				"right_lines": {
+					"fix": "Agreed. Lined up. Now we fix it exactly like that.",
+					"reduce": "Pull... turn the foot in... and look. Lined up. The side view is where breaks hide. Good eye.",
+					"open": "Agreed. Pulling again won't free it. A lever through the cut... there. Lined up.",
+				},
+				"wrong_lines": {
+					"lined:reduce": [4.0, "It's already lined up. Every extra pull on an old hip costs her blood."],
+					"lined:open": [10.0, "Open up a break that's lined up? More blood and more infection, for nothing."],
+					"rotated:fix": [16.0, "Look at the side view! Fix it like that and the screw cuts out in a month."],
+					"rotated:open": [8.0, "Not yet. A pull and a turn will do it. Try the simple thing first."],
+					"stuck:fix": [18.0, "Fix a gaping break? It will never heal. Look at both views."],
+					"stuck:reduce": [6.0, "They already pulled and turned once. The same again won't free what's caught."],
+				},
+				"notes": {
+					"right": "You read both X-ray views before fixing the break.",
+					"wrong": "You misread the X-ray. A break can look fine from the front and gape from the side.",
+				},
+			},
+			"measure": {
+				"options": [
+					{"id": "90", "text": "90 mm"},
+					{"id": "95", "text": "95 mm"},
+					{"id": "100", "text": "100 mm"},
+				],
+				"right_lines": {
+					"90": "Ninety. Five short of the tip. Tom, ninety, and set the drill to match.",
+					"95": "Ninety-five. Five short of the tip. Tom, ninety-five, and set the drill to match.",
+					"100": "A hundred. Five short of the tip. Tom, a hundred, and set the drill to match.",
+				},
+				"wrong_lines": {
+					"g100:100": [10.0, "That's the gauge itself. As the break settles, a screw that long pokes into the joint. Five short."],
+					"g100:90": [6.0, "Ten short? The threads would barely grip the head. Five short of the gauge."],
+					"g105:95": [6.0, "Ten short. It'd barely hold. The gauge reads 105."],
+					"g105:90": [10.0, "Fifteen short? That hardly reaches the head. Read the gauge again."],
+					"g95:95": [10.0, "That's the gauge itself. Too long: it ends up in the joint. Five short."],
+					"g95:100": [16.0, "Longer than the wire? That goes straight through into her hip socket."],
+				},
+				"notes": {
+					"right": "You picked the right screw: five millimetres short of the wire's tip.",
+					"wrong": "You picked the wrong screw length. It stops five millimetres short of the wire tip.",
+				},
+			},
+		},
+		"parts": [
+			{"id": "gape", "kind": "disc", "at": "wound", "size": Vector2(0.082, 0.026), "colour": Color("#8E2626"), "show": "open&!closing", "angle": true},
+			{"id": "gape_deep", "kind": "disc", "at": "wound", "size": Vector2(0.07, 0.018), "colour": Color("#5A1414"), "show": "open&!closing", "angle": true, "lift": 0.013},
+			{"id": "bone_in", "kind": "tube", "at": "wound", "size": Vector2(0.008, 0.13), "colour": Color("#E8E0CC"), "show": "open&!closing", "angle": true, "lift": 0.014},
+		],
+		"lines": {
+			"bleeding": {"call": "It's welling up from the muscle! Find the vessel and clamp it!",
+				"start": "There, where it's pumping. Clamp it!", "hit": "Clamped. Dry again."},
+			"pressure": {"line": "Her pressure's dropping. {bp}. The spinal's taken her pressure with it, and she's eighty-one. What do you want?",
+				"options": [
+					{"id": "fluids", "text": "Fluids, fast"},
+					{"id": "sedate", "text": "Sedate her, she's anxious"},
+					{"id": "carry_on", "text": "Carry on, it'll settle"},
+				],
+				"wrong": {"sedate": [14.0, "Sedation drops it further! It's the spinal, not nerves. She needs fluid."]},
+				"bot_wrong": ["carry_on", "sedate"],
+				"fixed": "Fluids running, legs up a little... pressure's back. Spinals do that in the old. Good call."},
+		},
+		"end_lines": {
+			"won": "Screw dead centre, plate flat. She'll stand up tomorrow. That's the whole point at eighty-one.",
+			"struggled": "Done. It took longer than her bones would like. She'll be fine.",
+			"failed": "It's done.",
+		},
+		"outcome_lines": {
+			"won": "Mrs. Gomes's hip is fixed, and she can stand tomorrow.",
+			"struggled": "Fixed, slowly.",
+			"failed": "Dr. Bhatt had to take over.",
+		},
+	}
+
+
+# --- Imran's spleen (Night 16) ------------------------------------------------
+# A trauma laparotomy at two in the morning: Dr. Sethi in from home, the belly
+# full of blood, pack it, find it, and decide whether the spleen can be saved.
+
+static func _spleen() -> Dictionary:
+	return {
+		"id": "spleen",
+		"title": "Emergency laparotomy",
+		"patient": "Imran Ali",
+		"first": "Imran",
+		"pronoun": "he",
+		"theatre": "Theatre 1",
+		"lead": "sethi",
+		"pool": ["pressure", "bleeding"],
+		"delayed": "pressure",
+		"complication_after": "pack",
+		"extreme_after": "suction",
+		"antibiotic": "co-amoxiclav",
+		"guide": [Vector2(6.6, 7.4), Vector2(17.6, 7.4), Vector2(0.0, 0.12)],
+		"wound_centre": Vector2(12.0, 7.4),
+		# Framed up and left of the wound, so the spleen clears the panels.
+		"view_centre": Vector2(11.0, 6.8),
+		"count_line": "Count before closing. Swabs: every pack out and counted. Instruments: all present.",
+		"steps": [
+			{"id": "incision", "tool": "scalpel", "title": "Open the belly", "act": "trace", "swab": true,
+				"call": "His belly is full of blood. Long cut down the middle, top to bottom. Fast and straight.",
+				"instruction": "Trace the dotted line in one stroke, end to end",
+				"hint": "Scalpel, then the long line down the middle in one stroke."},
+			{"id": "retract", "tool": "retractor", "title": "Hold it open", "act": "hold", "seconds": 2.0, "swab": true,
+				"call": "Open it up. Wide.",
+				"start": "Hold. Here it comes.", "let_go": "Keep it open! I can't see anything but red.",
+				"hold_label": "Hold it open", "instruction": "Press and hold to keep it open",
+				"hint": "Hold the edges apart until it's done."},
+			{"id": "suction", "tool": "suction", "title": "Clear the blood", "act": "hold", "seconds": 3.0,
+				"call": "Two litres in there, at least. Clear it so we can see where it's coming from.",
+				"start": "Keep going. Don't stop.", "let_go": "Don't stop! It's filling again.",
+				"hold_label": "Hold the suction", "instruction": "Hold the suction on until it's clear",
+				"hint": "Suction clears blood. Hold it on until you can see."},
+			{"id": "pack", "tool": "swab", "title": "Pack the bleeding corner", "act": "tap", "target": "pack_spleen",
+				"call": "Big swabs. Where's it coming from? Pack that corner first, hard. I'll pack the other three.",
+				"hit": "Packed. Press... The pressure's coming up. Anaesthesia can catch up now.",
+				"miss": "In a corner, {called}. Which one is bleeding?",
+				"traps": {"pack_liver": 6.0, "pack_low_left": 5.0, "pack_low_right": 5.0},
+				"trap_lines": {
+					"pack_liver": "That's the liver side. Look where the blood keeps welling up: high on his left, under the broken ribs.",
+					"pack_low_left": "Too low. The blood is coming from up under his left ribs, where he landed on the scaffold.",
+					"pack_low_right": "Wrong corner altogether. Up on his left, under the ribs. Where it hurt him most.",
+				},
+				"trap_notes": {"pack_liver": "You packed the liver side first. His broken ribs and the pain at his left shoulder said spleen."},
+				"instruction": "Tap the corner that's bleeding to pack it",
+				"hint": "Broken left ribs, pain at the tip of his left shoulder, blood welling up high on the left. That's the spleen."},
+			{"id": "look", "tool": "", "title": "Can the spleen be saved?", "act": "decide", "variant": "spleen",
+				"call": "Packs out of that corner. Slowly. Look at the spleen and tell me.",
+				"instruction": "Read the spleen and the monitor. Then decide",
+				"hint": "A small tear that oozes, with the pressure holding, can be saved. A crack into the stalk, or pieces, with the pressure falling, can't."},
+			{"id": "clamp", "tool": "clamp", "title": "Clamp the stalk", "act": "tap", "target": "stalk",
+				"call": "Clamp the stalk, where the vessels go in. Hug the spleen. The tail of the pancreas lies right against it.",
+				"call_after": {
+					"save": "While I stitch the tear, a soft clamp across the stalk so it stops bleeding. Hug the spleen. Mind the pancreas.",
+					"remove": "Clamp the stalk, where the vessels go in. Hug the spleen. The tail of the pancreas lies right against it.",
+				},
+				"hit": "On the stalk, clear of the pancreas. That's the hard part done.",
+				"miss": "On the stalk, {called}: the vessels going into the spleen.",
+				"traps": {"pancreas": 20.0},
+				"trap_lines": {"pancreas": "Not that! That's the tail of the pancreas. Crush it and it leaks juices that digest everything round it."},
+				"trap_notes": {"pancreas": "You clamped the tail of the pancreas. It lies against the spleen's stalk, and a crushed pancreas leaks."},
+				"instruction": "Tap the spleen's stalk to clamp it",
+				"hint": "The stalk is the bundle of vessels going into the spleen. The pale yellow strip beside it is the pancreas."},
+			{"id": "wash", "tool": "suction", "title": "Wash out and look again", "act": "hold", "seconds": 2.5,
+				"call": "Warm water in, suction out. Then we look everywhere again. People who fall off scaffolds rarely break one thing.",
+				"start": "Keep it on. Look as you go.", "let_go": "Keep going until it runs clear.",
+				"hold_label": "Hold the suction", "instruction": "Hold the suction on until it runs clear",
+				"hint": "Hold the suction on until the water runs clear."},
+			{"id": "close", "tool": "needle_holder", "title": "Close", "act": "stitch",
+				"call": "Dry. Close him. Strong stitches; he's twenty-four and he'll cough.",
+				"hint": "Across the cut, evenly, end to end. It's a long one."},
+		],
+		"timeout": [
+			{"id": "patient", "label": "Patient", "reads": "Imran Ali, 24", "said": "Patient: Imran Ali, twenty-four.",
+				"right": "confirm", "wrong_reads": "Imran Ali, 42", "wrong_said": "Patient: Imran Ali, forty-two.",
+				"wrong_note": "The board had him as 42. He's 24. A wrong age at two in the morning means a wrong file was opened."},
+			{"id": "procedure", "label": "Operation", "reads": "Open the belly: bleeding spleen", "said": "Operation: open the belly for a bleeding spleen.",
+				"right": "confirm", "wrong_reads": "Open the belly: burst appendix", "wrong_said": "Operation: open the belly for a burst appendix.",
+				"wrong_note": "The board named the wrong operation and you confirmed it."},
+			{"id": "allergy", "label": "Allergies", "reads": "None known", "said": "Allergies: none known.", "right": "allergy",
+				"kind": "allergy", "allergic": false, "asked": "allergy_asked"},
+		],
+		"variants": {
+			"spleen": {
+				"tear": {"say": "A small tear at the edge. Oozing, not pumping. His pressure's holding at 110.", "right": "save",
+					"look": "Spleen: one small tear at the edge. Bleeding: oozing. Pressure: holding, 110."},
+				"deep": {"say": "A deep crack, right into the stalk. It bleeds again the moment the pack lifts. Pressure 84, on the second unit.",
+					"right": "remove", "look": "Spleen: deep crack into the stalk. Bleeding: again as the pack lifts. Pressure: 84, falling."},
+				"shattered": {"say": "In pieces. Pumping from the stalk. Pressure 70, and the blood bank is sending its last two units.",
+					"right": "remove", "look": "Spleen: in pieces. Bleeding: pumping. Pressure: 70, falling fast."},
+			},
+		},
+		"decisions": {
+			"look": {
+				"options": [
+					{"id": "save", "text": "Save it: stitch the tear"},
+					{"id": "remove", "text": "Take the spleen out"},
+					{"id": "wait", "text": "Packs back in. Wait ten minutes"},
+				],
+				"right_lines": {
+					"save": "Agreed. He's twenty-four; he'll want his spleen. I'll stitch it. You keep it still.",
+					"remove": "Agreed. That spleen can't hold a stitch, and he can't afford to bleed again. It comes out.",
+				},
+				"wrong_lines": {
+					"tear:remove": [8.0, "Take out a spleen that can be saved? He'd fight infections harder for the rest of his life. Look again."],
+					"tear:wait": [4.0, "It's only oozing. Fix it now, while we're in."],
+					"deep:save": [14.0, "A crack into the stalk won't hold stitches. He'd bleed again tonight, on the ward, with nobody watching."],
+					"deep:wait": [10.0, "Wait for what? His pressure's falling while we watch."],
+					"shattered:save": [18.0, "Stitch what? It's in pieces! He's bleeding to death."],
+					"shattered:wait": [16.0, "Ten minutes? He hasn't got ten minutes."],
+				},
+				"notes": {
+					"right": "You read the spleen and the monitor together, and made the right call.",
+					"wrong": "You misjudged the spleen. A small oozing tear can be saved; a crack into the stalk or pieces, with the pressure falling, can't.",
+				},
+			},
+		},
+		"parts": [
+			{"id": "gape", "kind": "disc", "at": "wound", "size": Vector2(0.115, 0.052), "colour": Color("#8E2626"), "show": "open&!closing", "angle": true},
+			{"id": "gape_deep", "kind": "disc", "at": "wound", "size": Vector2(0.105, 0.045), "colour": Color("#5A1414"), "show": "open&!closing", "angle": true, "lift": 0.013},
+		],
+		"lines": {
+			"bleeding": {"call": "There's more! Pumping from behind the spleen! Clamp it!",
+				"start": "There, where it's pumping. Clamp it!", "hit": "Got it. Dry."},
+			"pressure": {"line": "Pressure's falling again. {bp}. Heart rate {hr}. He's lost a lot. What do you want?",
+				"fixed": "Blood running through the warmer, fast... pressure's coming back. Keep going."},
+		},
+		"end_lines": {
+			"won": "Dry, clean and closed. At two in the morning. Go and tell his wife. You've earned that part.",
+			"struggled": "He's alive. It was untidy. We'll talk about it in daylight.",
+			"failed": "It's done.",
+		},
+		"outcome_lines": {
+			"won": "Imran stopped bleeding, and he's alive.",
+			"struggled": "Alive. It was close.",
+			"failed": "Dr. Sethi had to take over.",
 		},
 	}

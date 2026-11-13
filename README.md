@@ -66,7 +66,7 @@ how you know you're winning.
 ## What works right now
 
 The game is being built in stages, and the old 2D version has been retired
-(it's kept safe on the `swift-prototype` branch). Stages 1 to 7 of the 3D game
+(it's kept safe on the `swift-prototype` branch). Stages 1 to 8 of the 3D game
 are in:
 
 - The title screen: the hospital at dusk, an ambulance, a doctor wandering about.
@@ -199,6 +199,32 @@ are in:
 - The review, with Dr. Rao, Dr. Iyer and an empty chair. Yours. They
   remember the hand, the lump, the credit and the VIP, and if you've earned
   it you walk out a Senior Resident.
+- A year later. Senior Resident: an intern of your own, Dr. Zoya Qureshi,
+  who is keen, terrified, and writes drug charts at three in the morning.
+  Teach her, watch her, or throw her in. She remembers which.
+- Mrs. Gomes, eighty-one, broke her hip and would like someone who doesn't
+  whisper. Her son drove five hours from Pune to sign things on her behalf.
+  She is perfectly capable of signing them herself, if anyone asks her.
+- Check Zoya's drug chart before it reaches a patient: a dose a thousand times
+  too big, an antibiotic she's allergic to, a blood thinner nobody stopped.
+  Tap the line, say what's wrong, and sign. Accuse a correct line and she'll
+  explain, politely, why you're wrong. Miss the blood thinner and you'll meet
+  it again in theatre, where it's much redder.
+- Fix her hip with Dr. Bhatt from orthopaedics. Read the X-ray, line
+  the break up, and put a guide wire through the middle of the bone, not the
+  joint, then a screw and a plate. Measure twice. The bone doesn't care how
+  confident you sounded.
+- Your first night in charge of the whole floor. Mr. Nanda's pulse is
+  climbing after his bowel operation. Whether Zoya calls you at eleven or
+  sits on it until one depends on what you taught her on Monday.
+- Two in the morning, a scaffolder falls two floors. Find the bleeding you
+  can't see, then open his belly with Dr. Sethi and decide: save the spleen,
+  or take it out. Mind the pancreas. It's right there and it holds grudges.
+- The M&M meeting, where doctors talk about what went wrong. Zoya presents.
+  Someone gets the credit. Then a budget vote: a surgical robot, or a second
+  doctor at night. You were alone on Tuesday night. Dr. Rao lets you decide.
+- The review, again. Same table, different chair. Earn it and you walk out
+  a Surgeon.
 
 Screenshots of every screen are rebuilt automatically after each change, on
 the [`screenshots` branch](../../tree/screenshots).

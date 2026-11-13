@@ -45,6 +45,8 @@ func step(view: TrainingView, delta: float) -> void:
 			_exam(view as ExamView)
 		"scan":
 			_scan(view as ScanView)
+		"chart":
+			_chart(view as ChartView)
 		_:
 			if view is OperationView:
 				_operation(view as OperationView, delta)
@@ -113,6 +115,47 @@ func _history(view: HistoryView) -> void:
 				view.ask(question_id)
 				return
 	view.done_asking()
+
+
+## Checks a drug chart like a careful senior: every wrong line, for the
+## right reason, then signs. "shaky" misses the last mistake and doubts one
+## right line; "bad" gives a wrong reason for each and signs after two.
+func _chart(view: ChartView) -> void:
+	if not _act():
+		return
+	var chart := view.task as ChartTask
+	var wrong := chart.mistakes()
+	var plan: Array = []
+	match quality:
+		"shaky":
+			plan = wrong.slice(0, wrong.size() - 1)
+			for entry in chart.lines:
+				if not bool(entry["wrong"]):
+					plan.append(str(entry["id"]))
+					break
+		"bad":
+			plan = wrong.slice(0, 2)
+		_:
+			plan = wrong
+	for line_id: String in plan:
+		if chart.is_flagged(line_id):
+			continue
+		if chart.selected != line_id:
+			view.pick(line_id)
+			return
+		var entry := chart.line(line_id)
+		var reason := str(entry.get("reason", "dose"))
+		if not bool(entry["wrong"]):
+			reason = "dose"
+		elif quality == "bad":
+			var accepted: Array = [reason] + (entry.get("also", []) as Array)
+			for other: String in ChartTask.REASONS:
+				if other not in accepted:
+					reason = other
+					break
+		view.flag(reason)
+		return
+	view.sign()
 
 
 ## Examines like a careful doctor: a bleed first, then gentle places

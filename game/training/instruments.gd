@@ -20,10 +20,13 @@ const NAMES := {
 	"clip": "Clip applier",
 	"hook": "Hook",
 	"mesh": "Mesh",
+	"wire": "Guide wire",
+	"drill": "Drill",
+	"plate": "Screw and plate",
 }
 ## Instruments only some operations use (keyhole, wound care, hernias). Not
 ## in training, and not on every tray.
-const EXTRA := ["syringe", "port", "camera", "clip", "hook", "mesh"]
+const EXTRA := ["syringe", "port", "camera", "clip", "hook", "mesh", "wire", "drill", "plate"]
 const JOBS := {
 	"scalpel": "Cut through skin",
 	"forceps": "Hold tissue, gently",
@@ -39,6 +42,9 @@ const JOBS := {
 	"clip": "Close a duct or a vessel with metal clips",
 	"hook": "Burn through tissue to peel it free",
 	"mesh": "Patch a weak spot in the muscle",
+	"wire": "Mark a screw's path through bone, under X-ray",
+	"drill": "Drill a channel in bone over the wire",
+	"plate": "Hold a broken bone together while it heals",
 }
 ## What a surgeon says when they need it.
 const CALLS := {
@@ -68,7 +74,7 @@ static func job_of(instrument: String) -> String:
 ## How far along -z each model's working tip reaches, in metres.
 const TIPS := {"scalpel": 0.062, "forceps": 0.07, "retractor": 0.057, "needle_holder": 0.039, "scissors": 0.07,
 	"clamp": 0.062, "suction": 0.1, "swab": 0.0, "syringe": 0.075, "port": 0.06, "camera": 0.1, "clip": 0.08,
-	"hook": 0.09, "mesh": 0.0}
+	"hook": 0.09, "mesh": 0.0, "wire": 0.11, "drill": 0.09, "plate": 0.0}
 
 
 ## A model lying flat, pointing along -z (tip away), about 14 cm long.
@@ -123,6 +129,22 @@ static func make(instrument: String) -> Node3D:
 			LowPoly.put(root, LowPoly.box(Vector3(0.07, 0.003, 0.05), Color("#DDE8F0")), Vector3(0, 0.002, 0))
 			for line in 3:
 				LowPoly.put(root, LowPoly.box(Vector3(0.07, 0.004, 0.002), Color("#A9BCCB")), Vector3(0, 0.003, -0.015 + 0.015 * line))
+		"wire":
+			# A long thin wire with a threaded tip, held in a small handle.
+			LowPoly.put(root, LowPoly.cylinder(0.0015, 0.0015, 0.2, 5, STEEL), Vector3(0, 0.004, -0.02), Vector3(PI / 2, 0, 0))
+			LowPoly.put(root, LowPoly.box(Vector3(0.014, 0.012, 0.03), HANDLE), Vector3(0, 0.006, 0.07))
+		"drill":
+			# A power drill: the body and grip, and a hollow bit to run over the wire.
+			LowPoly.put(root, LowPoly.box(Vector3(0.03, 0.03, 0.07), Color("#E5E9EA")), Vector3(0, 0.015, 0.03))
+			LowPoly.put(root, LowPoly.box(Vector3(0.022, 0.05, 0.022), Color("#4FA0D8")), Vector3(0, 0.02, 0.06), Vector3(0.5, 0, 0))
+			LowPoly.put(root, LowPoly.cylinder(0.004, 0.004, 0.07, 6, STEEL), Vector3(0, 0.015, -0.04), Vector3(PI / 2, 0, 0))
+		"plate":
+			# A side plate with its barrel, and the big screw that slides into it.
+			LowPoly.put(root, LowPoly.box(Vector3(0.016, 0.004, 0.09), STEEL), Vector3(0, 0.003, 0.0))
+			for hole in 4:
+				LowPoly.put(root, LowPoly.cylinder(0.003, 0.003, 0.005, 6, STEEL_DARK), Vector3(0, 0.004, -0.03 + 0.02 * hole))
+			LowPoly.put(root, LowPoly.cylinder(0.005, 0.005, 0.06, 8, Color("#D9B25A")), Vector3(0.024, 0.005, -0.01),
+				Vector3(PI / 2, 0, 0))
 	return root
 
 

@@ -219,6 +219,13 @@ func _lead() -> String:
 	return str(setup.get("lead", procedure.get("lead", "iyer")))
 
 
+## How the doctor leading the operation is named: "Dr. Iyer", "Dr. Bhatt".
+func lead_name() -> String:
+	var full := str(StoryBook.cast().get(_lead(), {}).get("name", "Dr. Iyer"))
+	var words := full.split(" ")
+	return "Dr. " + words[words.size() - 1] if full.begins_with("Dr. ") else full
+
+
 ## The data for a step or a complication by id.
 func _data(which: String) -> Dictionary:
 	for entry: Dictionary in procedure["steps"]:
@@ -288,6 +295,12 @@ func _plan_complications(delayed_kind: String) -> void:
 		later[after] = [delayed_kind]
 		return
 	var pick := str(setup["complication"])
+	# Something nobody caught before theatre (a blood thinner still given)
+	# brings its own trouble.
+	var brings: Dictionary = procedure.get("unknown_brings", {})
+	for key: String in brings:
+		if setup.has(key) and not bool(setup[key]) and pick != "none":
+			pick = str(brings[key])
 	if pick == "none":
 		return
 	if pick not in pool:
@@ -315,6 +328,10 @@ func _lay_out() -> void:
 			_lay_out_gallbladder()
 		"hernia":
 			_lay_out_hernia()
+		"hip":
+			_lay_out_hip()
+		"spleen":
+			_lay_out_spleen()
 	for entry: Dictionary in procedure.get("parts", []):
 		if bool(entry.get("extreme", false)) and difficulty != "extreme":
 			continue
@@ -440,6 +457,107 @@ func _lay_out_hernia() -> void:
 	targets["loop"] = targets["sac"]
 	targets["loop2"] = targets["sac"] + Vector2(1.5, 0.5)
 	targets["bleeder"] = centre + Vector2(1.6, 0.4)
+
+
+## The hip under X-ray: the screen comes over the wound once it is open,
+## showing the thigh bone, its neck and the ball of the hip. Where the ball
+## sits and the angle of the neck change with the seed. Four marks show
+## where the guide wire could end; only one is centre and deep.
+func _lay_out_hip() -> void:
+	var screen := Vector2(12.4, 8.0)
+	var tilt := _rng.range_float(-0.15, 0.15)
+	# The head sits up and left of the screen's middle, clear of the panels.
+	var head: Vector2 = screen + Vector2(-1.4, -1.2) + Vector2(_rng.range_float(-0.3, 0.3), _rng.range_float(-0.2, 0.2))
+	var neck_base := screen + Vector2(0.4, 1.2)
+	var along := (head - neck_base).normalized().rotated(tilt)
+	head = neck_base + along * neck_base.distance_to(head)
+	var up := Vector2(along.y, -along.x)
+	if up.y > 0.0:
+		up = -up
+	var entry := screen + Vector2(1.2, 2.6)
+	targets["aim_centre"] = head + along * 0.3
+	targets["aim_high"] = head + up * 1.05 + along * 0.1
+	targets["aim_joint"] = head + along * 1.75
+	targets["aim_neck"] = neck_base.lerp(head, 0.45)
+	targets["bleeder"] = procedure["wound_centre"] + Vector2(1.4, 0.3)
+	var on_screen := "done:retract&!done:plate&!comp:bleeding&!closing"
+	var bone := Color("#DAD6CA")
+	var lined := "&is:film=lined"
+	parts.append_array([
+		{"id": "screen", "kind": "disc", "at": screen, "size": Vector2(0.105, 0.105), "colour": Color("#0B0F12"), "show": on_screen, "lift": 0.03},
+		{"id": "shaft", "kind": "tube", "from": screen + Vector2(-0.2, 1.8), "to": screen + Vector2(4.4, 1.8), "size": Vector2(0.017, 0.0),
+			"colour": bone, "show": on_screen, "lift": 0.032},
+		{"id": "neck", "kind": "tube", "from": neck_base, "to": head - along * 0.9, "size": Vector2(0.012, 0.0),
+			"colour": bone, "show": on_screen, "lift": 0.033},
+		{"id": "head", "kind": "disc", "at": head, "size": Vector2(0.029, 0.029), "colour": bone, "show": on_screen + lined, "lift": 0.034},
+		{"id": "head_off", "kind": "disc", "at": head + up * 0.45 - along * 0.2, "size": Vector2(0.029, 0.029), "colour": bone,
+			"show": on_screen + "&!is:film=lined", "lift": 0.034},
+		{"id": "break", "kind": "tube", "from": head - along * 1.0 + up * 0.7, "to": head - along * 1.0 - up * 0.7, "size": Vector2(0.0035, 0.0),
+			"colour": Color("#0B0F12"), "show": on_screen + "&!is:film=lined", "lift": 0.036},
+		{"id": "socket", "kind": "ring", "at": head, "size": Vector2(0.032, 0.036), "colour": Color("#8E8A80"), "show": on_screen, "lift": 0.033},
+		{"id": "aim_centre", "kind": "mark", "at": targets["aim_centre"], "colour": Color("#FFFFFF"), "show": "step:wire", "tap": true, "lift": 0.047},
+		{"id": "aim_high", "kind": "mark", "at": targets["aim_high"], "colour": Color("#FFFFFF"), "show": "step:wire", "tap": true, "lift": 0.047},
+		{"id": "aim_joint", "kind": "mark", "at": targets["aim_joint"], "colour": Color("#FFFFFF"), "show": "step:wire", "tap": true, "lift": 0.047},
+		{"id": "aim_neck", "kind": "mark", "at": targets["aim_neck"], "colour": Color("#FFFFFF"), "show": "step:wire", "tap": true, "lift": 0.047},
+		{"id": "guide_wire", "kind": "tube", "from": entry, "to": targets["aim_centre"], "size": Vector2(0.0018, 0.0),
+			"colour": Color("#F4F8FA"), "show": "done:wire&" + on_screen, "lift": 0.055},
+		{"id": "channel", "kind": "tube", "from": entry, "to": targets["aim_centre"] - along * 0.5, "size": Vector2(0.006, 0.0),
+			"colour": Color("#59606A"), "show": "done:drill&" + on_screen, "lift": 0.048},
+		{"id": "plate_in", "kind": "tube", "from": procedure["wound_centre"] + Vector2(-2.0, 0.0), "to": procedure["wound_centre"] + Vector2(2.2, 0.0),
+			"size": Vector2(0.007, 0.0), "colour": Color("#B9C4CA"), "show": "done:plate&!closing", "lift": 0.016},
+		{"id": "screw_head", "kind": "disc", "at": procedure["wound_centre"] + Vector2(-2.0, 0.0), "size": Vector2(0.01, 0.01),
+			"colour": Color("#D9B25A"), "show": "done:plate&!closing", "lift": 0.018},
+	])
+
+
+## The belly at night: blood everywhere until it is sucked clear, the spleen
+## high on his left (the far side, by his head), the liver high on his right,
+## four corners to pack, and the spleen's stalk with the tail of the pancreas
+## lying against it, above or below it as the seed decides.
+func _lay_out_spleen() -> void:
+	var centre: Vector2 = procedure["wound_centre"]
+	var spleen := centre + Vector2(-3.0, -1.6) + Vector2(_rng.range_float(-0.3, 0.3), _rng.range_float(-0.2, 0.2))
+	var below := str(setup.get("pancreas_side", _rng.pick(["below", "above"]))) == "below"
+	var stalk_from := spleen + Vector2(0.6, 0.3)
+	var stalk_to := spleen + Vector2(1.8, 0.75)
+	targets["stalk"] = stalk_from.lerp(stalk_to, 0.5)
+	var pancreas_from := stalk_to + Vector2(0.2, 0.75 if below else -0.75)
+	targets["pancreas"] = pancreas_from + Vector2(0.4, 0.1)
+	targets["pack_spleen"] = centre + Vector2(-2.9, -1.4)
+	targets["pack_liver"] = centre + Vector2(-2.9, 1.5)
+	targets["pack_low_left"] = centre + Vector2(2.6, -1.0)
+	targets["pack_low_right"] = centre + Vector2(3.1, 1.5)
+	targets["bleeder"] = spleen + Vector2(0.5, 0.5)
+	var torn := "done:pack&!done:clamp&!closing"
+	parts.append_array([
+		{"id": "blood", "kind": "disc", "at": centre, "size": Vector2(0.1, 0.05), "colour": Color("#5E0C0C"), "show": "open&!done:suction&!closing",
+			"angle": true, "lift": 0.016},
+		{"id": "liver", "kind": "blob", "at": centre + Vector2(-3.3, 1.8), "size": Vector2(0.03, 0.4), "colour": Color("#7A2A26"), "show": "open&!closing"},
+		{"id": "spleen", "kind": "blob", "at": spleen, "size": Vector2(0.024, 0.5), "colour": Color("#6B2C4C"), "show": "open&!done:clamp&!closing"},
+		{"id": "spleen_kept", "kind": "blob", "at": spleen, "size": Vector2(0.024, 0.5), "colour": Color("#6B2C4C"),
+			"show": "done:clamp&had:chose_save&!closing"},
+		{"id": "tear", "kind": "tube", "from": spleen + Vector2(-0.6, 0.2), "to": spleen + Vector2(-0.1, 0.45), "size": Vector2(0.0025, 0.0),
+			"colour": Color("#2A0508"), "show": torn + "&is:spleen=tear", "lift": 0.02},
+		{"id": "crack", "kind": "tube", "from": spleen + Vector2(-0.8, -0.3), "to": stalk_from, "size": Vector2(0.003, 0.0),
+			"colour": Color("#2A0508"), "show": torn + "&is:spleen=deep", "lift": 0.02},
+		{"id": "pieces", "kind": "dots", "at": spleen, "colour": Color("#3A0A14"), "show": torn + "&is:spleen=shattered", "lift": 0.02},
+		{"id": "stalk", "kind": "tube", "from": stalk_from, "to": stalk_to, "size": Vector2(0.005, 0.0), "colour": Color("#9A2340"),
+			"show": "done:suction&!closing", "tap_at": targets["stalk"], "lift": 0.016},
+		{"id": "pancreas", "kind": "tube", "from": pancreas_from, "to": pancreas_from + Vector2(2.4, 0.3), "size": Vector2(0.006, 0.0),
+			"colour": Color("#E6D49A"), "show": "done:suction&!closing", "tap_at": targets["pancreas"], "lift": 0.015},
+		{"id": "bowel1", "kind": "ring", "at": centre + Vector2(1.6, 0.4), "colour": Color("#E8A4A0"), "size": Vector2(0.012, 0.03),
+			"show": "done:suction&!closing", "lift": 0.014},
+		{"id": "bowel2", "kind": "ring", "at": centre + Vector2(3.0, -0.3), "colour": Color("#E8A4A0"), "size": Vector2(0.01, 0.026),
+			"show": "done:suction&!closing", "lift": 0.015},
+		{"id": "pack_spleen", "kind": "mark", "at": targets["pack_spleen"], "colour": Color("#FFFFFF"), "show": "step:pack", "tap": true, "lift": 0.02},
+		{"id": "pack_liver", "kind": "mark", "at": targets["pack_liver"], "colour": Color("#FFFFFF"), "show": "step:pack", "tap": true, "lift": 0.02},
+		{"id": "pack_low_left", "kind": "mark", "at": targets["pack_low_left"], "colour": Color("#FFFFFF"), "show": "step:pack", "tap": true, "lift": 0.02},
+		{"id": "pack_low_right", "kind": "mark", "at": targets["pack_low_right"], "colour": Color("#FFFFFF"), "show": "step:pack", "tap": true, "lift": 0.02},
+		{"id": "packs", "kind": "dots", "colour": Color("#F2F2EC"), "show": "done:pack&!done:look&!closing", "lift": 0.018,
+			"points": ["pack_spleen", "pack_liver", "pack_low_left", "pack_low_right"]},
+		{"id": "welling", "kind": "disc", "at": targets["pack_spleen"] + Vector2(0.3, 0.2), "size": Vector2(0.026, 0.02), "colour": Color("#A51E1E"),
+			"show": "done:suction&!done:pack&!closing", "lift": 0.017, "pulse": true},
+	])
 
 
 # --- The incision line -------------------------------------------------------
@@ -769,7 +887,8 @@ func _hand_line(instrument: String) -> String:
 		"scalpel": "Scalpel.", "retractor": "Retractor.", "forceps": "Forceps.", "clamp": "Clamp.", "scissors": "Scissors.",
 		"needle_holder": "Needle holder. Loaded.", "suction": "Suction.", "swab": "Swab.", "syringe": "Syringe. Loaded.",
 		"port": "Port.", "camera": "Camera. Gas on.", "clip": "Clip applier. Loaded.", "hook": "Hook. Diathermy's on.",
-		"mesh": "Mesh. Trimmed to size.",
+		"mesh": "Mesh. Trimmed to size.", "wire": "Guide wire.", "drill": "Drill. Set to the wire.",
+		"plate": "Screw and plate. Loaded.",
 	}.get(instrument, Instruments.name_of(instrument) + "."))
 
 
@@ -1224,7 +1343,7 @@ func hint_text() -> String:
 	return ""
 
 
-## Asks for a hint: Dr. Iyer says it, and it costs points.
+## Asks for a hint: the lead surgeon says it, and it costs points.
 func use_hint() -> String:
 	if not can_hint():
 		return ""
@@ -1370,7 +1489,7 @@ func stitch_target() -> int:
 
 func _write_notes() -> void:
 	if takeover:
-		_note(false, _fill("{Name} got too unstable and Dr. Iyer had to take over. %s" % _takeover_reason()))
+		_note(false, _fill("{Name} got too unstable and %s had to take over. %s" % [lead_name(), _takeover_reason()]))
 	var allergy_line := {}
 	for line in timeout_lines:
 		if str(line.get("kind", "")) == "allergy":
@@ -1467,7 +1586,7 @@ func instruction() -> String:
 		"timeout":
 			return "Time-out: check the board. Confirm it, or stop the team"
 		"call":
-			return "Call for what Dr. Iyer needs on the ring"
+			return "Call for what %s needs on the ring" % lead_name()
 		"act":
 			match action:
 				"trace", "hold", "tap":
@@ -1489,7 +1608,7 @@ func instruction() -> String:
 		"search":
 			return "Find the missing swab in the wound"
 		"done":
-			return "Dr. Iyer has taken over" if takeover else "Done"
+			return "%s has taken over" % lead_name() if takeover else "Done"
 	return ""
 
 
@@ -1504,7 +1623,8 @@ func progress() -> float:
 
 ## True when a condition about the operation holds, for the table to know
 ## what to show: "open", "closing", "done:x", "step:x", "comp:x", "had:x",
-## "phase:x", each can start with "!" and several join with "&".
+## "phase:x", "is:key=kind" (a rolled version), each can start with "!"
+## and several join with "&".
 func condition_met(condition: String) -> bool:
 	if condition.is_empty():
 		return true
@@ -1528,6 +1648,10 @@ func condition_met(condition: String) -> bool:
 				value = bits[1] in happened
 			"phase":
 				value = phase == bits[1]
+			"is":
+				# A version rolled for a step that reads something: "is:film=lined".
+				var pair := bits[1].split("=")
+				value = str(variants.get(pair[0], "")) == pair[1]
 		if value == negate:
 			return false
 	return true
@@ -1595,7 +1719,7 @@ func _show_vitals() -> void:
 ## A word for the monitor: how the patient is doing.
 func condition() -> String:
 	if takeover:
-		return "DR. IYER HAS TAKEN OVER"
+		return "%s HAS TAKEN OVER" % lead_name().to_upper()
 	if not active_complication.is_empty():
 		return str(_data(active_complication).get("condition", active_complication.to_upper()))
 	if stability >= 70.0:
