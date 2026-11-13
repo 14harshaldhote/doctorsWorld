@@ -357,6 +357,8 @@ func _lay_out() -> void:
 			_lay_out_spleen()
 		"obstruction":
 			_lay_out_obstruction()
+		"bile_leak":
+			_lay_out_bile_leak()
 	for entry: Dictionary in procedure.get("parts", []):
 		if bool(entry.get("extreme", false)) and difficulty != "extreme":
 			continue
@@ -628,6 +630,72 @@ func _lay_out_obstruction() -> void:
 	])
 
 
+## Back in, three days after a keyhole gallbladder: the liver across the
+## top, the bare bed where the gallbladder sat, the clipped stump of its
+## duct and the main duct running past, all under a pool of bile. Where the
+## leak is (the stump, the bed, or the main duct itself) is rolled here, so
+## the leak, the fix and the main duct's tap point sit apart.
+func _lay_out_bile_leak() -> void:
+	var kinds: Array = (procedure["variants"]["leak"] as Dictionary).keys()
+	var leak := str(setup.get("leak", ""))
+	if leak not in kinds:
+		leak = _roll_variant(kinds)
+		setup["leak"] = leak
+	var flip := 1.0 if str(setup.get("layout", _rng.pick(["left", "right"]))) == "left" else -1.0
+	var centre := Vector2(12.6, 8.2)
+	var mirror := func(spot: Vector2) -> Vector2: return Vector2(centre.x + (spot.x - centre.x) * flip, spot.y)
+	var liver: Vector2 = mirror.call(Vector2(12.6, 5.6))
+	var bed: Vector2 = mirror.call(Vector2(14.5, 7.1))
+	var join: Vector2 = mirror.call(Vector2(11.9, 10.2))
+	var stump_tip: Vector2 = join.lerp(mirror.call(Vector2(13.4, 8.6)), 0.55)
+	var cbd_top: Vector2 = mirror.call(Vector2(11.0, 6.8))
+	var cbd_bottom: Vector2 = mirror.call(Vector2(11.4, 12.6))
+	var hole := cbd_top.lerp(cbd_bottom, 0.3)
+	targets["liver"] = liver
+	targets["duodenum"] = mirror.call(Vector2(9.0, 11.6))
+	targets["bleeder"] = bed.lerp(liver, 0.4)
+	match leak:
+		"stump":
+			targets["source"] = stump_tip
+			targets["fix"] = stump_tip.lerp(join, 0.3)
+			targets["cbd"] = cbd_top.lerp(cbd_bottom, 0.15)
+		"bed":
+			targets["source"] = bed + Vector2(0.0, 0.5)
+			targets["fix"] = bed + Vector2(0.0, 0.5)
+			targets["cbd"] = cbd_top.lerp(cbd_bottom, 0.5)
+		_:
+			targets["source"] = hole
+			# The drain lies beside the duct, on the side away from the stump.
+			targets["fix"] = hole + Vector2(-1.0 * flip, 0.3)
+			targets["cbd"] = cbd_top.lerp(cbd_bottom, 0.85)
+	var washed := "done:wash&!closing"
+	parts.append_array([
+		{"id": "scope", "kind": "scope", "at": centre + Vector2(0, 0.6), "size": Vector2(0.115, 0.0), "colour": Color("#0B0E10"), "show": "open&!closing"},
+		{"id": "belly_wall", "kind": "disc", "at": centre + Vector2(0, 0.6), "size": Vector2(0.118, 0.1), "colour": Color("#B94F4A"), "show": "open&!closing", "lift": 0.004},
+		{"id": "liver", "kind": "blob", "at": liver, "size": Vector2(0.062, 0.4), "colour": Color("#7A2A26"), "show": "open&!closing", "tap": true},
+		{"id": "bed", "kind": "blob", "at": bed, "size": Vector2(0.02, 0.3), "colour": Color("#A8483F"), "show": "open&!closing", "lift": 0.016},
+		{"id": "duodenum", "kind": "blob", "at": targets["duodenum"], "size": Vector2(0.032, 0.5), "colour": Color("#E39E95"), "show": "open&!closing", "tap": true},
+		{"id": "cbd", "kind": "tube", "from": cbd_top, "to": cbd_bottom, "size": Vector2(0.0062, 0.0), "colour": Color("#B9C26A"),
+			"show": "open&!closing", "tap_at": targets["cbd"], "lift": 0.014},
+		{"id": "stump", "kind": "tube", "from": join, "to": stump_tip, "size": Vector2(0.0046, 0.0), "colour": Color("#D6DB8A"),
+			"show": "open&!closing", "lift": 0.015},
+		{"id": "clips_stump", "kind": "clips", "at": stump_tip.lerp(join, 0.15), "colour": Color("#D8DEE2"), "show": "open&!closing"},
+		{"id": "loose_clip", "kind": "sliver", "at": stump_tip + Vector2(0.5 * flip, 0.4), "size": Vector2(0.012, 0.003),
+			"colour": Color("#D8DEE2"), "show": washed + "&is:leak=stump"},
+		{"id": "burn", "kind": "disc", "at": hole, "size": Vector2(0.008, 0.006), "colour": Color("#2E2A22"), "show": washed + "&is:leak=duct", "lift": 0.02},
+		{"id": "bile", "kind": "disc", "at": centre + Vector2(0, 1.6), "size": Vector2(0.07, 0.05), "colour": Color("#4F6B22"),
+			"show": "open&!done:wash&!closing", "lift": 0.022},
+		{"id": "source", "kind": "blob", "at": targets["source"], "size": Vector2(0.006, 0.6), "colour": Color("#7FA63A"),
+			"show": washed + "&!done:fix", "pulse": true, "lift": 0.022},
+		{"id": "new_clips", "kind": "clips", "at": targets["fix"], "colour": Color("#F2F6F8"), "show": "done:fix&!is:leak=duct&!closing", "lift": 0.02},
+		{"id": "drain", "kind": "tube", "from": targets["fix"], "to": targets["fix"] + Vector2(-1.6 * flip, 2.6), "size": Vector2(0.004, 0.0),
+			"colour": Color("#F4F4EE"), "show": "done:fix&is:leak=duct&!closing", "lift": 0.02},
+		{"id": "fix", "kind": "mark", "at": targets["fix"], "colour": Color("#FFFFFF"), "show": "step:fix", "tap": true},
+		{"id": "ports", "kind": "ports", "colour": Color("#2B2F33"), "show": "done:ports", "points": ["port1", "port2", "port3"]},
+		{"id": "port_marks", "kind": "marks", "colour": Color("#4B2F86"), "show": "!done:ports", "points": ["port1", "port2", "port3"]},
+	])
+
+
 # --- The incision line -------------------------------------------------------
 
 func _build_guide() -> void:
@@ -886,21 +954,28 @@ func _start_step(index: int) -> void:
 		var side := _side_line()
 		_note(false, str(side.get("note", "The board had the wrong side and you confirmed it.")))
 		_say_by(_lead(), str(side.get("stopped", "Wait. Wrong side. Read the notes, not the board.")), true)
-		_beat(BEAT * 1.6, _begin_call.bind(str(data["tool"]), _call_line(data)))
+		_beat(BEAT * 1.6, _begin_call.bind(_by_choice(data, "tool"), _call_line(data)))
 		return
 	if str(data.get("act", "")) == "decide":
 		_begin_step_decision(data)
 		return
-	_begin_call(str(data["tool"]), _call_line(data))
+	_begin_call(_by_choice(data, "tool"), _call_line(data))
 
 
 ## A step's call line, which can depend on what was decided before it.
 func _call_line(data: Dictionary) -> String:
-	var after: Dictionary = data.get("call_after", {})
-	for key: String in after:
-		if happened.has("chose_" + key):
-			return str(after[key])
-	return str(data.get("call", ""))
+	return _by_choice(data, "call")
+
+
+## A step's text (or tool) for key, or its "<key>_after" entry for an
+## option chosen earlier ({"reclip": ...}), so a decision can change what
+## the next step needs.
+func _by_choice(data: Dictionary, key: String, fallback: String = "") -> String:
+	var after: Dictionary = data.get(key + "_after", {})
+	for option: String in after:
+		if happened.has("chose_" + option):
+			return str(after[option])
+	return str(data.get(key, fallback))
 
 
 func _begin_call(instrument: String, line: String, by: String = "") -> void:
@@ -983,7 +1058,7 @@ func _begin_act() -> void:
 	if action == "fill":
 		fill_level = 0.0
 	if data.has("start"):
-		_say_by(_lead(), str(data["start"]), _is_complication(step) and action == "tap")
+		_say_by(_lead(), _by_choice(data, "start"), _is_complication(step) and action == "tap")
 
 
 ## Seconds a hold needs now.
@@ -1134,7 +1209,7 @@ func tap(spot: String) -> void:
 				target = str(sequence[sequence_index])
 				return
 		elif data.has("hit"):
-			_say_by(_lead(), str(data["hit"]))
+			_say_by(_lead(), _by_choice(data, "hit"))
 		_act_done()
 		return
 	tap_misses += 1
@@ -1401,13 +1476,13 @@ func can_hint() -> bool:
 func hint_text() -> String:
 	if phase == "call":
 		var data := _data(step)
-		var tool := str(data.get("tool", ""))
-		var hint := str(data.get("hint", ""))
+		var tool := _by_choice(data, "tool")
+		var hint := _by_choice(data, "hint")
 		if _is_complication(step) or hint.is_empty():
 			return "You need the %s: %s." % [Instruments.name_of(tool).to_lower(), Instruments.job_of(tool).to_lower()]
 		return hint
 	if phase in ["act", "decide"]:
-		return _fill(str(_data(step).get("hint", "")))
+		return _fill(_by_choice(_data(step), "hint"))
 	return ""
 
 
@@ -1662,7 +1737,7 @@ func instruction() -> String:
 					if data.has("sequence"):
 						return "%s: %d of %d" % [str(data.get("instruction", "Tap the marks")), sequence_index,
 							(data["sequence"] as Array).size()]
-					return str(data.get("instruction", "Tap it"))
+					return _by_choice(data, "instruction", "Tap it")
 				"fill":
 					return "%s · gas %d" % [str(_data(step).get("instruction", "Hold to fill")), int(fill_level)]
 				"stitch":

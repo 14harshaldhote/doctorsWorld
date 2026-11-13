@@ -21,7 +21,7 @@ plan"). This file covers how to build, run and test the game.
 | 7. Junior Resident | "Eight months later": Days 9 to 13 as a Junior Resident. The team walks into a real operating theatre and the department's seminar room. Three new operations: a cut hand in the minor theatre, a keyhole gallbladder (fill the belly with gas, read the camera) and a stuck hernia whose bowel you must judge. Each case is random within its difficulty (easy; hard, with hints that cost points; extreme, with stacked problems and no hints) and shaped by what you asked on the ward. Also a missed aneurysm, Dr. Sethi taking the credit at the department meeting, a VIP's mother against an emergency, and the review that makes a Senior Resident | Done |
 | 8. Senior Resident | "A year later": Days 14 to 18 as a Senior Resident with an intern of your own (Dr. Zoya Qureshi). A new puzzle, checking her drug chart (`ChartTask`, `ChartView`), whose wrong lines can come from what you missed on the ward and carry into theatre. Two new operations: hip fixation with Dr. Bhatt (read the X-ray, aim a guide wire, measure, drill, plate) and an emergency laparotomy for a torn spleen (find the bleeding corner, save or remove the spleen, clamp clear of the pancreas). Also a son who wants to sign for his capable mother, a night in charge where your teaching decides when Zoya calls you, the M&M meeting, the budget vote and the review that makes a Surgeon | Done |
 | 9. Surgeon | "Three months later": Days 19 to 23 as a Surgeon with a list and a team of your own. You pick the scrub nurse and the anaesthetist (`team_swap`), and each pick changes the operation: a tired nurse loses a swab in the count, a quick anaesthetist who wasn't told about her asthma meets a wheeze, waiting for the careful one makes the bowel worse. A new operation, an open belly for a blocked bowel (find where fat loops turn flat, read what an old swab has done, cut the scar band). Dr. Rao's 2004 swab and the choice to tell her, hide it or let him tell it. A new puzzle, triage at a bus crash (`TriageTask`, `TriageView`, START rules, borderline numbers on hard and extreme). Dr. Rao retires and the interview makes a Head of Department | Done |
-| Later | Head of Department (the strike, the board) and the ending | |
+| 10. Head of Department and the ending | "Six months later": Days 24 to 28 as Head of Department. A strike vote, Dr. Sameer Kapoor of CarePlus touring the ward, and Mrs. Sinha back from Dr. Sethi's day-case pilot with a bile leak: her history (the penicillin allergy) and a new keyhole operation (wash out, find the fresh trickle, read the leak: a slipped clip, a duct in the liver bed or a burn on the main duct, each with its own fix). Dr. Sethi's request to keep it quiet until the vote. A new puzzle, strike-day nurse cover (`RotaTask`, `RotaView`). The agency offer, the picket line, the board vote that makes you Chief of Medicine (`Ward.REVIEWS` 27), then the last day: your Head of Surgery, your own intern's first morning and Dr. Iyer and Grace telling you where everyone ended up. Quiet days carry on from Day 29 | Done |
 
 The earlier SwiftUI and SpriteKit prototype is kept on the git branch
 `swift-prototype`.
@@ -112,7 +112,8 @@ story/                  The words: cast, opening, Day 1 conversations, banter, t
                         (theatre.json), the ward days (ward.json), the Junior
                         Resident's days (junior.json), the Senior
                         Resident's (senior.json) and the Surgeon's
-                        (surgeon.json)
+                        (surgeon.json), and the Head of Department's
+                        days and the ending (hod.json)
 assets/fonts/           Fredoka and Nunito (SIL Open Font License)
 assets/music/           The music, made by tools/make_music.py
 assets/voices/          Recorded voices, made by tools/make_voices.py (Kokoro, Apache 2.0)
@@ -172,7 +173,7 @@ corner.
 Rank is no longer worked out from XP. XP sets the level, and the rank only
 rises when someone promotes you (`PlayerProfile.promote()`), which Dr. Rao
 does at the reviews on Day 8, Day 13 and Day 18, and the board does at the
-interview on Day 23 (`Ward.REVIEWS`).
+interview on Day 23 and the vote on Day 27 (`Ward.REVIEWS`).
 
 From Day 9 the days come from `game/world/ward_story.gd`, so new chapters
 are data, not code. `WardStory.DAYS` uses the same beats plus:
@@ -195,7 +196,13 @@ are data, not code. `WardStory.DAYS` uses the same beats plus:
 - `team_swap` to put the doctor's own picks into the team
   (`[[1, "neha", "team_neha"]]`: Neha scrubs if `team_neha` is set). The
   operation names whoever is there (`scrub_name()`, `anaesthetist_name()`);
-- a task `["triage", "bus_triage"]` for sorting casualties at a crash.
+- a task `["triage", "bus_triage"]` for sorting casualties at a crash;
+- a task `["rota", "strike_rota"]` for strike-day nurse cover, with a
+  `coach` (who stands with you at the desk);
+- `card` together with `go`: the time card plays, then the doctor walks to
+  the place and the beat's conversation starts there (the last evening at
+  the X-ray viewer). A talk at the X-ray viewer turns both people to each
+  other and uses its own camera, since the viewer stands by the end wall.
 
 `WardStory.NIGHTS` lists days that are night shifts, and a cast entry's
 `later_roles` changes the role shown from a day on (Dr. Sethi becomes a
@@ -213,7 +220,7 @@ conversations for these days are in a chapter listed in `WardStory.CHAPTERS`.
 ## Operations
 
 `game/surgery/procedures.gd` holds the appendix, the wound, the gallbladder,
-the hernia, the hip, the spleen and the blocked bowel as data. Each has steps (what Tom hands over, what the doctor
+the hernia, the hip, the spleen, the blocked bowel and the bile leak as data. Each has steps (what Tom hands over, what the doctor
 does), a time-out board, a pool of complications and, for some, insides that
 vary (`variants`: the hernia's bowel is pink, dusky or dead). A step id must
 never match a complication id; a test checks it.
@@ -229,6 +236,14 @@ seed, so the same seed gives the same case. `unknown_brings` ties a
 complication to something the team wasn't told (`{"warfarin_known":
 "bleeding"}`), and `view_centre` moves the close-up camera so the work sits
 between the screen's panels.
+
+A step can change with an earlier decision: `tool_after`, `call_after`,
+`hit_after`, `hint_after`, `instruction_after` and `start_after` map a
+decision's option to what that step uses instead (`"tool_after": {"drain":
+"forceps"}`: if the doctor chose to drain the bile leak, the next step is done
+with forceps, not the clip applier). `OperationTask._by_choice()` reads them.
+The bile leak picks its variant (`stump`, `bed` or `duct`) while the case is
+laid out, so the place to tap and what the camera shows agree with it.
 
 ## Drug charts
 
@@ -255,6 +270,26 @@ its deciding check counts as a guess. Tagging someone red as yellow or green
 is under-triage, and the ward sets `<case>_under` and `<case>_under_<id>`.
 Easy shows the rules on a card; hints cost 5 points on hard; extreme has
 none.
+
+## Strike-day cover
+
+`RotaTask` reads a `"kind": "rota"` case: who is left to work (`staff`:
+each with a `capacity` that can differ by difficulty, whether they can run a
+drip, and `student` or `from` for people who only appear on hard or
+extreme) and patient templates (`load` from 1 to 3, and `iv`, `infectious`,
+`fragile` or `confused`, each with an `about` line Grace says when you pick
+them). The seed picks six, eight or ten patients whose total load fills the
+staff to a set tightness, and `RotaTask.solve()` checks there is always a
+way to cover them. The rules (`RotaTask.RULES`): nobody carries more than
+their limit, drips only with a nurse who can run them, an infected patient
+never shares a nurse with a fragile one, a confused patient's nurse carries
+4 or less, and a student never takes a patient weighing 3. Signing scores the
+rota: 12 points off for each rule broken, 15 for each patient left without a
+nurse. The ward sets `<case>_right`, `<case>_<rule>` for each broken rule and
+`<case>_gap` for anyone uncovered, and the midday report reads them back.
+Easy shows the rules and marks a patient coral when they break one (with a
+warning from Grace); a hint (5 points on hard, none on extreme) names a
+placement that still leads to a full cover, or says which one to move.
 
 ## Settings and accessibility
 

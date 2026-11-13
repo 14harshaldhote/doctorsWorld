@@ -184,6 +184,8 @@ static func get_procedure(id: String) -> Dictionary:
 			made = _spleen()
 		"obstruction":
 			made = _obstruction()
+		"bile_leak":
+			made = _bile_leak()
 		_:
 			made = _appendix()
 	var defaults := {
@@ -198,7 +200,7 @@ static func get_procedure(id: String) -> Dictionary:
 
 
 static func ids() -> Array[String]:
-	return ["appendix", "wound", "gallbladder", "hernia", "hip", "spleen", "obstruction"]
+	return ["appendix", "wound", "gallbladder", "hernia", "hip", "spleen", "obstruction", "bile_leak"]
 
 
 ## A complication's data, with the procedure's own lines laid over it.
@@ -1152,6 +1154,160 @@ static func _obstruction() -> Dictionary:
 		"outcome_lines": {
 			"won": "Mrs. Kurup's bowel is free, and the 2004 swab is in a pot.",
 			"struggled": "Free, the hard way.",
+			"failed": "Dr. Iyer had to take over.",
+		},
+	}
+
+
+# --- Mrs. Sinha's bile leak (Day 25) -------------------------------------------
+
+static func _bile_leak() -> Dictionary:
+	return {
+		"id": "bile_leak",
+		"title": "Keyhole look: bile leak",
+		"patient": "Rekha Sinha",
+		"first": "Mrs. Sinha",
+		"pronoun": "she",
+		"theatre": "Theatre 2",
+		"lead": "iyer",
+		"keyhole": true,
+		"opens": "fill",
+		"tray": ["port", "camera", "forceps", "clip", "suction", "scissors", "hook", "needle_holder"],
+		"pool": ["bleeding", "pressure"],
+		"complication_after": "wash",
+		"extreme_after": "find",
+		"base_swabs": 0,
+		"antibiotic": "co-amoxiclav",
+		"count_line": "Count before closing. Ports: three in, three out. Clips: all accounted for, one more than Saturday.",
+		"guide": [Vector2(11.9, 11.2), Vector2(13.3, 11.2), Vector2(0.0, 0.25)],
+		"wound_centre": Vector2(12.6, 8.8),
+		"view_centre": Vector2(12.6, 8.8),
+		"fixed_targets": {"port1": Vector2(12.6, 11.2), "port2": Vector2(9.4, 6.6), "port3": Vector2(16.0, 7.0)},
+		"steps": [
+			{"id": "ports", "tool": "port", "title": "Back in through the old holes", "act": "tap", "sequence": ["port1", "port2", "port3"],
+				"call": "Keyhole again, through Saturday's three holes. They're barely healed; go gently. Your lead.",
+				"hits": ["Navel port in.", "Second port.", "Third port. Ready for the gas."],
+				"miss": "On the old scars, {called}. Same three holes.",
+				"instruction": "Tap the three old scars to put the ports back in",
+				"hint": "The ports go back through the three little scars from her first operation, one at each purple mark."},
+			{"id": "fill", "tool": "camera", "title": "Fill and look", "act": "fill",
+				"call": "Gas in, camera in. Twelve to fifteen. Her belly's tight already; don't overdo it.",
+				"start": "Gas flowing. Watch the gauge.",
+				"low": "Not enough room. Fill it more.",
+				"over": "Too much! Her pressure won't like that.",
+				"good": "Fourteen. Camera in... Oh. That's a lot of bile.",
+				"hold_label": "Hold to fill",
+				"instruction": "Hold to fill with gas. Let go between 12 and 15",
+				"hint": "Hold, and watch the gauge on the button. Let go as soon as it's in the green, 12 to 15."},
+			{"id": "wash", "tool": "suction", "title": "Wash it out", "act": "hold", "seconds": 2.5,
+				"call": "Green-brown, everywhere. A litre at least. Warm water in, suction out, until we can see.",
+				"start": "Keep going. It's clearing.", "let_go": "Keep the suction on. It's filling up again.",
+				"hold_label": "Hold the suction", "instruction": "Hold the suction on until it runs clear",
+				"hint": "Hold the suction on until the bile is gone and you can see what's underneath."},
+			{"id": "find", "tool": "forceps", "title": "Find the leak", "act": "tap", "target": "source",
+				"call": "Clear. Now watch. Where does fresh bile come from? Wait for the trickle.",
+				"hit": "There. A fresh green trickle, every few seconds.",
+				"miss": "Watch for the trickle, {called}. Where does new bile come from?",
+				"traps": {"duodenum": 6.0, "liver": 3.0},
+				"trap_lines": {
+					"duodenum": "That's the bowel! Grab it and it tears. The leak is higher up, where the gallbladder was.",
+					"liver": "That's liver. It bleeds if you poke it. Watch for the green trickle.",
+				},
+				"trap_notes": {"duodenum": "You grabbed the duodenum while looking for the leak. Bowel tears; you watch, then touch."},
+				"instruction": "Tap where the fresh bile trickles from",
+				"hint": "Wait and watch. New bile shows up as a fresh green trickle. Tap where it starts."},
+			{"id": "look", "tool": "", "title": "Where is it leaking?", "act": "decide", "variant": "leak",
+				"call": "Look at it properly before you touch anything.",
+				"instruction": "Read where the bile comes from. Then decide",
+				"hint": "A slipped clip: clip the stump again. A tiny duct in the liver bed: clip that. A hole in the main duct: don't touch it. Drain it and call the liver team."},
+			{"id": "fix", "tool": "clip", "title": "Stop the leak", "act": "tap", "target": "fix",
+				"tool_after": {"drain": "forceps"},
+				"call": "Close it off.",
+				"call_after": {
+					"reclip": "A new clip on the stump, below the one that slipped. Two this time. Dr. Sethi's notes said two last time.",
+					"clip_bed": "Clip that little duct where it trickles out of the liver bed. Just that one.",
+					"drain": "Forceps, and the drain. Lay it beside the duct, not on it. Nothing touches that duct but the liver team.",
+				},
+				"hit": "Clipped. Watch... dry. No more trickle.",
+				"hit_after": {
+					"drain": "Drain's in, beside it. The bile has a way out, and the liver team has a stent ready for the morning.",
+				},
+				"miss": "On the leak, {called}. Where the trickle was.",
+				"traps": {"cbd": 25.0},
+				"trap_lines": {"cbd": "STOP! That's the main bile duct! Nothing goes on that duct. Nothing."},
+				"trap_notes": {"cbd": "You went for the main bile duct. Clip or grab that and her liver can't drain."},
+				"instruction": "Tap the leak to close it off",
+				"instruction_after": {"drain": "Tap beside the duct to lay the drain"},
+				"hint": "On the leak itself. Keep clear of the thick main duct that runs past."},
+			{"id": "close", "tool": "needle_holder", "title": "Close the navel port", "act": "stitch",
+				"call": "Gas out. Close the navel port. And then, Doctor, someone needs to tell her why we were in there twice.",
+				"hint": "A few stitches across the little cut at the navel."},
+		],
+		"timeout": [
+			{"id": "patient", "label": "Patient", "reads": "Rekha Sinha, 52", "said": "Patient: Rekha Sinha, fifty-two.",
+				"right": "confirm", "wrong_reads": "Rekha Sinha, 25", "wrong_said": "Patient: Rekha Sinha, twenty-five.",
+				"wrong_note": "The board had her as 25. She's 52. Somebody copied it backwards."},
+			{"id": "procedure", "label": "Operation", "reads": "Keyhole look: bile leak", "said": "Operation: keyhole look for a bile leak.",
+				"right": "confirm", "wrong_reads": "Keyhole gallbladder removal", "wrong_said": "Operation: keyhole gallbladder removal.",
+				"wrong_note": "The board named Saturday's operation. Her gallbladder is already out; that's why she's back."},
+			{"id": "allergy", "label": "Allergies", "reads": "None known", "said": "Allergies: none known.", "right": "allergy",
+				"kind": "allergy", "allergic": true, "known": "allergy_known"},
+		],
+		"variants": {
+			"leak": {
+				"stump": {"say": "The stump of the gallbladder's duct. One clip on it. And another clip lying loose beside it.", "right": "reclip",
+					"look": "The duct's stump: one clip where there should be two, a second clip lying loose. Bile beads at the end."},
+				"bed": {"say": "Not the stump. Both clips are on. It's coming out of the liver itself, where the gallbladder sat.", "right": "clip_bed",
+					"look": "The stump: two clips, dry. The liver bed: a duct the size of a thread, weeping bile."},
+				"duct": {"say": "Both clips on, bed dry. It's coming from the side of the main duct. A burn mark, and a hole.", "right": "drain",
+					"look": "The stump: dry. The liver bed: dry. The main bile duct: a scorch mark on its side, and a small hole."},
+			},
+		},
+		"decisions": {
+			"look": {
+				"options": [
+					{"id": "reclip", "text": "Clip the stump again"},
+					{"id": "clip_bed", "text": "Clip the little duct in the liver bed"},
+					{"id": "drain", "text": "Don't touch it: drain it, call the liver team"},
+				],
+				"right_lines": {
+					"reclip": "Agreed. One clip slipped, so two go on. Below it, on healthy duct.",
+					"clip_bed": "Agreed. A little duct straight out of the liver. One in a hundred people have one. Clip it.",
+					"drain": "Agreed. A hole in the main duct is a job for the liver team and a stent. We drain it and keep our hands off.",
+				},
+				"wrong_lines": {
+					"stump:clip_bed": [6.0, "The bed's dry. Look where the bile beads: the end of the stump. And the loose clip."],
+					"stump:drain": [5.0, "A drain and a referral for a slipped clip? Clip it. It's two seconds."],
+					"bed:reclip": [5.0, "The stump has two clips and it's dry. Look where it weeps: the liver bed."],
+					"bed:drain": [4.0, "It's a little duct in the bed. Clip it and she goes home Sunday."],
+					"duct:reclip": [16.0, "The stump's dry! Clip near that main duct and you'll close it. Look at the burn."],
+					"duct:clip_bed": [16.0, "That's not the bed. That's the main duct. A clip on it and her liver can't drain."],
+				},
+				"notes": {
+					"right": "You found where the bile came from and chose the right fix.",
+					"wrong": "You misread the leak. A slipped clip: clip again. A duct in the liver bed: clip it. A hole in the main duct: drain it, and the liver team stents it.",
+				},
+			},
+		},
+		"lines": {
+			"bleeding": {"call": "Bleeding from the liver bed! Find it and clip it!", "tool": "clip",
+				"start": "There, where it's welling up. Clip it!", "hit": "Clipped. Dry again."},
+			"pressure": {"line": "Her pressure's dropping. {bp}. Three days of bile in her belly: she's septic. What do you want?",
+				"options": [
+					{"id": "fluids", "text": "Fluids fast, and the antibiotic now"},
+					{"id": "deeper", "text": "Deeper gas, she's light"},
+					{"id": "carry_on", "text": "Carry on, it'll settle"},
+				],
+				"fixed": "Fluids in, antibiotic running... pressure's lifting. Bile makes people very sick, very quietly."},
+		},
+		"end_lines": {
+			"won": "Washed out, ports glued. She'll be sitting up tonight and complaining by Sunday.",
+			"struggled": "Done. Harder than it should have been. She'll mend.",
+			"failed": "It's done.",
+		},
+		"outcome_lines": {
+			"won": "Mrs. Sinha's leak is stopped.",
+			"struggled": "Stopped, the hard way.",
 			"failed": "Dr. Iyer had to take over.",
 		},
 	}

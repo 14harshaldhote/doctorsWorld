@@ -316,6 +316,56 @@ func _ward_shots() -> void:
 	await _ward_shot("97-head-of-department", 23, months, "interview", func(w: Ward) -> bool:
 		return w.mode == "end" and w.overlay.fade_amount() > 0.9, surgeon)
 
+	# Stage 10: Head of Department, six months later, and the last day.
+	var head := Ward.pick_tones(["Support", "Ask", "Explain", "Together", "Promise", "Refuse", "Tea", "Truth", "Credit Grace",
+		"Own it", "Patients", "Sethi", "Families", "Everything"])
+	await _ward_shot("98-six-months", 24, [], "", func(w: Ward) -> bool:
+		return w._day_card_in > 0.0 and w._day_card_in < 2.0, head)
+	await _ward_shot("99-strike-vote", 24, [], "", func(w: Ward) -> bool:
+		return w.conversation == "morning24" and w.talk_ui.is_choosing(), head)
+	await _ward_shot("100-dr-kapoor", 24, ["strike_backed"], "kapoor", func(w: Ward) -> bool:
+		return w.conversation == "kapoor_tour" and w.talk_ui.is_choosing(), head)
+	var backed := ["strike_backed", "kapoor_asked"]
+	await _ward_shot("101-day-case", 25, backed, "", func(w: Ward) -> bool:
+		return w.view is HistoryView and (w.view.task as HistoryTask).asked.size() >= 2, head)
+	await _ward_shot("102-find-the-leak", 25, backed, "", func(w: Ward) -> bool:
+		return w.operation != null and w.operation.step == "find" and w.operation.phase == "act", head)
+	await _ward_shot("103-where-is-it-leaking", 25, backed, "", func(w: Ward) -> bool:
+		return w.operation != null and w.operation.step == "look" and w.operation.phase == "decide", head)
+	await _ward_shot("104-stop-the-leak", 25, backed, "", func(w: Ward) -> bool:
+		return w.operation != null and w.operation.step == "fix" and w.operation.phase == "act", head)
+	await _ward_shot("105-dr-sethi-asks", 25, backed, "", func(w: Ward) -> bool:
+		return w.conversation == "sethi_leak" and w.talk_ui.is_choosing(), head)
+	await _ward_shot("106-the-whole-sentence", 25, backed, "", func(w: Ward) -> bool:
+		return w.conversation == "sinha_truth" and w.talk_ui.is_choosing(), head)
+	var owned := backed + ["sinha_history_done", "sinha_history_right", "op_sinha_done", "op_sinha_won", "sinha_together",
+		"pilot_paused"]
+	await _ward_shot("107-strike-cover", 26, owned, "", func(w: Ward) -> bool:
+		return w.view is RotaView and (w.view.task as RotaTask).assigned.size() >= 3 \
+			and (w.view.task as RotaTask).selected.is_empty(), head)
+	await _ward_shot("108-who-takes-them", 26, owned, "", func(w: Ward) -> bool:
+		return w.view is RotaView and (w.view.task as RotaTask).assigned.size() >= 2 \
+			and not (w.view.task as RotaTask).selected.is_empty(), head)
+	var struck := owned + ["strike_rota_done", "strike_rota_right"]
+	await _ward_shot("109-agency-nurses", 26, struck, "midday", func(w: Ward) -> bool:
+		return w.conversation == "strike_midday" and w.talk_ui.is_choosing(), head)
+	await _ward_shot("110-picket-line", 26, struck + ["strike_no_agency"], "picket", func(w: Ward) -> bool:
+		return w.conversation == "picket" and w.talk_ui.is_choosing(), head)
+	var voted := struck + ["strike_no_agency", "picket_tea"]
+	await _ward_shot("111-board-vote", 27, voted, "board", func(w: Ward) -> bool:
+		return w.conversation == "board_vote" and w.talk_ui.is_choosing(), head)
+	await _ward_shot("112-chief-of-medicine", 27, voted, "board", func(w: Ward) -> bool:
+		return w.mode == "end" and w.overlay.fade_amount() > 0.9, head)
+	var last := voted + ["promoted"]
+	await _ward_shot("113-head-of-surgery", 28, last, "", func(w: Ward) -> bool:
+		return w.conversation == "morning28" and w.talk_ui.is_choosing(), head)
+	await _ward_shot("114-new-intern", 28, last + ["hos_sethi"], "intern", func(w: Ward) -> bool:
+		return w.conversation == "intern_day1" and w.talk_ui.is_choosing(), head)
+	await _ward_shot("115-end-of-the-day", 28, last + ["hos_sethi", "lesson_ask"], "ending", func(w: Ward) -> bool:
+		return w.conversation == "ending" and w.talk_ui.is_choosing(), head)
+	await _ward_shot("116-the-end", 28, last + ["hos_sethi", "lesson_ask"], "ending", func(w: Ward) -> bool:
+		return w.mode == "end" and w.overlay.fade_amount() > 0.9, head)
+
 
 ## The drug chart with a line already flagged: the list, or the reasons.
 static func _chart_at(ward: Ward, picking: bool) -> bool:
@@ -370,6 +420,13 @@ static func sample_profile_on_ward(day: int, flags: Array = []) -> PlayerProfile
 			doctor.set_flag(flag)
 		doctor.rank_held = Rank.SURGEON
 		doctor.total_xp = LevelCurve.total_xp_to_reach(Rank.FIRST_LEVELS[Rank.SURGEON]) + 400 * (day - 19)
+	if day >= 24:
+		# Six months on: Head of Department, the Surgeon's months behind them.
+		for flag: String in ["op_kurup_won", "kurup_told_now", "candour_together", "kurup_promise", "count_rule", "sethi_fair",
+				"bus_triage_right", "hod_talk", "jump_24"]:
+			doctor.set_flag(flag)
+		doctor.rank_held = Rank.HEAD_OF_DEPARTMENT if day < 28 else Rank.CHIEF
+		doctor.total_xp = LevelCurve.total_xp_to_reach(Rank.FIRST_LEVELS[doctor.rank_held]) + 400 * (day - 24)
 	return doctor
 
 

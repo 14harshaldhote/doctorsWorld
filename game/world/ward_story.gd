@@ -6,7 +6,10 @@ extends RefCounted
 ## on, as a Senior Resident with an intern of their own (stage 8), ending
 ## with the review that makes a Surgeon; then Days 19 to 23, three months
 ## on, as a Surgeon with a list and a team of their own (stage 9), ending with
-## the interview that makes a Head of Department.
+## the interview that makes a Head of Department; then Days 24 to 28, six
+## months on, as Head of Department (stage 10): the nurses' strike, a day
+## case that comes back, the board's vote for Chief of Medicine, and the last
+## day, with a new intern of your own. Quiet days follow.
 ##
 ## Beats use the Ward's keys (see Ward.DAYS) plus:
 ##   "where"     "seminar" for a beat in the seminar room (no walking)
@@ -36,9 +39,10 @@ const TIME_JUMPS := {
 	9: ["Eight months later", "Junior Resident now. The pager no longer makes you jump. Mostly."],
 	14: ["A year later", "Senior Resident. An intern of your own, and nights in charge of the whole floor."],
 	19: ["Three months later", "Surgeon. Your own list, your own team, and nobody's hands over yours."],
+	24: ["Six months later", "Head of Department. Dr. Rao's old office, a door that sticks, and everybody's problems before your own."],
 }
 ## The story chapters the Ward reads conversations from, after "ward".
-const CHAPTERS := ["junior", "senior", "surgeon"]
+const CHAPTERS := ["junior", "senior", "surgeon", "hod"]
 ## Story days that are night shifts (the first week's night is Ward.NIGHT_DAY).
 const NIGHTS := [16]
 
@@ -257,6 +261,71 @@ const DAYS := {
 			"talk": "review_hod", "with": "rajan", "slide": "INTERVIEW\nHead of Department, Surgery",
 			"put": [["rajan", "seminar:head"], ["rao", "seminar:seat1"], ["malhotra", "seminar:seat2"], ["you", "seminar:seat5"]]},
 	],
+	# --- Six months later: Head of Department ------------------------------------
+	24: [
+		{"id": "strike", "talk": "morning24", "with": "grace"},
+		{"id": "kapoor", "row": "Meet Dr. Kapoor", "go": "trolley", "talk": "kapoor_tour", "with": "kapoor",
+			"page": "Mr. Malhotra: Dr. Kapoor is in the admissions bay. Could the Head of Department join us? Smile, please.",
+			"put": [["kapoor", "trolley:other"], ["malhotra", "trolley:foot"]]},
+	],
+	25: [
+		{"id": "morning", "talk": "morning25", "with": "iyer"},
+		{"id": "sinha", "row": "Admissions: Mrs. Sinha", "go": "trolley", "talk": "sinha_arrive", "with": "sinha",
+			"page": "Priya: Admissions. Mrs. Sinha. Thirty-nine degrees and a belly like a board.",
+			"put": [["sinha", "trolley:lie"], ["priya", "trolley:other"]],
+			"tasks": [["history", "sinha_history"]], "after": "sinha_after",
+			"put_end": [["sinha", "bed4:lie"], ["priya", "off"]]},
+		{"id": "sinha_op", "row": "Operate: Mrs. Sinha", "go": "bed4", "talk": "sinha_ready", "with": "sinha",
+			"page": "Priya: Theatre 2 at two for Mrs. Sinha. Dr. Sethi's clinic says he's 'unavailable'.", "at": 13 * 60 + 50,
+			"tasks": [["operate", "bile_leak"]],
+			"brief": "bile_brief", "team": ["iyer", "neha", "khan"], "patient": "sinha",
+			# Theatre only knows about her penicillin if somebody asked her.
+			"op_flags": {"allergy_known": "sinha_history_allergy"},
+			"levels": ["easy", "hard", "extreme"],
+			"put_back": [["sinha", "bed4:lie"], ["you", "bed4:side"], ["iyer", "bed4:foot"]],
+			"after": "sinha_after_op",
+			"put_end": [["iyer", "desk:right"]]},
+		{"id": "sethi", "row": "Dr. Sethi wants a word", "go": "desk", "talk": "sethi_leak", "with": "sethi",
+			"page": "Dr. Iyer: Dr. Sethi's at the desk. He's read your op note.",
+			"put": [["sethi", "desk:left"]],
+			"put_end": [["sethi", "bed4:other", "sinha_together"], ["sethi", "off", "!sinha_together"], ["iyer", "off"]]},
+		{"id": "truth", "row": "Bed four: the whole sentence", "if": "sinha_told|sinha_together", "go": "bed4", "talk": "sinha_truth",
+			"with": "sinha", "page": "Priya: Mrs. Sinha's awake. Asking for 'the doctor with the whole sentence'.",
+			"put_end": [["sethi", "off"]]},
+	],
+	26: [
+		{"id": "rota", "row": "Strike cover with Grace", "talk": "strike_rota_arrive", "with": "grace",
+			"tasks": [["rota", "strike_rota"]], "coach": "grace", "after": "strike_rota_after",
+			"levels": ["easy", "hard", "extreme"],
+			"put_end": [["grace", "off"]]},
+		{"id": "midday", "row": "Midday on strike day", "go": "desk", "at": 13 * 60, "talk": "strike_midday", "with": "priya",
+			"page": "Priya: Desk, when you can. Midday report. And Mr. Malhotra's here, with a pen.",
+			"put": [["priya", "desk:behind"], ["malhotra", "desk:left"]]},
+		{"id": "picket", "row": "The picket line", "go": "trolley", "at": 17 * 60, "talk": "picket", "with": "grace",
+			"page": "Priya: The picket's come in out of the rain, to admissions. Grace says bring tea.",
+			"put": [["grace", "trolley:other"], ["rajan", "trolley:foot", "!strike_agency"], ["priya", "off"]],
+			"put_end": [["grace", "off"], ["rajan", "off"]]},
+	],
+	27: [
+		{"id": "morning", "talk": "morning27", "with": "grace"},
+		{"id": "sinha", "row": "Bed four: Mrs. Sinha goes home", "go": "bed4", "talk": "sinha27", "with": "sinha",
+			"page": "Priya: Mrs. Sinha's going home. She'd like to see you first. It's about grammar."},
+		{"id": "board", "row": "The board's vote", "where": "seminar", "at": 15 * 60,
+			"card": ["Seminar room · 15:00", "Dr. Kapoor's projector is still warm. Three questions, and seven votes."],
+			"talk": "board_vote", "with": "rajan", "slide": "CHIEF OF MEDICINE\nBoard of Governors",
+			"put": [["rajan", "seminar:head"], ["dean", "seminar:seat1"], ["malhotra", "seminar:seat2"], ["kapoor", "seminar:seat3"],
+				["you", "seminar:seat5"]]},
+	],
+	28: [
+		{"id": "morning", "talk": "morning28", "with": "iyer"},
+		{"id": "intern", "row": "Your new intern", "go": "desk", "talk": "intern_day1", "with": "saxena",
+			"page": "Grace: Desk. She's finished the fire notices. She's started on the canteen menu.",
+			"put": [["saxena", "desk:left"]], "put_end": [["saxena", "off"]]},
+		{"id": "ending", "row": "The end of the day", "go": "lightbox", "at": 18 * 60 + 20,
+			"card": ["18:20", "The light through the ward windows goes orange, the way it did on your first day."],
+			"talk": "ending", "with": "iyer", "page": "Dr. Iyer: Lightbox, Chief. No films. Just come and stand here a minute.",
+			"put": [["iyer", "lightbox:left"], ["grace", "lightbox:right"]]},
+	],
 }
 
 ## Where everyone is as each day starts.
@@ -291,6 +360,12 @@ const STAGING := {
 		["grace", "desk:behind"], ["priya", "desk:left"], ["you", "desk"]],
 	23: [["bg1", "bed1:lie"], ["kurup", "bed2:sit"], ["venu", "bed2:chair"], ["bg2", "bed3:lie"], ["bg3", "bed6:lie"],
 		["grace", "desk:behind"], ["iyer", "desk:right"], ["you", "desk"]],
+	24: [["bg1", "bed1:lie"], ["bg2", "bed3:lie"], ["bg3", "bed5:sit"], ["grace", "desk:behind"], ["iyer", "desk:right"], ["you", "desk"]],
+	25: [["bg1", "bed1:lie"], ["bg2", "bed3:lie"], ["bg3", "bed5:sit"], ["grace", "desk:behind"], ["iyer", "desk:right"], ["you", "desk"]],
+	26: [["bg1", "bed1:lie"], ["bg2", "bed3:lie"], ["sinha", "bed4:sit"], ["bg3", "bed6:lie"], ["grace", "desk:behind"], ["you", "desk"]],
+	27: [["bg1", "bed1:lie"], ["bg2", "bed3:lie"], ["sinha", "bed4:sit"], ["bg3", "bed6:lie"], ["grace", "desk:behind"],
+		["iyer", "desk:right"], ["you", "desk"]],
+	28: [["bg1", "bed1:sit"], ["bg2", "bed3:lie"], ["bg3", "bed6:lie"], ["grace", "desk:behind"], ["iyer", "desk:right"], ["you", "desk"]],
 }
 
 ## Where everyone is on a quiet day after the story.
@@ -314,6 +389,11 @@ const DAY_LINES := {
 	21: "Surgical ward · News from the top floor",
 	22: "Major incident · The flyover",
 	23: "Interview day",
+	24: "Surgical ward · Head of Department",
+	25: "Surgical ward · A day case comes back",
+	26: "Strike day",
+	27: "Board day",
+	28: "Monday · A new intern",
 }
 
 ## The day's last line: the first whose condition holds.
@@ -355,6 +435,20 @@ const END_LINES := {
 	22: [["bus_triage_under", "Twenty-three in, nine operations. One waited who shouldn't have."],
 		["", "Twenty-three in, nine operations. Nobody waited who couldn't."]],
 	23: [["", "Head of Department, from the first of the month."]],
+	24: [["strike_backed", "Your letter is on the board's desk. The strike is on for Thursday."],
+		["strike_talks", "The board meets the union's numbers on Wednesday night. You're bringing them."],
+		["", "The strike is on for Thursday. Grace isn't speaking to you. Much."]],
+	25: [["op_sinha_failed", "Mrs. Sinha is washed out and dry. Dr. Iyer finished it."],
+		["sinha_together", "Mrs. Sinha heard it from the surgeon, with you beside him."],
+		["sinha_told", "Mrs. Sinha heard it from the surgeon. You made sure of that."],
+		["sinha_waited", "Mrs. Sinha is asleep. Monday, you said. Not Tuesday."],
+		["", "Her notes say 'known complication'. Her son is driving from Lucknow."]],
+	26: [["strike_agency", "The strike is over. Twelve agency nurses broke it. Kapoor's."],
+		["strike_rota_right", "The strike is over: two more nurses on nights. Nobody came to harm."],
+		["strike_rota_confused", "The strike is over: two more nurses on nights. One patient fell. A bruise. This time."],
+		["", "The strike is over: two more nurses on nights. The cover held, mostly."]],
+	27: [["", "Chief of Medicine, from Monday."]],
+	28: [["", "Chief of Medicine. The pager still goes off. You still answer it."]],
 }
 
 ## The story's choices on each day, cleared when an unfinished day starts again.
@@ -378,6 +472,11 @@ const DAY_FLAGS := {
 	21: ["count_rule", "sethi_fair", "sethi_dig"],
 	22: ["crash_beds", "crash_called", "crash_no_photo", "crash_credit_priya", "crash_photo"],
 	23: ["hod_owned", "hod_blamed", "hod_nurses", "hod_talk", "hod_board"],
+	24: ["jump_24", "strike_backed", "strike_talks", "strike_opposed", "kapoor_asked"],
+	25: ["sinha_together", "sinha_told", "sinha_waited", "sinha_covered", "pilot_paused"],
+	26: ["strike_rota_gap", "strike_no_agency", "strike_agency", "picket_tea"],
+	27: ["sinha_told_late", "board_owned"],
+	28: ["hos_iyer", "hos_sethi", "hos_open", "lesson_ask", "lesson_families", "lesson_count"],
 }
 ## The cases worked each day, whose task flags are cleared with them.
 const DAY_CASES := {
@@ -389,6 +488,8 @@ const DAY_CASES := {
 	16: ["nanda_exam", "imran_exam"],
 	19: ["kurup_history"],
 	22: ["bus_triage"],
+	25: ["sinha_history"],
+	26: ["strike_rota"],
 }
 
 

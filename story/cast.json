@@ -6,7 +6,7 @@
 	"aarav": {"name": "Aarav", "role": "Leela's son, 6", "voice": 1.55, "gender": "male", "child": true, "pace": 1.05},
 	"tom": {"name": "Tom D'Souza", "role": "Scrub nurse", "voice": 0.9, "gender": "male"},
 	"priya": {"name": "Priya Nambiar", "role": "Staff nurse", "voice": 1.22, "trust": 45, "gender": "female"},
-	"dean": {"name": "Dr. R. Menon", "role": "Dean of the medical college", "voice": 0.82, "gender": "male", "pace": 0.95},
+	"dean": {"name": "Dr. R. Menon", "role": "Dean of the medical college", "voice": 0.82, "trust": 45, "gender": "male", "pace": 0.95, "later_roles": {"24": "Dean and Chief of Medicine · retiring"}},
 	"mum": {"name": "Mum", "role": "Your mother", "voice": 1.15, "gender": "female"},
 	"dad": {"name": "Dad", "role": "Your father", "voice": 0.84, "gender": "male"},
 	"anu": {"name": "Anu", "role": "Your little sister", "voice": 1.32, "gender": "female", "child": true},
@@ -43,5 +43,8 @@
 	"venu": {"name": "Venu Kurup", "role": "Her husband", "voice": 0.84, "trust": 40, "gender": "male", "pace": 0.95},
 	"neha": {"name": "Neha Joshi", "role": "Scrub nurse", "voice": 1.16, "gender": "female"},
 	"bose": {"name": "Dr. Arindam Bose", "role": "Anaesthetist", "voice": 0.94, "trust": 45, "gender": "male"},
-	"rajan": {"name": "Mrs. Nirmala Rajan", "role": "Chair of the hospital board", "voice": 0.98, "trust": 40, "gender": "female", "pace": 0.95}
+	"rajan": {"name": "Mrs. Nirmala Rajan", "role": "Chair of the hospital board", "voice": 0.98, "trust": 40, "gender": "female", "pace": 0.95},
+	"kapoor": {"name": "Dr. Sameer Kapoor", "role": "Medical Director, CarePlus Hospitals", "voice": 0.96, "trust": 30, "gender": "male", "pace": 1.04},
+	"sinha": {"name": "Mrs. Rekha Sinha", "role": "Patient · 52, Hindi teacher", "voice": 1.02, "trust": 40, "gender": "female", "pace": 0.96},
+	"saxena": {"name": "Dr. Ira Saxena", "role": "Intern · first day", "voice": 1.14, "trust": 45, "gender": "female", "pace": 1.06}
 }

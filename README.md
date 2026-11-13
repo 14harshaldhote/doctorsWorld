@@ -65,9 +65,9 @@ how you know you're winning.
 
 ## What works right now
 
-The game is being built in stages, and the old 2D version has been retired
-(it's kept safe on the `swift-prototype` branch). Stages 1 to 9 of the 3D game
-are in:
+All ten stages are in, from convocation to the corner office. The old 2D
+version has been retired (it's kept safe on the `swift-prototype` branch).
+Here's everything, in order, so you can decide how much of your life to give it:
 
 - The title screen: the hospital at dusk, an ambulance, a doctor wandering about.
 - Name your doctor and choose whether people call you by your first or last name.
@@ -248,6 +248,43 @@ are in:
 - Dr. Rao retires, and the Head of Department job is you or Dr. Sethi, who
   has done the management course twice and mentions it. The interview panel
   includes a retired judge. She can tell when an answer's been rehearsed.
+- Six months later. Head of Department: Dr. Rao's old office, a door that
+  sticks, and everybody's problems before your own. The nurses are voting on
+  a strike, the Dean is retiring, and a private chain called CarePlus has
+  sent Dr. Sameer Kapoor to look round. He finds the paper charts charming,
+  the way people find old cars charming.
+- Mrs. Rekha Sinha taught Hindi for thirty-one years and had her gallbladder
+  out on Dr. Sethi's new "home by evening" scheme. Three days later she's back,
+  yellow, feverish and correcting your grammar. Ask the right questions (yes,
+  she's allergic to penicillin), then go back in through the same keyholes:
+  wash out the bile, wait for the fresh green trickle, and decide what's
+  leaking. A clip that slipped, a tiny duct in the liver bed, or a burn on the
+  main duct, which needs a drain and a very long talk.
+- Dr. Sethi would like you to keep it quiet until after Friday's board vote.
+  You can tell her today, tell her together, wait, or write it up as "a known
+  complication". She marked homework for thirty-one years. She knows copying
+  when she sees it.
+- Strike day, and a new puzzle at seven in the morning with Sister Grace: who
+  nurses whom, with half the staff on the picket line. Each patient needs so
+  much nursing, and each nurse has a limit. Drips only go to nurses allowed to
+  run them (not the agency one). Infected wounds and chemotherapy patients
+  never share a nurse. A confused patient needs a nurse with time to watch
+  him. The student doesn't get the heaviest patient, however keen she is.
+  Easy marks the mistakes, hard charges for Grace's hints, and extreme gives
+  you ten patients and a Grace who keeps her hints to herself.
+- At midday you find out what you got wrong: a drip that ran dry, a fall, a
+  swab from everyone. Then Mr. Malhotra offers twelve CarePlus agency nurses
+  by four o'clock. At five the picket line comes in out of the rain, and you
+  find out what the nurses think of you, to your face.
+- The board votes on a new Chief of Medicine: you, or Dr. Kapoor and his
+  three videos. They remember the leak, the rota and the picket line, and the
+  chair has questions she already knows the answers to.
+- The last day. Choose your Head of Surgery, meet your own intern on her first
+  morning (you know exactly what to say; someone said it to you on Day 4), and
+  stand at the X-ray viewer at the end of the day while Dr. Iyer and Sister
+  Grace tell you where everyone ended up. Rohit builds bridges. Dr. Rao grows
+  roses. Then the pager goes off, because it always does, and the ward carries
+  on without an ending, the way wards do.
 
 Screenshots of every screen are rebuilt automatically after each change, on
 the [`screenshots` branch](../../tree/screenshots).

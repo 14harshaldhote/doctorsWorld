@@ -724,5 +724,118 @@
 				"stays": "Nothing. He snores.",
 				"why": "Slow, noisy breathing and no response to a command: his brain is in trouble. Red."}
 		]
+	},
+	"sinha_history": {
+		"patient": "Mrs. Rekha Sinha",
+		"about": "52 · fever, belly pain, gallbladder out on Saturday",
+		"actor": "sinha",
+		"limit": 5,
+		"him": "her",
+		"his": "her",
+		"part": "belly",
+		"opening": "Ask, Doctor. In whole sentences, please. I've had two days of leaflets.",
+		"questions": [
+			{"id": "operation", "ask": "When was your operation, and what was done?", "weight": "key",
+				"answer": "Saturday morning. Keyhole, my gallbladder, Dr. Sethi. I was home by six with a leaflet and a sandwich.",
+				"fact": "Keyhole gallbladder on Saturday, home the same evening",
+				"why": "Pain and fever days after a gallbladder operation means a leak or an infection inside until proven otherwise."},
+			{"id": "pain", "ask": "Where is the pain, and is it getting worse?", "weight": "key",
+				"answer": "Under my ribs on the right, and now everywhere. Worse every hour. The leaflet said some pain is normal, so I waited.",
+				"fact": "Pain spreading from the right side to the whole belly, worse each hour",
+				"why": "Pain that spreads and keeps worsening isn't wound pain. Something is irritating the whole belly."},
+			{"id": "fever", "ask": "Have you had a fever, or shivers?", "weight": "key",
+				"answer": "Shaking under two blankets last night. My son took my temperature on the phone, by shouting instructions. Thirty-nine.",
+				"fact": "Fever of 39, shivering",
+				"why": "Fever and shivers mean infection. With bile loose in the belly, she can turn septic quickly."},
+			{"id": "allergy", "ask": "Are you allergic to anything?", "weight": "key",
+				"answer": "Penicillin. I swell up like a balloon at a wedding. I told them on Saturday. I think. Saturday was very fast.",
+				"fact": "Allergic to penicillin: she swells up",
+				"why": "The usual antibiotic for a belly operation, co-amoxiclav, is a penicillin. Theatre must know before she's asleep."},
+			{"id": "yellow", "ask": "Have your eyes or skin turned yellow?", "weight": "useful",
+				"answer": "My son says my eyes look like old piano keys. A little yellow, he says. He's very poetic for a lawyer.",
+				"fact": "Eyes a little yellow"},
+			{"id": "urine", "ask": "What colour is your urine?", "weight": "useful",
+				"answer": "Dark. Like strong tea. And not much of it, Doctor, since you ask so politely.",
+				"fact": "Dark, scanty urine"},
+			{"id": "meal", "ask": "When did you last eat or drink?", "weight": "useful",
+				"answer": "Toast, yesterday morning. Sips of water since. Even the water argues with me.",
+				"fact": "Nothing but sips since yesterday morning"},
+			{"id": "surgeon", "ask": "What did Dr. Sethi say after the operation?", "weight": "none",
+				"answer": "'Textbook.' Twice. Then he ran. He had a presentation, he said. With slides."},
+			{"id": "job", "ask": "What do you do?", "weight": "none",
+				"answer": "I taught Hindi at the girls' school for thirty-one years. I can silence a room with one eyebrow."}
+		]
+	},
+	"strike_rota": {
+		"kind": "rota",
+		"place": "The surgical floor",
+		"actor": "grace",
+		"brief": {
+			"easy": "Life and limb cover. Six patients, three pairs of hands. Every bed gets a name, and the rules are on the card. I walk out at eight, Doctor. Make it so I can.",
+			"hard": "Eight patients, four of you, and Ananya is a student. I'll read it when you sign, not before. Then I'm on the gate with a placard.",
+			"extreme": "Ten patients. Five of you, counting your intern. No card and no help from me. I've already got my placard in my hand."
+		},
+		"warn": {
+			"load": "{staff} can't carry that much. Somebody's three a.m. checks get missed.",
+			"iv": "{staff} isn't signed off for IV drugs here. {who} needs a nurse who can run that drip.",
+			"infection": "Not with {staff}. The same hands on an infection and on someone who can't fight one? That's how we lose a patient.",
+			"confused": "{who} needs watching, and {staff} will have too many to watch.",
+			"student": "{staff} is a student. {who} is too much for her on her own."
+		},
+		"placed": {
+			"line": "{who} with {staff}."
+		},
+		"explain": {
+			"load": "More than one nurse can carry, and the checks get missed.",
+			"iv": "Only a nurse signed off for IV can give drugs through a drip.",
+			"infection": "Hands that touch an infection carry it to the patient who can't fight it.",
+			"confused": "A confused patient needs a nurse with time to watch them, or they wander and fall.",
+			"student": "A student can't take the heaviest patients alone."
+		},
+		"signed": {
+			"all": "That holds. Every bed has a name and nobody's carrying too much. Now I can walk out and sleep tonight.",
+			"gap": "Someone has no name next to them. I don't walk out on an empty bed, Doctor. Priya, find them somebody.",
+			"some": "Signed. It'll do. But someone's carrying more than they should, and that's on both of us now."
+		},
+		"staff": [
+			{"id": "priya", "from": "easy", "who": "Priya Nambiar", "short": "Priya", "capacity": 6, "iv": true,
+				"role": "Staff nurse, kept back for cover"},
+			{"id": "tom", "from": "easy", "who": "Tom D'Souza", "short": "Tom", "capacity": 4, "iv": true,
+				"role": "Scrub nurse, theatres shut"},
+			{"id": "joel", "from": "easy", "who": "Joel Rodrigues", "short": "Joel", "capacity": {"easy": 5, "extreme": 4}, "iv": false,
+				"role": "Agency nurse, no IV here"},
+			{"id": "ananya", "from": "hard", "who": "Ananya Gupta", "short": "Ananya", "capacity": 3, "student": true,
+				"role": "Student nurse"},
+			{"id": "neha", "from": "extreme", "who": "Neha Joshi", "short": "Neha", "capacity": 3, "iv": true,
+				"role": "Scrub nurse, theatres shut"}
+		],
+		"patients": [
+			{"id": "arora", "from": "easy", "who": "Mr. Arora", "short": "Mr. Arora", "load": 3, "iv": true, "fragile": true,
+				"about": "Bowel op yesterday. Drip, drain, pain pump."},
+			{"id": "chawla", "from": "easy", "who": "Mrs. Chawla", "short": "Mrs. Chawla", "load": 2, "iv": true, "infectious": true,
+				"about": "Chest infection, IV antibiotics. Coughing."},
+			{"id": "pinto", "from": "easy", "who": "Mr. Pinto", "short": "Mr. Pinto", "load": 2, "confused": true,
+				"about": "82, broken wrist. Wanders at night."},
+			{"id": "ghosh", "from": "easy", "who": "Mr. Ghosh", "short": "Mr. Ghosh", "load": 1,
+				"about": "Hernia repair. Waiting to go home."},
+			{"id": "shetty", "from": "easy", "who": "Mrs. Shetty", "short": "Mrs. Shetty", "load": 2,
+				"about": "New hip, day three. Needs help to walk."},
+			{"id": "iqbal", "from": "easy", "who": "Mrs. Iqbal", "short": "Mrs. Iqbal", "load": 2, "iv": true, "fragile": true,
+				"about": "Chemotherapy drip. No white cells to spare."},
+			{"id": "desai", "from": "easy", "who": "Mr. Desai", "short": "Mr. Desai", "load": 1,
+				"about": "Ankle in plaster. Bored, on his phone."},
+			{"id": "bedi", "from": "easy", "who": "Mr. Bedi", "short": "Mr. Bedi", "load": 2, "infectious": true,
+				"about": "Leg wound with a resistant bug."},
+			{"id": "naidu", "from": "hard", "who": "Mr. Naidu", "short": "Mr. Naidu", "load": 2, "iv": true,
+				"about": "Bleeding ulcer. Drip and blood running."},
+			{"id": "lobo", "from": "hard", "who": "Mrs. Lobo", "short": "Mrs. Lobo", "load": 2, "confused": true,
+				"about": "Dementia. Pulls at her drip, calls everyone Jacob."},
+			{"id": "kamath", "from": "hard", "who": "Miss Kamath", "short": "Miss Kamath", "load": 1,
+				"about": "Appendix out yesterday. Eating toast."},
+			{"id": "sen", "from": "extreme", "who": "Mr. Sen", "short": "Mr. Sen", "load": 3, "iv": true,
+				"about": "Pancreatitis. Drip, catheter, hourly urine."},
+			{"id": "hegde", "from": "extreme", "who": "Mrs. Hegde", "short": "Mrs. Hegde", "load": 3, "fragile": true,
+				"about": "Back from a thyroid op. Watch her breathing."}
+		]
 	}
 }

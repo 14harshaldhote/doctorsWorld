@@ -49,6 +49,8 @@ func step(view: TrainingView, delta: float) -> void:
 			_chart(view as ChartView)
 		"triage":
 			_triage(view as TriageView)
+		"rota":
+			_rota(view as RotaView)
 		_:
 			if view is OperationView:
 				_operation(view as OperationView, delta)
@@ -197,6 +199,39 @@ func _triage(view: TriageView) -> void:
 	elif quality == "shaky" and untagged.size() == 1 and tag == "red":
 		tag = "yellow"
 	view.give_tag(tag)
+
+
+## Plans strike cover: each patient in turn, most demanding first, with the
+## person the rota's own answer gives them, then signs. "shaky" puts one
+## patient with the wrong person; "bad" deals patients out in turn, like
+## cards, whatever the rules say.
+func _rota(view: RotaView) -> void:
+	if not _act():
+		return
+	var rota := view.task as RotaTask
+	var waiting: Array = rota.patients.filter(func(p: Dictionary) -> bool: return not rota.assigned.has(str(p["id"])))
+	if waiting.is_empty():
+		view.sign()
+		return
+	waiting.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+		return RotaTask._demand(a) > RotaTask._demand(b) or (RotaTask._demand(a) == RotaTask._demand(b) and str(a["id"]) < str(b["id"])))
+	var entry: Dictionary = waiting[0]
+	var patient_id := str(entry["id"])
+	if rota.selected != patient_id:
+		view.pick(patient_id)
+		return
+	var with := str(rota.solution.get(patient_id, ""))
+	if quality == "bad":
+		with = str(rota.staff[rota.assigned.size() % rota.staff.size()]["id"])
+	elif quality == "shaky" and rota.assigned.size() == 0:
+		# The heaviest patient goes to whoever can't take them.
+		for member in rota.staff:
+			var trial := rota.assigned.duplicate()
+			trial[patient_id] = str(member["id"])
+			if not RotaTask.breaks(rota.patients, rota.staff, trial).is_empty():
+				with = str(member["id"])
+				break
+	view.give_to(with)
 
 
 ## Examines like a careful doctor: a bleed first, then gentle places

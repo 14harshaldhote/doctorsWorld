@@ -98,6 +98,10 @@ VOICES = {
     "neha": {"mix": {"hf_beta": 0.6, "af_nicole": 0.4}, "speed": 1.03},
     "bose": {"mix": {"hm_psi": 0.55, "bm_daniel": 0.45}, "speed": 1.04},
     "rajan": {"mix": {"hf_alpha": 0.6, "bf_isabella": 0.4}, "speed": 0.93},
+    # Six months later: the day case, the rival, and a new intern.
+    "kapoor": {"mix": {"hm_psi": 0.5, "am_liam": 0.5}, "speed": 1.05},
+    "sinha": {"mix": {"hf_beta": 0.55, "bf_lily": 0.45}, "speed": 0.95},
+    "saxena": {"mix": {"hf_beta": 0.55, "af_sky": 0.45}, "speed": 1.06},
 }
 # The player's doctor: never voiced.
 PLAYER = "you"
@@ -120,6 +124,11 @@ RESPELL = {
     "Kurup": "Koo-roop", "Shanta": "Shaanta", "Venu": "Vay-noo", "Neha": "Nay-ha", "Arindam": "Ah-rin-dum",
     "Bose": "Bohs", "Nirmala": "Nir-mala", "Rajan": "Raajan", "Ernakulam": "Er-naa-kulam", "Rehan": "Ray-haan",
     "Joshi": "Joe-shee", "Anand": "Aanand",
+    "Sinha": "Sin-haa", "Rekha": "Ray-kha", "Saxena": "Sak-saynaa", "Ira": "Eera", "Sameer": "Sa-meer",
+    "Kapoor": "Ka-poor", "Lucknow": "Luck-now", "Coorg": "Koorg", "Ananya": "Ah-nun-ya", "Arora": "Ah-ro-raa",
+    "Chawla": "Chaav-laa", "Iqbal": "Ik-baal", "Naidu": "Nai-doo", "Hegde": "Heg-day", "Kamath": "Kaa-mat",
+    "Desai": "De-sai", "Bedi": "Bay-dee", "Lobo": "Lo-bo", "Ghosh": "Gohsh", "Rodrigues": "Rod-ree-gues",
+    "CarePlus": "Care Plus", "Ma'am": "Mam",
 }
 TITLES = {"Dr.": "Doctor", "Mr.": "Mister", "Mrs.": "Missus", "Ms.": "Miz"}
 ACRONYMS = ["ICU", "VIP", "MBBS", "ECG", "CPR", "OPD", "MRI", "HIV", "IVF", "DNA", "CCTV", "ENT", "NICU", "HR", "INR", "CT", "MDT"]
@@ -165,6 +174,21 @@ def story_lines():
     return found
 
 
+def rota_reason(patient, with_):
+    """As RotaTask._reason(): why a patient goes with someone, in a hint."""
+    if patient.get("iv"):
+        return "A drip needs someone who can give IV."
+    if patient.get("confused"):
+        return "Someone with a light load, to keep an eye on them."
+    if patient.get("infectious"):
+        return "Keep the infection away from the fragile ones."
+    if patient.get("fragile"):
+        return "Fragile: nobody infectious on the same nurse."
+    if int(patient.get("load", 1)) > 2:
+        return "Too heavy for a student."
+    return "%s has the room." % with_.capitalize()
+
+
 def case_lines(heard):
     """Every patient's answer and every finding in story/cases.json, by who
     says it (the patient's actor, or whoever introduces the case)."""
@@ -203,6 +227,26 @@ def case_lines(heard):
                     found.append((actor, casualty.get(key, "")))
                 for text in case.get("tagged", {}).values():
                     found.append((actor, text.replace("{who}", casualty.get("short", "them"))))
+            continue
+        if case.get("kind") == "rota":
+            # The head nurse says it all: the brief, each placing, a warning
+            # for each rule on easy, each hint, and the signing.
+            staff = case.get("staff", [])
+            people = case.get("patients", [])
+            texts = list(case.get("brief", {}).values()) + list(case.get("signed", {}).values())
+            texts += ["Start again from the sickest. It can be done.", "Everyone has someone. Sign it."]
+            for patient in people:
+                who = patient.get("short", "Them")
+                texts.append("Move %s. With them where they are, the rest can't work." % who)
+                texts.append("%s: %s" % (who, patient.get("about", "")))
+                for member in staff:
+                    with_ = member.get("short", "")
+                    texts.append(case.get("placed", {}).get("line", "{who} with {staff}.").replace("{who}", who).replace("{staff}", with_))
+                    for text in case.get("warn", {}).values():
+                        texts.append(text.replace("{who}", who).replace("{staff}", with_))
+                    texts.append("%s with %s. %s" % (who, with_, rota_reason(patient, with_)))
+            for text in texts:
+                found.append((actor, text))
             continue
         found.append((host, case.get("opening", "")))
         for spot in case.get("spots", []):

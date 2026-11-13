@@ -42,7 +42,7 @@ func _extra_runs() -> void:
 		for complication: String in ["bleeding", "pressure", "none"]:
 			_play_theatre(quality, complication)
 		for doctor_name: String in NAMES:
-			for day in [9, 10, 11, 12, 15, 16, 19, 22]:
+			for day in [9, 10, 11, 12, 15, 16, 19, 22, 25, 26]:
 				_play_ward(day, doctor_name, quality)
 		# The Senior Resident's operations at every difficulty, on two days
 		# (each day rolls its own case).
@@ -61,6 +61,12 @@ func _extra_runs() -> void:
 						"lose_swab": 1 if team[0] == "tom" else 0}, 3 + int(chest_safe))
 			for with_seed in [1, 2, 3, 4, 5, 6]:
 				_play_triage(level, with_seed, quality)
+			# Mrs. Sinha's bile leak, with and without her penicillin on the
+			# board, on two days (each rolls where it leaks on hard).
+			for known: bool in [true, false]:
+				for day in [3, 4]:
+					_play_theatre(quality, "", {"procedure": "bile_leak", "difficulty": level, "allergy_known": known,
+						"scrub_nurse": "neha"}, day)
 	print("The extra runs noted %d more lines." % (Speech.heard.size() - before))
 
 
@@ -91,6 +97,8 @@ func _play_ward(day: int, doctor_name: String, quality: String) -> void:
 	doctor.opening_seen = true
 	doctor.created = true
 	var rank := Rank.SURGEON if day >= 19 else (Rank.SENIOR_RESIDENT if day >= 14 else Rank.JUNIOR_RESIDENT)
+	if day >= 24:
+		rank = Rank.HEAD_OF_DEPARTMENT
 	doctor.total_xp = LevelCurve.total_xp_to_reach(Rank.FIRST_LEVELS[rank]) + 400
 	doctor.rank_held = rank
 	for flag: String in ["op_rohit_done", "op_rohit_won", "promoted", "beds_saved", "rider_treated", "jump_9"]:
@@ -99,6 +107,8 @@ func _play_ward(day: int, doctor_name: String, quality: String) -> void:
 		doctor.set_flag("jump_14")
 	if day >= 19:
 		doctor.set_flag("jump_19")
+	if day >= 24:
+		doctor.set_flag("jump_24")
 	var ward := Ward.new(doctor)
 	root.add_child(ward)
 	var finished := [false]

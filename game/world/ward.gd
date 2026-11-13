@@ -29,7 +29,7 @@ const FIRST_DAY := 4
 const NIGHT_DAY := 6
 const REVIEW_DAY := 8
 ## The review conversation on each review day.
-const REVIEWS := {8: "review", 13: "review_senior", 18: "review_surgeon", 23: "review_hod"}
+const REVIEWS := {8: "review", 13: "review_senior", 18: "review_surgeon", 23: "review_hod", 27: "board_vote"}
 ## Experience for an operation, by outcome, plus this much per star.
 const OP_XP := {"won": 120, "struggled": 80, "failed": 40}
 const OP_XP_PER_STAR := 10
@@ -61,6 +61,9 @@ const BEDS := {
 }
 const DESK := Vector3(1.6, 0, 1.45)
 const LIGHTBOX := Vector3(-8.8, 0, -0.35)
+## Inside the end walls (at x -9.1 and 9.5), where a talk camera can stand.
+const ROOM_MIN_X := -8.8
+const ROOM_MAX_X := 9.2
 const DOOR := Vector3(8.7, 0, 1.0)
 const FAMILY := Vector3(6.9, 0, 2.7)
 
@@ -478,6 +481,16 @@ func _build_people() -> void:
 		"glasses": 2, "brows": 2, "scrubs": 3, "coat": false}, AvatarConfig.Mood.HAPPY)
 	_person("rajan", {"skin": 5, "face": 0, "body": 1, "height": 2, "hair_style": 7, "hair_colour": 6, "brows": 3,
 		"glasses": 4, "scrubs": 6, "coat": false, "stethoscope": false, "watch": true}, AvatarConfig.Mood.CALM, "kurta")
+	# Six months a head of department: the day case that came back, the
+	# rival for Chief of Medicine, the Dean, and a new intern of your own.
+	_person("sinha", {"skin": 4, "face": 1, "body": 1, "height": 2, "hair_style": 9, "hair_colour": 5, "brows": 3,
+		"glasses": 1, "coat": false, "stethoscope": false}, AvatarConfig.Mood.TIRED, "patient")
+	_person("kapoor", {"skin": 3, "face": 2, "body": 1, "height": 4, "hair_style": 2, "hair_colour": 0, "facial_hair": 3,
+		"brows": 2, "scrubs": 1, "coat": false, "stethoscope": false, "watch": true}, AvatarConfig.Mood.HAPPY, "casual")
+	_person("dean", {"skin": 4, "face": 5, "body": 2, "height": 2, "hair_style": 1, "hair_colour": 6, "facial_hair": 4,
+		"glasses": 1, "brows": 4, "scrubs": 5, "coat": false, "stethoscope": false}, AvatarConfig.Mood.CALM, "kurta")
+	_person("saxena", {"skin": 5, "face": 3, "height": 1, "hair_style": 6, "hair_colour": 0, "eyes": 5, "brows": 1,
+		"scrubs": 1}, AvatarConfig.Mood.WORRIED)
 	# Patients who sleep through the week, so the ward is full.
 	_person("bg1", {"skin": 8, "face": 5, "body": 2, "hair_style": 1, "hair_colour": 5, "facial_hair": 5,
 		"coat": false, "stethoscope": false}, AvatarConfig.Mood.TIRED, "patient")
@@ -1079,7 +1092,7 @@ func _after_talk(key: String) -> void:
 		"joseph_family":
 			put("maria", "bed6:chair")
 			put("peter", "bed6:other")
-		"review", "review_senior", "review_surgeon", "review_hod":
+		"review", "review_senior", "review_surgeon", "review_hod", "board_vote":
 			_promote()
 
 
@@ -1231,6 +1244,11 @@ func _arrive() -> void:
 			_face(player, facing as Vector3)
 	active_bed = place if BEDS.has(place) else active_bed
 	var current := beat()
+	var partner := rig_for(str(current.get("with", "")))
+	if place == "lightbox" and current.has("talk") and partner != null and partner.visible:
+		# A talk by the films, not a look at them: turn to each other.
+		_face(player, partner.position)
+		_face(partner, player.position)
 	if current.has("talk"):
 		_talk(str(current["talk"]), str(current.get("with", "")))
 	else:
@@ -1315,6 +1333,8 @@ func open_task(task_id: String, which_case: String) -> void:
 		task = ChartTask.new(which_case, _case_seed("chart"), _case_level(beat()), forced)
 	elif task_id == "triage":
 		task = TriageTask.new(which_case, _case_seed("triage"), _case_level(beat()))
+	elif task_id == "rota":
+		task = RotaTask.new(which_case, _case_seed("rota"), _case_level(beat()))
 	else:
 		task = TrainingTask.make(task_id, 7 + profile.day * 3, which_case)
 	if task_id == "scan":
@@ -1330,6 +1350,11 @@ func open_task(task_id: String, which_case: String) -> void:
 		talking_with = (task as TriageTask).actor
 		_camera_speaker = talking_with
 		Music.cue("emergency")
+	elif task_id == "rota":
+		# At the nurses' station, with the head nurse before she walks out.
+		view = RotaView.new(task, self)
+		talking_with = (task as RotaTask).actor
+		_camera_speaker = talking_with
 	else:
 		var station := bed(active_bed)
 		if task_id == "history":
@@ -1362,11 +1387,13 @@ func open_task(task_id: String, which_case: String) -> void:
 	var spot := str(BEDS.get(active_bed, ["", "", "Ward"])[2])
 	if task_id == "scan":
 		spot = "X-ray viewer"
-	elif task_id == "chart":
+	elif task_id in ["chart", "rota"]:
 		spot = "Nurses' station"
 	elif task_id == "triage":
 		spot = "Ambulance bay"
 	var shift := "Major incident" if task_id == "triage" else ("On call" if night else "Ward round")
+	if task_id == "rota":
+		shift = "Strike day"
 	view.kicker_override = "%s · %s" % [shift, spot]
 	_layer.add_child(view)
 	_layer.move_child(view, talk_ui.get_index())
@@ -1375,9 +1402,9 @@ func open_task(task_id: String, which_case: String) -> void:
 	var station_now := station_for(task_id)
 	if station_now != null:
 		station_now.reset_task(task)
-	player.visible = task_id in ["chart", "triage"]
+	player.visible = task_id in ["chart", "triage", "rota"]
 	hud.set_talking(true)
-	_camera_mode = "talk" if task_id in ["chart", "triage"] else "close"
+	_camera_mode = "talk" if task_id in ["chart", "triage", "rota"] else "close"
 
 
 func _on_task_finished(task: TrainingTask) -> void:
@@ -1420,6 +1447,14 @@ func _on_task_finished(task: TrainingTask) -> void:
 		for casualty_id in triage.under_triaged():
 			seen.append("under_" + casualty_id)
 		profile.set_flag(case_id + "_under", not triage.under_triaged().is_empty())
+	elif task is RotaTask:
+		var rota := task as RotaTask
+		case_id = rota.case_id
+		right = rota.all_right()
+		# Which rules gave way, and whether anyone was left with nobody.
+		for rule in rota.broken_rules():
+			seen.append(rule)
+		profile.set_flag(case_id + "_gap", not rota.uncovered().is_empty())
 	profile.set_flag(case_id + "_done")
 	profile.set_flag(case_id + "_right", right)
 	for item: String in seen:
@@ -1746,6 +1781,11 @@ func update(delta: float) -> void:
 			var current := beat()
 			if current.has("talk") and not current.has("go"):
 				_talk(str(current["talk"]), str(current.get("with", "")))
+			elif current.has("go"):
+				# A moment passing, then the walk to wherever it happens.
+				_back_to_walking()
+				if not hud.pager_text().is_empty():
+					Sfx.play(self, "pager", -6.0)
 			else:
 				_finish_beat()
 	if _end_in > 0.0:
@@ -1800,6 +1840,14 @@ func _place_camera(weight: float) -> void:
 		target = home.at(Vector3(0.0, 0.8, -0.3))
 		fov = 44.0
 		offset = 0.5
+	elif _camera_mode == "talk" and partner != null and partner.visible \
+			and _rest_point(partner).distance_to(LIGHTBOX) < 2.2 and player.position.distance_to(LIGHTBOX) < 2.2:
+		# At the X-ray viewer, by the end wall: from out in the aisle, between
+		# the beds and the trolley, looking back at everyone round the films.
+		var box := stations["scan"] as LabStation
+		goal = box.at(Vector3(-0.6, 2.1, 4.3))
+		target = box.at(Vector3(-0.1, 1.15, 1.0))
+		offset = 0.62
 	elif _camera_mode == "talk" and partner != null and partner.visible:
 		var me := player.position
 		var other := _rest_point(partner)
@@ -1810,6 +1858,11 @@ func _place_camera(weight: float) -> void:
 		if side.z < -0.05 or (absf(side.z) <= 0.05 and side.x > 0.0):
 			side = -side
 		var looking := (side + Vector3(0, 0, 0.75)).normalized()
+		var spot := middle + looking * 3.9
+		if spot.x < ROOM_MIN_X or spot.x > ROOM_MAX_X:
+			# By an end wall (the X-ray viewer): look from the room's side, not
+			# from behind the wall.
+			looking = (-side + Vector3(0, 0, 0.75)).normalized()
 		var speaker := rig_for(_camera_speaker)
 		var speaker_spot := speaker.position if speaker != null and speaker.visible else other
 		var lean := middle.lerp(Vector3(speaker_spot.x, 0, speaker_spot.z), 0.25)
