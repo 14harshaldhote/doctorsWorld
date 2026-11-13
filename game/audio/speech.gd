@@ -5,8 +5,8 @@ extends RefCounted
 ## you hear is exactly what you see typed. Each character keeps one voice
 ## for the whole game, picked by whether they speak higher or lower, with
 ## their own pitch on top so two people sharing a voice still sound apart.
-## The player's doctor speaks too, in the voice chosen in Settings (or the
-## character creator).
+## The player's doctor is never voiced: their lines and replies are only
+## shown, so the only voices in the game are the other characters'.
 ##
 ## Most lines are recorded ahead of time with natural voices (VoiceBank,
 ## made by tools/make_voices.py) and play from those clips; the device's
@@ -23,8 +23,8 @@ extends RefCounted
 ## Speech speed choices (Settings) and how much each one speeds the voice.
 const SPEED_NAMES := ["Slower", "Normal", "Faster"]
 const SPEEDS := [0.8, 1.0, 1.2]
-## The player's own voice (Settings and the character creator).
-const YOUR_VOICE_NAMES := ["Lighter", "Deeper", "Silent"]
+## The player's cast id: the one person who is never voiced.
+const PLAYER := "you"
 ## A touch under the device's default pace, for clearer speech.
 const BASE_RATE := 0.95
 ## English voices in order of preference: the game is set in India.
@@ -108,31 +108,23 @@ static func available() -> bool:
 	return not (pools()["higher"] as Array).is_empty() or not (pools()["lower"] as Array).is_empty()
 
 
-## Whether this person's lines are read by the device's voice ("you" can
-## be set to Silent).
+## Whether this person's lines are read by the device's voice. The player
+## ("you") never is.
 static func speaks(who: String) -> bool:
-	if not available():
-		return false
-	return who != "you" or GameSettings.current.your_voice != 2
+	return who != PLAYER and available()
 
 
-## Who a line's recording is filed under: the player has a lighter and a
-## deeper voice.
-static func recorded_as(who: String) -> String:
-	if who != "you":
-		return who
-	return "you.deeper" if GameSettings.current.your_voice == 1 else "you.lighter"
-
-
-## Starts reading a line aloud as a cast member ("you" for the player).
-## Returns the line's number, or 0 when it is not read aloud.
+## Starts reading a line aloud as a cast member. Returns the line's number,
+## or 0 when it is not read aloud (always for the player, "you").
 static func say(text: String, who: String, on_start: Callable = Callable(), on_word: Callable = Callable(),
 		on_done: Callable = Callable()) -> int:
+	if who == PLAYER:
+		return 0
 	if listening:
 		heard[who + "\t" + text] = true
-	if not allowed() or (who == "you" and GameSettings.current.your_voice == 2):
+	if not allowed():
 		return 0
-	var parts := VoiceBank.find(recorded_as(who), text)
+	var parts := VoiceBank.find(who, text)
 	if not parts.is_empty() and _recorder() != null:
 		return _say_recorded(text, parts, on_start, on_word, on_done)
 	if not speaks(who):
@@ -394,8 +386,8 @@ static func _is_novelty(label: String) -> bool:
 
 ## The voice for a cast member: {id, pitch, rate}, or {} if none fits.
 static func voice_for(who: String) -> Dictionary:
-	if who == "you":
-		return _your_voice()
+	if who == PLAYER:
+		return {}
 	if _picked.has(who):
 		return _picked[who]
 	var cast := StoryBook.cast()
@@ -404,15 +396,14 @@ static func voice_for(who: String) -> Dictionary:
 	var pool := _pool(higher)
 	if pool.is_empty():
 		return {}
-	# The cast share the voices out in cast order. The first of each kind
-	# is the player's, so the doctor rarely sounds like the person answering.
+	# The cast share the voices out in cast order.
 	var order := 0
 	for other: String in cast:
 		if other == who:
 			break
 		if _speaks_higher(cast[other]) == higher:
 			order += 1
-	var voice: Dictionary = pool[(order + 1) % pool.size()]
+	var voice: Dictionary = pool[order % pool.size()]
 	var level := float(entry.get("voice", 1.0))
 	var pitch: float
 	if bool(entry.get("child", false)):
@@ -438,21 +429,6 @@ static func _speaks_higher(entry: Dictionary) -> bool:
 static func _pool(higher: bool) -> Array:
 	var pool: Array = pools()["higher" if higher else "lower"]
 	return pool if not pool.is_empty() else pools()["lower" if higher else "higher"]
-
-
-static func _your_voice() -> Dictionary:
-	var choice := GameSettings.current.your_voice
-	if choice == 2:
-		return {}
-	var pool := _pool(choice == 0)
-	if pool.is_empty():
-		return {}
-	return {"id": pool[0]["id"], "pitch": 1.03 if choice == 0 else 0.97, "rate": 1.0}
-
-
-## A short line in the player's voice, for trying the choice out.
-static func preview_you() -> void:
-	say("Hello. I'm the new doctor.", "you")
 
 
 # --- Words ------------------------------------------------------------------

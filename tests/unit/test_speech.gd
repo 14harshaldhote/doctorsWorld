@@ -1,9 +1,9 @@
 extends TestCase
-## Lines read aloud: everyone speaks their typed lines with the device's own
-## voices, the text keeps pace with the voice, the music dips under it, the
-## settings control it, and the game falls back to the murmur where the
-## device can't speak. A fake engine (fake_speech.gd) stands in for the
-## phone's voices.
+## Lines read aloud: everyone but the player's doctor speaks their typed
+## lines with the device's own voices, the text keeps pace with the voice,
+## the music dips under it, the settings control it, and the game falls back
+## to the murmur where the device can't speak. A fake engine
+## (fake_speech.gd) stands in for the phone's voices.
 
 const FakeSpeech := preload("res://tests/unit/fake_speech.gd")
 const FOLDER := "user://test_speech"
@@ -83,8 +83,7 @@ func test_every_character_has_their_own_voice() -> void:
 			expect(float(voice["pitch"]) > 1.1, "%s sounds young" % id)
 		elif str(entry["gender"]) == "male":
 			expect(lower_ids.has(voice["id"]), "%s speaks lower" % id)
-	expect(Speech.voice_for("iyer")["id"] != Speech.voice_for("you")["id"],
-		"your doctor doesn't sound like Dr. Iyer")
+	expect(Speech.voice_for("you").is_empty(), "your doctor has no voice")
 	expect(Speech.voice_for("iyer")["id"] != Speech.voice_for("grace")["id"], "Dr. Iyer and Sister Grace differ")
 	expect_equal(Speech.voice_for("iyer"), Speech.voice_for("iyer"), "the same voice all game")
 
@@ -188,7 +187,7 @@ func test_text_never_stalls_without_word_marks() -> void:
 	expect(not ui.is_typing(), "and finishes when the voice does")
 
 
-func test_everyone_in_a_conversation_speaks_and_so_do_you() -> void:
+func test_everyone_in_a_conversation_speaks_but_you_stay_silent() -> void:
 	var fake := _fake()
 	var profile := PlayerProfile.new()
 	profile.name = "Kiran Rao"
@@ -203,10 +202,11 @@ func test_everyone_in_a_conversation_speaks_and_so_do_you() -> void:
 		if not lobby.story.is_playing():
 			break
 		if lobby.talk_ui.is_choosing():
+			var before := fake.spoken.size()
 			lobby.story.choose(0)
 			replies += 1
-			expect(lobby.story.is_busy(), "the conversation waits while you say your reply")
-			expect_equal(fake.last()["voice"], Speech.voice_for("you")["id"], "you say your reply aloud")
+			expect(fake.spoken.size() == before or fake.last()["voice"] == Speech.voice_for("grace")["id"],
+				"choosing a reply says nothing aloud for you")
 		elif not lobby.story.is_busy() and not lobby.talk_ui.is_typing() and not fake.is_speaking():
 			lobby.talk_ui.tap()
 		lobby._process(STEP)
@@ -216,12 +216,17 @@ func test_everyone_in_a_conversation_speaks_and_so_do_you() -> void:
 	for line: Dictionary in fake.spoken:
 		voices[line["voice"]] = true
 	expect(voices.has(Speech.voice_for("grace")["id"]), "Sister Grace speaks")
-	expect(voices.has(Speech.voice_for("you")["id"]), "and so do you")
 	var said_by_grace := 0
+	var yours := {}
 	for event: Array in lobby.story.runner.history:
 		if event[0] == "grace":
 			said_by_grace += 1
-	expect(fake.spoken.size() >= said_by_grace + replies, "every line was said aloud")
+		elif event[0] == "you":
+			yours[event[1]] = true
+	expect(fake.spoken.size() >= said_by_grace, "every one of her lines was said aloud")
+	for line: Dictionary in fake.spoken:
+		expect(not yours.has(line["text"]), "none of yours: " + str(line["text"]))
+	expect(lobby.player.get_node_or_null("Voice") == null, "your doctor doesn't even murmur")
 
 
 func test_the_music_dips_while_someone_speaks() -> void:
@@ -247,16 +252,15 @@ func test_speech_settings_are_kept_and_reach_the_voice() -> void:
 	var settings := GameSettings.current
 	expect(settings.read_aloud, "lines are read aloud from the start")
 	expect_equal(settings.speech_speed, 1, "at normal speed")
-	expect_equal(settings.your_voice, 0)
 	settings.read_aloud = false
 	settings.speech_speed = 2
-	settings.your_voice = 1
 	expect_equal(settings.save_to(PATH), OK)
 	expect_equal(GameSettings.load_from(PATH).to_dict(), settings.to_dict(), "they survive a restart")
-	var old := GameSettings.from_dict({"music": 0.5})
-	expect(old.read_aloud and old.speech_speed == 1 and old.your_voice == 0, "an older settings file gets the defaults")
-	var broken := GameSettings.from_dict({"speech_speed": 9, "your_voice": -3, "read_aloud": "yes"})
-	expect(broken.speech_speed == 2 and broken.your_voice == 0 and broken.read_aloud, "bad values are repaired")
+	var old := GameSettings.from_dict({"music": 0.5, "your_voice": 1})
+	expect(old.read_aloud and old.speech_speed == 1, "an older settings file gets the defaults")
+	expect(not old.to_dict().has("your_voice"), "and its old voice choice for your doctor is dropped")
+	var broken := GameSettings.from_dict({"speech_speed": 9, "read_aloud": "yes"})
+	expect(broken.speech_speed == 2 and broken.read_aloud, "bad values are repaired")
 	settings.read_aloud = true
 	settings.speech_speed = 0
 	Speech.say("Slow.", "iyer")
@@ -267,50 +271,35 @@ func test_speech_settings_are_kept_and_reach_the_voice() -> void:
 	settings.voices = 0.4
 	Speech.say("Quiet.", "iyer")
 	expect_equal(int(fake.last()["volume"]), 50, "the Voices volume sets how loud")
-	settings.your_voice = 1
-	expect(Speech.voice_for("you")["id"] in (Speech.pools()["lower"] as Array).map(
-		func(voice: Dictionary) -> String: return str(voice["id"])), "Deeper picks a lower voice")
-	settings.your_voice = 2
-	expect(not Speech.speaks("you") and Speech.speaks("iyer"), "Silent keeps only your own lines quiet")
+	expect(not Speech.speaks("you") and Speech.speaks("iyer"), "only the other characters are voiced")
 
 
 func test_the_settings_screen_has_speech_choices() -> void:
 	var fake := _fake()
 	var panel := SettingsPanel.new()
 	add_node(panel)
-	for key: String in ["read_aloud", "your_voice"]:
-		expect(panel.choice_rows.has(key), "a %s row" % key)
+	expect(panel.choice_rows.has("read_aloud"), "a read aloud row")
+	expect(not panel.choice_rows.has("your_voice"), "and no voice for your own doctor")
 	expect_equal((panel.choice_rows["read_aloud"] as Array).size(), 4, "off, slower, normal, faster")
 	panel.pick("read_aloud", 1)
 	expect(GameSettings.current.read_aloud, "still reading aloud")
 	expect_equal(GameSettings.current.speech_speed, 0, "but slower")
 	expect(fake.spoken.size() > 0, "you hear the new speed at once")
-	panel.pick("your_voice", 1)
-	expect_equal(GameSettings.current.your_voice, 1)
-	expect_equal(fake.last()["voice"], Speech.voice_for("you")["id"], "and your new voice")
+	expect(str(fake.last()["voice"]) == str(Speech.voice_for("iyer")["id"]), "in someone else's voice")
 	panel.pick("read_aloud", 0)
 	expect(not GameSettings.current.read_aloud and not Speech.speaking(), "turning it off stops the voice")
 
 
-func test_the_character_creator_offers_a_voice() -> void:
+func test_the_character_creator_has_no_voice_choice() -> void:
 	var fake := _fake()
 	var creator := AvatarCreator.new()
 	add_node(creator)
-	creator.show_tab("Body")
-	var section := creator.find_child("Voice", true, false)
-	expect(section != null, "the Body tab has a voice choice")
-	if section == null:
-		return
-	var deeper: Button = null
-	for button in section.find_children("*", "Button", true, false):
-		if (button as Button).text == "Deeper":
-			deeper = button
-	expect(deeper != null, "Lighter or Deeper")
-	if deeper != null:
-		deeper.pressed.emit()
-	expect_equal(GameSettings.current.your_voice, 1, "the choice is kept")
-	expect_equal(fake.last()["voice"], Speech.voice_for("you")["id"], "and the doctor says hello in it")
-	expect(FileAccess.file_exists(PATH), "and saved")
+	for tab: String in AvatarCreator.TABS:
+		creator.show_tab(tab)
+		expect(creator.find_child("Voice", true, false) == null, "no voice choice on the %s tab" % tab)
+		for button in creator.find_children("*", "Button", true, false):
+			expect((button as Button).text not in ["Lighter", "Deeper", "Silent"], "no voice chips on " + tab)
+	expect(fake.spoken.is_empty(), "and the doctor never says hello")
 
 
 # --- Training and operations --------------------------------------------------

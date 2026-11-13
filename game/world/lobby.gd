@@ -34,6 +34,15 @@ const TASKS := [
 const IYER_POST := Vector3(2.7, 0, -1.9)
 ## Seconds between Dr. Iyer's goodbye and the end of the day.
 const DAY_END_DELAY := 2.5
+## Background chatter between other people is only heard up close: at its
+## loudest (still soft) within BANTER_NEAR metres of the player, fading out
+## by BANTER_FAR, and silent beyond (their mouths still move). While the
+## player is in a conversation of their own it is softer again.
+const BANTER_NEAR := 1.8
+const BANTER_FAR := 4.5
+const BANTER_LOUDEST := -20.0
+const BANTER_FAINTEST := -36.0
+const BANTER_IN_CONVERSATION := -8.0
 
 const WALL := Color("#EEF2EC")
 const WALL_TOP := Color("#DCE8E6")
@@ -848,8 +857,11 @@ func _update_banter(delta: float) -> void:
 		var vowels: String = chat["vowels"]
 		if float(chat["syllable"]) <= 0.0 and float(chat["time"]) < 2.2 and not vowels.is_empty():
 			chat["syllable"] = 0.17
-			speaker.voice_volume_db = -14.0
-			speaker.say_syllable(vowels[int(float(chat["time"]) / 0.17) % vowels.length()])
+			var level := banter_volume(_player_distance(speaker), story.is_playing())
+			speaker.voice_volume_db = level
+			speaker.say_syllable(vowels[int(float(chat["time"]) / 0.17) % vowels.length()], not is_nan(level))
+			# Their own lines in a conversation keep the normal level.
+			speaker.voice_volume_db = 0.0
 		var head := speaker.face_point() + Vector3(0, 0.62 * speaker.scale.y, 0)
 		hud.set_bubble(pair[0] + pair[1], str(line[1]), camera.unproject_position(head),
 			not camera.is_position_behind(head))
@@ -861,6 +873,23 @@ func _update_banter(delta: float) -> void:
 			var finished_round: bool = int(chat["index"]) % lines.size() == 0
 			chat["wait"] = 7.0 if finished_round else 0.5
 			hud.set_bubble(pair[0] + pair[1], "", Vector2.ZERO, false)
+
+
+## How loud a background murmur is (dB) for a speaker this far from the
+## player, or NAN when it is too far away to be heard at all.
+static func banter_volume(distance: float, in_conversation: bool = false) -> float:
+	if distance > BANTER_FAR:
+		return NAN
+	var weight := clampf((distance - BANTER_NEAR) / (BANTER_FAR - BANTER_NEAR), 0.0, 1.0)
+	var level := lerpf(BANTER_LOUDEST, BANTER_FAINTEST, weight)
+	return level + (BANTER_IN_CONVERSATION if in_conversation else 0.0)
+
+
+func _player_distance(rig: AvatarRig) -> float:
+	if player == null or not is_instance_valid(player):
+		return INF
+	var gap := rig.global_position - player.global_position
+	return Vector2(gap.x, gap.z).length()
 
 
 func _quiet_banter(chat: Dictionary, a: AvatarRig, b: AvatarRig) -> void:

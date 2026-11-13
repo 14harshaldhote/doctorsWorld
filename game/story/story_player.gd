@@ -46,9 +46,6 @@ var _give := {}
 ## when the conversation ends.
 var _music_before := ""
 var _music_changed := false
-## The player's reply, said aloud before the conversation goes on.
-var _reply := SpokenLine.new()
-var _reply_words := -1
 
 
 func _init(story_runner: StoryRunner, conversation_ui: ConversationUi, on_stage: Node) -> void:
@@ -80,7 +77,6 @@ func is_busy() -> bool:
 
 func update(delta: float) -> void:
 	ui.tick(delta)
-	_update_reply(delta)
 	_update_walks(delta)
 	_update_turns(delta)
 	_update_gestures(delta)
@@ -106,9 +102,7 @@ func choose(index: int) -> void:
 		effect = _describe(changes)
 	ui.show_result(str(result.get("said", "")), effect, str(result.get("detail", "")))
 	_just_chose = true
-	if _say_reply(str(result.get("said", ""))):
-		_block(0.0, _reply.is_done)
-		return
+	# The player's reply is shown, never said aloud: on to the answer.
 	_next()
 
 
@@ -116,7 +110,6 @@ func choose(index: int) -> void:
 func skip() -> void:
 	if not _playing:
 		return
-	_reply.stop()
 	for id: String in _walks:
 		var rig: AvatarRig = actors.get(id)
 		if rig != null:
@@ -241,45 +234,16 @@ func _show_choice(event: Dictionary) -> void:
 
 
 func _on_advanced() -> void:
-	if _reply.speaking:
-		# A tap cuts the player's own reply short.
-		_reply.stop()
-		return
 	if _playing and not _busy and not runner.waiting_for_choice():
 		_next()
 
 
-## Says the player's chosen reply in their voice. False when it isn't
-## read aloud (the conversation then goes straight on).
-func _say_reply(text: String) -> bool:
-	if text.is_empty() or not _reply.start(text, "you"):
-		return false
-	_reply_words = 0
-	var you: AvatarRig = actors.get("you")
-	if you != null:
-		you.talking = true
-	return true
-
-
-func _update_reply(delta: float) -> void:
-	if not _reply.speaking and _reply_words < 0:
-		return
-	var you: AvatarRig = actors.get("you")
-	if _reply.speaking:
-		_reply.advance(delta, 0.0)
-		if _reply.words > _reply_words and you != null and is_instance_valid(you):
-			you.say_syllable("a", false)
-		_reply_words = _reply.words
-	if not _reply.speaking:
-		_reply_words = -1
-		if you != null and is_instance_valid(you):
-			you.talking = false
-
-
 func _on_syllable(letter: String) -> void:
 	if _speaker != null and is_instance_valid(_speaker):
-		# A line read aloud already has a voice: only the mouth moves.
-		_speaker.say_syllable(letter, not ui.reading_aloud())
+		# A line read aloud already has a voice, and the player's doctor has
+		# none: only the mouth moves.
+		var silent: bool = ui.reading_aloud() or _speaker == actors.get(Speech.PLAYER)
+		_speaker.say_syllable(letter, not silent)
 
 
 func _on_typing_finished() -> void:
@@ -290,7 +254,6 @@ func _on_typing_finished() -> void:
 func _finish(skipped: bool) -> void:
 	_playing = false
 	_busy = false
-	_reply.stop()
 	if _music_changed:
 		_music_changed = false
 		Music.cue(_music_before)

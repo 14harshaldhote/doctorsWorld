@@ -220,3 +220,43 @@ func test_chatter_pauses_while_you_talk_to_someone_in_it() -> void:
 		expect(line.is_empty(), "the waiting patients stop chatting while you talk to them")
 		if not line.is_empty():
 			break
+
+
+func test_background_chatter_is_soft_and_only_heard_up_close() -> void:
+	expect(is_nan(Lobby.banter_volume(Lobby.BANTER_FAR + 0.5)), "too far away: not heard at all")
+	var near := Lobby.banter_volume(1.0)
+	expect_between(near, -30.0, -18.0, "up close: heard, but softly")
+	expect(Lobby.banter_volume(3.5) < near - 6.0, "much fainter a few steps away")
+	expect(Lobby.banter_volume(1.0, true) < near, "softer still while you talk to someone")
+	var lobby := _lobby()
+	var tom: AvatarRig = lobby.people["tom"]["rig"]
+	var priya: AvatarRig = lobby.people["priya"]["rig"]
+	var middle := (tom.position + priya.position) / 2.0
+	# Across the room from the nurses: their chatter is silent, though their
+	# mouths still move.
+	lobby.player.position = Vector3(-signf(middle.x) * 7.0, 0, -signf(middle.z) * 5.0)
+	for rig: AvatarRig in [tom, priya]:
+		expect(lobby._player_distance(rig) > Lobby.BANTER_FAR, "the player starts far away")
+	var talked := false
+	for frame in 60 * 12:
+		lobby._process(1.0 / 60.0)
+		talked = talked or tom.talking or priya.talking
+	expect(talked, "the nurses chat")
+	expect(tom.get_node_or_null("Voice") == null and priya.get_node_or_null("Voice") == null,
+		"but from across the room you don't hear them")
+	# Right beside them: now it can be heard, softly.
+	lobby.player.position = middle + Vector3(0.6, 0, 0.6)
+	var heard: AudioStreamPlayer3D = null
+	for frame in 60 * 20:
+		lobby._process(1.0 / 60.0)
+		for rig: AvatarRig in [tom, priya]:
+			var voice := rig.get_node_or_null("Voice") as AudioStreamPlayer3D
+			if voice != null:
+				heard = voice
+		if heard != null:
+			break
+	expect(heard != null, "standing beside them you hear them")
+	if heard != null:
+		expect_between(heard.volume_db, Lobby.BANTER_LOUDEST - 1.0, Lobby.BANTER_LOUDEST + 0.1, "softly")
+	expect(tom.voice_volume_db == 0.0 and priya.voice_volume_db == 0.0,
+		"their own lines in a conversation keep the normal level")

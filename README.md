@@ -86,12 +86,14 @@ are in:
   or less, and a little meter shows you exactly how badly that went.
 - People move when they talk: hands, shrugs, nods, turning to look at whoever
   is speaking, and lips that keep time. Nurses gossip by the vending machine
-  whether you're listening or not.
+  whether you're listening or not, though you only catch it if you wander
+  close.
 - Everyone talks out loud. Every line you can read, someone actually says,
   in their own natural voice, recorded for this game, and the words appear as
   they're said instead of racing ahead. Dr. Iyer sounds like Dr.
-  Iyer all game, children sound like children, and your doctor says your
-  replies out loud too, so you can hear exactly how that sounded. The music
+  Iyer all game, and children sound like children. Your own doctor stays
+  quiet: your lines and replies are yours to read, in whatever voice is in
+  your head. The music
   ducks out of the way while anyone speaks. Too slow? Too fast? There's a
   setting. Too honest? No setting for that.
 - Day 2, the skills lab. Six stations, three trainers, and a sign promising
@@ -157,8 +159,7 @@ are in:
   scores chime.
 - Settings, from the title screen or the pause menu: separate volumes for
   music, sound effects and voices; reading lines aloud (off, slower, normal or
-  faster) and a lighter or deeper voice for your doctor, also offered when you
-  design them; bigger text, which grows everywhere at once;
+  faster); bigger text, which grows everywhere at once;
   Reduce motion, for people who'd rather the camera didn't swoop; a
   colour-blind-safe monitor in blue and orange with arrows, because "the red
   number" is not a diagnosis; and Battery saver, which older iPhones pick by

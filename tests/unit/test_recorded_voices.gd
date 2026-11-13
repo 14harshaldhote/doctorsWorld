@@ -2,7 +2,8 @@ extends TestCase
 ## Recorded voices: lines made ahead of time with natural voices play
 ## instead of the phone's reading voice, found by who says them and what
 ## they say, with the player's name and numbers fitted in; the phone's
-## voice reads only lines that have no recording.
+## voice reads only lines that have no recording. The player's doctor is
+## never voiced.
 
 const FakeSpeech := preload("res://tests/unit/fake_speech.gd")
 const STEP := 1.0 / 30.0
@@ -55,8 +56,7 @@ func _bank() -> FakeSpeech:
 			{"who": "khan", "key": "heart rate # pressure # #", "parts": [
 				_part("heart", 0.6, 2), {"number": 0}, _part("pressure", 0.5, 1), {"number": 1},
 				_part("over", 0.2, 1), {"number": 2}]},
-			{"who": "you.lighter", "key": "i ll scrub in", "parts": [_part("lighter", 1.0, 3)]},
-			{"who": "you.deeper", "key": "i ll scrub in", "parts": [_part("deeper", 1.0, 3)]},
+			{"who": "you", "key": "i ll scrub in", "parts": [_part("you", 1.0, 3)]},
 		],
 		"numbers": {"khan": {"88": _part("88", 0.4, 2), "118": _part("118", 0.6, 3), "74": _part("74", 0.5, 2)}},
 	})
@@ -141,18 +141,19 @@ func test_lines_without_a_recording_are_read_by_the_phone() -> void:
 	expect(not ui.reading_aloud(), "the rest are murmured, as before")
 
 
-func test_your_voice_picks_the_lighter_or_deeper_recording() -> void:
-	_bank()
-	var settings := GameSettings.current
-	settings.your_voice = 0
-	expect_equal(Speech.recorded_as("you"), "you.lighter")
-	expect(VoiceBank.find(Speech.recorded_as("you"), "I'll scrub in.")[0]["stream"] == _clips["lighter"])
-	settings.your_voice = 1
-	expect(VoiceBank.find(Speech.recorded_as("you"), "I'll scrub in.")[0]["stream"] == _clips["deeper"])
-	expect(Speech.say("I'll scrub in.", "you") != 0 and Speech.recorded(), "your reply plays from its recording")
-	settings.your_voice = 2
-	expect_equal(Speech.say("I'll scrub in.", "you"), 0, "Silent means silent")
-	expect_equal(Speech.recorded_as("iyer"), "iyer", "everyone else has one voice")
+func test_the_player_is_never_voiced() -> void:
+	var fake := _bank()
+	expect_equal(Speech.say("I'll scrub in.", "you"), 0, "even a line with a recording stays silent")
+	expect(not Speech.speaking() and fake.spoken.is_empty(), "nothing plays, recorded or not")
+	expect_equal(Speech.say("A reply nobody recorded.", "you"), 0, "and the phone's voice doesn't read it either")
+	expect(fake.spoken.is_empty())
+	expect(not Speech.speaks("you") and Speech.speaks("iyer"), "only the other characters are voiced")
+	var ui := _ui()
+	ui.show_line("Dr. Asha Verma", "I'll scrub in.", {"voice": "you"})
+	expect(not ui.reading_aloud(), "your doctor's line is only shown")
+	expect(not Speech.speaking())
+	expect(VoiceBank.has_lines(), "while everyone else's lines still play")
+	expect(Speech.say(LINE, "iyer") != 0 and Speech.recorded())
 
 
 func test_the_speed_setting_plays_recordings_faster_at_the_same_pitch() -> void:
@@ -182,16 +183,20 @@ func test_the_game_has_recordings_for_its_story() -> void:
 	var total := 0
 	var found := 0
 	var missing := []
+	var voiced := 0
 	for line: Dictionary in StoryBook.spoken_lines():
 		var who := str(line["who"])
 		var text := str(line["text"]).replace("{called}", "Dr. Verma")
 		if "{" in text or VoiceBank.normalize(text).is_empty():
 			continue  # the player's first name, or a silent "..."
-		for as_who: String in (["you.lighter", "you.deeper"] if who == "you" else [who]):
-			total += 1
-			if not VoiceBank.find(as_who, text).is_empty():
-				found += 1
-			elif missing.size() < 5:
-				missing.append("%s: %s" % [as_who, text])
-	expect(total > 700, "the story's lines are all checked (%d)" % total)
+		if who == Speech.PLAYER:
+			voiced += int(not VoiceBank.find(who, text).is_empty())
+			continue  # the player's doctor is never voiced
+		total += 1
+		if not VoiceBank.find(who, text).is_empty():
+			found += 1
+		elif missing.size() < 5:
+			missing.append("%s: %s" % [who, text])
+	expect(total > 450, "the story's lines are all checked (%d)" % total)
 	expect_equal(found, total, "every story line has a recording; missing e.g. %s" % [missing])
+	expect_equal(voiced, 0, "and none are made for the player's doctor")

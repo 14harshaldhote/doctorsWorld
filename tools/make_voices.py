@@ -12,8 +12,8 @@ the game sound like people instead of the phone's reading voice:
 
 Each character has their own voice, made by blending Kokoro's voices (so
 nobody else's game sounds like this). A line's mood sets its pace, calls
-come through a phone, children sound like children. The player's lines are
-made twice, in a lighter and a deeper voice (the setting picks one).
+come through a phone, children sound like children. The player's own
+doctor is never voiced, so their lines and replies get no clips.
 
 The player's name in a line ({called}) is said as "Doctor". Lines with
 numbers in them (a pulse, a swab count) are kept as the words around the
@@ -84,10 +84,9 @@ VOICES = {
     "peter": {"mix": {"hm_psi": 0.5, "bm_daniel": 0.5}, "speed": 1.0},
     "bansal": {"mix": {"hm_omega": 0.6, "bm_lewis": 0.4}, "speed": 0.92},
     "raju": {"mix": {"hm_omega": 0.7, "am_echo": 0.3}, "speed": 1.0},
-    # The player: the Settings pick one of these.
-    "you.lighter": {"mix": {"hf_alpha": 0.45, "af_bella": 0.55}, "speed": 1.0},
-    "you.deeper": {"mix": {"hm_psi": 0.5, "am_michael": 0.5}, "speed": 1.0},
 }
+# The player's doctor: never voiced.
+PLAYER = "you"
 
 # A line's mood changes its pace a little.
 MOOD_SPEED = {"calm": 0.97, "happy": 1.04, "focused": 1.02, "worried": 1.05, "angry": 1.06,
@@ -426,34 +425,33 @@ def plan(model_dir, only):
     skipped = []
 
     def add(who, text, mood, templated):
-        if who not in VOICES and who != "you":
+        if who == PLAYER or (only and who not in only):
+            return
+        if who not in VOICES:
             skipped.append((who, text))
             return
         if re.search(r"\{(?!called\})[a-z]+\}", text) or not text.strip():
             skipped.append((who, text))
             return
         speed = MOOD_SPEED.get(mood, 1.0)
-        for as_who in (["you.lighter", "you.deeper"] if who == "you" else [who]):
-            if only and as_who not in only and who not in only:
-                continue
-            split = number_parts(text) if templated and re.search(r"\d", text) else None
-            if split is None:
-                lines.append((as_who, normalize(text), [(model_dir, as_who, text, speed, ".")]))
-                continue
-            key, parts = split
-            specs = []
-            for index, part in enumerate(parts):
-                if isinstance(part, dict):
-                    specs.append(part)
-                else:
-                    last = index == len(parts) - 1
-                    specs.append((model_dir, as_who, part, speed, "." if last else ","))
-            lines.append((as_who, key, specs))
-            needed = numbered.setdefault(as_who, set())
-            for value in re.findall(r"\d+", text):
-                low = max(0, int(int(value) * 0.6) - 2)
-                high = min(LARGEST_NUMBER, int(int(value) * 1.4) + 3)
-                needed.update(range(low, high + 1))
+        split = number_parts(text) if templated and re.search(r"\d", text) else None
+        if split is None:
+            lines.append((who, normalize(text), [(model_dir, who, text, speed, ".")]))
+            return
+        key, parts = split
+        specs = []
+        for index, part in enumerate(parts):
+            if isinstance(part, dict):
+                specs.append(part)
+            else:
+                last = index == len(parts) - 1
+                specs.append((model_dir, who, part, speed, "." if last else ","))
+        lines.append((who, key, specs))
+        needed = numbered.setdefault(who, set())
+        for value in re.findall(r"\d+", text):
+            low = max(0, int(int(value) * 0.6) - 2)
+            high = min(LARGEST_NUMBER, int(int(value) * 1.4) + 3)
+            needed.update(range(low, high + 1))
 
     for who, text, mood in story:
         add(who, text, mood, False)
@@ -531,6 +529,8 @@ def main():
                     if os.path.exists(os.path.join(full, name + extra)):
                         os.remove(os.path.join(full, name + extra))
                 removed += 1
+        if not os.listdir(full):
+            os.rmdir(full)
     print("manifest: %d lines; removed %d unused clips" % (len(manifest["lines"]), removed))
     for who, text in skipped[:20]:
         print("  left to the phone's voice: %s: %s" % (who, text[:80]))

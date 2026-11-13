@@ -32,8 +32,6 @@ var graphics := "smooth"
 var read_aloud := true
 ## Index into Speech.SPEEDS: slower, normal, faster.
 var speech_speed := 1
-## The player's doctor's voice: 0 lighter, 1 deeper, 2 silent.
-var your_voice := 0
 
 
 func text_scale() -> float:
@@ -66,7 +64,7 @@ func set_volume(bus: String, value: float) -> void:
 func to_dict() -> Dictionary:
 	return {"music": music, "effects": effects, "voices": voices, "text_size": text_size,
 		"reduce_motion": reduce_motion, "colour_safe": colour_safe, "graphics": graphics,
-		"read_aloud": read_aloud, "speech_speed": speech_speed, "your_voice": your_voice}
+		"read_aloud": read_aloud, "speech_speed": speech_speed}
 
 
 ## Reads saved settings, keeping the default for anything missing or broken.
@@ -83,8 +81,6 @@ static func from_dict(data: Variant) -> GameSettings:
 		made.text_size = clampi(int(raw["text_size"]), 0, TEXT_SCALES.size() - 1)
 	if typeof(raw.get("speech_speed")) in [TYPE_INT, TYPE_FLOAT]:
 		made.speech_speed = clampi(int(raw["speech_speed"]), 0, 2)
-	if typeof(raw.get("your_voice")) in [TYPE_INT, TYPE_FLOAT]:
-		made.your_voice = clampi(int(raw["your_voice"]), 0, 2)
 	for toggle: String in ["reduce_motion", "colour_safe", "read_aloud"]:
 		if typeof(raw.get(toggle)) == TYPE_BOOL:
 			made.set(toggle, raw[toggle])

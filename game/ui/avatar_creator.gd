@@ -9,11 +9,9 @@ signal done_pressed
 
 const TABS := ["Body", "Face", "Hair", "Clothes", "Extras"]
 ## Each section: [kind, field, label, grid columns]. Kinds are "swatches",
-## "chips", "toggle", "mood" (preview only), "voice" (the doctor's speaking
-## voice, kept in the settings) and "locked" (earned later).
+## "chips", "toggle", "mood" (preview only) and "locked" (earned later).
 const SECTIONS := {
-	"Body": [["swatches", "skin", "Skin tone", 5], ["chips", "body", "Build", 1], ["chips", "height", "Height", 2],
-		["voice", "", "Voice", 2]],
+	"Body": [["swatches", "skin", "Skin tone", 5], ["chips", "body", "Build", 1], ["chips", "height", "Height", 2]],
 	"Face": [["chips", "face", "Face shape", 3], ["chips", "eyes", "Eyes", 4], ["chips", "brows", "Brows", 3],
 		["chips", "nose", "Nose", 3], ["mood", "", "Try an expression", 4]],
 	"Hair": [["chips", "hair_style", "Style", 4], ["swatches", "hair_colour", "Colour", 5],
@@ -252,10 +250,6 @@ func _section(section: Array) -> Control:
 		"mood":
 			for index in AvatarConfig.EXPRESSIONS.size():
 				grid.add_child(_chip(AvatarConfig.EXPRESSIONS[index], rig.mood == index, _try_mood.bind(index)))
-		"voice":
-			for index in 2:
-				grid.add_child(_chip(Speech.YOUR_VOICE_NAMES[index], GameSettings.current.your_voice == index,
-					_pick_voice.bind(index)))
 		"locked":
 			for item: Array in LOCKED:
 				grid.add_child(_locked_row(item[0], item[1]))
@@ -302,16 +296,6 @@ func _choice_name(field: String, index: int) -> String:
 func _pick(field: String, value: Variant) -> void:
 	config.set(field, value)
 	_apply()
-
-
-## The speaking voice belongs to the settings (it can be changed there
-## later); picking one here saves it and says hello in it.
-func _pick_voice(index: int) -> void:
-	GameSettings.current.your_voice = index
-	if not SettingsPanel.save_path.is_empty():
-		GameSettings.current.save_to(SettingsPanel.save_path)
-	Speech.preview_you()
-	_build_choices()
 
 
 func _try_mood(index: int) -> void:

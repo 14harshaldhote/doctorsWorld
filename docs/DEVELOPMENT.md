@@ -220,9 +220,8 @@ changes them live and saves on Done.
 - **Volumes:** the Music, Effects and Voices audio buses, made at run time.
   Zero mutes a bus, and sound effects and voices are not even started.
 - **Read lines aloud:** off, or slower, normal or faster speech
-  (`read_aloud`, `speech_speed`), and the player's doctor's voice, lighter,
-  deeper or silent (`your_voice`, also chosen in the character creator). See
-  Spoken lines below.
+  (`read_aloud`, `speech_speed`). The player's doctor is never voiced, so
+  there is no voice choice for them. See Spoken lines below.
 - **Text size:** `UiKit.set_text_size()` records each label's design size, and
   `UiKit.refresh_text()` resizes every label on screen when the setting
   changes. Body text grows by up to a quarter; headings of 28 and over stay as
@@ -283,7 +282,8 @@ voice, a blend of Kokoro's voices with an Indian voice at its heart (see
 `VOICES` in the script), so nobody else's game sounds like this one. A line's
 mood sets its pace, Arjun and Pooja come through a phone, the children are
 pitched up, everyone else gets a faint room, and all of them are levelled to
-the same loudness. The player's lines are made twice, lighter and deeper.
+the same loudness. The player's doctor (`you`) gets no clips: they are
+never voiced.
 
 - What is said comes from `story/*.json` (every line and reply),
   `story/cases.json` (every answer and finding) and `tools/voice_lines.json`:
@@ -328,7 +328,7 @@ Lines with no recording use the device's text-to-speech (Godot's
   before standard, Indian English before other accents, never the joke voices.
   They are split into higher and lower voices by name. Each cast member has a
   `gender` (and `child`, `pace`) in `story/cast.json`; they share out the
-  voices of their kind in cast order, the first being the player's, and their
+  voices of their kind in cast order, and their
   `voice` level sets the pitch on top, so people sharing a voice still sound
   apart. `Speech.prepare()` turns the shown text into what is said ("Dr." is
   "Doctor", "120/80" is "120 over 80", shouted capitals are words) and keeps a
@@ -338,8 +338,14 @@ Lines with no recording use the device's text-to-speech (Godot's
   runs ahead. If the engine gives no word marks the text creeps on at about
   speaking pace; if the voice never starts, the line is typed as before.
 - `ConversationUi` and `TrainingView` (coach lines, patients answering in
-  exams and histories) use it; `StoryPlayer` also has the player say their
-  chosen reply before the next line. Lobby banter stays a murmur.
+  exams and histories) use it.
+- The player's doctor is never voiced: `Speech.say()` returns 0 for `you`,
+  a chosen reply is only shown, and the player's own lines move their lips
+  without the murmur (`StoryPlayer._on_syllable`).
+- Lobby banter stays a murmur, and only up close: `Lobby.banter_volume()`
+  sets it from the player's distance to the speaker, soft within
+  `BANTER_NEAR`, fading out by `BANTER_FAR`, silent beyond (mouths still
+  move), and softer again while the player is in a conversation.
 - Where a line has no recording and the device has no English voice (and in
   headless tests), lines fall back to the murmur. Tests use a fake engine (`tests/unit/fake_speech.gd`)
   that sends the same events as the real one. The screenshot tool turns

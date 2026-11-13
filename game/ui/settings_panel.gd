@@ -93,8 +93,7 @@ func _ready() -> void:
 	# Reading aloud and its speed share one row: Off, or how fast.
 	right.add_child(_choice_row("read_aloud", "Read lines aloud", ["Off"] + Speech.SPEED_NAMES,
 		settings.speech_speed + 1 if settings.read_aloud else 0,
-		"Everyone says their lines in this phone's own voices. Clearer voices: iPhone Settings > Accessibility > Spoken Content."))
-	right.add_child(_choice_row("your_voice", "Your doctor's voice", Speech.YOUR_VOICE_NAMES, settings.your_voice))
+		"Everyone you meet says their lines out loud. Your own doctor's words are only shown."))
 	right.add_child(_section("Comfort"))
 	right.add_child(_choice_row("reduce_motion", "Reduce motion", ["Off", "On"], 1 if settings.reduce_motion else 0,
 		"Cuts instead of camera sweeps, and no bouncing."))
@@ -182,8 +181,6 @@ func _on_choice(key: String, index: int) -> void:
 			settings.read_aloud = index > 0
 			if index > 0:
 				settings.speech_speed = index - 1
-		"your_voice":
-			settings.your_voice = index
 	if settings == GameSettings.current:
 		# Let the player hear the change.
 		match key:
@@ -192,11 +189,6 @@ func _on_choice(key: String, index: int) -> void:
 					Speech.say("This is how fast people will talk.", "iyer")
 				else:
 					Speech.stop()
-			"your_voice":
-				if settings.your_voice == 2:
-					Speech.stop()
-				else:
-					Speech.preview_you()
 	if key == "graphics" and is_inside_tree():
 		settings.apply_display(get_window())
 	if key == "text_size" and is_inside_tree() and settings == GameSettings.current:
