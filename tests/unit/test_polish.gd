@@ -92,8 +92,12 @@ func test_volumes_set_the_audio_buses_and_zero_mutes() -> void:
 	var effects := AudioServer.get_bus_index("Effects")
 	expect(not AudioServer.is_bus_mute(effects))
 	expect_near(AudioServer.get_bus_volume_db(effects), linear_to_db(0.5), 0.01)
+	var count := AudioServer.bus_count
 	settings.apply_audio()
-	expect_equal(AudioServer.bus_count, 1 + GameSettings.BUSES.size(), "buses are made once")
+	# Master, the three volume buses, and Spoken once a recorded line has played.
+	var spoken := 1 if AudioServer.get_bus_index(Speech.RECORDED_BUS) >= 0 else 0
+	expect_equal(AudioServer.bus_count, 1 + GameSettings.BUSES.size() + spoken, "buses are made once")
+	expect_equal(AudioServer.bus_count, count, "applying again adds none")
 
 
 func test_settings_from_the_title_screen_apply_at_once_and_save() -> void:

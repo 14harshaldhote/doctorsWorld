@@ -111,8 +111,9 @@ story/                  The words: cast, opening, Day 1 conversations, banter, t
                         Resident's days (junior.json)
 assets/fonts/           Fredoka and Nunito (SIL Open Font License)
 assets/music/           The music, made by tools/make_music.py
+assets/voices/          Recorded voices, made by tools/make_voices.py (Kokoro, Apache 2.0)
 tests/                  The test runner and unit tests
-tools/                  Screenshot tool used by CI, and the music generator
+tools/                  Screenshot tool used by CI, the music and voice makers
 ```
 
 ## Writing story
@@ -270,10 +271,58 @@ Sound effects (`Sfx`) and the fallback murmur are made in code at run time.
 
 ## Spoken lines
 
-Every line is read aloud with the device's own text-to-speech (Godot's
+Every line is read aloud. Almost all of them play from recordings made ahead
+of time with natural voices; the few without one are read by the device's own
+text-to-speech. Both are free, offline, and nothing leaves the device.
+
+### Recorded voices
+
+`tools/make_voices.py` makes them with Kokoro, a free, open voice model
+(Apache 2.0) that runs on an ordinary computer. Each character has their own
+voice, a blend of Kokoro's voices with an Indian voice at its heart (see
+`VOICES` in the script), so nobody else's game sounds like this one. A line's
+mood sets its pace, Arjun and Pooja come through a phone, the children are
+pitched up, everyone else gets a faint room, and all of them are levelled to
+the same loudness. The player's lines are made twice, lighter and deeper.
+
+- What is said comes from `story/*.json` (every line and reply),
+  `story/cases.json` (every answer and finding) and `tools/voice_lines.json`:
+  the coaching and theatre lines, listed by `tools/voice_lines.gd`, which runs
+  the test suite and then every operation again well, shakily and badly while
+  `Speech` notes each line it is asked to say.
+- The player's name ({called}) is said as "Doctor", so one clip fits every
+  player. Lines from code with numbers in them are kept as the words between
+  the numbers plus clips of each number on its own, in the same voice;
+  `VoiceBank` joins them up ("Heart rate" + "88" + "and slowing").
+- Clips are named by what they say: a second run makes only what changed and
+  deletes clips no line uses. `assets/voices/manifest.json` lists them by who
+  says them and the line's words (lower case, no punctuation, `{called}` and
+  `#` for numbers); exports include it through the preset's include filter.
+- Names the model says wrongly are spelt as they are said in `RESPELL`.
+
+```sh
+pip install kokoro-onnx scipy          # and ffmpeg
+# kokoro-v1.0.onnx and voices-v1.0.bin from
+# https://github.com/thewh1teagle/kokoro-onnx/releases (model-files-v1.0)
+godot --headless --path . -s res://tools/voice_lines.gd -- tools/voice_lines.json   # after new code lines
+python3 tools/make_voices.py --model DIR                # everything, one worker a core
+python3 tools/make_voices.py --model DIR --only iyer   # one character again
+python3 tools/make_voices.py --model DIR --sample iyer "A line to try."
+godot --headless --path . --import
+```
+
+At run time `Speech.say()` asks `VoiceBank.find()` first and plays the parts
+through a `RecordedVoice` on the "Spoken" bus, which sends to Voices. The speed
+setting plays the clip faster or slower and a pitch shift on that bus keeps
+the voice's pitch. Words are reached on a clock from each clip's word times,
+so the text and the lips keep pace with it, as with the device's voices.
+`test_recorded_voices.gd` checks every story line has a recording.
+
+### The device's voices
+
+Lines with no recording use the device's text-to-speech (Godot's
 `DisplayServer.tts_*`, which on iOS is `AVSpeechSynthesizer`; it needs
-`audio/general/text_to_speech` in the project settings). It's free, offline,
-and nothing leaves the device.
+`audio/general/text_to_speech` in the project settings).
 
 - `Speech` picks the voices: English ones only, clearer (enhanced or premium)
   before standard, Indian English before other accents, never the joke voices.
@@ -291,8 +340,8 @@ and nothing leaves the device.
 - `ConversationUi` and `TrainingView` (coach lines, patients answering in
   exams and histories) use it; `StoryPlayer` also has the player say their
   chosen reply before the next line. Lobby banter stays a murmur.
-- Where the device has no English voice (and in headless tests), lines fall
-  back to the murmur. Tests use a fake engine (`tests/unit/fake_speech.gd`)
+- Where a line has no recording and the device has no English voice (and in
+  headless tests), lines fall back to the murmur. Tests use a fake engine (`tests/unit/fake_speech.gd`)
   that sends the same events as the real one. The screenshot tool turns
   speech off (`Speech.enabled`) so shots don't wait on voices.
 - Better voices: on an iPhone, Settings > Accessibility > Spoken Content >

@@ -8,9 +8,13 @@ extends RefCounted
 ## The player's doctor speaks too, in the voice chosen in Settings (or the
 ## character creator).
 ##
-## Free, offline and on the device: nothing is sent anywhere. When the
-## device has no English voice, or "Read lines aloud" is off, say() returns
-## 0 and the caller falls back to the old murmur.
+## Most lines are recorded ahead of time with natural voices (VoiceBank,
+## made by tools/make_voices.py) and play from those clips; the device's
+## voices read only lines that have no clip.
+##
+## Free, offline and on the device: nothing is sent anywhere. When a line
+## has no clip and the device has no English voice, or "Read lines aloud"
+## is off, say() returns 0 and the caller falls back to the old murmur.
 ##
 ## Only one line speaks at a time; a new line cuts off the one before. The
 ## owner of a line hears back through its callables: on_start(), on_word(
@@ -44,6 +48,13 @@ const NOVELTY := [
 	"albert", "bad news", "bahh", "bells", "boing", "bubbles", "cellos", "good news", "jester", "organ",
 	"superstar", "trinoids", "whisper", "wobble", "zarvox", "deranged", "hysterical", "pipe organ",
 ]
+## The bus recorded lines play on: it sends to Voices, and keeps their
+## pitch when the speed setting plays them faster or slower.
+const RECORDED_BUS := &"Spoken"
+## Extra time allowed past a recording's length before it counts as over,
+## for the gaps between its parts.
+const RECORDED_SLACK := 0.3
+
 ## Capitals that are said letter by letter; other words in capitals are
 ## only shouted for emphasis, and are said as words.
 const ACRONYMS := ["ICU", "VIP", "MBBS", "ECG", "CPR", "OPD", "MRI", "HIV", "IVF", "DNA", "CCTV", "ENT", "NICU"]
@@ -55,12 +66,17 @@ const LOWER_MIDDLE := 0.9
 static var backend: SpeechBackend
 ## Off for tools that must not wait on voices (the screenshot tool).
 static var enabled := true
+## The voice tool's catalogue run (tools/voice_lines.gd) notes every line
+## asked for here, read aloud or not: "who\ttext" keys.
+static var listening := false
+static var heard := {}
 static var _pools := {}
 static var _picked := {}
 static var _next_id := 0
 static var _current := {}
 static var _pattern: RegEx
 static var _words: RegEx
+static var _recorded: RecordedVoice
 
 
 static func device() -> SpeechBackend:
@@ -77,26 +93,48 @@ static func use_backend(engine: SpeechBackend) -> void:
 	_picked.clear()
 
 
-## True when lines can be read aloud now: the setting is on, the Voices
-## volume is up and the device has an English voice.
-static func available() -> bool:
+## True when lines may be read aloud at all: the setting is on and the
+## Voices volume is up.
+static func allowed() -> bool:
 	var settings := GameSettings.current
-	if not enabled or not settings.read_aloud or settings.voices <= 0.0 or not device().ready():
+	return enabled and settings.read_aloud and settings.voices > 0.0
+
+
+## True when the device's own voices can read lines now: reading aloud is
+## allowed and the device has an English voice.
+static func available() -> bool:
+	if not allowed() or not device().ready():
 		return false
 	return not (pools()["higher"] as Array).is_empty() or not (pools()["lower"] as Array).is_empty()
 
 
-## Whether this person's lines are read aloud ("you" can be set to Silent).
+## Whether this person's lines are read by the device's voice ("you" can
+## be set to Silent).
 static func speaks(who: String) -> bool:
 	if not available():
 		return false
 	return who != "you" or GameSettings.current.your_voice != 2
 
 
+## Who a line's recording is filed under: the player has a lighter and a
+## deeper voice.
+static func recorded_as(who: String) -> String:
+	if who != "you":
+		return who
+	return "you.deeper" if GameSettings.current.your_voice == 1 else "you.lighter"
+
+
 ## Starts reading a line aloud as a cast member ("you" for the player).
 ## Returns the line's number, or 0 when it is not read aloud.
 static func say(text: String, who: String, on_start: Callable = Callable(), on_word: Callable = Callable(),
 		on_done: Callable = Callable()) -> int:
+	if listening:
+		heard[who + "\t" + text] = true
+	if not allowed() or (who == "you" and GameSettings.current.your_voice == 2):
+		return 0
+	var parts := VoiceBank.find(recorded_as(who), text)
+	if not parts.is_empty() and _recorder() != null:
+		return _say_recorded(text, parts, on_start, on_word, on_done)
 	if not speaks(who):
 		return 0
 	var voice := voice_for(who)
@@ -118,8 +156,13 @@ static func say(text: String, who: String, on_start: Callable = Callable(), on_w
 static func stop() -> void:
 	if _current.is_empty():
 		return
+	var recorded := bool(_current.get("recorded", false))
 	_end_current()
-	device().stop()
+	if recorded:
+		if _recorded != null and is_instance_valid(_recorded):
+			_recorded.halt()
+	else:
+		device().stop()
 	Music.duck_for_speech(false)
 
 
@@ -134,8 +177,12 @@ static func speaking(id: int = 0) -> bool:
 	return not _current.is_empty() and (id == 0 or int(_current["id"]) == id)
 
 
-## Moves the fake engine's clock (tests); real voices run by themselves.
+## Moves time on: a recorded line's words are reached on this clock (and
+## the fake engine's, in tests); the device's voices run by themselves.
 static func tick(delta: float) -> void:
+	if not _current.is_empty() and bool(_current.get("recorded", false)):
+		_tick_recorded(delta)
+		return
 	if backend != null:
 		backend.tick(delta)
 
@@ -156,6 +203,133 @@ static func on_event(kind: String, id: int, position: int) -> void:
 			_current = {}
 			Music.duck_for_speech(false)
 			_call(done)
+
+
+# --- Recorded lines ---------------------------------------------------------
+
+static func _say_recorded(text: String, parts: Array, on_start: Callable, on_word: Callable,
+		on_done: Callable) -> int:
+	if not _current.is_empty() and not bool(_current.get("recorded", false)):
+		device().stop()
+	_end_current()
+	_next_id += 1
+	var speed := float(SPEEDS[clampi(GameSettings.current.speech_speed, 0, SPEEDS.size() - 1)])
+	# Where each word ends, in seconds from the start, over all the parts.
+	var times := []
+	var offset := 0.0
+	for part: Dictionary in parts:
+		for time: Variant in part["words"]:
+			times.append(offset + float(time))
+		offset += float(part["length"])
+	_current = {"id": _next_id, "text": text, "recorded": true, "clock": 0.0, "speed": speed,
+		"length": offset, "times": times, "ends": _word_ends(text), "said": 0, "started": false,
+		"start": on_start, "word": on_word, "done": on_done}
+	_set_recorded_speed(speed)
+	_recorded.play_parts(parts, speed)
+	return _next_id
+
+
+## The player for recorded lines, kept on the scene tree's root.
+static func _recorder() -> RecordedVoice:
+	if _recorded != null and is_instance_valid(_recorded):
+		return _recorded
+	var tree := Engine.get_main_loop() as SceneTree
+	if tree == null or tree.root == null:
+		return null
+	GameSettings.ensure_buses()
+	_ensure_recorded_bus()
+	_recorded = RecordedVoice.new()
+	_recorded.name = "RecordedVoice"
+	_recorded.bus = RECORDED_BUS
+	_recorded.started.connect(_on_recorded_started)
+	_recorded.ran_out.connect(_on_recorded_ran_out)
+	tree.root.add_child.call_deferred(_recorded)
+	return _recorded
+
+
+static func _ensure_recorded_bus() -> void:
+	if AudioServer.get_bus_index(RECORDED_BUS) >= 0:
+		return
+	AudioServer.add_bus()
+	var index := AudioServer.bus_count - 1
+	AudioServer.set_bus_name(index, RECORDED_BUS)
+	AudioServer.set_bus_send(index, &"Voices")
+	AudioServer.add_bus_effect(index, AudioEffectPitchShift.new())
+	AudioServer.set_bus_effect_enabled(index, 0, false)
+
+
+## Playing faster raises the pitch; the bus's pitch shift puts it back.
+static func _set_recorded_speed(speed: float) -> void:
+	var index := AudioServer.get_bus_index(RECORDED_BUS)
+	if index < 0 or AudioServer.get_bus_effect_count(index) == 0:
+		return
+	var shift := AudioServer.get_bus_effect(index, 0) as AudioEffectPitchShift
+	if shift != null:
+		shift.pitch_scale = 1.0 / speed
+	AudioServer.set_bus_effect_enabled(index, 0, not is_equal_approx(speed, 1.0))
+
+
+## The pitch the recorded lines' bus puts back (1 when off), for tests.
+static func recorded_pitch() -> float:
+	var index := AudioServer.get_bus_index(RECORDED_BUS)
+	if index < 0 or AudioServer.get_bus_effect_count(index) == 0 or not AudioServer.is_bus_effect_enabled(index, 0):
+		return 1.0
+	return (AudioServer.get_bus_effect(index, 0) as AudioEffectPitchShift).pitch_scale
+
+
+## True while the line being said comes from a recording.
+static func recorded() -> bool:
+	return not _current.is_empty() and bool(_current.get("recorded", false))
+
+
+static func _on_recorded_started() -> void:
+	if recorded() and not bool(_current["started"]):
+		_current["started"] = true
+		Music.duck_for_speech(true)
+		_call(_current["start"])
+
+
+static func _on_recorded_ran_out() -> void:
+	if recorded():
+		_finish_recorded()
+
+
+static func _tick_recorded(delta: float) -> void:
+	if not bool(_current["started"]):
+		_on_recorded_started()
+	var clock := float(_current["clock"]) + delta * float(_current["speed"])
+	_current["clock"] = clock
+	var times: Array = _current["times"]
+	var ends: PackedInt32Array = _current["ends"]
+	while int(_current["said"]) < times.size() and float(times[int(_current["said"])]) <= clock:
+		var said := int(_current["said"]) + 1
+		_current["said"] = said
+		# The recording may count words a little differently from the shown
+		# line (a name, a number): share them out evenly.
+		var shown := str(_current["text"]).length()
+		if not ends.is_empty():
+			shown = ends[clampi(roundi(float(said) / times.size() * ends.size()) - 1, 0, ends.size() - 1)]
+		_call(_current["word"], [shown])
+		if not recorded():
+			return
+	if clock >= float(_current["length"]) + RECORDED_SLACK * maxf(1.0, times.size() / 8.0):
+		_finish_recorded()
+
+
+static func _finish_recorded() -> void:
+	var done: Callable = _current["done"]
+	_current = {}
+	Music.duck_for_speech(false)
+	_call(done)
+
+
+## Where each word of a shown line ends.
+static func _word_ends(text: String) -> PackedInt32Array:
+	var ends := PackedInt32Array()
+	for index in text.length():
+		if text[index] not in " \n" and (index + 1 == text.length() or text[index + 1] in " \n"):
+			ends.append(index + 1)
+	return ends
 
 
 # --- Voices ---------------------------------------------------------------

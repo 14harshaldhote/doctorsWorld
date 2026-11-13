@@ -21,11 +21,14 @@ func _fake() -> FakeSpeech:
 	SettingsPanel.save_path = PATH
 	var fake := FakeSpeech.new()
 	Speech.use_backend(fake)
+	# These tests are about the device's voices: no recorded lines.
+	VoiceBank.use({})
 	return fake
 
 
 func cleanup() -> void:
 	Speech.use_backend(_backend_before)
+	VoiceBank.reset()
 	super()
 	GameSettings.current = _settings_before
 	SettingsPanel.save_path = _save_path_before
@@ -149,6 +152,7 @@ func test_a_tap_shows_the_line_and_the_next_line_cuts_in() -> void:
 func test_without_voices_lines_are_murmured_as_before() -> void:
 	GameSettings.current = GameSettings.new()
 	Speech.use_backend(SpeechBackend.new())
+	VoiceBank.use({})
 	var ui := _ui()
 	ui.show_line("Dr. Meera Iyer", "A line of about forty-six letters, give or take.", {"voice": "iyer"})
 	expect(not ui.reading_aloud(), "a headless run has no voices")

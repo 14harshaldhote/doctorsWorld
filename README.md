@@ -88,8 +88,8 @@ are in:
   is speaking, and lips that keep time. Nurses gossip by the vending machine
   whether you're listening or not.
 - Everyone talks out loud. Every line you can read, someone actually says,
-  in their own voice, using the voices already on your phone, and the words
-  appear as they're said instead of racing ahead. Dr. Iyer sounds like Dr.
+  in their own natural voice, recorded for this game, and the words appear as
+  they're said instead of racing ahead. Dr. Iyer sounds like Dr.
   Iyer all game, children sound like children, and your doctor says your
   replies out loud too, so you can hear exactly how that sounded. The music
   ducks out of the way while anyone speaks. Too slow? Too fast? There's a

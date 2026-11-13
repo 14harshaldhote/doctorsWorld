@@ -41,6 +41,35 @@ static func chapter_names() -> PackedStringArray:
 	return names
 
 
+## Every line spoken in the conversations, by who says it: {who, text},
+## where "you" is the player (their lines and the replies they can pick).
+## Text still holds {called} and the like.
+static func spoken_lines() -> Array[Dictionary]:
+	var lines: Array[Dictionary] = []
+	for chapter_name in chapter_names():
+		var book := chapter(chapter_name)
+		for id: String in book:
+			_collect_lines(book[id], lines)
+	return lines
+
+
+static func _collect_lines(item: Variant, lines: Array[Dictionary]) -> void:
+	if item is Array:
+		for step: Variant in item:
+			_collect_lines(step, lines)
+	elif item is Dictionary:
+		if item.has("say") and item.has("text"):
+			lines.append({"who": str(item["say"]), "text": str(item["text"])})
+		for key: String in item:
+			if key == "choose" and item[key] is Array:
+				for option: Variant in item[key]:
+					if option is Dictionary and (option as Dictionary).has("text"):
+						lines.append({"who": "you", "text": str(option["text"])})
+					_collect_lines(option, lines)
+			elif item[key] is Array or item[key] is Dictionary:
+				_collect_lines(item[key], lines)
+
+
 static func _read(path: String) -> Dictionary:
 	var text := FileAccess.get_file_as_string(path)
 	if text.is_empty():
