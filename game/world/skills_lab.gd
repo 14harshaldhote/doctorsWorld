@@ -583,7 +583,11 @@ func open_task(id: String) -> void:
 	var task_seed := 1 + int(_attempts[id]) + profile.day * 10
 	if not drill.is_empty():
 		task_seed = Drills.seed_for(profile, profile.day) + int(_attempts[id])
-	var task := TrainingTask.make(id, task_seed)
+	var which_case := ""
+	if not drill.is_empty() and id == "history":
+		# A history drill brings a practice patient Day 2 never had.
+		which_case = Drills.history_case(profile.day)
+	var task := TrainingTask.make(id, task_seed, which_case)
 	view = _view_for(task)
 	view.name = "Training"
 	if drill.is_empty():

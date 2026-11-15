@@ -26,6 +26,7 @@ plan"). This file covers how to build, run and test the game.
 | 12. No two weeks the same | More variety for the endless days, all in `ChiefDays`. Fourteen recurring hard calls (`ROUNDS_CALLS`, three openings each by `rounds_a/b/c`); none comes back within `CALL_GAP` days, worked out once per doctor and cached (`call_for` and `sim_for` are loops, not recursion, so Day 5000 is as cheap as Day 50). From Day 43 each week (`week`, `event_for`) is ordinary or an event from `EVENTS`: the rains (crashes every other day, more busy days), festival week (a new crash, `festival_triage`) or an outbreak (a new rota full of the stomach bug, `outbreak_rota`, every day). The first four weeks bring all three events and one ordinary week; after that each four is a seeded shuffle, never the same twice running. An event changes the puzzle's case, its talks and page, the day card's heading, the teaser the evening before, the morning news (`event_*` flags) and the day's last line, and costs a point a morning from its own meter. Eight walk-in patients (`CASEBOOK` entries with `walkin: true`) come on Day 37 and every fourth day after, in an order seeded by the doctor's name; each is a history and an operation at the day's difficulties, and joins the simulator's cases after their day. The board's wrong-age note now names the casebook patient. Story in `tools/chief_story.py`; the new cases and histories are in `story/cases.json` | Done |
 | 13. Reminders, privacy and thanks | Reminders on the phone to bring the player back (`Reminders`, `ReminderBackend`, `ReminderAsk`): a page about the day waiting (the story day, the casebook patient, a walk-in, a hard week starting, a milestone, the board report or the day's hard call), then a run to save or a slipping number, then two gentle nudges, then silence. One a day at the hour the player usually plays (kept between 10:00 and 20:00), none after a week away, and every launch and save replaces the plan. Off until the player says yes: the game asks after Day 1 and once more after the first review (`Reminders.should_ask`), the phone then asks for permission, and Settings has an on/off row. The iOS side is `addons/dw_reminders` (see Reminders below). Settings > About opens the privacy policy and the acknowledgements (`AboutTexts`, `ReaderPanel`): thanks, every part of Godot with its copyright holders, and every licence text. The policy is also in [docs/PRIVACY.md](PRIVACY.md) for the App Store | Done |
 | 14. Training through the career, and fewer ways to get stuck | A drill between every day from the end of Day 3 to the start of Day 28 (`Drills`, `DrillCard`, `SkillsLab` with a `drill` station): the save moves to the next morning as soon as a day ends, with `Drills.FLAG` set, and `Main.show_hospital` opens the skills lab for one station (monitor, IV line, stitching, instruments, scrubbing in, in turn) before the day. A card shows a true story (`TrainingFacts`, six per station) and the XP on offer; the first score pays `Drills.xp` (for turning up, each star and a new best, times 1 + half the rank) and clears the flag; Skip goes straight on. Every Day 2 score card ends with a story too (`TrainingView.fact`). Fixes from a playthrough audit: a day started again after the game closed halfway goes back to that morning (`PlayerProfile.begin_day`, the `morning` snapshot in the save), so a review can no longer promote twice and XP can't be earned twice; the ward's and theatre's place to go counts from a tap on its bed or person or the floor beside it, or from walking up to it, and its tag is pinned to the screen's edge with an arrow when the place is off screen or under a panel (`LobbyHud.set_tag(..., pin)`, `tag_hit`) | Done |
+| 15. Turning up pays, new patients, a card that talks | XP for opening the game on a new real-world day (`DailyReward`: 10 XP, plus 5 for each day in a row up to a week, times 1 + half the rank; `PlayerProfile.last_played` and the counter `day_streak`), on a `WelcomeCard` over the day's screen, which waits for it. The XP goes into the morning snapshot too, so a day that starts over keeps it. The history station joins the drills (`Drills.ORDER` has six stations) with a practice patient each time it comes round (`Drills.HISTORY_CASES`, four new cases in `story/cases.json`, all acted by Dr. Iyer). The trainer reads the drill card aloud: the opener, then the true story (`DrillCard._read_aloud`); the facts and openers moved to `story/facts.json` so `tools/make_voices.py` records them (`fact_lines()`) | Done |
 
 The earlier SwiftUI and SpriteKit prototype is kept on the git branch
 `swift-prototype`.
@@ -61,8 +62,25 @@ library is Intel only), so run it on a real iPhone or iPad.
    General > VPN & Device Management.
 
 With a free Apple ID the installed app expires after 7 days; run it from Xcode
-again to renew. The Apple Developer Program removes that limit and enables
-TestFlight.
+again to renew. The paid Apple Developer Program would remove that limit and
+enable TestFlight; the game doesn't use it for now.
+
+### Testers' phones, without a paid account
+
+A free Apple ID installs on other people's phones the same way: plug the
+tester's iPhone into the Mac, pick it as the run destination in Xcode and
+press Run. The first time, the phone needs Developer Mode on and the profile
+trusted (step 5 above), and the tester must unlock it while Xcode installs.
+Apple limits a free ID to a few devices and a few apps a week, and each
+install stops opening after 7 days, so plan to plug the phones in again
+weekly. Settings on the phone are kept between installs; the save file is
+too, unless the app is deleted. Nothing is uploaded anywhere: there is no
+server, so a tester's save stays on their phone.
+
+For a long test on an older iPhone, turn on Settings > Graphics > Battery
+saver (phones before the iPhone 11 start on it) and watch for warmth and
+battery drain during a full ward day; the engine can't read the phone's
+heat, so that check is done by hand.
 
 ## Project layout
 
@@ -340,11 +358,28 @@ same until it is played. The first score pays `Drills.xp(rank, stars,
 new_best)` once and clears the flag; retries are practice. `drill_finished`
 (Done, Skip, or leaving after a score) takes Main on to the day.
 
-True stories live in `game/training/training_facts.gd`, six per station.
+True stories live in `story/facts.json` ("facts", six per station, read by
+`TrainingFacts`; "openers", one line per trainer, read by `Drills.opener`).
 Day 2 shows fact n on the nth go at a station; the drill before a day shows
 fact `Drills.visit(day)`, so no story repeats between Day 2 and Day 28.
 Keep them true and short (under about 250 characters): they are on screen
-next to the score.
+next to the score, and the trainer reads them aloud on the drill card, so
+run `tools/make_voices.py` after changing one.
+
+The history drill picks `Drills.history_case(day)` from `HISTORY_CASES`,
+practice patients in `story/cases.json` with the same shape as
+`training_history` (four key questions with a `why`, three useful, two
+that waste a question). `SkillsLab.open_task` passes the case to
+`TrainingTask.make` only in drill mode, so Day 2 keeps Mr. Kumar.
+
+## A new day
+
+`DailyReward.claim(profile)` runs at the top of `Main.show_hospital`: the
+first open on a new local date pays `xp_for(streak, rank)`, moves the streak
+on (or back to one after a gap) and returns what to show; `Main.welcome_back`
+puts a `WelcomeCard` over the screen and disables the screen's processing
+until the card closes. The career's first session only notes the date. Tests
+set `DailyReward.today_override`.
 
 ## Reminders
 

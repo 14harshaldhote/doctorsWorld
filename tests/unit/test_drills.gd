@@ -226,3 +226,68 @@ func test_a_place_off_screen_is_pinned_to_the_edge_and_still_takes_a_tap() -> vo
 	expect(not hud.tag_pinned("place_trolley"), "on screen it floats over the place as before")
 	hud.set_tag("place_bed1", "Bed 1", Vector2(-400, low), true, true, false)
 	expect(not (hud._tags["place_bed1"] as Control).visible, "other tags still hide off screen")
+
+
+func test_history_drills_bring_new_practice_patients() -> void:
+	expect("history" in Drills.ORDER, "the history station comes round between days")
+	var met := {}
+	for day in range(Drills.FIRST_BEFORE, Drills.LAST_BEFORE + 1):
+		if Drills.before_day(day) == "history":
+			met[Drills.history_case(day)] = true
+	expect_equal(met.size(), Drills.HISTORY_CASES.size(), "every practice patient gets a turn")
+	for case_id: String in Drills.HISTORY_CASES:
+		var task := HistoryTask.new(case_id)
+		expect(task.patient != "The patient" and task.patient != "Mr. Ravi Kumar", "%s is a new patient" % case_id)
+		expect_equal(task.actor, "iyer", "acted by Dr. Iyer, as on Day 2")
+		expect(task.questions.size() >= 8, "with plenty to ask")
+		var keys := 0
+		for entry: Dictionary in task.questions:
+			if str(entry.get("weight", "")) == "key":
+				keys += 1
+				expect(entry.has("why") and entry.has("fact"), "%s: every key fact says why it matters" % case_id)
+		expect_equal(keys, 4, "four facts that would hurt on the table")
+		expect(task.best_points() > 0 and task.limit == 5)
+	var main := _main(5)
+	main.profile.set_flag("jump_9")
+	main._on_day_finished()
+	var lab := main.screen as SkillsLab
+	expect(lab != null and lab.drill == "history", "a history drill before Day 6")
+	var card := _card(lab)
+	expect(card != null)
+	if card == null:
+		return
+	var before := main.profile.total_xp
+	card.start_button.pressed.emit()
+	expect(lab.view is HistoryView, "Start opens a history")
+	expect_equal((lab.view.task as HistoryTask).case_id, Drills.HISTORY_CASES[0], "with the first practice patient")
+	expect(lab.play_task(), "it's played")
+	expect(main.profile.total_xp > before, "and pays")
+	lab.view.done_pressed.emit()
+	expect(main.screen is Ward and main.profile.day == 6, "then Day 6 starts")
+
+
+func test_the_trainer_reads_the_drill_card_aloud() -> void:
+	var FakeSpeech := load("res://tests/unit/fake_speech.gd")
+	var backend_before: SpeechBackend = Speech.backend
+	var settings_before := GameSettings.current
+	GameSettings.current = GameSettings.new()
+	var fake: SpeechBackend = FakeSpeech.new()
+	Speech.use_backend(fake)
+	VoiceBank.use({})
+	var profile := PlayerProfile.new()
+	profile.name = "Kiran Rao"
+	var card := add_node(DrillCard.new("instruments", 8, profile)) as DrillCard
+	expect_equal(card.trainer, "tom", "Tom runs the instrument drill")
+	expect((card.find_child("Opener", true, false) as Label).text.contains(Drills.opener("instruments")), "his opener is on the card")
+	expect(card.line > 0 and Speech.speaking(card.line), "and he says it")
+	expect(fake.spoken.size() == 1 and str(fake.spoken[0]["text"]).begins_with("Trolley"), "the opener first")
+	for frame in 300:
+		if fake.spoken.size() >= 2:
+			break
+		Speech.tick(STEP)
+	expect(fake.spoken.size() == 2 and str(fake.spoken[1]["text"]).contains("Liston"), "then the story (Day 8's, not Day 2's)")
+	card.skip_button.pressed.emit()
+	expect(not Speech.speaking(), "Skip stops the voice")
+	Speech.use_backend(backend_before)
+	VoiceBank.reset()
+	GameSettings.current = settings_before

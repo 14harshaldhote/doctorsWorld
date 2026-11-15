@@ -2,10 +2,13 @@ class_name DrillCard
 extends Control
 ## The card that opens a drill between days: which station, who runs it, a
 ## true story from medicine, the free XP on offer and the best to beat.
-## "Start drill" plays it; "Skip" goes straight on to the next day.
+## "Start drill" plays it; "Skip" goes straight on to the next day. The
+## trainer reads the opener and then the story aloud (Speech).
 
 signal start_pressed
 signal skip_pressed
+
+const NAMES := {"iyer": "Dr. Iyer", "grace": "Sister Grace", "tom": "Tom"}
 
 var station := ""
 var day := 4
@@ -13,6 +16,10 @@ var profile: PlayerProfile
 var start_button: Button
 var skip_button: Button
 var fact_label: Label
+## The trainer whose voice reads the card.
+var trainer := "iyer"
+## The line being read aloud (a Speech id), 0 for none.
+var line := 0
 var _done := false
 var _card: PanelContainer
 var _scroll: ScrollContainer
@@ -60,7 +67,10 @@ func _ready() -> void:
 	_body = UiKit.vbox(8)
 	_body.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_scroll.add_child(_body)
-	var opener := UiKit.label(Drills.opener(station), 14, UiKit.TEXT)
+	trainer = Drills.trainer_of(station)
+	_body.add_child(UiKit.kicker(str(NAMES.get(trainer, "Dr. Iyer")), 11))
+	var opener := UiKit.label("“%s”" % Drills.opener(station), 14, UiKit.TEXT)
+	opener.name = "Opener"
 	opener.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	opener.custom_minimum_size.x = UiKit.px(530)
 	_body.add_child(opener)
@@ -100,6 +110,18 @@ func _ready() -> void:
 	start_button.pressed.connect(_answer.bind(true))
 	buttons.add_child(start_button)
 	UiKit.pop_in(card)
+	_read_aloud()
+
+
+## The trainer says the opener, then tells the story.
+func _read_aloud() -> void:
+	line = Speech.say(Drills.opener(station), trainer, Callable(), Callable(), _on_opener_done)
+
+
+func _on_opener_done() -> void:
+	if _done or not is_inside_tree():
+		return
+	line = Speech.say(Drills.fact_for(day), trainer)
 
 
 func _process(_delta: float) -> void:
@@ -137,6 +159,9 @@ func _answer(start: bool) -> void:
 	if _done:
 		return
 	_done = true
+	if line > 0:
+		Speech.stop_line(line)
+		line = 0
 	Sfx.play(get_parent(), "tap", -8.0)
 	if start:
 		start_pressed.emit()

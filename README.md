@@ -350,6 +350,16 @@ Here's everything, in order, so you can decide how much of your life to give it:
   patient or the floor beside them works too. Closing the game halfway
   through a day no longer pays you twice, or promotes you twice, which was
   generous but wrong.
+- Turning up pays. Open the game on a new day and there's XP waiting, more
+  for every day in a row for a week, and more the higher you've climbed. Miss
+  a day and the streak starts again, like every good habit.
+- Four more patients who are not Mr. Kumar. The history drill now brings a
+  stranger each time: a man with a stent and an opinion, a woman whose
+  period is late and who is allergic to gloves, a seventy-four-year-old who
+  did not trip, and a car salesman with one kidney and a fever. Five
+  questions. Choose well.
+- The drill card talks. Dr. Iyer, Sister Grace or Tom says their piece and
+  then tells you the story, out loud, in their own recorded voice.
 
 Screenshots of every screen are rebuilt automatically after each change, on
 the [`screenshots` branch](../../tree/screenshots).

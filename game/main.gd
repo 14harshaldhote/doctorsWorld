@@ -146,6 +146,30 @@ func show_hospital() -> void:
 	if not profile.opening_seen:
 		show_opening()
 		return
+	# The first open of a new real-world day pays a little XP, on a card
+	# over the day's screen (claimed before the screen takes its morning
+	# snapshot, so the XP survives a restart of the day).
+	var reward := DailyReward.claim(profile)
+	_show_hospital_screen()
+	if not reward.is_empty():
+		_save()
+		welcome_back(reward)
+
+
+## The card for a new day's XP, over the screen, which waits until it closes.
+func welcome_back(reward: Dictionary) -> WelcomeCard:
+	var card := WelcomeCard.new(reward)
+	var paused := screen
+	if paused != null:
+		paused.process_mode = Node.PROCESS_MODE_DISABLED
+	card.closed.connect(func() -> void:
+		if paused != null and is_instance_valid(paused) and paused == screen:
+			paused.process_mode = Node.PROCESS_MODE_INHERIT)
+	add_child(card)
+	return card
+
+
+func _show_hospital_screen() -> void:
 	if profile.has_flag(Drills.FLAG):
 		if Drills.due_before(profile.day):
 			show_drill()

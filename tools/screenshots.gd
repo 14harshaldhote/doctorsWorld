@@ -493,6 +493,25 @@ func _ward_shots() -> void:
 	await _ward_shot("143-place-off-screen", 6, [], "", func(w: Ward) -> bool:
 		return w.mode == "walk" and w.beat().get("id", "") == "rider", careful)
 
+	# Stage 15: XP for a new day, and a history drill with a practice patient.
+	var returning := Ward.new(sample_profile_on_ward(5, ["beds_checked"]))
+	await _shot("144-welcome-back", returning, func() -> void:
+		returning.play_until(func() -> bool: return returning.mode == "walk", careful, AutoPlayer.new())
+		returning.add_child(WelcomeCard.new({"xp": 25, "streak": 4, "next": 30}))
+		returning.set_process(false))
+	var asking := SkillsLab.new(_drill_profile(6), Drills.before_day(6))
+	await _shot("145-history-drill", asking, func() -> void:
+		for frame in 120:
+			if asking.drill_card != null:
+				break
+			asking.update(1.0 / 30.0)
+		asking.drill_card.start_button.pressed.emit()
+		asking.play_task(func() -> bool: return (asking.view.task as HistoryTask).asked.size() >= 2)
+		for frame in 90:
+			asking.view._type_coach(1.0 / 30.0)
+		asking.settle_camera()
+		asking.set_process(false))
+
 
 ## The drug chart with a line already flagged: the list, or the reasons.
 static func _chart_at(ward: Ward, picking: bool) -> bool:

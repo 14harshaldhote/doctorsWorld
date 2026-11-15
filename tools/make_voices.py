@@ -288,6 +288,21 @@ def case_lines(heard):
     return [(who, text) for who, text in found if who and text]
 
 
+TRAINERS = {"scrub": "grace", "monitor": "iyer", "history": "iyer", "instruments": "tom", "iv": "grace",
+            "stitch": "iyer"}
+
+
+def fact_lines():
+    """The drill card's lines (story/facts.json): each trainer's opener, and
+    the true stories of their stations, told in their voice."""
+    with open(os.path.join(ROOT, "story", "facts.json")) as file:
+        book = json.load(file)
+    found = [(who, text) for who, text in book.get("openers", {}).items()]
+    for station, facts in book.get("facts", {}).items():
+        found += [(TRAINERS.get(station, "iyer"), text) for text in facts]
+    return found
+
+
 def catalogue_lines(story):
     """The lines the running game asked for (tools/voice_lines.json) that are
     not story lines, with the test players' names put back as {called}."""
@@ -571,6 +586,8 @@ def plan(model_dir, only):
         add(who, text, mood, False)
     for who, text in catalogue_lines(story):
         add(who, text, "", True)
+    for who, text in fact_lines():
+        add(who, text, "", False)
     unique = {}
     for who, key, specs in lines:
         unique.setdefault((who, key), (who, key, specs))

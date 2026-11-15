@@ -39,6 +39,9 @@ var counters := {}
 ## started again from its first beat (the game was closed halfway) goes
 ## back to it, so nothing is earned, promoted or decided twice.
 var morning := {}
+## The local date the game was last opened ("2026-11-16"), for the XP on a
+## new day (DailyReward); the days in a row are the counter "day_streak".
+var last_played := ""
 
 const DAY_START := 7 * 60
 ## What a day keeps in the morning snapshot.
@@ -175,6 +178,7 @@ func to_dict() -> Dictionary:
 		"rank": rank_held,
 		"counters": counters.duplicate(),
 		"morning": morning.duplicate(true),
+		"last_played": last_played,
 	}
 
 
@@ -230,6 +234,9 @@ static func from_dict(data: Variant) -> PlayerProfile:
 	var snapshot: Variant = data.get("morning")
 	if typeof(snapshot) == TYPE_DICTIONARY and typeof(snapshot.get("day")) in [TYPE_INT, TYPE_FLOAT]:
 		profile.morning = snapshot
+	var played: Variant = data.get("last_played")
+	if typeof(played) == TYPE_STRING and played.length() == 10:
+		profile.last_played = played
 	return profile
 
 

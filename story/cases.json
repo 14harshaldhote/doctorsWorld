@@ -3118,5 +3118,307 @@
 				"answer": "My son. He's sixteen and he's been on his phone since we arrived. He's very worried. That's how he shows it."
 			}
 		]
+	},
+	"drill_hernia": {
+		"patient": "Mr. Dinesh Rathod",
+		"about": "61 · hernia repair tomorrow morning",
+		"actor": "iyer",
+		"limit": 5,
+		"part": "hernia",
+		"opening": "Mr. Rathod. Sixty-one, a hernia, an operation in the morning, and an opinion about everything. Ask.",
+		"questions": [
+			{
+				"id": "heart",
+				"ask": "Any heart trouble, or anything done to your chest?",
+				"weight": "key",
+				"answer": "A stent, two years back. A little tube in the heart pipe. I take the blood-thinning tablet every morning for it. The cardiologist was very strict.",
+				"fact": "Heart stent, on a blood thinner",
+				"why": "A stent and a blood thinner. Stop the tablet without the heart doctor and the stent can block; operate on it and he bleeds. Either way the surgeon has to know today."
+			},
+			{
+				"id": "sugar",
+				"ask": "Do you have diabetes, and what do you take for it?",
+				"weight": "key",
+				"answer": "Sugar, yes. Insulin, morning and night. My wife does the injection. I can't look.",
+				"fact": "Diabetic, insulin twice a day",
+				"why": "Insulin and no breakfast is a low sugar on the table. The dose and the timing have to be planned around the operation."
+			},
+			{
+				"id": "family",
+				"ask": "Has anyone in your family had trouble with an anaesthetic?",
+				"weight": "key",
+				"answer": "My brother. His temperature shot up during an operation and he nearly died. Hereditary something. They told him to tell all of us.",
+				"fact": "Brother had a severe reaction to anaesthetic",
+				"why": "A relative whose temperature shot up under anaesthetic can mean a rare inherited reaction. The anaesthetist needs different drugs and a plan, before, not during."
+			},
+			{
+				"id": "meal",
+				"ask": "When did you last eat or drink?",
+				"weight": "key",
+				"answer": "Nothing since dinner. Tea at six this morning, with sugar. Is tea food?",
+				"fact": "Sweet tea at 06:00",
+				"why": "Sweet tea counts. Anything in the stomach can come back up under anaesthetic, so the time of the operation depends on his last drink."
+			},
+			{
+				"id": "cough",
+				"ask": "Do you smoke, or have a cough?",
+				"weight": "useful",
+				"answer": "Twenty a day for forty years. I cough in the mornings. Everyone does.",
+				"fact": "Smokes twenty a day, morning cough"
+			},
+			{
+				"id": "lump",
+				"ask": "Does the lump go back in when you lie down?",
+				"weight": "useful",
+				"answer": "It goes back. It takes a while now, and it aches.",
+				"fact": "Hernia still goes back, slowly"
+			},
+			{
+				"id": "ops",
+				"ask": "Have you had any operations before?",
+				"weight": "useful",
+				"answer": "The stent, if that counts. And my appendix in college.",
+				"fact": "Appendix out as a student"
+			},
+			{
+				"id": "shop",
+				"ask": "How's business at the shop?",
+				"weight": "none",
+				"answer": "Slow. People buy online now. Ask my son, he's the one who set it up. That's a question gone, Doctor."
+			},
+			{
+				"id": "weather",
+				"ask": "Hot this week, isn't it?",
+				"weight": "none",
+				"answer": "I came about my hernia, not the forecast."
+			}
+		]
+	},
+	"drill_gallstones": {
+		"patient": "Mrs. Kamla Joshi",
+		"about": "36 · gallstones, keyhole operation next week",
+		"actor": "iyer",
+		"limit": 5,
+		"him": "her",
+		"his": "her",
+		"part": "gallbladder",
+		"opening": "Mrs. Joshi. Thirty-six, gallstones, a keyhole operation next week, and three children who all came along. Ask.",
+		"questions": [
+			{
+				"id": "period",
+				"ask": "When was your last period, and could you be pregnant?",
+				"weight": "key",
+				"answer": "Six weeks ago. I'm usually like a clock. I thought it was the stress.",
+				"fact": "Period two weeks late, could be pregnant",
+				"why": "A late period before an operation means a pregnancy test first. The anaesthetic, the X-rays and the gas in the belly all change for a pregnancy."
+			},
+			{
+				"id": "gloves",
+				"ask": "Are you allergic to anything, even rubber gloves or plasters?",
+				"weight": "key",
+				"answer": "Rubber gloves. The kitchen ones bring me out in welts. And a plaster once took the skin off.",
+				"fact": "Allergic to latex",
+				"why": "A latex allergy on the table can be a full collapse. The whole theatre has to be set up latex-free before she comes in."
+			},
+			{
+				"id": "chest",
+				"ask": "Any trouble with your breathing or your chest?",
+				"weight": "key",
+				"answer": "Asthma since school. Two puffs of the blue inhaler most days. More when it's dusty.",
+				"fact": "Asthma, uses the reliever most days",
+				"why": "Asthma that needs the reliever every day isn't controlled. Under anaesthetic that can turn into a tight chest. It needs sorting before, not during."
+			},
+			{
+				"id": "medicines",
+				"ask": "Do you take any medicines or tablets?",
+				"weight": "key",
+				"answer": "Just the inhaler. And iron tablets. The chemist said I looked pale.",
+				"fact": "Iron tablets, looks pale",
+				"why": "Pale and on iron tablets means somebody thinks she's anaemic. A blood count before surgery says whether she can afford to bleed."
+			},
+			{
+				"id": "pain",
+				"ask": "When does the pain come, and what sets it off?",
+				"weight": "useful",
+				"answer": "After anything fried. Under the ribs on the right, and round to my back. An hour of it and I can't sit still.",
+				"fact": "Pain after fried food, under the right ribs"
+			},
+			{
+				"id": "yellow",
+				"ask": "Any fever, or have you ever turned yellow?",
+				"weight": "useful",
+				"answer": "No fever. My sister says my eyes went yellow once. I didn't look.",
+				"fact": "Eyes may have gone yellow once"
+			},
+			{
+				"id": "ops",
+				"ask": "Have you had any operations before?",
+				"weight": "useful",
+				"answer": "Three caesareans. The last one took a long time. They said there was scar tissue.",
+				"fact": "Three caesareans, scar tissue"
+			},
+			{
+				"id": "children",
+				"ask": "Are the children behaving?",
+				"weight": "none",
+				"answer": "The little one is eating the leaflets. That's one question, Doctor."
+			},
+			{
+				"id": "cooking",
+				"ask": "What do you cook at home?",
+				"weight": "none",
+				"answer": "Everything fried, which is probably why I'm here. Next question."
+			}
+		]
+	},
+	"drill_hip": {
+		"patient": "Mr. Abdul Karim",
+		"about": "74 · fell at home, broken hip",
+		"actor": "iyer",
+		"limit": 5,
+		"part": "hip",
+		"opening": "Mr. Karim. Seventy-four, fell in his bathroom this morning, a broken hip, theatre as soon as it's safe. He's sharp, so don't talk down to him. Ask.",
+		"questions": [
+			{
+				"id": "fall",
+				"ask": "What happened just before you fell? Did you feel dizzy, or black out?",
+				"weight": "key",
+				"answer": "I stood up from the chair and the room went grey. The next thing, I was on the floor. I didn't trip. I know what tripping feels like.",
+				"fact": "Went grey and fell, didn't trip",
+				"why": "A fall after the room goes grey is a blackout, not a trip. The heart or the blood pressure dropped him, and it can do it again on the table unless it's found first."
+			},
+			{
+				"id": "thinners",
+				"ask": "Do you take any blood thinners?",
+				"weight": "key",
+				"answer": "Warfarin. For the heartbeat, it flutters. They check my blood every month.",
+				"fact": "On warfarin for a fluttering heart",
+				"why": "Warfarin means his blood doesn't clot. A hip operation on warfarin bleeds badly, so it has to be reversed first. The flutter explains the blackout too."
+			},
+			{
+				"id": "head",
+				"ask": "Did you hit your head? Can you remember everything?",
+				"weight": "key",
+				"answer": "There's a bump at the back. I don't remember the floor. I remember my daughter shouting.",
+				"fact": "Bump on the head, a gap in memory",
+				"why": "A bump and a gap in memory on a blood thinner can be a bleed inside the skull. That needs a scan before anything else."
+			},
+			{
+				"id": "meal",
+				"ask": "When did you last eat or drink?",
+				"weight": "key",
+				"answer": "Breakfast at seven. Paratha. My daughter's. Then the floor.",
+				"fact": "Ate paratha at 07:00",
+				"why": "A full stomach fixes the earliest safe time for theatre. Emergency or not, the anaesthetist needs the hour."
+			},
+			{
+				"id": "home",
+				"ask": "Who's at home with you, and how do you get about?",
+				"weight": "useful",
+				"answer": "My daughter, since my wife passed. I walk with a stick. I manage.",
+				"fact": "Lives with his daughter, walks with a stick"
+			},
+			{
+				"id": "eyes",
+				"ask": "How is your eyesight?",
+				"weight": "useful",
+				"answer": "A cataract in the left. The right one does the work. The bathroom light has gone, I keep saying.",
+				"fact": "Cataract, a dark bathroom"
+			},
+			{
+				"id": "chest",
+				"ask": "Any pain in your chest, before or since?",
+				"weight": "useful",
+				"answer": "No pain. A flutter, like I said. Like a bird in there.",
+				"fact": "No chest pain, heart flutters"
+			},
+			{
+				"id": "pension",
+				"ask": "Did your pension come through this month?",
+				"weight": "none",
+				"answer": "My hip is broken, Doctor. The pension can wait, and so can that question."
+			},
+			{
+				"id": "match",
+				"ask": "Did you see the match last night?",
+				"weight": "none",
+				"answer": "I'm seventy-four and lying on a trolley. Ask me something useful."
+			}
+		]
+	},
+	"drill_stone": {
+		"patient": "Mr. Vikram Sahu",
+		"about": "45 · kidney stone, dye and X-ray tomorrow",
+		"actor": "iyer",
+		"limit": 5,
+		"part": "kidney",
+		"opening": "Mr. Sahu. Forty-five, a kidney stone, booked for tomorrow with the dye and the X-ray. He's in a hurry. Ask.",
+		"questions": [
+			{
+				"id": "kidneys",
+				"ask": "Has anything ever been wrong with your kidneys before?",
+				"weight": "key",
+				"answer": "I've only got one. They took the other out when I was a boy. Something was wrong with it. I forget to mention it.",
+				"fact": "Only one kidney",
+				"why": "One kidney with a stone in it is a kidney that can shut down. The dye, the drugs and the timing all change when there is no spare."
+			},
+			{
+				"id": "dye",
+				"ask": "Are you allergic to anything, including X-ray dye?",
+				"weight": "key",
+				"answer": "The dye. Last time they put it in I itched all over and my face swelled up. They gave me an injection.",
+				"fact": "Reacted to X-ray dye before",
+				"why": "He reacted to the dye before, and the next time can be worse. The team needs to know before the dye is anywhere near him."
+			},
+			{
+				"id": "fever",
+				"ask": "Any fever or shivering?",
+				"weight": "key",
+				"answer": "Shivering last night. Teeth chattering, then boiling hot. I thought it was the air conditioning.",
+				"fact": "Shivers and fever last night",
+				"why": "Fever with a blocked kidney is an infection behind the block. That's an emergency: the kidney has to be drained, not just the stone chipped."
+			},
+			{
+				"id": "meal",
+				"ask": "When did you last eat or drink?",
+				"weight": "key",
+				"answer": "Lunch at one. Biryani. And a cold drink in the car.",
+				"fact": "Ate at 13:00",
+				"why": "Lunch at one sets the earliest safe time for an anaesthetic. The stone can wait an hour or two. A full stomach can't be rushed."
+			},
+			{
+				"id": "water",
+				"ask": "How much do you drink in a day?",
+				"weight": "useful",
+				"answer": "Coffee, mostly. Water when I remember. I'm in the car all day.",
+				"fact": "Drinks little water"
+			},
+			{
+				"id": "before",
+				"ask": "Have you had stones before?",
+				"weight": "useful",
+				"answer": "Twice. They passed on their own, with a lot of shouting.",
+				"fact": "Two stones before, both passed"
+			},
+			{
+				"id": "urine",
+				"ask": "Any blood in your urine, or trouble passing it?",
+				"weight": "useful",
+				"answer": "Pink, yesterday. And it burns.",
+				"fact": "Pink urine, burning"
+			},
+			{
+				"id": "gym",
+				"ask": "Do you get to the gym?",
+				"weight": "none",
+				"answer": "I sell cars, Doctor. The gym is a thing other people do. Next."
+			},
+			{
+				"id": "holiday",
+				"ask": "Any holiday plans?",
+				"weight": "none",
+				"answer": "Goa, if you let me out. That's one question wasted, isn't it."
+			}
+		]
 	}
 }

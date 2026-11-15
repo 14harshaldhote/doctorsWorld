@@ -1,69 +1,27 @@
 class_name TrainingFacts
 extends RefCounted
 ## True stories and facts from medicine for the training stations, shown on
-## the score card ("Did you know?") on Day 2 and on the drill card between
-## days. Each station has its own list; the nth visit shows the nth fact,
-## so a doctor who keeps practising keeps learning something new.
+## the score card ("Did you know?") on Day 2 and read out on the drill card
+## between days. Each station has its own list; the nth visit shows the nth
+## fact, so a doctor who keeps practising keeps learning something new.
+##
+## The stories live in story/facts.json ("facts", by station) so the voice
+## tool (tools/make_voices.py) records each one in its trainer's voice.
 
-const FACTS := {
-	"scrub": [
-		"In 1847 Ignaz Semmelweis made the doctors on his Vienna maternity ward wash their hands in chlorinated lime. Deaths from childbed fever fell to about one in a hundred. Many doctors refused to believe him anyway.",
-		"Rubber surgical gloves began in 1889 because a scrub nurse, Caroline Hampton, had sore hands from the disinfectant. Her surgeon, William Halsted, had a pair made for her. They married the next year.",
-		"In the 1860s Joseph Lister began cleaning wounds, dressings and instruments with carbolic acid, and far fewer of his patients died of infection. Listerine mouthwash is named after him.",
-		"Surgeons in the 1800s often operated in old coats stiff with dried blood, and wore them as a badge of experience.",
-		"Scrubs are often green or blue because they sit opposite red on the colour wheel. They rest a surgeon's eyes after staring at blood, and hide the after-images.",
-		"A surgical scrub follows the same order every time, fingertips first, so nothing is skipped when you're tired. Pilots work from checklists for the same reason.",
-	],
-	"monitor": [
-		"The first practical ECG machine, built by Willem Einthoven in the early 1900s, weighed about 270 kg and took five people to run. Patients sat with their arms and a leg in buckets of salt water.",
-		"A pulse oximeter shines red and infrared light through your finger. Blood carrying oxygen soaks up the two colours differently, and the clip works out the difference. Takuo Aoyagi in Japan worked out how in the 1970s.",
-		"On most monitors the beep drops in pitch as the oxygen level falls, so the whole team can hear a patient getting worse without looking up.",
-		"A resting adult heart beats about 100,000 times a day and pumps around 7,000 litres of blood. It never gets a day off either.",
-		"An adult at rest breathes about 12 to 20 times a minute. A fast breathing rate is one of the earliest warnings that a patient is getting sicker, and the easiest one to miss.",
-		"Blood pressure was first measured in the 1700s by Stephen Hales, a clergyman, who put a glass tube into an artery of a horse. The blood rose about two and a half metres up the tube.",
-	],
-	"history": [
-		"In a famous 1975 study, the patient's story alone led doctors to the right diagnosis in more than three out of four cases. Tests and examination mostly confirmed it.",
-		"A 2018 study found that doctors let patients speak for a median of about 11 seconds before interrupting them.",
-		"About one person in ten says they are allergic to penicillin, but when tested, nine out of ten of them aren't. It's still the first thing you ask, every time.",
-		"The word patient comes from the Latin patiens: one who suffers, or one who endures. Both fit a busy waiting room.",
-		"Sir William Osler, who took medical students out of the lecture hall and onto the wards, is often quoted as saying: listen to your patient, he is telling you the diagnosis.",
-		"Doctors still write c/o for complains of and PMH for past medical history. Shorthand like this is why a history can fit on one side of a page.",
-	],
-	"instruments": [
-		"Many surgical instruments carry the names of the surgeons who designed them: Mayo scissors, Kocher clamps, Metzenbaum scissors, Langenbeck retractors.",
-		"Before anaesthesia, speed was everything. Robert Liston, in the 1840s, was said to take a leg off in under three minutes.",
-		"Surgical swabs have a thread woven in that shows up on an X-ray, so a swab left inside a patient can be found. The swab count is there so it never has to be.",
-		"A scrub nurse hands an instrument handle first, into the surgeon's open palm, so the surgeon never has to look away from the wound.",
-		"Blades of obsidian, a volcanic glass, can have an edge far finer than steel. Some surgeons have tried them for very fine cuts.",
-		"The Sushruta Samhita, an ancient Indian surgical text, describes more than a hundred surgical instruments, many modelled on the beaks and jaws of animals and birds.",
-	],
-	"iv": [
-		"Salt water was first given into a vein in 1832, by Thomas Latta in Scotland, to patients dying of cholera. Some of them revived while he watched.",
-		"Veins look blue but the blood inside them is dark red. The blue comes from the way skin scatters light.",
-		"Cannula sizes are counted in gauges, and the bigger the number, the thinner the needle. An orange 14 gauge is for a big bleed, a blue 22 for a child's hand.",
-		"An adult has about five litres of blood, around seven per cent of their body weight.",
-		"Karl Landsteiner found the blood groups A, B and O in 1901. It's why giving blood stopped being a gamble, and it won him a Nobel Prize.",
-		"Hands are warmed before a drip goes in because cold veins shrink and hide. A warm towel finds more veins than a second needle.",
-	],
-	"stitch": [
-		"Catgut stitches were never made from cats. They came from the intestines of sheep and cattle.",
-		"The Sushruta Samhita, written in ancient India, describes rebuilding a nose with a flap of the patient's own skin. Surgeons in Europe learnt the method from India centuries later.",
-		"Stitches on the face usually come out after about five days, and on the back after about two weeks. Skin heals faster where the blood supply is richer.",
-		"Many stitches inside the body dissolve on their own, broken down by the body over a few weeks or months.",
-		"A surgical knot needs at least three throws. One throw slips, two can loosen, and the third keeps the first two honest.",
-		"Some ancient healers closed small wounds with the jaws of large ants, letting them bite across the cut and then removing the bodies.",
-	],
-}
+
+## Every station's stories, by station id.
+static func all() -> Dictionary:
+	var found: Variant = StoryBook.chapter("facts").get("facts", {})
+	return found if typeof(found) == TYPE_DICTIONARY else {}
 
 
 ## The nth fact for a station (wrapping round), or "" for a station with none.
 static func fact(station: String, index: int) -> String:
-	var list: Array = FACTS.get(station, [])
+	var list: Array = all().get(station, [])
 	if list.is_empty():
 		return ""
 	return str(list[posmod(index, list.size())])
 
 
 static func count(station: String) -> int:
-	return (FACTS.get(station, []) as Array).size()
+	return (all().get(station, []) as Array).size()
