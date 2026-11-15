@@ -146,6 +146,11 @@ func show_hospital() -> void:
 	if not profile.opening_seen:
 		show_opening()
 		return
+	if profile.has_flag(Drills.FLAG):
+		if Drills.due_before(profile.day):
+			show_drill()
+			return
+		profile.set_flag(Drills.FLAG, false)
 	if profile.day == 1 and profile.has_flag("day1_iyer"):
 		# Day 1 was finished before the skills lab existed.
 		_start_day(2)
@@ -194,6 +199,22 @@ func show_theatre() -> void:
 	_swap(theatre)
 
 
+## Between two days (Days 3 to 27): one station in the skills lab, a true
+## story from medicine and free XP, then the next day.
+func show_drill() -> void:
+	var lab := SkillsLab.new(profile, Drills.before_day(profile.day))
+	lab.save_requested.connect(_save)
+	lab.menu_choice.connect(_on_menu_choice)
+	lab.drill_finished.connect(_on_drill_finished)
+	_swap(lab)
+
+
+func _on_drill_finished() -> void:
+	profile.set_flag(Drills.FLAG, false)
+	_save()
+	show_hospital()
+
+
 ## Day 4 onwards: the surgical ward.
 func show_ward() -> void:
 	var ward := Ward.new(profile)
@@ -205,10 +226,23 @@ func show_ward() -> void:
 
 func _on_day_finished() -> void:
 	var finished := profile.day
+	_close_day(finished)
 	if Reminders.should_ask(GameSettings.current, finished):
 		ask_about_reminders(finished)
 		return
-	_start_day(finished + 1)
+	show_hospital()
+
+
+## The day is over: the save moves on to the next morning straight away
+## (with a drill waiting before it from Day 3 to Day 27), so closing the
+## game now never means playing the day again.
+func _close_day(finished: int) -> void:
+	if profile.day != finished:
+		return
+	profile.day = finished + 1
+	profile.minutes = PlayerProfile.DAY_START
+	profile.set_flag(Drills.FLAG, Drills.due_before(profile.day))
+	_save()
 
 
 ## After the first day (and the first review): would the player like a page
@@ -218,7 +252,8 @@ func ask_about_reminders(finished: int) -> ReminderAsk:
 	ask.answered.connect(func(yes: bool) -> void:
 		Reminders.answer(GameSettings.current, profile, finished, yes)
 		GameSettings.current.save_to(settings_path)
-		_start_day(finished + 1))
+		_close_day(finished)
+		show_hospital())
 	add_child(ask)
 	return ask
 

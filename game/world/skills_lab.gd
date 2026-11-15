@@ -16,6 +16,8 @@ signal save_requested
 signal menu_choice(choice: String)
 ## The doctor has gone home through the door: the next day can start.
 signal day_finished
+## A drill between days is over (played or skipped): the next day can start.
+signal drill_finished
 
 const ROOM := Rect2(-7, -5, 14, 10)
 const WALK_SPEED := 1.8
@@ -85,10 +87,17 @@ var _marker: Node3D
 var _marker_time := 0.0
 var _home_in := -1.0
 var _end_in := -1.0
+## The station practised between days ("" on Day 2, the full training).
+var drill := ""
+## The card that opens the drill, while it shows.
+var drill_card: DrillCard
+var _drill_card_in := -1.0
+var _drill_scored := false
 
 
-func _init(for_profile: PlayerProfile = null) -> void:
+func _init(for_profile: PlayerProfile = null, drill_station: String = "") -> void:
 	profile = for_profile if for_profile != null else PlayerProfile.new()
+	drill = drill_station
 
 
 func _ready() -> void:
@@ -130,7 +139,9 @@ func _ready() -> void:
 	story.finished.connect(_on_talk_finished)
 	_refresh_board()
 	_update_clock()
-	if not profile.has_flag("lab_welcome"):
+	if not drill.is_empty():
+		_begin_drill()
+	elif not profile.has_flag("lab_welcome"):
 		_begin_day()
 	StaticBatch.optimise(self)
 	_place_camera(1.0)
@@ -327,7 +338,58 @@ func _begin_day() -> void:
 
 
 func _update_clock() -> void:
+	if not drill.is_empty():
+		hud.set_clock("Before Day %d · Skills lab" % profile.day)
+		return
 	hud.set_clock("Day %d · %s · Skills lab" % [profile.day, profile.clock_text()])
+
+
+# --- A drill between days ------------------------------------------------------
+
+## The lab between two days: the doctor at one station with its trainer,
+## a card with a true story and the XP on offer, then one go at the task.
+func _begin_drill() -> void:
+	mode = "story"
+	active = drill
+	hud.set_talking(true)
+	var station: LabStation = stations[drill]
+	var trainer := str(TrainingTask.TRAINERS[drill])
+	player.position = station.at(station.spot)
+	var centre := station.at(Vector3.ZERO)
+	_facing = atan2(centre.x - player.position.x, centre.z - player.position.z)
+	player.rotation.y = _facing
+	var rig: AvatarRig = people[trainer]["rig"]
+	rig.position = station.at(station.trainer_greeting_spot())
+	rig.rotation.y = atan2(player.position.x - rig.position.x, player.position.z - rig.position.z)
+	talking_with = trainer
+	_camera_speaker = trainer
+	_camera_mode = "talk"
+	overlay.card("Between shifts", "Skills lab · before Day %d" % profile.day, 2.2)
+	_clear_in = 1.6
+	_drill_card_in = 2.3
+
+
+func _show_drill_card() -> void:
+	drill_card = DrillCard.new(drill, profile.day, profile)
+	_layer.add_child(drill_card)
+	drill_card.start_pressed.connect(_start_drill)
+	drill_card.skip_pressed.connect(_finish_drill)
+
+
+## Starts the drill's task (again, after leaving it).
+func _start_drill() -> void:
+	drill_card = null
+	talking_with = ""
+	open_task(drill)
+
+
+## The drill is over, played or skipped: on to the next day.
+func _finish_drill() -> void:
+	drill_card = null
+	if mode == "done":
+		return
+	mode = "done"
+	drill_finished.emit()
 
 
 func is_trained(id: String) -> bool:
@@ -351,6 +413,12 @@ func next_station() -> String:
 
 
 func _refresh_board() -> void:
+	if not drill.is_empty():
+		var best := profile.best_score(drill)
+		hud.set_tasks([[TrainingTask.title_of(drill) + " drill", _drill_scored,
+			TrainingTask.stars_for(best) if best >= 0 else -1]], "Between shifts")
+		hud.set_pager("")
+		return
 	var rows := []
 	for id: String in TrainingTask.IDS:
 		var best := profile.best_score(id)
@@ -512,9 +580,18 @@ func open_task(id: String) -> void:
 	mode = "task"
 	var station: LabStation = stations[id]
 	_attempts[id] = int(_attempts.get(id, 0)) + 1
-	var task := TrainingTask.make(id, 1 + int(_attempts[id]) + profile.day * 10)
+	var task_seed := 1 + int(_attempts[id]) + profile.day * 10
+	if not drill.is_empty():
+		task_seed = Drills.seed_for(profile, profile.day) + int(_attempts[id])
+	var task := TrainingTask.make(id, task_seed)
 	view = _view_for(task)
 	view.name = "Training"
+	if drill.is_empty():
+		# Day 2: a true story on each score card, a new one each go.
+		view.fact = TrainingFacts.fact(id, int(_attempts[id]) - 1)
+	else:
+		view.kicker_override = "Drill · before Day %d" % profile.day
+		view.done_text = "On to Day %d" % profile.day
 	_layer.add_child(view)
 	_layer.move_child(view, talk_ui.get_index())
 	view.leave_pressed.connect(_on_leave)
@@ -553,6 +630,9 @@ func _view_for(task: TrainingTask) -> TrainingView:
 
 
 func _on_task_finished(task: TrainingTask) -> void:
+	if not drill.is_empty():
+		_on_drill_scored(task)
+		return
 	var id := task.id
 	var before := profile.best_score(id)
 	var old_stars := TrainingTask.stars_for(before) if before >= 0 else 0
@@ -579,6 +659,28 @@ func _on_task_finished(task: TrainingTask) -> void:
 	save_requested.emit()
 
 
+## A drill's score: free XP the first time (for turning up, the stars and a
+## new best), and the drill counts as done even if the game closes now.
+func _on_drill_scored(task: TrainingTask) -> void:
+	var before := profile.best_score(task.id)
+	var better := profile.record_score(task.id, task.score())
+	var parts := PackedStringArray()
+	if not _drill_scored:
+		_drill_scored = true
+		var xp := Drills.xp(profile.rank(), task.stars(), better and before >= 0)
+		profile.total_xp += xp
+		profile.set_flag(Drills.FLAG, false)
+		parts.append("+%d XP" % xp)
+	if better and before >= 0:
+		parts.append("new best")
+	else:
+		parts.append("best %d" % profile.best_score(task.id))
+	view.show_result(" · ".join(parts))
+	hud.refresh_profile()
+	_refresh_board()
+	save_requested.emit()
+
+
 func _close_task() -> void:
 	if view != null:
 		_layer.remove_child(view)
@@ -599,6 +701,14 @@ func _close_task() -> void:
 
 func _on_leave() -> void:
 	_close_task()
+	if not drill.is_empty():
+		# Out of the drill: once scored it's done, otherwise back to its card.
+		if _drill_scored:
+			_finish_drill()
+		else:
+			mode = "story"
+			_show_drill_card()
+		return
 	_back_to_walking()
 
 
@@ -610,6 +720,9 @@ func _on_retry() -> void:
 
 func _on_done() -> void:
 	_close_task()
+	if not drill.is_empty():
+		_finish_drill()
+		return
 	_back_to_walking()
 	if next_station().is_empty() and not profile.has_flag("training_done"):
 		_gather_for("done")
@@ -843,6 +956,10 @@ func update(delta: float) -> void:
 		_intro_in -= delta
 		if _intro_in <= 0.0:
 			_talk("welcome", "iyer", StoryBook.conversation("training", "welcome"))
+	if _drill_card_in > 0.0:
+		_drill_card_in -= delta
+		if _drill_card_in <= 0.0:
+			_show_drill_card()
 	if mode == "walk" or mode == "approach":
 		player.moving = 0.0 if not _routes.has("you") else player.moving
 		_walk_with_keys(delta)

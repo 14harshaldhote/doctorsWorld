@@ -394,6 +394,8 @@ func _place(id: String, at: Vector3, facing_point: Vector3) -> void:
 # --- The day ----------------------------------------------------------------
 
 func _begin_day() -> void:
+	# Started again after closing the game halfway: back to this morning.
+	profile.begin_day()
 	for flag: String in DAY_FLAGS:
 		profile.set_flag(flag, false)
 	stage = "morning"
@@ -543,7 +545,27 @@ func place_at(screen_point: Vector2) -> String:
 		if distance < best_distance:
 			best_distance = distance
 			best = key
-	return best
+	if not best.is_empty():
+		return best
+	# The tag pinned at the screen's edge, or the bed or sink itself (and the
+	# floor right by it) count too.
+	var floor_point: Variant = LabStation.ray_to_height(camera, screen_point, 0.0)
+	for key: String in _places_open():
+		if hud.tag_hit("place_" + key, screen_point):
+			return key
+		if floor_point != null and near_place(floor_point as Vector3, key, 1.2):
+			return key
+	return ""
+
+
+## True when a point on the floor is within reach of the bed or the sink.
+func near_place(point: Vector3, key: String, reach: float) -> bool:
+	var spots: Array[Vector3] = [BED, BED_SPOT] if key == "bed" else [SINK,
+		(stations["scrub"] as LabStation).at((stations["scrub"] as LabStation).spot)]
+	for spot: Vector3 in spots:
+		if Vector2(point.x - spot.x, point.z - spot.z).length() <= reach:
+			return true
+	return false
 
 
 func _places_open() -> Array[String]:
@@ -645,6 +667,12 @@ func _update_routes(delta: float) -> void:
 			_routes.erase(id)
 			if id == "you" and mode == "approach":
 				_arrive()
+			elif id == "you" and mode == "walk":
+				# Walked right up to the bed or the sink: that counts as going there.
+				for key: String in _places_open():
+					if near_place(player.position, key, 1.1):
+						go_to(key)
+						break
 			elif id != "you" and mode == "story" and conversation == "consent":
 				rig.rotation.y = atan2(player.position.x - rig.position.x, player.position.z - rig.position.z)
 
@@ -949,7 +977,7 @@ func _update_tags() -> void:
 		var open := key in _places_open()
 		var text := "Rohit · bed 4" if key == "bed" else "Scrub in"
 		hud.set_tag("place_" + key, text, camera.unproject_position(point),
-			walking and open and not camera.is_position_behind(point), true)
+			walking and open and not camera.is_position_behind(point), true, true)
 
 
 # --- For tests and screenshots ------------------------------------------------

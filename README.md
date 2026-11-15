@@ -334,6 +334,22 @@ Here's everything, in order, so you can decide how much of your life to give it:
 - Acknowledgements, also in Settings: the free software it's built with
   (Godot, the Kokoro voices, the fonts), every licence they came with, and a
   thank-you to the night shift.
+- Homework. Between every day from the end of your first operation to the
+  start of Day 28, you stop in the skills lab for one station: the monitor,
+  a drip, a row of stitches, the instrument tray or the sink. It takes a
+  minute or two and pays XP just for turning up, more for stars and more
+  for beating your own best, and more again the higher you climb. You can
+  skip it. Tom will know.
+- Things you didn't know you wanted to know: every training score card ends
+  with a true story from medicine. Catgut was never cat. The first proper heart
+  tracing machine weighed 270 kilos and needed five people and buckets of
+  salt water. Rubber gloves exist because a surgeon fell for his
+  scrub nurse.
+- Fewer ways to get stuck. If the place you need is off the edge of the
+  screen, its tag waits at the edge with an arrow, and tapping the bed, the
+  patient or the floor beside them works too. Closing the game halfway
+  through a day no longer pays you twice, or promotes you twice, which was
+  generous but wrong.
 
 Screenshots of every screen are rebuilt automatically after each change, on
 the [`screenshots` branch](../../tree/screenshots).

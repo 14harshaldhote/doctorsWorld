@@ -40,6 +40,9 @@ const SEMINAR_AT := Vector3(0, -80, 0)
 const SHIFT_XP := 120
 ## Each task gives this much experience plus half its score.
 const TASK_XP := 20
+## How close to a place a tap on the floor, or a walk, counts as going there.
+const NEAR_TAP := 1.2
+const NEAR_ARRIVE := 1.1
 ## The review gives at least this much, and always enough for the promotion.
 const REVIEW_XP := 150
 const DAY_END_DELAY := 3.4
@@ -873,6 +876,10 @@ func _stage_beat(entry: Dictionary) -> void:
 # --- The day ----------------------------------------------------------------------
 
 func _begin_day() -> void:
+	# A day always starts from its first beat. If it was begun before (the
+	# game was closed halfway), the career goes back to how it stood that
+	# morning, so XP, a promotion or a decision never counts twice.
+	profile.begin_day()
 	if ChiefDays.is_chief_day(profile.day):
 		ChiefDays.prepare(profile, profile.day)
 	for flag: String in DAY_FLAGS.get(profile.day, WardStory.DAY_FLAGS.get(profile.day, [])):
@@ -1250,15 +1257,71 @@ func tap(screen_point: Vector2) -> void:
 	_send("you", Vector3(point.x, 0, point.z), WALK_SPEED)
 
 
-## The place to walk to under a screen point, or "".
+## The place to walk to under a screen point, or "". Its floating tag (or
+## the tag's arrow at the edge of the screen), the bed, desk or viewer
+## itself, the floor right beside it, and the people there all count.
 func place_at(screen_point: Vector2) -> String:
 	var place := _go_place()
 	if place.is_empty():
 		return ""
+	if hud.tag_hit("place_" + place, screen_point):
+		return place
 	var point := _tag_point(place)
-	if camera.is_position_behind(point):
-		return ""
-	return place if camera.unproject_position(point).distance_to(screen_point) < UiKit.px(48) else ""
+	if not camera.is_position_behind(point) and camera.unproject_position(point).distance_to(screen_point) < UiKit.px(48):
+		return place
+	var floor_point: Variant = LabStation.ray_to_height(camera, screen_point, 0.0)
+	if floor_point != null and near_place(floor_point as Vector3, place, NEAR_TAP):
+		return place
+	for rig: AvatarRig in _people_at(place):
+		if _on_rig(rig, screen_point):
+			return place
+	return ""
+
+
+## Where the doctor stands at a place, and the middle of its furniture.
+func _place_points(place: String) -> Array[Vector3]:
+	var points: Array[Vector3] = []
+	var spot: Variant = mark(place) if place != "desk" else DESK + Vector3(-0.35, 0, 0.85)
+	if spot != null:
+		points.append(spot as Vector3)
+	if BEDS.has(place):
+		points.append(bed(place).at(Vector3.ZERO))
+	elif place == "desk":
+		points.append(DESK)
+	elif place == "lightbox":
+		points.append((stations["scan"] as LabStation).at(Vector3.ZERO))
+	return points
+
+
+## True when a point on the floor is within reach of a place.
+func near_place(point: Vector3, place: String, reach: float) -> bool:
+	for spot: Vector3 in _place_points(place):
+		if Vector2(point.x - spot.x, point.z - spot.z).length() <= reach:
+			return true
+	return false
+
+
+## The patient in a bed and whoever the current beat is with, if they are
+## at that place.
+func _people_at(place: String) -> Array[AvatarRig]:
+	var found: Array[AvatarRig] = []
+	if BEDS.has(place) and bed(place).patient != null and bed(place).patient.visible:
+		found.append(bed(place).patient)
+	var partner := rig_for(str(beat().get("with", "")))
+	if partner != null and partner.visible and partner != player and near_place(partner.position, place, NEAR_TAP + 0.6):
+		found.append(partner)
+	return found
+
+
+## True when a screen point is on someone's body.
+func _on_rig(rig: AvatarRig, screen_point: Vector2) -> bool:
+	var feet := rig.global_position
+	var head := rig.face_point() + Vector3(0, 0.12, 0)
+	if camera.is_position_behind(head) or camera.is_position_behind(feet):
+		return false
+	var a := camera.unproject_position(feet)
+	var b := camera.unproject_position(head)
+	return Geometry2D.get_closest_point_to_segment(screen_point, a, b).distance_to(screen_point) < UiKit.px(40)
 
 
 func _tag_point(place: String) -> Vector3:
@@ -1363,6 +1426,10 @@ func _update_routes(delta: float) -> void:
 				_hide(id)
 			elif id == "you" and mode == "approach":
 				_arrive()
+			elif id == "you" and mode == "walk" and not _go_place().is_empty() \
+					and near_place(player.position, _go_place(), NEAR_ARRIVE):
+				# Walked right up to the place without tapping it: that counts.
+				go_to(_go_place())
 			elif id != "you":
 				_face(rig, player.position)
 
@@ -1979,8 +2046,19 @@ func _update_tags() -> void:
 	var place := _go_place() if walking else ""
 	for key: String in ["bed1", "bed2", "bed3", "bed4", "bed5", "bed6", "side", "trolley", "desk", "lightbox"]:
 		var point := _tag_point(key)
-		var shown := walking and key == place and not camera.is_position_behind(point)
-		hud.set_tag("place_" + key, _tag_text(key), camera.unproject_position(point), shown, true)
+		var screen := camera.unproject_position(point) if not camera.is_position_behind(point) else _behind_point(point)
+		hud.set_tag("place_" + key, _tag_text(key), screen, walking and key == place, true, true)
+
+
+## A point behind the camera, put where it would be on screen if the camera
+## turned to it (far off the edge on that side), so its tag can point there.
+func _behind_point(point: Vector3) -> Vector2:
+	var local := camera.global_transform.affine_inverse() * point
+	var view := get_viewport().get_visible_rect().size
+	var direction := Vector2(local.x, -local.y)
+	if direction.length() < 0.001:
+		direction = Vector2(0, 1)
+	return view / 2.0 + direction.normalized() * view.length()
 
 
 # --- For tests and screenshots ------------------------------------------------------

@@ -311,11 +311,12 @@ func test_finishing_day_one_asks_before_day_two_starts() -> void:
 	main._on_day_finished()
 	var asks := main.find_children("*", "ReminderAsk", false, false)
 	expect_equal(asks.size(), 1, "the question comes up as Day 1 ends")
-	expect_equal(main.profile.day, 1, "and Day 2 waits for the answer")
+	expect_equal(main.profile.day, 2, "the save has moved on to Day 2 already")
+	expect(not main.screen is SkillsLab, "but Day 2 waits for the answer")
 	var ask := asks[0] as ReminderAsk
 	expect(ask.yes_button != null and ask.no_button != null, "yes or not now")
 	ask.yes_button.pressed.emit()
-	expect_equal(main.profile.day, 2, "then Day 2 starts")
+	expect(main.screen is SkillsLab, "then Day 2 starts")
 	expect(GameSettings.current.reminders, "with reminders on")
 	expect(GameSettings.load_from(SETTINGS).reminders, "remembered on the device")
 	var asked := false

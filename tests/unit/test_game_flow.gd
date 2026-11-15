@@ -191,6 +191,14 @@ func test_going_home_after_training_leads_to_theatre_day_and_then_the_ward() -> 
 	var good := AutoPlayer.new()
 	theatre.play_until(func() -> bool: return main.screen != theatre,
 		Theatre.pick_tones(["Ask Rohit", "Allergies", "Explain", "Be straight", "Hold firm"]), good, 900.0)
+	var drill := main.screen as SkillsLab
+	expect(drill != null and drill.drill == Drills.before_day(4), "before the ward, a drill in the skills lab")
+	expect_equal(main.profile.day, 4, "the save has moved on to Day 4 already")
+	main.show_title()
+	(main.screen as TitleScreen).continue_pressed.emit()
+	expect(main.screen is SkillsLab and (main.screen as SkillsLab).drill == Drills.before_day(4),
+		"continue returns to the drill")
+	_past_drill(main)
 	var after := main.screen as Ward
 	expect(after != null, "after the operation the doctor works on the ward")
 	expect_equal(main.profile.day, 4)
@@ -200,6 +208,29 @@ func test_going_home_after_training_leads_to_theatre_day_and_then_the_ward() -> 
 	(main.screen as TitleScreen).continue_pressed.emit()
 	expect(main.screen is Ward, "continue returns to the ward")
 	_clear()
+
+
+## Waits for a drill's card between days, then skips it, or plays it well
+## and goes on. Returns the XP the drill gave.
+func _past_drill(main: Main, play: bool = false) -> int:
+	var lab := main.screen as SkillsLab
+	if lab == null or lab.drill.is_empty():
+		return 0
+	for frame in 150:
+		if lab.drill_card != null:
+			break
+		lab.update(1.0 / 30.0)
+	if lab.drill_card == null:
+		return 0
+	if not play:
+		lab.drill_card.skip_button.pressed.emit()
+		return 0
+	var before := main.profile.total_xp
+	lab.drill_card.start_button.pressed.emit()
+	lab.play_task()
+	var earned := main.profile.total_xp - before
+	lab.view.done_pressed.emit()
+	return earned
 
 
 ## Plays a lobby conversation to its end: the one on show, or a new one
@@ -275,13 +306,16 @@ func test_a_whole_career_from_new_game_to_junior_resident() -> void:
 	# Days 4 to 8 on the ward, until the review.
 	var careful := Ward.pick_tones(["Ready", "Honest", "Reassure", "Ask her", "Check", "Own it", "Calm", "Compromise",
 		"To Aarav", "Gentle", "Careful", "Stay", "Patient first", "Answer", "Light", "Ask him", "The facts", "Grateful"])
+	var drill_xp := 0
 	for attempt in 6:
+		drill_xp += _past_drill(main, true)
 		var ward := main.screen as Ward
 		if ward == null or main.profile.has_flag("ward_day%d" % Ward.REVIEW_DAY):
 			break
 		days_seen.append(main.profile.day)
 		ward.play_until(func() -> bool: return main.screen != ward, careful, AutoPlayer.new(), 1500.0)
 	expect_equal(days_seen, [1, 2, 3, 4, 5, 6, 7, 8], "every day is played once, in order")
+	expect(drill_xp >= Drills.xp(Rank.INTERN, 0, false) * 5, "with a drill and its free XP between the days (%d XP)" % drill_xp)
 	var profile := main.profile
 	expect_equal(profile.rank(), Rank.JUNIOR_RESIDENT, "promoted at the review")
 	expect(profile.level() >= 4, "with the experience to match")
@@ -329,6 +363,7 @@ func test_a_junior_resident_year_ends_as_senior_resident() -> void:
 	var careful := Ward.pick_tones(["Ready", "Calm", "Honest", "Careful", "Plain", "Explain", "Question",
 		"Patient first", "Help", "Grateful", "Thorough"])
 	for attempt in 6:
+		_past_drill(main)
 		var ward := main.screen as Ward
 		if ward == null or main.profile.has_flag("ward_day13"):
 			break
@@ -379,6 +414,7 @@ func test_a_senior_resident_year_ends_as_surgeon() -> void:
 	var careful := Ward.pick_tones(["Open door", "Patient first", "Honest", "Explain", "Plain", "Check", "Own it", "Report",
 		"Night doctor", "Together", "Call senior", "Ask", "Theatre", "Zoya holds", "Thank", "Truth", "Credit", "Grateful"])
 	for attempt in 6:
+		_past_drill(main)
 		var ward := main.screen as Ward
 		if ward == null or main.profile.has_flag("ward_day18"):
 			break
@@ -432,6 +468,7 @@ func test_a_surgeon_s_first_months_end_as_head_of_department() -> void:
 	var careful := Ward.pick_tones(["Fresh hands", "Start now", "Patient first", "Plain", "Truth now", "Together", "Truth",
 		"Listen", "Promise", "Explain", "Fair fight", "Call in", "Own it", "Credit Priya", "Ready", "Count rule", "Talk"])
 	for attempt in 6:
+		_past_drill(main)
 		var ward := main.screen as Ward
 		if ward == null or main.profile.has_flag("ward_day23"):
 			break
@@ -487,6 +524,7 @@ func test_a_head_of_department_s_months_end_as_chief_of_medicine() -> void:
 	var careful := Ward.pick_tones(["Support", "Ask", "Explain", "Together", "Promise", "Refuse", "Tea", "Truth",
 		"Credit Grace", "Own it", "Patients", "Sethi", "Families", "Everything"])
 	for attempt in 6:
+		_past_drill(main)
 		var ward := main.screen as Ward
 		if ward == null or main.profile.has_flag("ward_day28"):
 			break

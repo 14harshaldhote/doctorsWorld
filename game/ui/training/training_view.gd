@@ -31,6 +31,8 @@ var can_retry := true
 ## Replaces the line over the title and the score card's top line (on the
 ## ward: "Ward round · Bed 2").
 var kicker_override := ""
+## A true story from medicine for the bottom of the score card ("" for none).
+var fact := ""
 
 var _header: PanelContainer
 var _title: Label
@@ -153,6 +155,18 @@ func show_result(reward: String) -> void:
 		text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		text.custom_minimum_size = Vector2(UiKit.px(400), 0)
 		row.add_child(text)
+	if not fact.is_empty():
+		var row := UiKit.hbox(8)
+		row.name = "Fact"
+		notes.add_child(row)
+		var icon := UiIcon.make("book", 18, UiKit.AMBER)
+		icon.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+		row.add_child(icon)
+		var text := UiKit.label("Did you know? " + fact, 13, Color("#F3DDB0"))
+		text.name = "FactText"
+		text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		text.custom_minimum_size = Vector2(UiKit.px(400), 0)
+		row.add_child(text)
 	var buttons := UiKit.hbox(10)
 	buttons.alignment = BoxContainer.ALIGNMENT_END
 	column.add_child(buttons)
@@ -204,8 +218,12 @@ func _note_list(column: VBoxContainer) -> VBoxContainer:
 ## Gives the notes the height they need, or whatever the screen has left.
 func _fit_notes(list: VBoxContainer, width: float, text_size: float) -> void:
 	var needed := 0.0
+	var line := UiKit.body_font().get_height(UiKit.scaled_text(text_size))
 	for row in list.get_children():
-		needed += UiKit.wrapped_height((row.get_child(1) as Label).text, width, text_size)
+		var tall := UiKit.wrapped_height((row.get_child(1) as Label).text, width, text_size)
+		# A label adds its line spacing between wrapped lines, which the
+		# font's own measure leaves out.
+		needed += tall + 3.0 * maxf(0.0, roundf(tall / maxf(line, 1.0)) - 1.0) + 1.0
 	needed += list.get_theme_constant("separation") * maxi(0, list.get_child_count() - 1)
 	var room := UiKit.safe_insets()
 	var left := get_viewport_rect().size.y - UiKit.px(24) - room.y - room.z - _result.get_combined_minimum_size().y

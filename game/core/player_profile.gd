@@ -34,8 +34,15 @@ var rank_held := Rank.INTERN
 ## row ("op_streak"), the best run ("op_streak_best"), and, for a Chief, the
 ## hospital's standing (see Standing).
 var counters := {}
+## How the career stood when today began: {"day", "total_xp", "minutes",
+## "relationships", "flags", "skills", "rank", "counters"}. A day that is
+## started again from its first beat (the game was closed halfway) goes
+## back to it, so nothing is earned, promoted or decided twice.
+var morning := {}
 
 const DAY_START := 7 * 60
+## What a day keeps in the morning snapshot.
+const MORNING_KEYS := ["total_xp", "minutes", "relationships", "flags", "skills", "rank", "counters"]
 
 
 ## Trims spaces, collapses runs of spaces and cuts overly long names.
@@ -167,6 +174,7 @@ func to_dict() -> Dictionary:
 		"skills": skills.duplicate(),
 		"rank": rank_held,
 		"counters": counters.duplicate(),
+		"morning": morning.duplicate(true),
 	}
 
 
@@ -219,4 +227,33 @@ static func from_dict(data: Variant) -> PlayerProfile:
 			var points: Variant = best[skill]
 			if typeof(skill) == TYPE_STRING and typeof(points) in [TYPE_INT, TYPE_FLOAT]:
 				profile.skills[skill] = clampi(int(points), 0, 100)
+	var snapshot: Variant = data.get("morning")
+	if typeof(snapshot) == TYPE_DICTIONARY and typeof(snapshot.get("day")) in [TYPE_INT, TYPE_FLOAT]:
+		profile.morning = snapshot
 	return profile
+
+
+## Called as a day begins from its first beat. The first time, remembers how
+## the career stands; if this day was begun before and is starting over (the
+## game was closed halfway through), puts everything back to that morning.
+## Returns true when it put things back.
+func begin_day() -> bool:
+	if int(morning.get("day", -1)) == day:
+		var copy := to_dict()
+		for key: String in MORNING_KEYS:
+			if morning.has(key):
+				copy[key] = morning[key]
+		var back := PlayerProfile.from_dict(copy)
+		total_xp = back.total_xp
+		minutes = back.minutes
+		relationships = back.relationships
+		flags = back.flags
+		skills = back.skills
+		rank_held = back.rank_held
+		counters = back.counters
+		return true
+	morning = {"day": day}
+	var now := to_dict()
+	for key: String in MORNING_KEYS:
+		morning[key] = now[key]
+	return false

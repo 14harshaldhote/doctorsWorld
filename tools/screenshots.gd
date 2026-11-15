@@ -470,6 +470,29 @@ func _ward_shots() -> void:
 	GameSettings.current.reminders = false
 	Reminders.use_backend(backend_before)
 
+	# Stage 14: a drill between days, and a place to go that is off screen.
+	var drilling := SkillsLab.new(_drill_profile(12), Drills.before_day(12))
+	await _shot("141-drill-card", drilling, func() -> void:
+		for frame in 120:
+			if drilling.drill_card != null:
+				break
+			drilling.update(1.0 / 30.0)
+		drilling.set_process(false))
+	var drilled := SkillsLab.new(_drill_profile(9), Drills.before_day(9))
+	await _shot("142-drill-score", drilled, func() -> void:
+		for frame in 120:
+			if drilled.drill_card != null:
+				break
+			drilled.update(1.0 / 30.0)
+		drilled.drill_card.start_button.pressed.emit()
+		drilled.play_task()
+		for frame in 90:
+			drilled.view._type_coach(1.0 / 30.0)
+		drilled.settle_camera()
+		drilled.set_process(false))
+	await _ward_shot("143-place-off-screen", 6, [], "", func(w: Ward) -> bool:
+		return w.mode == "walk" and w.beat().get("id", "") == "rider", careful)
+
 
 ## The drug chart with a line already flagged: the list, or the reasons.
 static func _chart_at(ward: Ward, picking: bool) -> bool:
@@ -613,6 +636,16 @@ func _task_shot(shot_name: String, id: String, moment: Callable) -> void:
 			lab.view._type_coach(1.0 / 30.0)
 		lab.settle_camera()
 		lab.set_process(false))
+
+
+## Between two days: the save has moved on to the next morning and a drill
+## waits in the skills lab before it.
+static func _drill_profile(day: int) -> PlayerProfile:
+	var doctor := sample_profile_on_ward(day)
+	doctor.set_flag(Drills.FLAG)
+	for id: String in TrainingTask.IDS:
+		doctor.record_score(id, 78)
+	return doctor
 
 
 ## The doctor on Day 2, welcomed, with the sink and the monitor done.

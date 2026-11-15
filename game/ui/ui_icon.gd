@@ -6,6 +6,12 @@ var kind := "circle"
 var colour := UiKit.TEXT
 ## Line width in design pixels.
 var stroke := 2.0
+## Which way an "arrow" points, in radians (0 = right). Containers reset a
+## child's rotation, so the arrow turns itself as it draws.
+var angle := 0.0:
+	set(value):
+		angle = value
+		queue_redraw()
 
 
 static func make(icon_kind: String, size: float = 22, icon_colour: Color = UiKit.TEXT) -> UiIcon:
@@ -95,6 +101,12 @@ func _draw() -> void:
 			draw_polyline(PackedVector2Array([p.call(9, 21), p.call(11, 15), p.call(13, 9), p.call(15, 15), p.call(17, 21)]),
 				colour, width)
 			draw_polyline(PackedVector2Array([p.call(7, 12), p.call(13, 9), p.call(18, 12)]), colour, width)
+		"arrow":
+			var turned := PackedVector2Array()
+			for corner: Vector2 in [Vector2(-7, -8), Vector2(9, 0), Vector2(-7, 8), Vector2(-3, 0)]:
+				var spun := corner.rotated(angle)
+				turned.append(p.call(12 + spun.x, 12 + spun.y))
+			draw_colored_polygon(turned, colour)
 		"badge":
 			draw_rect(Rect2(p.call(5, 3), p.call(19, 21) - p.call(5, 3)), colour, false, width)
 			draw_line(p.call(9, 15), p.call(15, 15), colour, width)

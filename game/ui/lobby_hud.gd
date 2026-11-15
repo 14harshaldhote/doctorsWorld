@@ -404,26 +404,77 @@ func set_tasks(tasks: Array, title: String = "Today") -> void:
 
 
 ## Name tags float over people. tags: name -> [text, screen position, visible].
-func set_tag(id: String, text: String, at: Vector2, shown: bool, highlight: bool = false) -> void:
+func set_tag(id: String, text: String, at: Vector2, shown: bool, highlight: bool = false, pin: bool = false) -> void:
 	var tag: PanelContainer = _tags.get(id)
 	if tag == null:
 		tag = UiKit.panel(Color.WHITE, 14, Vector2(10, 0))
 		tag.custom_minimum_size = Vector2(0, UiKit.px(28))
 		tag.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		var row := UiKit.hbox(6)
+		row.name = "Row"
+		row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		tag.add_child(row)
+		var arrow := UiIcon.make("arrow", 14, UiKit.INK)
+		arrow.name = "Arrow"
+		arrow.visible = false
+		arrow.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		row.add_child(arrow)
 		var label := UiKit.label(text, 13, UiKit.INK, UiKit.heavy_font())
 		label.name = "Text"
 		label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-		tag.add_child(label)
+		row.add_child(label)
 		add_child(tag)
 		move_child(tag, 0)
 		_tags[id] = tag
-	var text_label := tag.get_node("Text") as Label
+	var text_label := tag.get_node("Row/Text") as Label
 	text_label.text = text
+	var arrow := tag.get_node("Row/Arrow") as UiIcon
 	var style := tag.get_theme_stylebox("panel") as StyleBoxFlat
 	style.bg_color = UiKit.AMBER if highlight else Color(1, 1, 1, 0.94)
+	arrow.visible = false
 	tag.reset_size()
 	tag.position = _keep_on_screen(at - Vector2(tag.size.x / 2.0, tag.size.y), tag.size)
-	tag.visible = shown and not _talking and _on_screen(at) and not _covered(Rect2(tag.position, tag.size))
+	var fits := _on_screen(at) and not _covered(Rect2(tag.position, tag.size))
+	if pin and shown and not _talking and not fits:
+		# Off screen or under a panel: the tag waits at the nearest clear
+		# edge, with an arrow pointing the way, and still takes a tap.
+		arrow.visible = true
+		tag.reset_size()
+		tag.position = _pin_spot(at, tag.size)
+		arrow.angle = (at - (tag.position + tag.size / 2.0)).angle()
+		tag.visible = true
+		return
+	tag.visible = shown and not _talking and fits
+
+
+## True when a screen point is on a tag that is showing (a little extra
+## round it, for a thumb).
+func tag_hit(id: String, at: Vector2) -> bool:
+	var tag: Control = _tags.get(id)
+	return tag != null and tag.visible and Rect2(tag.position, tag.size).grow(UiKit.px(12)).has_point(at)
+
+
+## True when a tag is held at the edge of the screen, pointing the way.
+func tag_pinned(id: String) -> bool:
+	var tag: Control = _tags.get(id)
+	return tag != null and tag.visible and (tag.get_node("Row/Arrow") as Control).visible
+
+
+## Where a pinned tag goes: as close to the point as the screen and the
+## panels allow, inside the safe area.
+func _pin_spot(at: Vector2, box: Vector2) -> Vector2:
+	var room := UiKit.safe_insets()
+	var margin := UiKit.px(14)
+	var inner := Rect2(Vector2(room.x + margin, margin), size - Vector2(room.x + room.y + margin * 2.0, margin * 2.0 + room.z))
+	var centre := size / 2.0
+	var start := Vector2(clampf(at.x, inner.position.x + box.x / 2.0, inner.end.x - box.x / 2.0),
+		clampf(at.y, inner.position.y + box.y / 2.0, inner.end.y - box.y / 2.0))
+	for step in 11:
+		var spot := start.lerp(centre, step * 0.1)
+		var corner := spot - box / 2.0
+		if not _covered(Rect2(corner, box)):
+			return corner
+	return centre - box / 2.0
 
 
 ## A speech bubble over someone chatting nearby ("" hides it).
