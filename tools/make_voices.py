@@ -109,6 +109,15 @@ VOICES = {
     "relative_a": {"mix": {"hm_omega": 0.55, "am_onyx": 0.45}, "speed": 1.04},
     "relative_b": {"mix": {"hf_alpha": 0.6, "af_kore": 0.4}, "speed": 1.03},
     "relative_c": {"mix": {"hf_beta": 0.55, "af_river": 0.45}, "speed": 1.05},
+    # The walk-ins of the endless days.
+    "arif": {"mix": {"hm_psi": 0.5, "am_echo": 0.5}, "speed": 1.06},
+    "mohan": {"mix": {"hm_omega": 0.6, "am_michael": 0.4}, "speed": 1.03},
+    "savitri": {"mix": {"hf_alpha": 0.65, "bf_alice": 0.35}, "speed": 1.0},
+    "usha": {"mix": {"hf_beta": 0.6, "bf_isabella": 0.4}, "speed": 0.96},
+    "rosy": {"mix": {"bf_emma": 0.5, "hf_alpha": 0.3, "bf_lily": 0.2}, "speed": 0.9},
+    "gurdeep": {"mix": {"hm_omega": 0.6, "am_onyx": 0.4}, "speed": 0.98},
+    "anwar": {"mix": {"hm_psi": 0.55, "bm_george": 0.45}, "speed": 0.9},
+    "kavita": {"mix": {"hf_beta": 0.6, "af_nova": 0.4}, "speed": 1.05},
 }
 # The player's doctor: never voiced.
 PLAYER = "you"
@@ -141,6 +150,12 @@ RESPELL = {
     "Rizvi": "Riz-vee", "Menezes": "Me-nay-zes", "Patil": "Paa-til", "Saini": "Sai-nee", "Bakshi": "Buck-shee",
     "Kurian": "Koo-ree-an", "D'Mello": "D Mello", "Pawar": "Pa-waar", "Rane": "Raa-nay", "Mitali": "Mi-taa-lee",
     "dupatta": "du-putta",
+    "Kale": "Kaa-lay", "Savitri": "Saa-vit-ree", "Tiwari": "Ti-waa-ree", "poha": "po-haa", "Pereira": "Pe-ray-ra",
+    "Sandhu": "Sun-dhoo", "Bhave": "Bhaa-vay", "Mirza": "Meer-zaa", "Krishnan": "Krish-nun", "Hussain": "Hu-sain",
+    "Usha": "Oo-shaa", "Kavita": "Ka-vi-taa", "Shinde": "Shin-day", "Bhide": "Bhi-day", "Sawant": "Saa-vant",
+    "Kadam": "Ka-dum", "Dalvi": "Dul-vee", "Kher": "Kair", "Bhalla": "Bhul-laa", "Bajaj": "Ba-jaaj", "Vaz": "Vaaz",
+    "Kohli": "Koh-lee", "Thakur": "Thaa-koor", "Dutta": "Dut-taa", "Nashik": "Naa-shik", "beedis": "bee-dees",
+    "Kunte": "Koon-tay", "Gurdeep": "Gur-deep",
 }
 TITLES = {"Dr.": "Doctor", "Mr.": "Mister", "Mrs.": "Missus", "Ms.": "Miz"}
 ACRONYMS = ["ICU", "VIP", "MBBS", "ECG", "CPR", "OPD", "MRI", "HIV", "IVF", "DNA", "CCTV", "ENT", "NICU", "HR", "INR", "CT", "MDT"]

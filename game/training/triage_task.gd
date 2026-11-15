@@ -247,7 +247,7 @@ func tag(which: String) -> void:
 	var entry := casualty(selected)
 	selected = ""
 	var said: Dictionary = _case.get("tagged", {})
-	_say(str(said.get(which, "Tagged.")).replace("{who}", str(entry.get("short", "them"))))
+	_say(fill_who(str(said.get(which, "Tagged.")), str(entry.get("short", "them"))))
 
 
 func all_tagged() -> bool:
@@ -341,17 +341,17 @@ func finish_triage() -> void:
 			"guessed":
 				right += 1
 				_note(false, "%s: right tag, but on a guess. You never checked %s." %
-					[who.capitalize(), _missing_checks(entry)])
+					[sentence_case(who), _missing_checks(entry)])
 			"over":
 				_note(false, "%s was %s, not %s. Tagged too urgent: someone sicker waits." %
-					[who.capitalize(), entry["truth"], tags[casualty_id]])
+					[sentence_case(who), entry["truth"], tags[casualty_id]])
 			"under":
-				_note(false, "%s was %s, tagged %s. %s" % [who.capitalize(), entry["truth"], tags[casualty_id],
+				_note(false, "%s was %s, tagged %s. %s" % [sentence_case(who), entry["truth"], tags[casualty_id],
 					str(entry.get("why", "Sent to wait when they couldn't."))])
 			"black":
-				_note(false, "%s was written off but could have lived: %s." % [who.capitalize(), entry["truth"]])
+				_note(false, "%s was written off but could have lived: %s." % [sentence_case(who), entry["truth"]])
 			"untagged":
-				_note(false, "%s was never tagged. Everyone gets a tag." % who.capitalize())
+				_note(false, "%s was never tagged. Everyone gets a tag." % sentence_case(who))
 	_note(right == casualties.size(), "%d of %d tagged right." % [right, casualties.size()])
 	if wasted > 0:
 		_note(false, "%d check%s the rules didn't need (-%d). Each one is fifteen seconds someone else waits." %
@@ -407,3 +407,22 @@ func progress() -> float:
 	if finished:
 		return 1.0
 	return float(tags.size()) / maxf(1.0, casualties.size())
+
+
+## A line with {who} filled in, the name capitalised where it starts a
+## sentence ("Red. The rider with the helmet goes in first.").
+static func fill_who(line: String, who: String) -> String:
+	var made := line
+	var at := made.find("{who}")
+	while at >= 0:
+		var before := made.substr(0, at).strip_edges(false, true)
+		var name := sentence_case(who) if before.is_empty() or before.ends_with(".") or before.ends_with("!") or before.ends_with("?") else who
+		made = made.substr(0, at) + name + made.substr(at + 5)
+		at = made.find("{who}")
+	return made
+
+
+## Only the first letter made a capital, unlike String.capitalize() (which
+## would give "The Rider With The Helmet").
+static func sentence_case(text: String) -> String:
+	return text if text.is_empty() else text.substr(0, 1).to_upper() + text.substr(1)

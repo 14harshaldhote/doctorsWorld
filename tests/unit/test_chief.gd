@@ -1,7 +1,8 @@
 extends TestCase
 ## The Chief's days (Day 29 on): the casebook, the hard calls, the
 ## hospital's standing, the endless generated days that keep getting
-## harder, and the hooks that end every day.
+## harder (and never run the same week twice: events, walk-ins, fourteen
+## calls), and the hooks that end every day.
 
 const CAREFUL := ["Warm", "Patient", "Kind", "Calm", "Listen", "Gentle", "Sorry", "Promote", "Everything", "Town",
 	"Staff", "Support", "Ask", "Explain", "Together", "Truth", "Patients", "Families"]
@@ -76,12 +77,12 @@ func test_a_board_day_reports_on_the_hospital() -> void:
 
 # --- The generator, for ever ---------------------------------------------------
 
-func test_every_day_for_three_hundred_days_is_built_from_real_pieces() -> void:
+func test_every_day_for_two_thousand_days_is_built_from_real_pieces() -> void:
 	var cast := StoryBook.cast()
 	var chief := StoryBook.chapter("chief")
 	var cases := StoryBook.chapter("cases")
 	var doctor := _doctor(29)
-	for day in range(ChiefDays.FIRST_DAY, 330):
+	for day in range(ChiefDays.FIRST_DAY, 2000):
 		doctor.day = day
 		var beats := ChiefDays.beats(doctor, day)
 		expect(beats.size() >= 3, "Day %d has a morning, work and a call" % day)
@@ -154,15 +155,201 @@ func test_a_busy_day_brings_a_rota_and_a_crash() -> void:
 	expect(found >= 5, "busy days come")
 
 
-func test_calls_and_simulator_cases_never_repeat_two_days_running() -> void:
+func test_calls_never_come_round_within_a_week_and_simulator_cases_never_repeat() -> void:
+	for doctor_name: String in ["Asha Verma", "Kiran Rao"]:
+		var doctor := _doctor(29)
+		doctor.name = doctor_name
+		var seen := {}
+		for day in range(39, 1500):
+			var call := ChiefDays.call_for(doctor, day)
+			for back in range(1, ChiefDays.CALL_GAP + 1):
+				if day - back >= 39:
+					expect(ChiefDays.call_for(doctor, day - back) != call, "%s, Day %d: %s came up %d days ago" % [doctor_name, day, call, back])
+			seen[call] = true
+		expect_equal(seen.size(), ChiefDays.ROUNDS_CALLS.size(), "every recurring call comes round")
+		expect_equal(ChiefDays.ROUNDS_CALLS.size(), 14)
+		for day in range(37, 1500):
+			expect(ChiefDays.sim_for(doctor, day) != ChiefDays.sim_for(doctor, day - 1), "Day %d's simulator case is new" % day)
+	# Every recurring call is written, in three versions, with flags to clear.
+	var chief := StoryBook.chapter("chief")
+	for call: String in ChiefDays.ROUNDS_CALLS:
+		expect(chief.has("hc_" + call), "%s is written" % call)
+		expect_equal((ChiefDays.CALL_FLAGS[call] as Array).size(), 3, call)
+		expect(ChiefDays.CALLS[call].has("teaser"), "%s has a teaser" % call)
+		var text := JSON.stringify(chief["hc_" + call])
+		for flag: String in ChiefDays.CALL_FLAGS[call]:
+			expect(text.contains(flag), "%s sets %s" % [call, flag])
+
+
+# --- Weekly events ---------------------------------------------------------------
+
+func test_weeks_bring_the_rains_a_festival_and_an_outbreak_never_twice_running() -> void:
+	for doctor_name: String in ["Asha Verma", "Kiran Rao", "Mei Lin"]:
+		var doctor := _doctor(29)
+		doctor.name = doctor_name
+		for day in range(36, 43):
+			expect_equal(ChiefDays.event_for(doctor, day), "", "the first week is ordinary")
+		var first := {}
+		for week in range(1, 5):
+			first[ChiefDays.event_for(doctor, 36 + 7 * week)] = true
+		expect_equal(first.size(), 4, "%s: the first four weeks bring all three events and one ordinary week" % doctor_name)
+		var last := ""
+		var counts := {}
+		for week in range(1, 300):
+			var day := 36 + 7 * week
+			var event := ChiefDays.event_for(doctor, day)
+			for offset in 7:
+				expect_equal(ChiefDays.event_for(doctor, day + offset), event, "an event lasts its whole week")
+			expect(event != last, "%s, week %d: %s two weeks running" % [doctor_name, week, event])
+			expect_equal(ChiefDays.event_starts(doctor, day), not event.is_empty())
+			expect(not ChiefDays.event_starts(doctor, day + 1))
+			counts[event] = int(counts.get(event, 0)) + 1
+			last = event
+		for event: String in ["", "monsoon", "festival", "outbreak"]:
+			expect(int(counts.get(event, 0)) > 50, "%s comes round (%s)" % [event, counts])
+
+
+func test_an_events_week_changes_the_puzzles_the_mornings_and_the_evenings() -> void:
 	var doctor := _doctor(29)
+	var chief := StoryBook.chapter("chief")
 	var seen := {}
-	for day in range(39, 400):
-		expect(ChiefDays.call_for(doctor, day) != ChiefDays.call_for(doctor, day - 1), "Day %d's call is new" % day)
-		seen[ChiefDays.call_for(doctor, day)] = true
-	for day in range(37, 400):
-		expect(ChiefDays.sim_for(doctor, day) != ChiefDays.sim_for(doctor, day - 1), "Day %d's simulator case is new" % day)
-	expect_equal(seen.size(), ChiefDays.ROUNDS_CALLS.size(), "every recurring call comes round")
+	for day in range(43, 600):
+		var event := ChiefDays.event_for(doctor, day)
+		if event.is_empty() or not ChiefDays.walkin_for(doctor, day).is_empty():
+			continue
+		var beats := ChiefDays.beats(doctor, day)
+		var tasks := {}
+		for beat: Dictionary in beats:
+			for task: Array in beat.get("tasks", []):
+				tasks[str(task[0])] = str(task[1])
+			if str(beat["id"]) in ["rota", "triage"]:
+				expect_equal(str(beat["talk"]), str(ChiefDays.EVENTS[event]["talks"][beat["id"]]), "Day %d: the %s week's own words" % [day, event])
+		match event:
+			"outbreak":
+				expect_equal(tasks.get("rota", ""), "outbreak_rota", "Day %d: the outbreak's rota" % day)
+				if not ChiefDays.busy_day(doctor, day):
+					expect(not tasks.has("triage"), "Day %d: no crash in an outbreak, only the bug" % day)
+			"festival":
+				if tasks.has("triage"):
+					expect_equal(tasks["triage"], "festival_triage", "Day %d: the festival grounds" % day)
+			"monsoon":
+				if tasks.has("triage"):
+					expect_equal(tasks["triage"], "chief_triage", "Day %d: the highway, in the rain" % day)
+		seen[event + ":" + ChiefDays.rounds_puzzle(doctor, day)] = true
+		expect(ChiefDays.day_line(doctor, day).begins_with(str(ChiefDays.EVENTS[event]["title"])) or ChiefDays.is_milestone(day),
+			"Day %d's card names the week: %s" % [day, ChiefDays.day_line(doctor, day)])
+	for want: String in ["monsoon:triage", "monsoon:rota", "festival:triage", "festival:rota", "outbreak:rota"]:
+		expect(seen.has(want), "%s happens (%s)" % [want, seen.keys()])
+	# Crashes come more often in the rains than in an ordinary week.
+	var crashes := {"": 0, "monsoon": 0}
+	for day in range(43, 800):
+		var event := ChiefDays.event_for(doctor, day)
+		if crashes.has(event):
+			crashes[event] += int(ChiefDays.rounds_puzzle(doctor, day) == "triage")
+	expect(crashes["monsoon"] > crashes[""], "%s" % [crashes])
+	# The evening before, the teaser warns of it; the morning knows.
+	for day in range(43, 200):
+		if ChiefDays.event_starts(doctor, day) and ChiefDays.patient_today(doctor, day).is_empty():
+			var event := ChiefDays.event_for(doctor, day)
+			expect(ChiefDays.teaser(doctor, day).contains(str(ChiefDays.EVENTS[event]["coming"])), ChiefDays.teaser(doctor, day))
+	var morning := JSON.stringify(chief["rounds_morning"])
+	for event: String in ChiefDays.EVENTS:
+		expect(morning.contains("event_starts&event_" + event), "the morning opens the %s week" % event)
+		expect(chief.has(str(ChiefDays.EVENTS[event]["talks"]["rota"])) and chief.has(str(ChiefDays.EVENTS[event]["talks"]["triage"])))
+		expect(ChiefDays.EVENT_DAY_ENDS.has(event))
+
+
+func test_an_events_week_costs_its_meter_every_morning_once() -> void:
+	var doctor := _doctor(29)
+	var day := 43
+	while ChiefDays.event_for(doctor, day) != "outbreak":
+		day += 1
+	doctor.day = day
+	Standing.start(doctor)
+	var before := Standing.value(doctor, "staff")
+	ChiefDays.prepare(doctor, day)
+	var lost := 1 + (ChiefDays.drift(day) if ChiefDays.drift_meter(day) == "staff" else 0)
+	expect_equal(Standing.value(doctor, "staff"), before - lost, "the outbreak costs the staff")
+	expect(doctor.has_flag("event_outbreak") and not doctor.has_flag("event_monsoon"))
+	ChiefDays.prepare(doctor, day)
+	expect_equal(Standing.value(doctor, "staff"), before - lost, "only once a day")
+
+
+func test_the_festival_crash_and_the_outbreak_rota_always_roll_a_fair_puzzle() -> void:
+	for level: String in RotaTask.LEVELS:
+		for with_seed in range(1, 41):
+			var rota := RotaTask.new("outbreak_rota", with_seed, level)
+			expect_equal(rota.patients.size(), RotaTask.COUNTS[level], "%s outbreak rota %d is full" % [level, with_seed])
+			expect(not rota.solution.is_empty(), "%s outbreak rota %d can be done" % [level, with_seed])
+			var bug := rota.patients.filter(func(p: Dictionary) -> bool: return bool(p["infectious"]))
+			expect(bug.size() >= 2, "%s outbreak rota %d is full of the bug" % [level, with_seed])
+			expect_equal(rota.title(), "Outbreak cover")
+			var crash := TriageTask.new("festival_triage", with_seed, level)
+			var colours := {}
+			for casualty in crash.casualties:
+				colours[casualty["truth"]] = true
+			expect(colours.has("red") and colours.has("yellow") and colours.has("green"),
+				"%s festival crash %d needs sorting (%s)" % [level, with_seed, colours.keys()])
+
+
+# --- Walk-ins ----------------------------------------------------------------------
+
+func test_eight_walk_ins_come_every_fourth_day_then_join_the_simulator() -> void:
+	for doctor_name: String in ["Asha Verma", "Kiran Rao"]:
+		var doctor := _doctor(29)
+		doctor.name = doctor_name
+		var order := ChiefDays.walkins(doctor)
+		expect_equal(order.size(), 8)
+		var met := {}
+		for day in range(36, 120):
+			var id := ChiefDays.walkin_for(doctor, day)
+			if id.is_empty():
+				continue
+			expect_equal((day - ChiefDays.WALKIN_FROM) % ChiefDays.WALKIN_EVERY, 0, "Day %d" % day)
+			expect(not met.has(id), "%s comes once" % id)
+			met[id] = day
+			expect_equal(ChiefDays.walkin_day(doctor, id), day)
+			expect(not ChiefDays.busy_day(doctor, day), "Day %d isn't also a busy day" % day)
+			var ids: Array = ChiefDays.beats(doctor, day).map(func(b: Dictionary) -> String: return str(b["id"]))
+			expect("patient" in ids and "op" in ids and "call" in ids, "Day %d: admitted, operated, a call (%s)" % [day, ids])
+			expect(not "sim" in ids, "Day %d: no simulator on a walk-in day" % day)
+			var op: Dictionary = ChiefDays.beats(doctor, day).filter(func(b: Dictionary) -> bool: return str(b["id"]) == "op")[0]
+			for level: String in op["levels"]:
+				expect(level in ChiefDays.CASEBOOK[id]["levels"], "%s: %s is a level the operation has" % [id, level])
+			expect(ChiefDays.teaser(doctor, day).contains(str(ChiefDays.CASEBOOK[id]["teaser"])), ChiefDays.teaser(doctor, day))
+		expect_equal(met.size(), 8, "%s meets all eight (%s)" % [doctor_name, met])
+		# In the simulator only after their own day.
+		for day in range(36, 400):
+			var sim := ChiefDays.sim_for(doctor, day)
+			if met.has(sim):
+				expect(day > int(met[sim]), "%s is in the simulator on Day %d, after Day %d" % [sim, day, met[sim]])
+		var later := {}
+		for day in range(70, 400):
+			later[ChiefDays.sim_for(doctor, day)] = true
+		expect_equal(later.size(), ChiefDays.CASEBOOK.size(), "every case comes round in the simulator")
+
+
+func test_a_walk_in_day_plays_to_the_end() -> void:
+	var doctor := _doctor(29)
+	var day := ChiefDays.WALKIN_FROM
+	var id := ChiefDays.walkin_for(doctor, day)
+	var ward := _ward(day)
+	expect_equal(ChiefDays.walkin_for(ward.profile, day), id)
+	expect(_play_day(ward), "the day ends")
+	for flag: String in ["cb_%s_history_done" % id, "op_%s_done" % id]:
+		expect(ward.profile.has_flag(flag), flag)
+	expect(ward.profile.has_flag("walkin_today"))
+	expect(not ward.profile.has_flag("op_sim_done"), "no simulator today")
+
+
+func test_a_wrong_age_on_the_board_names_the_right_patient() -> void:
+	for id: String in ChiefDays.CASEBOOK:
+		var entry: Dictionary = ChiefDays.CASEBOOK[id]
+		var made := Procedures.for_patient(Procedures.get_procedure(str(entry["procedure"])), ChiefDays.casebook_setup(id))
+		var row: Dictionary = made["timeout"][0]
+		if row.has("wrong_note"):
+			expect(str(row["wrong_note"]).contains(str(entry["age"])) and str(row["wrong_note"]).contains(str(entry["wrong_age"])),
+				"%s: %s" % [id, row["wrong_note"]])
 
 
 func test_the_complaints_desk_shows_a_different_family_each_time() -> void:
@@ -214,10 +401,13 @@ func test_each_morning_loses_a_little_ground_once() -> void:
 	Standing.start(doctor)
 	var meter := ChiefDays.drift_meter(47)
 	var before := Standing.value(doctor, meter)
+	# This week's event, if it costs the same meter, takes its point too.
+	var event := ChiefDays.event_for(doctor, 47)
+	var lost := ChiefDays.drift(47) + int(not event.is_empty() and str(ChiefDays.EVENTS[event]["meter"]) == meter)
 	ChiefDays.prepare(doctor, 47)
-	expect_equal(Standing.value(doctor, meter), before - ChiefDays.drift(47))
+	expect_equal(Standing.value(doctor, meter), before - lost)
 	ChiefDays.prepare(doctor, 47)
-	expect_equal(Standing.value(doctor, meter), before - ChiefDays.drift(47), "a replayed day doesn't lose it twice")
+	expect_equal(Standing.value(doctor, meter), before - lost, "a replayed day doesn't lose it twice")
 	expect_equal(doctor.count("chief_days"), 1)
 
 

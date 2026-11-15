@@ -6,6 +6,9 @@ extends "res://tests/run_tests.gd"
 ##
 ##   godot --headless --path . -s res://tools/voice_lines.gd -- OUT.json
 ##
+## Add --chief-only (and --quality=good, shaky or bad, one per process) to
+## play only the Chief's days quickly, then merge with the catalogue.
+##
 ## Story lines are also read straight from story/*.json by make_voices.py,
 ## so lines the tests never reach are still voiced. After the tests it
 ## plays every operation again, well, shakily and badly, as several
@@ -18,8 +21,20 @@ const QUALITIES := ["good", "shaky", "bad"]
 
 func _run_all() -> void:
 	Speech.listening = true
-	super()
-	_extra_runs()
+	# --chief-only skips the suite and the older runs (their lines are already
+	# in tools/voice_lines.json; merge with it), and --quality=good (or shaky,
+	# bad) plays one robot, so several can run side by side.
+	var args := OS.get_cmdline_user_args()
+	var qualities := QUALITIES
+	for argument in args:
+		if argument.begins_with("--quality="):
+			qualities = [argument.trim_prefix("--quality=")]
+	if "--chief-only" in args:
+		for quality: String in qualities:
+			_chief_runs(quality)
+	else:
+		super()
+		_extra_runs()
 	var out := ""
 	for argument in OS.get_cmdline_user_args():
 		if argument.ends_with(".json"):
@@ -34,6 +49,8 @@ func _run_all() -> void:
 	file.store_string(JSON.stringify(lines, "\t"))
 	file.close()
 	print("Noted %d lines." % lines.size())
+	if "--chief-only" in args:
+		quit()
 
 
 func _extra_runs() -> void:
@@ -71,10 +88,11 @@ func _extra_runs() -> void:
 	print("The extra runs noted %d more lines." % (Speech.heard.size() - before))
 
 
-## The Chief's days: every casebook patient on the table at every
-## difficulty (with what they said known and not known) and once in the
-## simulator, tonight's rota and the highway crash with many seeds, and
-## the generated days themselves, including a new tier and a milestone.
+## The Chief's days: every casebook patient and walk-in on the table at
+## every difficulty (with what they said known and not known) and once in
+## the simulator, tonight's rota, the highway crash and the weekly events'
+## puzzles with many seeds, and the generated days themselves, including a
+## new tier, walk-in days and a milestone.
 func _chief_runs(quality: String) -> void:
 	for id: String in ChiefDays.CASEBOOK:
 		var entry: Dictionary = ChiefDays.CASEBOOK[id]
@@ -93,8 +111,11 @@ func _chief_runs(quality: String) -> void:
 		for with_seed in [1, 2, 3, 4, 5, 6, 7, 8]:
 			_play_rota("chief_rota", level, with_seed, quality)
 			_play_triage(level, with_seed, quality, "chief_triage")
+			# The weekly events' own puzzles.
+			_play_rota("outbreak_rota", level, with_seed, quality)
+			_play_triage(level, with_seed, quality, "festival_triage")
 	for doctor_name: String in NAMES.slice(0, 2):
-		for day in [29, 30, 31, 32, 33, 34, 35, 36, 38, 39, 42, 46, 50]:
+		for day in [29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 41, 42, 44, 46, 50, 51]:
 			_play_ward(day, doctor_name, quality)
 
 

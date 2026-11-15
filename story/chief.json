@@ -3936,6 +3936,218 @@
 			]
 		},
 		{
+			"if": "event_starts&event_monsoon",
+			"then": [
+				{
+					"say": "iyer",
+					"text": "The rains have come, Chief. All of them at once. The underpass is a river, and the highway's a skating rink.",
+					"mood": "worried",
+					"gesture": "explain",
+					"to": "you"
+				},
+				{
+					"say": "iyer",
+					"text": "This week: more crashes, nurses who can't get in, and fevers in every bed. And the town will remember how we coped.",
+					"mood": "focused",
+					"gesture": "wag",
+					"to": "you"
+				}
+			],
+			"else": [
+				{
+					"if": "event_monsoon&rounds_a",
+					"then": [
+						{
+							"say": "iyer",
+							"text": "Still raining. The basement's flooded again. Housekeeping have built a wall of sandbags and named it.",
+							"mood": "tired",
+							"gesture": "shrug",
+							"to": "you"
+						}
+					]
+				},
+				{
+					"if": "event_monsoon&rounds_b",
+					"then": [
+						{
+							"say": "iyer",
+							"text": "Dengue in four more beds overnight. And a snake in the ambulance bay. The snake's fine.",
+							"mood": "tired",
+							"gesture": "open_hands",
+							"to": "you"
+						}
+					]
+				},
+				{
+					"if": "event_monsoon&rounds_c",
+					"then": [
+						{
+							"say": "iyer",
+							"text": "The roof over bed six is leaking. Grace has put a bucket under it and a sign on the bucket.",
+							"mood": "calm",
+							"gesture": "shrug",
+							"to": "you"
+						}
+					]
+				}
+			]
+		},
+		{
+			"if": "event_starts&event_festival",
+			"then": [
+				{
+					"say": "iyer",
+					"text": "Festival week, Chief. Lights on every building, fireworks every night, and half the staff on leave.",
+					"mood": "happy",
+					"gesture": "open_hands",
+					"to": "you"
+				},
+				{
+					"say": "iyer",
+					"text": "Burns, crushes and food poisoning. It costs us overtime every year. Mr. Malhotra has already sighed twice.",
+					"mood": "focused",
+					"gesture": "wag",
+					"to": "you"
+				}
+			],
+			"else": [
+				{
+					"if": "event_festival&rounds_a",
+					"then": [
+						{
+							"say": "iyer",
+							"text": "The canteen's made festival sweets. Dr. Khan has eaten eleven. For quality control.",
+							"mood": "happy",
+							"gesture": "shrug",
+							"to": "you"
+						}
+					]
+				},
+				{
+					"if": "event_festival&rounds_b",
+					"then": [
+						{
+							"say": "iyer",
+							"text": "Three burnt hands overnight, all from the same brand of rocket. I've rung the police. They've rung the shop.",
+							"mood": "tired",
+							"gesture": "fold_arms",
+							"to": "you"
+						}
+					]
+				},
+				{
+					"if": "event_festival&rounds_c",
+					"then": [
+						{
+							"say": "iyer",
+							"text": "The agency wants festival rates for every night nurse. Mr. Malhotra is lying down in his office.",
+							"mood": "calm",
+							"gesture": "shrug",
+							"to": "you"
+						}
+					]
+				}
+			]
+		},
+		{
+			"if": "event_starts&event_outbreak",
+			"then": [
+				{
+					"say": "iyer",
+					"text": "It's an outbreak, Chief. The burst water main in the old town. Forty cases of the stomach bug overnight, and it's in the nurses' hostel.",
+					"mood": "worried",
+					"gesture": "explain",
+					"to": "you"
+				},
+				{
+					"say": "iyer",
+					"text": "This week: keep it away from the patients who can't fight it, and keep enough nurses standing to do that.",
+					"mood": "focused",
+					"gesture": "wag",
+					"to": "you"
+				}
+			],
+			"else": [
+				{
+					"if": "event_outbreak&rounds_a",
+					"then": [
+						{
+							"say": "iyer",
+							"text": "Twelve more with the bug overnight. The council says the water's fine. The council drinks bottled water.",
+							"mood": "tired",
+							"gesture": "fold_arms",
+							"to": "you"
+						}
+					]
+				},
+				{
+					"if": "event_outbreak&rounds_b",
+					"then": [
+						{
+							"say": "iyer",
+							"text": "Two more nurses off with it. Grace has put hand gel on every surface, including the lift buttons and Mr. Malhotra.",
+							"mood": "tired",
+							"gesture": "shrug",
+							"to": "you"
+						}
+					]
+				},
+				{
+					"if": "event_outbreak&rounds_c",
+					"then": [
+						{
+							"say": "iyer",
+							"text": "The water main's mended, they say. The bug hasn't heard. Another eight came in at dawn.",
+							"mood": "worried",
+							"gesture": "open_hands",
+							"to": "you"
+						}
+					]
+				}
+			]
+		},
+		{
+			"if": "walkin_today",
+			"then": [
+				{
+					"if": "rounds_a",
+					"then": [
+						{
+							"say": "iyer",
+							"text": "And a walk-in on the board, Chief. Somebody new. Priya will page you once they're on a trolley.",
+							"mood": "calm",
+							"gesture": "point",
+							"to": "you"
+						}
+					]
+				},
+				{
+					"if": "rounds_b",
+					"then": [
+						{
+							"say": "iyer",
+							"text": "There's a new name on the admissions board. Came in off the street this morning. Yours, if you want them. You do.",
+							"mood": "calm",
+							"gesture": "explain",
+							"to": "you"
+						}
+					]
+				},
+				{
+					"if": "rounds_c",
+					"then": [
+						{
+							"say": "iyer",
+							"text": "Somebody walked in at dawn and asked for 'the best surgeon'. The porter sent them to you. I didn't correct him.",
+							"mood": "happy",
+							"gesture": "shrug",
+							"to": "you"
+						}
+					]
+				}
+			]
+		},
+		{
 			"if": "cb_yesterday_lost",
 			"then": [
 				{
@@ -4014,7 +4226,7 @@
 			]
 		},
 		{
-			"if": "rounds_a",
+			"if": "!walkin_today&rounds_a",
 			"then": [
 				{
 					"say": "iyer",
@@ -4026,7 +4238,7 @@
 			]
 		},
 		{
-			"if": "rounds_b",
+			"if": "!walkin_today&rounds_b",
 			"then": [
 				{
 					"say": "iyer",
@@ -4038,7 +4250,7 @@
 			]
 		},
 		{
-			"if": "rounds_c",
+			"if": "!walkin_today&rounds_c",
 			"then": [
 				{
 					"say": "iyer",
@@ -5024,6 +5236,3231 @@
 					]
 				}
 			]
+		}
+	],
+	"hc_vip_queue": [
+		{
+			"if": "rounds_a",
+			"then": [
+				{
+					"say": "malhotra",
+					"text": "Chief, the minister's office rang. His nephew needs a hernia repair. Today. There are eleven people ahead of him, and one of them is a farmer who's waited since March.",
+					"mood": "worried",
+					"gesture": "open_hands",
+					"to": "you"
+				}
+			]
+		},
+		{
+			"if": "rounds_b",
+			"then": [
+				{
+					"say": "malhotra",
+					"text": "A cricketer's mother has arrived with a sore gallbladder and a photographer. She'd like this afternoon's list. All of it.",
+					"mood": "worried",
+					"gesture": "point",
+					"to": "you"
+				}
+			]
+		},
+		{
+			"if": "rounds_c",
+			"then": [
+				{
+					"say": "malhotra",
+					"text": "A film producer wants his knee looked at before his flight tonight. He's offered to pay for a new waiting room. A very nice one.",
+					"mood": "calm",
+					"gesture": "explain",
+					"to": "you"
+				}
+			]
+		},
+		{
+			"say": "malhotra",
+			"text": "I'm only the messenger. The messenger would quite like a new waiting room.",
+			"mood": "tired",
+			"gesture": "shrug",
+			"to": "you"
+		},
+		{
+			"choose": [
+				{
+					"tone": "Queue",
+					"text": "The queue is the queue. They wait their turn, like the farmer.",
+					"flag": "hc_vip_queue_queue",
+					"standing": {
+						"public": 4,
+						"money": -3
+					},
+					"then": [
+						{
+							"say": "malhotra",
+							"text": "Their turn. I'll say it more politely than that.",
+							"mood": "calm",
+							"head": "nod"
+						}
+					]
+				},
+				{
+					"tone": "Squeeze",
+					"text": "Put them on today's list. Somebody else moves to tomorrow.",
+					"flag": "hc_vip_queue_squeeze",
+					"standing": {
+						"money": 5,
+						"public": -5,
+						"staff": -2
+					},
+					"then": [
+						{
+							"say": "malhotra",
+							"text": "Somebody else. I'll find out who, and I won't tell you their name.",
+							"mood": "tired",
+							"gesture": "shrug"
+						}
+					]
+				},
+				{
+					"tone": "Private",
+					"text": "A paid evening list, after the real one. Their money pays for two free operations.",
+					"flag": "hc_vip_queue_private",
+					"standing": {
+						"money": 4,
+						"staff": -3,
+						"public": 1
+					},
+					"then": [
+						{
+							"say": "malhotra",
+							"text": "An evening list. The theatre team will love you. Briefly. Then not.",
+							"mood": "calm",
+							"gesture": "wag"
+						}
+					]
+				}
+			]
+		}
+	],
+	"hc_drug_shortage": [
+		{
+			"if": "rounds_a",
+			"then": [
+				{
+					"say": "priya",
+					"text": "Chief, the strong antibiotic's run short. Four vials left, and six patients written up for it. The next delivery is Thursday.",
+					"mood": "worried",
+					"gesture": "hold",
+					"to": "you"
+				}
+			]
+		},
+		{
+			"if": "rounds_b",
+			"then": [
+				{
+					"say": "priya",
+					"text": "We're out of the anti-venom except for two vials. It's snake season in the villages, and the ambulance is bringing a third bite.",
+					"mood": "worried",
+					"gesture": "open_hands",
+					"to": "you"
+				}
+			]
+		},
+		{
+			"if": "rounds_c",
+			"then": [
+				{
+					"say": "priya",
+					"text": "The insulin pump supplies are stuck at the port. Three diabetic patients and supplies for one.",
+					"mood": "worried",
+					"gesture": "hold",
+					"to": "you"
+				}
+			]
+		},
+		{
+			"say": "priya",
+			"text": "Pharmacy wants a decision by six. Nobody wants to be the one who chose.",
+			"mood": "tired",
+			"gesture": "fold_arms",
+			"to": "you"
+		},
+		{
+			"choose": [
+				{
+					"tone": "Sickest",
+					"text": "The sickest get it first. Write down why, and tell the others' families the truth.",
+					"flag": "hc_drug_shortage_sickest",
+					"standing": {
+						"staff": 2,
+						"public": 2
+					},
+					"then": [
+						{
+							"say": "priya",
+							"text": "The sickest first, and the truth for the rest. I'll do the talking with you.",
+							"mood": "calm",
+							"head": "nod"
+						}
+					]
+				},
+				{
+					"tone": "Borrow",
+					"text": "Ring CarePlus and borrow theirs. We'll pay it back with interest.",
+					"flag": "hc_drug_shortage_borrow",
+					"standing": {
+						"public": 3,
+						"money": -3
+					},
+					"then": [
+						{
+							"say": "priya",
+							"text": "Dr. Kapoor will lend it. And he'll mention it at every meeting until we die.",
+							"mood": "calm",
+							"gesture": "shrug"
+						}
+					]
+				},
+				{
+					"tone": "Buy",
+					"text": "Buy it today from anyone who has it, at whatever price.",
+					"flag": "hc_drug_shortage_buy",
+					"standing": {
+						"public": 2,
+						"staff": 1,
+						"money": -6
+					},
+					"then": [
+						{
+							"say": "priya",
+							"text": "Whatever price. Mr. Malhotra just felt a chill and doesn't know why.",
+							"mood": "happy",
+							"gesture": "shrug"
+						}
+					]
+				}
+			]
+		}
+	],
+	"hc_resident_tired": [
+		{
+			"if": "rounds_a",
+			"then": [
+				{
+					"say": "saxena",
+					"text": "Chief. Dr. Kunte fell asleep at a red light driving home. Thirty-six hours on. He's fine. The scooter in front of him isn't.",
+					"mood": "worried",
+					"gesture": "open_hands",
+					"to": "you"
+				}
+			]
+		},
+		{
+			"if": "rounds_b",
+			"then": [
+				{
+					"say": "saxena",
+					"text": "One of the residents wrote the wrong dose at hour thirty. The pharmacist caught it. She cried in the sluice, and then she went back to work.",
+					"mood": "worried",
+					"gesture": "hold",
+					"to": "you"
+				}
+			]
+		},
+		{
+			"if": "rounds_c",
+			"then": [
+				{
+					"say": "saxena",
+					"text": "Three residents asked me to ask you, because they're scared to. Can the shifts stop being thirty-six hours?",
+					"mood": "worried",
+					"gesture": "chest",
+					"to": "you"
+				}
+			]
+		},
+		{
+			"say": "saxena",
+			"text": "When I was an intern I thought being tired was part of the training. Now I think it's just being tired.",
+			"mood": "tired",
+			"gesture": "shrug",
+			"to": "you"
+		},
+		{
+			"choose": [
+				{
+					"tone": "Cap",
+					"text": "No shift longer than twenty-four hours, from Monday. I'll find the money.",
+					"flag": "hc_resident_tired_cap",
+					"standing": {
+						"staff": 6,
+						"money": -5
+					},
+					"then": [
+						{
+							"say": "saxena",
+							"text": "From Monday. I'm going to tell them in the canteen. Loudly.",
+							"mood": "happy",
+							"gesture": "clap"
+						}
+					]
+				},
+				{
+					"tone": "Rest",
+					"text": "A rest room with a door that locks, and a taxi home after any night shift.",
+					"flag": "hc_resident_tired_rest",
+					"standing": {
+						"staff": 3,
+						"money": -2
+					},
+					"then": [
+						{
+							"say": "saxena",
+							"text": "A door that locks. You have no idea how much that's worth.",
+							"mood": "calm",
+							"head": "nod"
+						}
+					]
+				},
+				{
+					"tone": "Tough",
+					"text": "Every doctor in this building did those hours. It's how we learnt.",
+					"flag": "hc_resident_tired_tough",
+					"standing": {
+						"staff": -6,
+						"money": 2
+					},
+					"then": [
+						{
+							"say": "saxena",
+							"text": "It's how you learnt. Some of us also learnt to fall asleep at red lights.",
+							"mood": "angry",
+							"gesture": "fold_arms"
+						}
+					]
+				}
+			]
+		}
+	],
+	"hc_scanner_down": [
+		{
+			"if": "rounds_a",
+			"then": [
+				{
+					"say": "iyer",
+					"text": "The CT scanner's died. Smoke, a smell, and an engineer who says 'next week' in a voice that means 'next month'.",
+					"mood": "worried",
+					"gesture": "explain",
+					"to": "you"
+				}
+			]
+		},
+		{
+			"if": "rounds_b",
+			"then": [
+				{
+					"say": "iyer",
+					"text": "The scanner's down again. The engineer can fix it tonight, at triple his normal rate, because he knows we're desperate.",
+					"mood": "tired",
+					"gesture": "shrug",
+					"to": "you"
+				}
+			]
+		},
+		{
+			"if": "rounds_c",
+			"then": [
+				{
+					"say": "iyer",
+					"text": "Half the X-ray department's gone off with a burnt-out cable. We can scan the urgent ones, slowly, or not at all.",
+					"mood": "worried",
+					"gesture": "open_hands",
+					"to": "you"
+				}
+			]
+		},
+		{
+			"say": "iyer",
+			"text": "Every head injury and every belly we can't read is a guess until it's fixed.",
+			"mood": "focused",
+			"gesture": "wag",
+			"to": "you"
+		},
+		{
+			"choose": [
+				{
+					"tone": "Divert",
+					"text": "Divert head injuries and big crashes to CarePlus until it's fixed.",
+					"flag": "hc_scanner_down_divert",
+					"standing": {
+						"public": -4,
+						"money": 2
+					},
+					"then": [
+						{
+							"say": "iyer",
+							"text": "CarePlus will take the money and the credit. But the patients get scanned.",
+							"mood": "calm",
+							"gesture": "shrug"
+						}
+					]
+				},
+				{
+					"tone": "Pay",
+					"text": "Pay him tonight. Whatever it costs.",
+					"flag": "hc_scanner_down_pay",
+					"standing": {
+						"money": -6,
+						"public": 3
+					},
+					"then": [
+						{
+							"say": "iyer",
+							"text": "Triple rates. He'll bring his nephew to watch. He'll call it training.",
+							"mood": "happy",
+							"gesture": "shrug"
+						}
+					]
+				},
+				{
+					"tone": "Careful",
+					"text": "We manage on the old machine. Urgent cases only, and we examine properly.",
+					"flag": "hc_scanner_down_careful",
+					"standing": {
+						"staff": -3,
+						"public": 1
+					},
+					"then": [
+						{
+							"say": "iyer",
+							"text": "Examine properly. The oldest scanner there is. It still works, if you use it.",
+							"mood": "calm",
+							"head": "nod"
+						}
+					]
+				}
+			]
+		}
+	],
+	"hc_blood_bank": [
+		{
+			"if": "rounds_a",
+			"then": [
+				{
+					"say": "priya",
+					"text": "The blood bank's down to a day's stock, Chief. O negative is down to four units, and it's a Friday.",
+					"mood": "worried",
+					"gesture": "hold",
+					"to": "you"
+				}
+			]
+		},
+		{
+			"if": "rounds_b",
+			"then": [
+				{
+					"say": "priya",
+					"text": "The crash yesterday used a week's blood in an afternoon. The blood bank is begging, politely.",
+					"mood": "worried",
+					"gesture": "open_hands",
+					"to": "you"
+				}
+			]
+		},
+		{
+			"if": "rounds_c",
+			"then": [
+				{
+					"say": "priya",
+					"text": "A fridge failed overnight. We lost thirty units. Nobody's fault. Everybody's problem.",
+					"mood": "worried",
+					"gesture": "hold",
+					"to": "you"
+				}
+			]
+		},
+		{
+			"say": "priya",
+			"text": "Three planned operations tomorrow need blood ready. So does anyone who comes off the highway.",
+			"mood": "focused",
+			"gesture": "point",
+			"to": "you"
+		},
+		{
+			"choose": [
+				{
+					"tone": "Appeal",
+					"text": "A public appeal. Radio, newspaper, temples, colleges. I'll give the first unit myself.",
+					"flag": "hc_blood_bank_appeal",
+					"standing": {
+						"public": 5,
+						"staff": -1
+					},
+					"then": [
+						{
+							"say": "priya",
+							"text": "The Chief giving blood. That'll bring them in. Wear short sleeves.",
+							"mood": "happy",
+							"gesture": "point"
+						}
+					]
+				},
+				{
+					"tone": "Postpone",
+					"text": "Postpone the planned operations until the stock is safe.",
+					"flag": "hc_blood_bank_postpone",
+					"standing": {
+						"public": -3,
+						"money": -2,
+						"staff": 1
+					},
+					"then": [
+						{
+							"say": "priya",
+							"text": "I'll ring the three families. One of them has rearranged a wedding round this.",
+							"mood": "tired",
+							"gesture": "shrug"
+						}
+					]
+				},
+				{
+					"tone": "Buy",
+					"text": "Buy from the private blood bank in the city, today.",
+					"flag": "hc_blood_bank_buy",
+					"standing": {
+						"money": -5,
+						"public": 1
+					},
+					"then": [
+						{
+							"say": "priya",
+							"text": "Private blood. Same blood, three times the price, delivered in a very clean van.",
+							"mood": "calm",
+							"gesture": "shrug"
+						}
+					]
+				}
+			]
+		}
+	],
+	"hc_tv_hero": [
+		{
+			"if": "rounds_a",
+			"then": [
+				{
+					"say": "malhotra",
+					"text": "Chief, a television channel wants a 'hero doctor' story. Ten minutes, prime time. They asked for you, by name. And by face.",
+					"mood": "happy",
+					"gesture": "open_hands",
+					"to": "you"
+				}
+			]
+		},
+		{
+			"if": "rounds_b",
+			"then": [
+				{
+					"say": "malhotra",
+					"text": "The news channel wants to film the night shift. 'A night in the life'. They've promised not to film anyone being sick. They always film someone being sick.",
+					"mood": "calm",
+					"gesture": "explain",
+					"to": "you"
+				}
+			]
+		},
+		{
+			"if": "rounds_c",
+			"then": [
+				{
+					"say": "malhotra",
+					"text": "A magazine wants you on the cover. 'The Chief Who Never Sleeps.' I said you do sleep. They said that's not a cover.",
+					"mood": "happy",
+					"gesture": "shrug",
+					"to": "you"
+				}
+			]
+		},
+		{
+			"say": "malhotra",
+			"text": "It's free advertising. The town would love it. CarePlus would hate it, which is a bonus.",
+			"mood": "happy",
+			"gesture": "point",
+			"to": "you"
+		},
+		{
+			"choose": [
+				{
+					"tone": "Team",
+					"text": "Film the team, not me. Grace, Priya, Tom, the porters. They're the story.",
+					"flag": "hc_tv_hero_team",
+					"standing": {
+						"staff": 4,
+						"public": 3
+					},
+					"then": [
+						{
+							"say": "malhotra",
+							"text": "The porters. On television. One of them will want an agent.",
+							"mood": "happy",
+							"gesture": "shrug"
+						}
+					]
+				},
+				{
+					"tone": "Me",
+					"text": "Fine. Ten minutes, me, and then back to work.",
+					"flag": "hc_tv_hero_me",
+					"standing": {
+						"public": 4,
+						"staff": -4
+					},
+					"then": [
+						{
+							"say": "malhotra",
+							"text": "Wear the white coat. The clean one. Not the one with the coffee.",
+							"mood": "happy",
+							"gesture": "wag"
+						}
+					]
+				},
+				{
+					"tone": "No",
+					"text": "No cameras on the wards. Patients aren't props.",
+					"flag": "hc_tv_hero_no",
+					"standing": {
+						"public": -2,
+						"staff": 2
+					},
+					"then": [
+						{
+							"say": "malhotra",
+							"text": "Patients aren't props. I'll tell them. They'll put it in the story anyway.",
+							"mood": "tired",
+							"gesture": "shrug"
+						}
+					]
+				}
+			]
+		}
+	],
+	"hc_drug_trial": [
+		{
+			"if": "rounds_a",
+			"then": [
+				{
+					"say": "iyer",
+					"text": "A drug company wants to run a trial here. A new blood thinner. Good money, a research nurse, and a lot of forms.",
+					"mood": "calm",
+					"gesture": "explain",
+					"to": "you"
+				}
+			]
+		},
+		{
+			"if": "rounds_b",
+			"then": [
+				{
+					"say": "iyer",
+					"text": "The trial people are back. They'd like to start next week, with 'simplified consent'. I don't like the word simplified.",
+					"mood": "focused",
+					"gesture": "fold_arms",
+					"to": "you"
+				}
+			]
+		},
+		{
+			"if": "rounds_c",
+			"then": [
+				{
+					"say": "iyer",
+					"text": "A university wants our patients for a study on wound healing. Less money, more paperwork, and they'd train two of our nurses.",
+					"mood": "calm",
+					"gesture": "open_hands",
+					"to": "you"
+				}
+			]
+		},
+		{
+			"say": "iyer",
+			"text": "Research is how medicine gets better. It's also how hospitals get into the newspapers for the wrong reasons.",
+			"mood": "calm",
+			"gesture": "wag",
+			"to": "you"
+		},
+		{
+			"choose": [
+				{
+					"tone": "Properly",
+					"text": "Yes, with full consent, our own ethics committee, and a patient's right to say no at any point.",
+					"flag": "hc_drug_trial_properly",
+					"standing": {
+						"money": 3,
+						"public": 1,
+						"staff": -1
+					},
+					"then": [
+						{
+							"say": "iyer",
+							"text": "Properly. It'll take three months to start. That's how you know it's right.",
+							"mood": "calm",
+							"head": "nod"
+						}
+					]
+				},
+				{
+					"tone": "Fast",
+					"text": "Yes, and start next week. The money pays for a nurse we can't otherwise afford.",
+					"flag": "hc_drug_trial_fast",
+					"standing": {
+						"money": 7,
+						"public": -5
+					},
+					"then": [
+						{
+							"say": "iyer",
+							"text": "Next week. I'll read every form myself. Twice.",
+							"mood": "worried",
+							"gesture": "fold_arms"
+						}
+					]
+				},
+				{
+					"tone": "Decline",
+					"text": "Not this year. We haven't got the people to do it safely.",
+					"flag": "hc_drug_trial_decline",
+					"standing": {
+						"money": -2,
+						"staff": 1
+					},
+					"then": [
+						{
+							"say": "iyer",
+							"text": "Not this year. Sensible. Disappointing. Sensible.",
+							"mood": "calm",
+							"gesture": "shrug"
+						}
+					]
+				}
+			]
+		}
+	],
+	"hc_night_allowance": [
+		{
+			"if": "rounds_a",
+			"then": [
+				{
+					"say": "priya",
+					"text": "The nurses' committee would like a word. Night allowance. It hasn't gone up in six years. Onions have.",
+					"mood": "focused",
+					"gesture": "fold_arms",
+					"to": "you"
+				}
+			]
+		},
+		{
+			"if": "rounds_b",
+			"then": [
+				{
+					"say": "priya",
+					"text": "Chief, the night nurses want their allowance raised. CarePlus pays double for nights. They have a spreadsheet. With colours.",
+					"mood": "focused",
+					"gesture": "point",
+					"to": "you"
+				}
+			]
+		},
+		{
+			"if": "rounds_c",
+			"then": [
+				{
+					"say": "priya",
+					"text": "The committee's back about nights. They've been very patient. They've asked me to tell you they're running out of patience.",
+					"mood": "tired",
+					"gesture": "fold_arms",
+					"to": "you"
+				}
+			]
+		},
+		{
+			"say": "priya",
+			"text": "They don't want a speech. They want a number.",
+			"mood": "focused",
+			"gesture": "wag",
+			"to": "you"
+		},
+		{
+			"choose": [
+				{
+					"tone": "Pay",
+					"text": "Raise it. From this month.",
+					"flag": "hc_night_allowance_pay",
+					"standing": {
+						"staff": 6,
+						"money": -6
+					},
+					"then": [
+						{
+							"say": "priya",
+							"text": "From this month. I'll tell them before you change your mind. Not that you would.",
+							"mood": "happy",
+							"gesture": "clap"
+						}
+					]
+				},
+				{
+					"tone": "Half",
+					"text": "Half now, half next year, in writing.",
+					"flag": "hc_night_allowance_half",
+					"standing": {
+						"staff": 2,
+						"money": -3
+					},
+					"then": [
+						{
+							"say": "priya",
+							"text": "In writing. They'll frame it. Then they'll check the date.",
+							"mood": "calm",
+							"head": "nod"
+						}
+					]
+				},
+				{
+					"tone": "No",
+					"text": "Not this year. The money isn't there.",
+					"flag": "hc_night_allowance_no",
+					"standing": {
+						"staff": -6,
+						"money": 3
+					},
+					"then": [
+						{
+							"say": "priya",
+							"text": "The money isn't there. That's what they were told six years ago.",
+							"mood": "angry",
+							"gesture": "fold_arms"
+						}
+					]
+				}
+			]
+		}
+	],
+	"hc_corridor_beds": [
+		{
+			"if": "rounds_a",
+			"then": [
+				{
+					"say": "priya",
+					"text": "No beds, Chief. Four patients on trolleys in the corridor and two more in the lift lobby. One of them is eating lunch on a fire extinguisher.",
+					"mood": "worried",
+					"gesture": "open_hands",
+					"to": "you"
+				}
+			]
+		},
+		{
+			"if": "rounds_b",
+			"then": [
+				{
+					"say": "priya",
+					"text": "The emergency department's full, and the afternoon list hasn't even started. Every bed's taken, and three patients are waiting on chairs.",
+					"mood": "worried",
+					"gesture": "hold",
+					"to": "you"
+				}
+			]
+		},
+		{
+			"if": "rounds_c",
+			"then": [
+				{
+					"say": "priya",
+					"text": "We've run out of beds again. Bed six has been cleaned three times today. It hasn't been empty for a minute.",
+					"mood": "tired",
+					"gesture": "shrug",
+					"to": "you"
+				}
+			]
+		},
+		{
+			"say": "priya",
+			"text": "Something has to give. I'd rather it wasn't one of the patients.",
+			"mood": "focused",
+			"gesture": "point",
+			"to": "you"
+		},
+		{
+			"choose": [
+				{
+					"tone": "Seminar",
+					"text": "Open the seminar room as a ward. The meetings can happen in the canteen.",
+					"flag": "hc_corridor_beds_seminar",
+					"standing": {
+						"public": 3,
+						"staff": -3
+					},
+					"then": [
+						{
+							"say": "priya",
+							"text": "The seminar room. Dr. Iyer will have to present to the samosas.",
+							"mood": "happy",
+							"gesture": "shrug"
+						}
+					]
+				},
+				{
+					"tone": "Discharge",
+					"text": "Send home the nearly-well today, with a phone number and a clinic tomorrow.",
+					"flag": "hc_corridor_beds_discharge",
+					"standing": {
+						"public": -2,
+						"money": 2,
+						"staff": 1
+					},
+					"then": [
+						{
+							"say": "priya",
+							"text": "Nearly-well. I'll pick them carefully. If one comes back, it's on both of us.",
+							"mood": "calm",
+							"gesture": "fold_arms"
+						}
+					]
+				},
+				{
+					"tone": "Divert",
+					"text": "Divert new admissions to CarePlus until we have room.",
+					"flag": "hc_corridor_beds_divert",
+					"standing": {
+						"public": -4,
+						"money": 1
+					},
+					"then": [
+						{
+							"say": "priya",
+							"text": "CarePlus. The town will notice. So will Dr. Kapoor.",
+							"mood": "worried",
+							"gesture": "shrug"
+						}
+					]
+				}
+			]
+		}
+	],
+	"hc_careplus_offer": [
+		{
+			"if": "rounds_a",
+			"then": [
+				{
+					"say": "kapoor",
+					"text": "Chief. A proposal. We share a scanner. Your patients, our machine, my staff. Sensible, isn't it?",
+					"mood": "happy",
+					"gesture": "open_hands",
+					"to": "you"
+				}
+			]
+		},
+		{
+			"if": "rounds_b",
+			"then": [
+				{
+					"say": "kapoor",
+					"text": "CarePlus would like to take your night emergencies. You'd sleep. We'd... grow.",
+					"mood": "happy",
+					"gesture": "chest",
+					"to": "you"
+				}
+			]
+		},
+		{
+			"if": "rounds_c",
+			"then": [
+				{
+					"say": "kapoor",
+					"text": "We'd like to buy your Saturday clinic. A fair price. We'd keep the name. We'd change everything else.",
+					"mood": "calm",
+					"gesture": "explain",
+					"to": "you"
+				}
+			]
+		},
+		{
+			"say": "kapoor",
+			"text": "No hard feelings about the vote. I've had a very successful year. Ask anyone. Ask the newspaper.",
+			"mood": "happy",
+			"gesture": "shrug",
+			"to": "you"
+		},
+		{
+			"choose": [
+				{
+					"tone": "Terms",
+					"text": "We'll share, on our terms. Our patients first, and every scan reported to us the same day.",
+					"flag": "hc_careplus_offer_terms",
+					"standing": {
+						"money": 4,
+						"staff": -1
+					},
+					"then": [
+						{
+							"say": "kapoor",
+							"text": "Your terms. You've learnt to negotiate. I blame Mr. Malhotra.",
+							"mood": "calm",
+							"gesture": "wag"
+						}
+					]
+				},
+				{
+					"tone": "No",
+					"text": "No. This town needs a hospital that doesn't close at night.",
+					"flag": "hc_careplus_offer_no",
+					"standing": {
+						"public": 3,
+						"money": -2
+					},
+					"then": [
+						{
+							"say": "kapoor",
+							"text": "A hospital that never closes. Very noble. Very expensive.",
+							"mood": "calm",
+							"gesture": "shrug"
+						}
+					]
+				},
+				{
+					"tone": "Sell",
+					"text": "Make it a good price and we'll talk.",
+					"flag": "hc_careplus_offer_sell",
+					"standing": {
+						"money": 8,
+						"public": -6,
+						"staff": -3
+					},
+					"then": [
+						{
+							"say": "kapoor",
+							"text": "A good price. I'll send it in writing. In a nice folder.",
+							"mood": "happy",
+							"gesture": "clap"
+						}
+					]
+				}
+			]
+		}
+	],
+	"cb_arif_arrive": [
+		{
+			"say": "arif",
+			"text": "Doctor, sorry, is this going to take long? I have an exam at nine. Had. I had an exam at nine.",
+			"mood": "worried",
+			"gesture": "open_hands",
+			"to": "you"
+		},
+		{
+			"say": "priya",
+			"text": "Nineteen, from the engineering hostel. Pain low on the right since the night, a temperature, and he's been sick twice. His friends carried him down three floors.",
+			"mood": "calm",
+			"gesture": "point",
+			"to": "you"
+		},
+		{
+			"say": "arif",
+			"text": "They're in the corridor. One of them is drawing my appendix. He's never seen one. Neither have I.",
+			"mood": "tired",
+			"gesture": "shrug"
+		},
+		{
+			"choose": [
+				{
+					"tone": "Kind",
+					"text": "Forget the exam for today. Let me find out what's wrong first.",
+					"trust": {
+						"arif": 3
+					},
+					"then": [
+						{
+							"say": "arif",
+							"text": "Forget the exam. My father will need to hear that from you personally.",
+							"mood": "happy",
+							"gesture": "chest"
+						}
+					]
+				},
+				{
+					"tone": "Joke",
+					"text": "Tell your friend the appendix is the shape of a small worm. He can fix the drawing.",
+					"trust": {
+						"arif": 2
+					},
+					"then": [
+						{
+							"say": "arif",
+							"text": "A worm. He's drawn it like a banana. I'll tell him. He'll be devastated.",
+							"mood": "happy",
+							"gesture": "point"
+						}
+					]
+				}
+			]
+		}
+	],
+	"cb_arif_after": [
+		{
+			"if": "cb_arif_history_allergy",
+			"then": [
+				{
+					"say": "priya",
+					"text": "Penicillin allergy. Swollen lips at school. I'll put it on his band in red, and on the theatre board.",
+					"mood": "focused",
+					"gesture": "hold",
+					"to": "you"
+				}
+			],
+			"else": [
+				{
+					"say": "priya",
+					"text": "Nobody asked him about allergies, Chief. Theatre will give the usual antibiotic unless somebody tells them.",
+					"mood": "worried",
+					"gesture": "shrug",
+					"to": "you"
+				}
+			]
+		},
+		{
+			"say": "arif",
+			"text": "Do I need an operation? Honestly? My mother will want to know everything. She's a pharmacist.",
+			"mood": "worried",
+			"head": "tilt",
+			"to": "you"
+		},
+		{
+			"choose": [
+				{
+					"tone": "Honest",
+					"text": "Yes. Your appendix is inflamed, and it comes out today, before it bursts.",
+					"trust": {
+						"arif": 2
+					},
+					"then": [
+						{
+							"say": "arif",
+							"text": "Today. Okay. Okay. I'll ring her. You'll talk to her? She'll have questions. Forty of them.",
+							"mood": "worried",
+							"gesture": "open_hands"
+						}
+					]
+				},
+				{
+					"tone": "Gentle",
+					"text": "Probably. Let's get you comfortable first, and I'll explain it all to you and your mother.",
+					"trust": {
+						"arif": 1
+					},
+					"then": [
+						{
+							"say": "arif",
+							"text": "Probably. That's a doctor's yes, isn't it. My mother says 'probably' the same way.",
+							"mood": "calm",
+							"gesture": "shrug"
+						}
+					]
+				}
+			]
+		},
+		{
+			"say": "priya",
+			"text": "Theatre 2 at two. I'll keep the friends out. They've started a group chat about it.",
+			"mood": "happy",
+			"gesture": "point"
+		}
+	],
+	"cb_arif_ready": [
+		{
+			"say": "arif",
+			"text": "My mother rang Dr. Khan. Dr. Khan is still on the phone. I'm sorry.",
+			"mood": "worried",
+			"gesture": "open_hands",
+			"to": "you"
+		},
+		{
+			"say": "khan",
+			"text": "She's very well informed. She's asked for my qualifications. I've sent them.",
+			"mood": "calm",
+			"gesture": "shrug",
+			"to": "you"
+		},
+		{
+			"choose": [
+				{
+					"tone": "Reassure",
+					"text": "You're in very good hands, Arif. Dr. Khan has put thousands of people to sleep. And woken them up.",
+					"trust": {
+						"arif": 2
+					},
+					"then": [
+						{
+							"say": "arif",
+							"text": "Woken them up. That's the important part. Please tell my mother that part.",
+							"mood": "calm",
+							"head": "nod"
+						}
+					]
+				},
+				{
+					"tone": "Joke",
+					"text": "When you wake up, it'll be lunchtime, and the exam will be somebody else's problem.",
+					"trust": {
+						"arif": 1
+					},
+					"then": [
+						{
+							"say": "arif",
+							"text": "Somebody else's problem. That's the nicest thing anyone's said to me this term.",
+							"mood": "happy",
+							"gesture": "chest"
+						}
+					]
+				}
+			]
+		}
+	],
+	"cb_arif_after_op": [
+		{
+			"if": "op_arif_failed",
+			"then": [
+				{
+					"say": "iyer",
+					"text": "It had stuck itself to everything. I finished it. He'll be fine, Chief. Tired, and fine.",
+					"mood": "calm",
+					"gesture": "open_hands",
+					"to": "you"
+				}
+			],
+			"else": [
+				{
+					"say": "iyer",
+					"text": "Out, before it burst. Neat work. He'll be home in two days, and back at his desk complaining in three.",
+					"mood": "happy",
+					"gesture": "open_hands",
+					"to": "you"
+				}
+			]
+		},
+		{
+			"say": "arif",
+			"text": "Is it out? Can I see it? My friends want a photograph. For science.",
+			"mood": "tired",
+			"head": "tilt",
+			"to": "you"
+		},
+		{
+			"choose": [
+				{
+					"tone": "Yes",
+					"text": "It's in a jar. One photograph. For science.",
+					"trust": {
+						"arif": 2
+					},
+					"then": [
+						{
+							"say": "arif",
+							"text": "For science. They'll put it on the hostel noticeboard. You'll be famous.",
+							"mood": "happy",
+							"gesture": "point"
+						}
+					]
+				},
+				{
+					"tone": "Rest",
+					"text": "Sleep first. Science can wait until tomorrow.",
+					"then": [
+						{
+							"say": "arif",
+							"text": "Science can wait. You sound like my mother. She'll like you.",
+							"mood": "calm",
+							"head": "nod"
+						}
+					]
+				}
+			]
+		}
+	],
+	"cb_mohan_arrive": [
+		{
+			"say": "mohan",
+			"text": "Doctor sahib, it's nothing. A small lump. I'll push it back and go. Forty cylinders on the tempo.",
+			"mood": "tired",
+			"gesture": "open_hands",
+			"to": "you"
+		},
+		{
+			"say": "priya",
+			"text": "He's the man who brings our gas cylinders, Chief. A lump in his groin that's been stuck since he lifted one this morning. It's hard, and he's grey.",
+			"mood": "calm",
+			"gesture": "point",
+			"to": "you"
+		},
+		{
+			"say": "mohan",
+			"text": "I'm not grey. I'm always this colour. It's the stairs.",
+			"mood": "worried",
+			"head": "down"
+		},
+		{
+			"choose": [
+				{
+					"tone": "Kind",
+					"text": "Lie back, Mr. Tiwari. The cylinders can wait an hour. You can't.",
+					"trust": {
+						"mohan": 3
+					},
+					"then": [
+						{
+							"say": "mohan",
+							"text": "An hour. The canteen won't be able to make chai. You're a brave man, doctor.",
+							"mood": "happy",
+							"gesture": "chest"
+						}
+					]
+				},
+				{
+					"tone": "Firm",
+					"text": "Don't push it back. If it's stuck, it stays where it is until I've looked.",
+					"trust": {
+						"mohan": 1
+					},
+					"then": [
+						{
+							"say": "mohan",
+							"text": "Don't push. Okay. You're the doctor. I'm only the cylinders.",
+							"mood": "calm",
+							"head": "nod"
+						}
+					]
+				}
+			]
+		}
+	],
+	"cb_mohan_after": [
+		{
+			"if": "cb_mohan_history_meal",
+			"then": [
+				{
+					"say": "priya",
+					"text": "A big plate of poha at five. Dr. Khan will want that before anything else.",
+					"mood": "focused",
+					"gesture": "hold",
+					"to": "you"
+				}
+			],
+			"else": [
+				{
+					"say": "priya",
+					"text": "Nobody asked when he last ate, Chief. Dr. Khan will ask. Loudly.",
+					"mood": "worried",
+					"gesture": "shrug",
+					"to": "you"
+				}
+			]
+		},
+		{
+			"say": "mohan",
+			"text": "My daughter is at the nursing college. She'll want to know what you're doing. Tell me properly, so I can tell her.",
+			"mood": "worried",
+			"head": "tilt",
+			"to": "you"
+		},
+		{
+			"choose": [
+				{
+					"tone": "Explain",
+					"text": "Your bowel has slipped through a weak spot and got stuck. We free it, check it's healthy, and patch the spot with mesh.",
+					"trust": {
+						"mohan": 2
+					},
+					"then": [
+						{
+							"say": "mohan",
+							"text": "Mesh. Like a sieve. My wife will understand that. She sieves everything.",
+							"mood": "happy",
+							"gesture": "point"
+						}
+					]
+				},
+				{
+					"tone": "Simple",
+					"text": "A small operation today, so it doesn't happen again.",
+					"then": [
+						{
+							"say": "mohan",
+							"text": "Small. My daughter will say nothing is small. She's very strict.",
+							"mood": "calm",
+							"gesture": "shrug"
+						}
+					]
+				}
+			]
+		},
+		{
+			"say": "priya",
+			"text": "Theatre 2 at two. His driver's parked in the ambulance bay. I've asked him nicely. Twice.",
+			"mood": "tired",
+			"gesture": "point"
+		}
+	],
+	"cb_mohan_ready": [
+		{
+			"say": "mohan",
+			"text": "Doctor, who will deliver the cylinders this week? The canteen needs two. Theatre needs one.",
+			"mood": "worried",
+			"gesture": "open_hands",
+			"to": "you"
+		},
+		{
+			"say": "tom",
+			"text": "I'll ring the depot. Theatre's oxygen comes from a different man. Don't worry about our gas.",
+			"mood": "calm",
+			"gesture": "wag",
+			"to": "mohan"
+		},
+		{
+			"choose": [
+				{
+					"tone": "Promise",
+					"text": "I'll make sure the canteen gets its cylinders. You think about getting better.",
+					"trust": {
+						"mohan": 2
+					},
+					"then": [
+						{
+							"say": "mohan",
+							"text": "You'll make sure. The Chief, delivering cylinders. I'll tell everyone.",
+							"mood": "happy",
+							"gesture": "chest"
+						}
+					]
+				},
+				{
+					"tone": "Joke",
+					"text": "If the canteen runs out of chai, I'll blame you personally.",
+					"trust": {
+						"mohan": 1
+					},
+					"then": [
+						{
+							"say": "mohan",
+							"text": "Blame me. Everybody does. When the gas runs out, nobody blames the gas.",
+							"mood": "happy",
+							"gesture": "shrug"
+						}
+					]
+				}
+			]
+		}
+	],
+	"cb_mohan_after_op": [
+		{
+			"if": "op_mohan_failed",
+			"then": [
+				{
+					"say": "iyer",
+					"text": "The loop was tight and angry. I finished the mesh. He'll heal, Chief.",
+					"mood": "calm",
+					"gesture": "open_hands",
+					"to": "you"
+				}
+			],
+			"else": [
+				{
+					"say": "iyer",
+					"text": "The bowel pinked up nicely, and the mesh is flat. He'll be carrying again in six weeks. Lighter loads, if he listens.",
+					"mood": "happy",
+					"gesture": "open_hands",
+					"to": "you"
+				}
+			]
+		},
+		{
+			"say": "mohan",
+			"text": "Six weeks? Who carries the cylinders for six weeks?",
+			"mood": "worried",
+			"gesture": "open_hands",
+			"to": "you"
+		},
+		{
+			"choose": [
+				{
+					"tone": "Help",
+					"text": "I'll write to your depot myself. Six weeks of light work, on full pay.",
+					"trust": {
+						"mohan": 3
+					},
+					"then": [
+						{
+							"say": "mohan",
+							"text": "On a Chief's letter. My supervisor will frame it. Then he'll argue with it.",
+							"mood": "happy",
+							"gesture": "chest"
+						}
+					]
+				},
+				{
+					"tone": "Firm",
+					"text": "Somebody else. If you lift too soon, it'll come back.",
+					"then": [
+						{
+							"say": "mohan",
+							"text": "Somebody else. Okay. I'll supervise. From a chair.",
+							"mood": "calm",
+							"head": "nod"
+						}
+					]
+				}
+			]
+		}
+	],
+	"cb_savitri_arrive": [
+		{
+			"say": "savitri",
+			"text": "Doctor! I brought tea. For the nurses. You also, if you're not too important.",
+			"mood": "happy",
+			"gesture": "offer",
+			"to": "you"
+		},
+		{
+			"say": "priya",
+			"text": "Sixty-six, runs the tea stall at the bus stand. A glass broke in her hand while she was washing up. Deep cut across the left palm. The towel's doing its best.",
+			"mood": "calm",
+			"gesture": "point",
+			"to": "you"
+		},
+		{
+			"say": "savitri",
+			"text": "Thirty-one years, never a cut. Today, one glass. The old kind. Thick.",
+			"mood": "tired",
+			"gesture": "shrug"
+		},
+		{
+			"choose": [
+				{
+					"tone": "Warm",
+					"text": "Thank you for the tea. Now let me look after the hand that made it.",
+					"trust": {
+						"savitri": 3
+					},
+					"then": [
+						{
+							"say": "savitri",
+							"text": "Such a nice doctor. You'll come to the stall. Twelve rupees for you. Ten, now.",
+							"mood": "happy",
+							"gesture": "chest"
+						}
+					]
+				},
+				{
+					"tone": "Brisk",
+					"text": "Let's see that hand before anything else.",
+					"then": [
+						{
+							"say": "savitri",
+							"text": "Straight to work. Good. My customers are waiting.",
+							"mood": "calm",
+							"head": "nod"
+						}
+					]
+				}
+			]
+		}
+	],
+	"cb_savitri_after": [
+		{
+			"if": "cb_savitri_history_tetanus",
+			"then": [
+				{
+					"say": "priya",
+					"text": "Twenty years since her last tetanus jab. Broken glass at a bus stand isn't clean. I'll tell theatre.",
+					"mood": "focused",
+					"gesture": "hold",
+					"to": "you"
+				}
+			],
+			"else": [
+				{
+					"say": "priya",
+					"text": "Nobody asked about tetanus, Chief. A wound from a bus stand needs somebody to ask.",
+					"mood": "worried",
+					"gesture": "shrug",
+					"to": "you"
+				}
+			]
+		},
+		{
+			"say": "savitri",
+			"text": "Will I be able to hold a kettle? I have to hold a kettle. That's the whole job.",
+			"mood": "worried",
+			"head": "tilt",
+			"to": "you"
+		},
+		{
+			"choose": [
+				{
+					"tone": "Honest",
+					"text": "In about ten days, if we find every bit of glass and it heals clean.",
+					"trust": {
+						"savitri": 2
+					},
+					"then": [
+						{
+							"say": "savitri",
+							"text": "Ten days. My nephew will run the stall. He'll make terrible tea. People will miss me.",
+							"mood": "happy",
+							"gesture": "fold_arms"
+						}
+					]
+				},
+				{
+					"tone": "Reassure",
+					"text": "Of course. You'll be back tomorrow.",
+					"trust": {
+						"savitri": -1
+					},
+					"then": [
+						{
+							"say": "savitri",
+							"text": "Tomorrow? With a hand like this? Doctor, I'm old, not foolish.",
+							"mood": "angry",
+							"gesture": "wag"
+						}
+					]
+				}
+			]
+		},
+		{
+			"say": "priya",
+			"text": "Minor theatre at two. Tom's laying out the tray. He's already had two cups.",
+			"mood": "happy",
+			"gesture": "point"
+		}
+	],
+	"cb_savitri_ready": [
+		{
+			"say": "savitri",
+			"text": "Will the injection hurt? I can stand anything except injections. And the price of milk.",
+			"mood": "worried",
+			"head": "tilt",
+			"to": "you"
+		},
+		{
+			"say": "iyer",
+			"text": "I'm only watching, Chief. Your patient, your hands, and her tea.",
+			"mood": "calm",
+			"gesture": "open_hands",
+			"to": "you"
+		},
+		{
+			"choose": [
+				{
+					"tone": "Honest",
+					"text": "It stings for a few seconds. After that, you'll feel pushing, not cutting.",
+					"trust": {
+						"savitri": 2
+					},
+					"then": [
+						{
+							"say": "savitri",
+							"text": "A few seconds. I can do a few seconds. I've done thirty-one years.",
+							"mood": "calm",
+							"head": "nod"
+						}
+					]
+				},
+				{
+					"tone": "Distract",
+					"text": "Tell me about the bus drivers while I numb it. Which one's the worst?",
+					"trust": {
+						"savitri": 2
+					},
+					"then": [
+						{
+							"say": "savitri",
+							"text": "The worst? The forty-two's driver. Never pays. Says he'll pay Friday. Friday never comes.",
+							"mood": "happy",
+							"gesture": "wag"
+						}
+					]
+				}
+			]
+		}
+	],
+	"cb_savitri_after_op": [
+		{
+			"if": "op_savitri_failed",
+			"then": [
+				{
+					"say": "iyer",
+					"text": "The glass was deep. I finished the end of it. She'll heal, Chief.",
+					"mood": "calm",
+					"gesture": "open_hands",
+					"to": "you"
+				}
+			],
+			"else": [
+				{
+					"say": "iyer",
+					"text": "Every sliver out, and neat stitches. She'll be pouring tea in ten days.",
+					"mood": "happy",
+					"gesture": "open_hands",
+					"to": "you"
+				}
+			]
+		},
+		{
+			"say": "savitri",
+			"text": "Finished? I felt only tugging. Like somebody darning a sock.",
+			"mood": "happy",
+			"gesture": "open_hands",
+			"to": "you"
+		},
+		{
+			"choose": [
+				{
+					"tone": "Care",
+					"text": "Keep it dry, keep it up, and come back in five days so I can look.",
+					"trust": {
+						"savitri": 2
+					},
+					"then": [
+						{
+							"say": "savitri",
+							"text": "Dry, up, five days. I'll bring tea when I come. Don't argue.",
+							"mood": "happy",
+							"gesture": "point"
+						}
+					]
+				},
+				{
+					"tone": "Joke",
+					"text": "No washing glasses for ten days. Your nephew can learn.",
+					"trust": {
+						"savitri": 1
+					},
+					"then": [
+						{
+							"say": "savitri",
+							"text": "My nephew. He'll break every glass at the stall. You'll see him next week.",
+							"mood": "happy",
+							"gesture": "shrug"
+						}
+					]
+				}
+			]
+		}
+	],
+	"cb_usha_arrive": [
+		{
+			"say": "usha",
+			"text": "Good morning. Sit up straight, Priya. Yes, I remember you. Third row, by the window. Always late.",
+			"mood": "calm",
+			"gesture": "wag",
+			"to": "priya"
+		},
+		{
+			"say": "priya",
+			"text": "Yes, Ma'am. Sixty-one, Chief. Pain under the right ribs since her niece's engagement dinner, and a fever since midnight. She was my headmistress.",
+			"mood": "worried",
+			"gesture": "hold",
+			"to": "you"
+		},
+		{
+			"say": "usha",
+			"text": "And now I'm a patient. Very strange. Usually I'm the one asking the questions.",
+			"mood": "tired",
+			"gesture": "shrug",
+			"to": "you"
+		},
+		{
+			"choose": [
+				{
+					"tone": "Respect",
+					"text": "Then today I'll ask, and you can mark my questions, Mrs. Krishnan.",
+					"trust": {
+						"usha": 3
+					},
+					"then": [
+						{
+							"say": "usha",
+							"text": "Good. I'll be fair. I was always fair. Ask Priya.",
+							"mood": "happy",
+							"gesture": "point"
+						}
+					]
+				},
+				{
+					"tone": "Brisk",
+					"text": "Let's start with the pain, and leave school out of it.",
+					"then": [
+						{
+							"say": "usha",
+							"text": "Straight to the point. Good. Too many people waste the first five minutes.",
+							"mood": "calm",
+							"head": "nod"
+						}
+					]
+				}
+			]
+		}
+	],
+	"cb_usha_after": [
+		{
+			"if": "cb_usha_history_medicines",
+			"then": [
+				{
+					"say": "priya",
+					"text": "Aspirin every morning for her heart, and she took it at seven. Theatre will keep blood ready. Nobody stops a heart aspirin without asking.",
+					"mood": "focused",
+					"gesture": "hold",
+					"to": "you"
+				}
+			],
+			"else": [
+				{
+					"say": "priya",
+					"text": "Nobody asked about blood thinners, Chief. At her age, with a heart, somebody should.",
+					"mood": "worried",
+					"gesture": "shrug",
+					"to": "you"
+				}
+			]
+		},
+		{
+			"say": "usha",
+			"text": "Is it the gallbladder? Speak clearly. I can't bear mumbling.",
+			"mood": "focused",
+			"head": "tilt",
+			"to": "you"
+		},
+		{
+			"choose": [
+				{
+					"tone": "Clear",
+					"text": "Yes. Stones, and the gallbladder is inflamed now. It comes out today, by keyhole.",
+					"trust": {
+						"usha": 3
+					},
+					"then": [
+						{
+							"say": "usha",
+							"text": "Clear and correct. Ten out of ten. Don't let it go to your head.",
+							"mood": "happy",
+							"head": "nod"
+						}
+					]
+				},
+				{
+					"tone": "Soft",
+					"text": "It looks like your gallbladder. We'll talk about the next steps soon.",
+					"then": [
+						{
+							"say": "usha",
+							"text": "Soon. Six out of ten. Be more precise next time.",
+							"mood": "calm",
+							"gesture": "wag"
+						}
+					]
+				}
+			]
+		},
+		{
+			"say": "priya",
+			"text": "Theatre 2 at two. Neha's terrified. She was in Mrs. Krishnan's class too.",
+			"mood": "happy",
+			"gesture": "point"
+		}
+	],
+	"cb_usha_ready": [
+		{
+			"say": "usha",
+			"text": "Neha Joshi. I remember you. Your handwriting was dreadful. Is it better now?",
+			"mood": "calm",
+			"gesture": "wag",
+			"to": "neha"
+		},
+		{
+			"say": "neha",
+			"text": "Yes, Ma'am. I write the theatre count. Everybody can read it.",
+			"mood": "worried",
+			"head": "nod",
+			"to": "usha"
+		},
+		{
+			"choose": [
+				{
+					"tone": "Kind",
+					"text": "She's the best scrub nurse we have, Mrs. Krishnan. You taught her well.",
+					"trust": {
+						"usha": 2
+					},
+					"then": [
+						{
+							"say": "usha",
+							"text": "I taught her to sit still. The rest she did herself.",
+							"mood": "happy",
+							"gesture": "chest"
+						}
+					]
+				},
+				{
+					"tone": "Joke",
+					"text": "If her handwriting slips, you can give her a detention after.",
+					"trust": {
+						"usha": 1
+					},
+					"then": [
+						{
+							"say": "usha",
+							"text": "A detention. I'd forgotten how much I enjoyed those.",
+							"mood": "happy",
+							"gesture": "shrug"
+						}
+					]
+				}
+			]
+		}
+	],
+	"cb_usha_after_op": [
+		{
+			"if": "op_usha_failed",
+			"then": [
+				{
+					"say": "iyer",
+					"text": "The liver bed oozed. I finished it. She's fine, Chief.",
+					"mood": "calm",
+					"gesture": "open_hands",
+					"to": "you"
+				}
+			],
+			"else": [
+				{
+					"say": "iyer",
+					"text": "Out by keyhole, stones and all. Four little scars. She'll inspect them.",
+					"mood": "happy",
+					"gesture": "open_hands",
+					"to": "you"
+				}
+			]
+		},
+		{
+			"say": "usha",
+			"text": "Well? Report, please. Clearly.",
+			"mood": "tired",
+			"head": "tilt",
+			"to": "you"
+		},
+		{
+			"choose": [
+				{
+					"tone": "Report",
+					"text": "It's out. Four small cuts, no stones left, and you'll go home in two days.",
+					"trust": {
+						"usha": 3
+					},
+					"then": [
+						{
+							"say": "usha",
+							"text": "Clear. Concise. Nine out of ten. Nobody gets ten.",
+							"mood": "happy",
+							"head": "nod"
+						}
+					]
+				},
+				{
+					"tone": "Rest",
+					"text": "All done. Rest now, and we'll talk when you're awake.",
+					"then": [
+						{
+							"say": "usha",
+							"text": "I am awake. But fine. Seven out of ten. Go away.",
+							"mood": "calm",
+							"gesture": "shrug"
+						}
+					]
+				}
+			]
+		}
+	],
+	"cb_rosy_arrive": [
+		{
+			"say": "rosy",
+			"text": "Young doctor. Before anything: somebody must feed Clementine. Half a tin at noon, half at six. She won't eat the cheap one.",
+			"mood": "worried",
+			"gesture": "point",
+			"to": "you"
+		},
+		{
+			"say": "priya",
+			"text": "Eighty-three, fell over her cat at six this morning. Lay on the floor until the milkman found her. Her left leg is short and turned out.",
+			"mood": "calm",
+			"gesture": "explain",
+			"to": "you"
+		},
+		{
+			"say": "rosy",
+			"text": "Clementine is not to blame. She has slept on that step for nine years. I'm the one who changed.",
+			"mood": "tired",
+			"gesture": "shrug"
+		},
+		{
+			"choose": [
+				{
+					"tone": "Kind",
+					"text": "We'll find somebody to feed Clementine. Now let me look after you.",
+					"trust": {
+						"rosy": 3
+					},
+					"then": [
+						{
+							"say": "rosy",
+							"text": "Thank you. The tin opener is in the second drawer. It sticks.",
+							"mood": "happy",
+							"gesture": "chest"
+						}
+					]
+				},
+				{
+					"tone": "Brisk",
+					"text": "The cat can wait an hour, Mrs. Pereira. Your hip can't.",
+					"trust": {
+						"rosy": -1
+					},
+					"then": [
+						{
+							"say": "rosy",
+							"text": "You've never met Clementine. But fine. Ask.",
+							"mood": "angry",
+							"gesture": "fold_arms"
+						}
+					]
+				}
+			]
+		}
+	],
+	"cb_rosy_after": [
+		{
+			"if": "cb_rosy_history_medicines",
+			"then": [
+				{
+					"say": "priya",
+					"text": "Warfarin for her heart, last dose last night, and I gave the vitamin K at breakfast. Dr. Bhatt will want her clotting before he lets anyone cut.",
+					"mood": "focused",
+					"gesture": "hold",
+					"to": "you"
+				}
+			],
+			"else": [
+				{
+					"say": "priya",
+					"text": "Nobody asked about her medicines, Chief. At eighty-three, with an irregular heart, somebody should.",
+					"mood": "worried",
+					"gesture": "shrug",
+					"to": "you"
+				}
+			]
+		},
+		{
+			"if": "cb_rosy_history_allergy",
+			"then": [
+				{
+					"say": "priya",
+					"text": "And penicillin, since 1971. She finished the Chopin first. I've put it on the board.",
+					"mood": "calm",
+					"gesture": "point",
+					"to": "you"
+				}
+			]
+		},
+		{
+			"say": "rosy",
+			"text": "Will I play again? I don't play with my hip, but I need it to get to the piano.",
+			"mood": "worried",
+			"head": "tilt",
+			"to": "you"
+		},
+		{
+			"choose": [
+				{
+					"tone": "Honest",
+					"text": "With a screw and a plate, you'll be walking with a frame in days, and to the piano in weeks.",
+					"trust": {
+						"rosy": 2
+					},
+					"then": [
+						{
+							"say": "rosy",
+							"text": "Weeks. My last pupil has a recital in March. I'll be there. On a frame, if necessary.",
+							"mood": "happy",
+							"gesture": "fold_arms"
+						}
+					]
+				},
+				{
+					"tone": "Reassure",
+					"text": "You'll be back at the piano in no time.",
+					"then": [
+						{
+							"say": "rosy",
+							"text": "No time. Doctors always say no time. Time is the only thing I have plenty of.",
+							"mood": "calm",
+							"gesture": "shrug"
+						}
+					]
+				}
+			]
+		},
+		{
+			"say": "priya",
+			"text": "Theatre 3 at two. I'll feed the cat on my way home. Half a tin. The good one.",
+			"mood": "happy",
+			"gesture": "point"
+		}
+	],
+	"cb_rosy_ready": [
+		{
+			"say": "rosy",
+			"text": "Dr. Bhatt says I'll be awake behind a screen. May we have music? Something with a steady tempo.",
+			"mood": "calm",
+			"gesture": "open_hands",
+			"to": "you"
+		},
+		{
+			"say": "bhatt",
+			"text": "I've found some Chopin on my phone. Nocturnes. Tom says they're too sad for theatre.",
+			"mood": "happy",
+			"gesture": "shrug",
+			"to": "you"
+		},
+		{
+			"choose": [
+				{
+					"tone": "Yes",
+					"text": "Chopin it is. Steady tempo, steady hands.",
+					"trust": {
+						"rosy": 2
+					},
+					"then": [
+						{
+							"say": "rosy",
+							"text": "Steady tempo, steady hands. You'd have made a pianist. A poor one, but a pianist.",
+							"mood": "happy",
+							"gesture": "chest"
+						}
+					]
+				},
+				{
+					"tone": "Joke",
+					"text": "Something fast, please. Dr. Bhatt works to the beat.",
+					"trust": {
+						"rosy": 1
+					},
+					"then": [
+						{
+							"say": "rosy",
+							"text": "Then no Chopin. He'd rush. Everybody rushes Chopin.",
+							"mood": "happy",
+							"gesture": "wag"
+						}
+					]
+				}
+			]
+		}
+	],
+	"cb_rosy_after_op": [
+		{
+			"if": "op_rosy_failed",
+			"then": [
+				{
+					"say": "bhatt",
+					"text": "Old bone, and it fought me. I finished the screws. It'll hold, Chief.",
+					"mood": "calm",
+					"gesture": "open_hands",
+					"to": "you"
+				}
+			],
+			"else": [
+				{
+					"say": "bhatt",
+					"text": "Lined up, screw dead centre, plate flat. She hummed the whole way through. In tune.",
+					"mood": "happy",
+					"gesture": "open_hands",
+					"to": "you"
+				}
+			]
+		},
+		{
+			"say": "rosy",
+			"text": "Is it done? I heard you counting. You count well. Most people rush.",
+			"mood": "tired",
+			"head": "tilt",
+			"to": "you"
+		},
+		{
+			"choose": [
+				{
+					"tone": "Warm",
+					"text": "It's done. Priya is feeding Clementine tonight. The good tin.",
+					"trust": {
+						"rosy": 3
+					},
+					"then": [
+						{
+							"say": "rosy",
+							"text": "The good tin. Then I can sleep. Thank you, young doctor.",
+							"mood": "happy",
+							"gesture": "chest"
+						}
+					]
+				},
+				{
+					"tone": "Plan",
+					"text": "It's done. The physio will have you standing tomorrow.",
+					"then": [
+						{
+							"say": "rosy",
+							"text": "Tomorrow. Scales at seven, then. Walking scales.",
+							"mood": "calm",
+							"head": "nod"
+						}
+					]
+				}
+			]
+		}
+	],
+	"cb_gurdeep_arrive": [
+		{
+			"say": "gurdeep",
+			"text": "Doctor. I walked in. That's good, yes? A man who walks in can't be too bad.",
+			"mood": "worried",
+			"gesture": "open_hands",
+			"to": "you"
+		},
+		{
+			"say": "priya",
+			"text": "Forty-five. His lorry rolled at the top of the ghat. The steering wheel hit him under the left ribs. Pressure's ninety-five and falling. He's pale and sweating.",
+			"mood": "worried",
+			"gesture": "point",
+			"to": "you"
+		},
+		{
+			"say": "gurdeep",
+			"text": "Eighteen tonnes of onions on the road. The village is collecting them. Somebody should tell my company.",
+			"mood": "tired",
+			"gesture": "shrug"
+		},
+		{
+			"choose": [
+				{
+					"tone": "Calm",
+					"text": "Your company can wait. Lie still, and tell me exactly where it hurts.",
+					"trust": {
+						"gurdeep": 3
+					},
+					"then": [
+						{
+							"say": "gurdeep",
+							"text": "Still. Okay. I've been still for twenty-five years in that cab. I can do still.",
+							"mood": "calm",
+							"head": "nod"
+						}
+					]
+				},
+				{
+					"tone": "Urgent",
+					"text": "Walking in doesn't mean it isn't bad. We need to move fast.",
+					"trust": {
+						"gurdeep": 1
+					},
+					"then": [
+						{
+							"say": "gurdeep",
+							"text": "Fast. Good. I don't like the way this feels.",
+							"mood": "worried",
+							"head": "down"
+						}
+					]
+				}
+			]
+		}
+	],
+	"cb_gurdeep_after": [
+		{
+			"if": "cb_gurdeep_history_pain",
+			"then": [
+				{
+					"say": "priya",
+					"text": "Pain in his left shoulder tip, with a blow under the left ribs. That's blood under his diaphragm. I'll ring theatre now.",
+					"mood": "focused",
+					"gesture": "hold",
+					"to": "you"
+				}
+			],
+			"else": [
+				{
+					"say": "priya",
+					"text": "Nobody asked where else it hurts, Chief. His pressure's still dropping. Theatre needs to know what we think it is.",
+					"mood": "worried",
+					"gesture": "shrug",
+					"to": "you"
+				}
+			]
+		},
+		{
+			"say": "gurdeep",
+			"text": "Is it bad, doctor? Tell me straight. I drive the ghat. I like things straight.",
+			"mood": "worried",
+			"head": "tilt",
+			"to": "you"
+		},
+		{
+			"choose": [
+				{
+					"tone": "Straight",
+					"text": "Your spleen is probably bleeding. We need to operate now, before you lose much more.",
+					"trust": {
+						"gurdeep": 3
+					},
+					"then": [
+						{
+							"say": "gurdeep",
+							"text": "Now. Straight. Thank you. Ring my brother. He's driving from Nashik.",
+							"mood": "calm",
+							"head": "nod"
+						}
+					]
+				},
+				{
+					"tone": "Gentle",
+					"text": "Something inside is bleeding. We're going to fix it.",
+					"trust": {
+						"gurdeep": 1
+					},
+					"then": [
+						{
+							"say": "gurdeep",
+							"text": "Fix it. Okay. I trust you. I've no choice, but I trust you.",
+							"mood": "worried",
+							"gesture": "shrug"
+						}
+					]
+				}
+			]
+		},
+		{
+			"say": "priya",
+			"text": "Theatre 1 is open. Dr. Iyer's scrubbing. Blood's on its way down.",
+			"mood": "focused",
+			"gesture": "point"
+		}
+	],
+	"cb_gurdeep_ready": [
+		{
+			"say": "gurdeep",
+			"text": "Doctor, if something happens, my brother has the lorry papers. And the onion money. Tell him.",
+			"mood": "worried",
+			"gesture": "open_hands",
+			"to": "you"
+		},
+		{
+			"say": "khan",
+			"text": "Nothing's happening except sleep. Count backwards from ten for me.",
+			"mood": "calm",
+			"head": "nod",
+			"to": "gurdeep"
+		},
+		{
+			"choose": [
+				{
+					"tone": "Promise",
+					"text": "I'll tell him myself. And I'll tell him you were brave.",
+					"trust": {
+						"gurdeep": 2
+					},
+					"then": [
+						{
+							"say": "gurdeep",
+							"text": "Brave. He won't believe it. Ten, nine, eight...",
+							"mood": "calm",
+							"head": "nod"
+						}
+					]
+				},
+				{
+					"tone": "Steady",
+					"text": "Nothing will happen. We've done this many times.",
+					"then": [
+						{
+							"say": "gurdeep",
+							"text": "Many times. Good. Ten, nine...",
+							"mood": "calm",
+							"head": "nod"
+						}
+					]
+				}
+			]
+		}
+	],
+	"cb_gurdeep_after_op": [
+		{
+			"if": "op_gurdeep_failed",
+			"then": [
+				{
+					"say": "iyer",
+					"text": "It bled hard. I finished it. He's alive, Chief, and his pressure's holding.",
+					"mood": "calm",
+					"gesture": "open_hands",
+					"to": "you"
+				}
+			],
+			"else": [
+				{
+					"say": "iyer",
+					"text": "Spleen out, belly dry, nothing else broken. You moved fast. That's what saved him.",
+					"mood": "happy",
+					"gesture": "open_hands",
+					"to": "you"
+				}
+			]
+		},
+		{
+			"say": "gurdeep",
+			"text": "Doctor. My brother came? Did he bring the onions back?",
+			"mood": "tired",
+			"head": "tilt",
+			"to": "you"
+		},
+		{
+			"choose": [
+				{
+					"tone": "Warm",
+					"text": "He's here. He's been in the corridor for two hours. No onions.",
+					"trust": {
+						"gurdeep": 2
+					},
+					"then": [
+						{
+							"say": "gurdeep",
+							"text": "No onions. Typical. Send him in.",
+							"mood": "happy",
+							"gesture": "shrug"
+						}
+					]
+				},
+				{
+					"tone": "Advice",
+					"text": "No spleen means vaccines before you go home, and antibiotics for any fever. I'll explain it all.",
+					"trust": {
+						"gurdeep": 1
+					},
+					"then": [
+						{
+							"say": "gurdeep",
+							"text": "Vaccines. Like a child. Fine. You saved my life. I'll take the vaccines.",
+							"mood": "calm",
+							"head": "nod"
+						}
+					]
+				}
+			]
+		}
+	],
+	"cb_anwar_arrive": [
+		{
+			"say": "anwar",
+			"text": "Assalamu alaikum, doctor. Excuse the cough. It's older than you.",
+			"mood": "tired",
+			"gesture": "chest",
+			"to": "you"
+		},
+		{
+			"say": "priya",
+			"text": "Sixty-seven, retired tailor. A lump in his left groin that's been stuck since he coughed at dawn. It's tight, and tender. And he hasn't passed wind.",
+			"mood": "calm",
+			"gesture": "point",
+			"to": "you"
+		},
+		{
+			"say": "anwar",
+			"text": "Forty years of beedis, my son says. He's right. Don't tell him I said so.",
+			"mood": "calm",
+			"gesture": "shrug"
+		},
+		{
+			"choose": [
+				{
+					"tone": "Warm",
+					"text": "Walaikum assalam, Mr. Hussain. Let's see what that cough has done.",
+					"trust": {
+						"anwar": 3
+					},
+					"then": [
+						{
+							"say": "anwar",
+							"text": "Such good manners. Your mother raised you well.",
+							"mood": "happy",
+							"gesture": "chest"
+						}
+					]
+				},
+				{
+					"tone": "Brisk",
+					"text": "Lie back, and try not to cough while I look.",
+					"then": [
+						{
+							"say": "anwar",
+							"text": "Try not to cough. I've been trying for forty years.",
+							"mood": "calm",
+							"gesture": "shrug"
+						}
+					]
+				}
+			]
+		}
+	],
+	"cb_anwar_after": [
+		{
+			"if": "cb_anwar_history_meal",
+			"then": [
+				{
+					"say": "priya",
+					"text": "A paratha at five, after prayers. A big one. Dr. Khan will want to know.",
+					"mood": "focused",
+					"gesture": "hold",
+					"to": "you"
+				}
+			],
+			"else": [
+				{
+					"say": "priya",
+					"text": "Nobody asked when he last ate, Chief. Dr. Khan will.",
+					"mood": "worried",
+					"gesture": "shrug",
+					"to": "you"
+				}
+			]
+		},
+		{
+			"say": "anwar",
+			"text": "Will the cough break your stitches? Tell me honestly. I'm a tailor. I know about stitches.",
+			"mood": "worried",
+			"head": "tilt",
+			"to": "you"
+		},
+		{
+			"choose": [
+				{
+					"tone": "Honest",
+					"text": "It could, so we'll use mesh, strong and flat. And you hold a pillow on it when you cough.",
+					"trust": {
+						"anwar": 2
+					},
+					"then": [
+						{
+							"say": "anwar",
+							"text": "A pillow. Like pressing a seam before you sew. Sensible.",
+							"mood": "happy",
+							"head": "nod"
+						}
+					]
+				},
+				{
+					"tone": "Reassure",
+					"text": "Don't worry about the stitches. They'll hold.",
+					"then": [
+						{
+							"say": "anwar",
+							"text": "Every apprentice says that. Then the seam splits at the wedding.",
+							"mood": "calm",
+							"gesture": "wag"
+						}
+					]
+				}
+			]
+		},
+		{
+			"say": "priya",
+			"text": "Theatre 2 at two. Neha's scrubbing. He's asked to inspect her knots.",
+			"mood": "happy",
+			"gesture": "point"
+		}
+	],
+	"cb_anwar_ready": [
+		{
+			"say": "anwar",
+			"text": "Young lady. Your stitches. Small and even, yes? Like a good suit.",
+			"mood": "calm",
+			"gesture": "wag",
+			"to": "neha"
+		},
+		{
+			"say": "neha",
+			"text": "Small and even, Mr. Hussain. I promise. The Chief does the stitching.",
+			"mood": "happy",
+			"head": "nod",
+			"to": "anwar"
+		},
+		{
+			"choose": [
+				{
+					"tone": "Promise",
+					"text": "Small, even, and strong enough for that cough.",
+					"trust": {
+						"anwar": 2
+					},
+					"then": [
+						{
+							"say": "anwar",
+							"text": "Strong enough for my cough. That's a big promise. I accept.",
+							"mood": "happy",
+							"gesture": "chest"
+						}
+					]
+				},
+				{
+					"tone": "Joke",
+					"text": "If you don't like the seam, you can take it in yourself.",
+					"trust": {
+						"anwar": 1
+					},
+					"then": [
+						{
+							"say": "anwar",
+							"text": "Take it in. At my age. I'll let it out instead. More biryani.",
+							"mood": "happy",
+							"gesture": "shrug"
+						}
+					]
+				}
+			]
+		}
+	],
+	"cb_anwar_after_op": [
+		{
+			"if": "op_anwar_failed",
+			"then": [
+				{
+					"say": "iyer",
+					"text": "The loop was tight. I finished the repair. It'll hold, Chief.",
+					"mood": "calm",
+					"gesture": "open_hands",
+					"to": "you"
+				}
+			],
+			"else": [
+				{
+					"say": "iyer",
+					"text": "Bowel's pink, mesh is flat, and the stitches are very even. He'll check.",
+					"mood": "happy",
+					"gesture": "open_hands",
+					"to": "you"
+				}
+			]
+		},
+		{
+			"say": "anwar",
+			"text": "Show me the seam. ...Hm. Good seam. Small. Even. Who taught you?",
+			"mood": "tired",
+			"head": "tilt",
+			"to": "you"
+		},
+		{
+			"choose": [
+				{
+					"tone": "Humble",
+					"text": "A lot of patient people. Now you're one of them.",
+					"trust": {
+						"anwar": 2
+					},
+					"then": [
+						{
+							"say": "anwar",
+							"text": "Patient people. Yes. That's how you learn anything.",
+							"mood": "happy",
+							"gesture": "chest"
+						}
+					]
+				},
+				{
+					"tone": "Advice",
+					"text": "Hold the pillow when you cough, and no lifting for six weeks.",
+					"trust": {
+						"anwar": 1
+					},
+					"then": [
+						{
+							"say": "anwar",
+							"text": "Pillow. No lifting. My daughter-in-law will be delighted. She's wanted me to sit down for years.",
+							"mood": "happy",
+							"gesture": "shrug"
+						}
+					]
+				}
+			]
+		}
+	],
+	"cb_kavita_arrive": [
+		{
+			"say": "kavita",
+			"text": "Ticket? No, sorry. Habit. Doctor, I've got pain here and a son who won't look up from his phone.",
+			"mood": "tired",
+			"gesture": "open_hands",
+			"to": "you"
+		},
+		{
+			"say": "priya",
+			"text": "Forty-four, bus conductor on the forty-two. Pain under the right ribs since her night shift, shivering since four. She came in on her own bus.",
+			"mood": "calm",
+			"gesture": "point",
+			"to": "you"
+		},
+		{
+			"say": "kavita",
+			"text": "The driver didn't charge me. First time in eleven years. I knew it was serious.",
+			"mood": "worried",
+			"gesture": "shrug"
+		},
+		{
+			"choose": [
+				{
+					"tone": "Warm",
+					"text": "Let's make the free ride worth it. Tell me about the pain.",
+					"trust": {
+						"kavita": 3
+					},
+					"then": [
+						{
+							"say": "kavita",
+							"text": "Worth it. I like that. Okay. Ask.",
+							"mood": "happy",
+							"head": "nod"
+						}
+					]
+				},
+				{
+					"tone": "Brisk",
+					"text": "Lie back. Questions first, then we'll see.",
+					"then": [
+						{
+							"say": "kavita",
+							"text": "Questions. Fine. I ask questions all night. 'Where to?' 'Change?'",
+							"mood": "calm",
+							"gesture": "shrug"
+						}
+					]
+				}
+			]
+		}
+	],
+	"cb_kavita_after": [
+		{
+			"if": "cb_kavita_history_medicines",
+			"then": [
+				{
+					"say": "priya",
+					"text": "Two aspirin at six, for what she thought was acidity. Theatre will keep blood ready.",
+					"mood": "focused",
+					"gesture": "hold",
+					"to": "you"
+				}
+			],
+			"else": [
+				{
+					"say": "priya",
+					"text": "Nobody asked what she's taken, Chief. People take all sorts before they come in.",
+					"mood": "worried",
+					"gesture": "shrug",
+					"to": "you"
+				}
+			]
+		},
+		{
+			"say": "kavita",
+			"text": "Was it the vada pav? Tell me it wasn't the vada pav. I can't give up vada pav.",
+			"mood": "worried",
+			"head": "tilt",
+			"to": "you"
+		},
+		{
+			"choose": [
+				{
+					"tone": "Honest",
+					"text": "Stones in your gallbladder, months in the making. The vada pav only rang the bell.",
+					"trust": {
+						"kavita": 3
+					},
+					"then": [
+						{
+							"say": "kavita",
+							"text": "Only rang the bell. Like a passenger. I can live with that.",
+							"mood": "happy",
+							"gesture": "point"
+						}
+					]
+				},
+				{
+					"tone": "Strict",
+					"text": "Fried food makes it worse. Less of it, after this.",
+					"trust": {
+						"kavita": -1
+					},
+					"then": [
+						{
+							"say": "kavita",
+							"text": "Less vada pav. You're a cruel person, doctor.",
+							"mood": "angry",
+							"gesture": "fold_arms"
+						}
+					]
+				}
+			]
+		},
+		{
+			"say": "priya",
+			"text": "Theatre 2 at two. Her son's asked for the wi-fi password. I've said no.",
+			"mood": "happy",
+			"gesture": "point"
+		}
+	],
+	"cb_kavita_ready": [
+		{
+			"say": "kavita",
+			"text": "How long will it take? The forty-two does the round trip in fifty minutes.",
+			"mood": "focused",
+			"head": "tilt",
+			"to": "you"
+		},
+		{
+			"say": "tom",
+			"text": "We're slower than the forty-two. But we stop at every stop, and nobody falls off.",
+			"mood": "happy",
+			"gesture": "shrug",
+			"to": "kavita"
+		},
+		{
+			"choose": [
+				{
+					"tone": "Honest",
+					"text": "About an hour. Your son will see you when you wake up.",
+					"trust": {
+						"kavita": 2
+					},
+					"then": [
+						{
+							"say": "kavita",
+							"text": "An hour. Tell him to look up from his phone when I come out. Once.",
+							"mood": "calm",
+							"head": "nod"
+						}
+					]
+				},
+				{
+					"tone": "Joke",
+					"text": "About ten minutes longer than the forty-two. No tickets needed.",
+					"trust": {
+						"kavita": 1
+					},
+					"then": [
+						{
+							"say": "kavita",
+							"text": "No tickets. Best ride I'll ever get.",
+							"mood": "happy",
+							"gesture": "chest"
+						}
+					]
+				}
+			]
+		}
+	],
+	"cb_kavita_after_op": [
+		{
+			"if": "op_kavita_failed",
+			"then": [
+				{
+					"say": "iyer",
+					"text": "The liver bed oozed. I finished it. She's fine, Chief.",
+					"mood": "calm",
+					"gesture": "open_hands",
+					"to": "you"
+				}
+			],
+			"else": [
+				{
+					"say": "iyer",
+					"text": "Out by keyhole. Four little scars. She asked if she could keep the stones for her ticket machine.",
+					"mood": "happy",
+					"gesture": "open_hands",
+					"to": "you"
+				}
+			]
+		},
+		{
+			"say": "kavita",
+			"text": "Is my son here? Is he on his phone?",
+			"mood": "tired",
+			"head": "tilt",
+			"to": "you"
+		},
+		{
+			"choose": [
+				{
+					"tone": "Warm",
+					"text": "He's here. He put the phone away when they wheeled you out. He's been holding your ticket machine.",
+					"trust": {
+						"kavita": 3
+					},
+					"then": [
+						{
+							"say": "kavita",
+							"text": "He put it away? Then I really was ill.",
+							"mood": "happy",
+							"gesture": "chest"
+						}
+					]
+				},
+				{
+					"tone": "Plan",
+					"text": "Home in two days. Light work for two weeks. No night shifts.",
+					"then": [
+						{
+							"say": "kavita",
+							"text": "No night shifts. The depot will have to find someone. They'll hate it. Good.",
+							"mood": "happy",
+							"gesture": "shrug"
+						}
+					]
+				}
+			]
+		}
+	],
+	"monsoon_rota_arrive": [
+		{
+			"if": "rounds_a",
+			"then": [
+				{
+					"say": "priya",
+					"text": "Half the night shift is stuck behind the flooded underpass, Chief. One of them rang from a rickshaw floating past the post office.",
+					"mood": "tired",
+					"gesture": "open_hands",
+					"to": "you"
+				}
+			]
+		},
+		{
+			"if": "rounds_b",
+			"then": [
+				{
+					"say": "priya",
+					"text": "The rain's taken out the road from the nurses' hostel. Three can't get in. One swam. Don't tell Grace.",
+					"mood": "tired",
+					"gesture": "shrug",
+					"to": "you"
+				}
+			]
+		},
+		{
+			"if": "rounds_c",
+			"then": [
+				{
+					"say": "priya",
+					"text": "Two off with fever, two stuck at home with water in the kitchen. Rota, Chief, and quickly.",
+					"mood": "worried",
+					"gesture": "hold",
+					"to": "you"
+				}
+			]
+		},
+		{
+			"say": "priya",
+			"text": "Every bed needs a name before eight. The rain doesn't care.",
+			"mood": "focused",
+			"gesture": "point",
+			"to": "you"
+		}
+	],
+	"monsoon_triage_arrive": [
+		{
+			"if": "rounds_a",
+			"then": [
+				{
+					"say": "priya",
+					"text": "A bus aquaplaned into a lorry on the highway. The rain's so heavy the ambulances can't see the road.",
+					"mood": "worried",
+					"gesture": "open_hands",
+					"to": "you"
+				}
+			]
+		},
+		{
+			"if": "rounds_b",
+			"then": [
+				{
+					"say": "priya",
+					"text": "A pile-up under the flyover. Six vehicles. The water was up to the wheels and nobody slowed down.",
+					"mood": "worried",
+					"gesture": "point",
+					"to": "you"
+				}
+			]
+		},
+		{
+			"if": "rounds_c",
+			"then": [
+				{
+					"say": "priya",
+					"text": "The ghat road again. A landslide in front of a bus, and a line of bikes behind it.",
+					"mood": "worried",
+					"gesture": "open_hands",
+					"to": "you"
+				}
+			]
+		},
+		{
+			"say": "priya",
+			"text": "They're soaked and cold, and cold hides shock. Red now, yellow soon, green walks, black beyond help. Tag them, Chief.",
+			"mood": "focused",
+			"gesture": "point",
+			"to": "you"
+		}
+	],
+	"festival_rota_arrive": [
+		{
+			"if": "rounds_a",
+			"then": [
+				{
+					"say": "priya",
+					"text": "Half the nurses are on festival leave, Chief. The other half want to be. Rota.",
+					"mood": "tired",
+					"gesture": "open_hands",
+					"to": "you"
+				}
+			]
+		},
+		{
+			"if": "rounds_b",
+			"then": [
+				{
+					"say": "priya",
+					"text": "Two of the regulars are at their villages, one's at her sister's wedding, and the agency is charging festival rates. Rota, Chief.",
+					"mood": "tired",
+					"gesture": "shrug",
+					"to": "you"
+				}
+			]
+		},
+		{
+			"if": "rounds_c",
+			"then": [
+				{
+					"say": "priya",
+					"text": "Three nurses on leave, two who ate the canteen's festival sweets and regret it. Rota, Chief.",
+					"mood": "tired",
+					"gesture": "fold_arms",
+					"to": "you"
+				}
+			]
+		},
+		{
+			"say": "priya",
+			"text": "Every bed needs a name before eight. Then I'm going to see the fireworks. From the window.",
+			"mood": "calm",
+			"gesture": "point",
+			"to": "you"
+		}
+	],
+	"festival_triage_arrive": [
+		{
+			"if": "rounds_a",
+			"then": [
+				{
+					"say": "priya",
+					"text": "The festival grounds, Chief. A firework stall went up, and the crowd ran into the stage. The stage fell.",
+					"mood": "worried",
+					"gesture": "open_hands",
+					"to": "you"
+				}
+			]
+		},
+		{
+			"if": "rounds_b",
+			"then": [
+				{
+					"say": "priya",
+					"text": "A crush at the festival gate. Too many people, one gate, and a firework somebody let off to make them hurry.",
+					"mood": "worried",
+					"gesture": "point",
+					"to": "you"
+				}
+			]
+		},
+		{
+			"if": "rounds_c",
+			"then": [
+				{
+					"say": "priya",
+					"text": "The lighting tower at the festival came down in the wind. Then the firework stall caught. Everybody's coming here.",
+					"mood": "worried",
+					"gesture": "open_hands",
+					"to": "you"
+				}
+			]
+		},
+		{
+			"say": "priya",
+			"text": "Burns, crushes, and a lot of shouting. The loud ones aren't the sick ones. Tag them, Chief.",
+			"mood": "focused",
+			"gesture": "point",
+			"to": "you"
+		}
+	],
+	"festival_triage_after": [
+		{
+			"if": "festival_triage_under",
+			"then": [
+				{
+					"say": "priya",
+					"text": "One you tagged to wait went grey on the trolley, Chief. Dr. Iyer pulled them forward. They'll live. Just.",
+					"mood": "worried",
+					"gesture": "hold",
+					"to": "you"
+				}
+			],
+			"else": [
+				{
+					"if": "festival_triage_right",
+					"then": [
+						{
+							"say": "priya",
+							"text": "Every tag right. The burns unit says it's the best-sorted festival they've ever had. They've had a lot.",
+							"mood": "happy",
+							"head": "nod",
+							"to": "you"
+						}
+					],
+					"else": [
+						{
+							"say": "priya",
+							"text": "Sent in. Dr. Iyer will check the tags again inside. One or two were hopeful.",
+							"mood": "calm",
+							"gesture": "shrug",
+							"to": "you"
+						}
+					]
+				}
+			]
+		}
+	],
+	"outbreak_rota_arrive": [
+		{
+			"if": "rounds_a",
+			"then": [
+				{
+					"say": "priya",
+					"text": "The stomach bug's taken two more nurses, Chief. Lata's on the bathroom floor at home, phoning in her apologies.",
+					"mood": "tired",
+					"gesture": "open_hands",
+					"to": "you"
+				}
+			]
+		},
+		{
+			"if": "rounds_b",
+			"then": [
+				{
+					"say": "priya",
+					"text": "Six new admissions with the bug overnight, and three of our nurses with it too. The water's still bad in the old town.",
+					"mood": "worried",
+					"gesture": "hold",
+					"to": "you"
+				}
+			]
+		},
+		{
+			"if": "rounds_c",
+			"then": [
+				{
+					"say": "priya",
+					"text": "Neha's on loan from theatre. The list's cancelled, because half the anaesthetists have the bug.",
+					"mood": "tired",
+					"gesture": "shrug",
+					"to": "you"
+				}
+			]
+		},
+		{
+			"say": "priya",
+			"text": "The rule that matters this week: the bug never shares a nurse with anyone who can't fight it. Every bed needs a name by eight.",
+			"mood": "focused",
+			"gesture": "wag",
+			"to": "you"
+		}
+	],
+	"outbreak_rota_after": [
+		{
+			"if": "outbreak_rota_gap",
+			"then": [
+				{
+					"say": "priya",
+					"text": "Somebody's got nobody tonight, Chief. In an outbreak. I'll stay and cover them myself.",
+					"mood": "tired",
+					"gesture": "fold_arms",
+					"to": "you"
+				}
+			],
+			"else": [
+				{
+					"if": "outbreak_rota_right",
+					"then": [
+						{
+							"say": "priya",
+							"text": "That holds. The bug stays on one side of the floor, and the fragile ones stay on the other. I'll sign it.",
+							"mood": "happy",
+							"head": "nod",
+							"to": "you"
+						}
+					],
+					"else": [
+						{
+							"say": "priya",
+							"text": "Signed. It'll do. But somebody's hands go from the bug to someone who can't fight it, and that worries me.",
+							"mood": "worried",
+							"gesture": "shrug",
+							"to": "you"
+						}
+					]
+				}
+			]
+		},
+		{
+			"if": "staff_low",
+			"then": [
+				{
+					"say": "priya",
+					"text": "We can't keep doing this, Chief. We need more nurses, not cleverer rotas.",
+					"mood": "focused",
+					"gesture": "open_hands",
+					"to": "you"
+				}
+			]
+		}
+	],
+	"outbreak_triage_arrive": [
+		{
+			"say": "priya",
+			"text": "The bug's in every other bed, Chief, and now the highway's sent a bus crash. They don't take turns.",
+			"mood": "worried",
+			"gesture": "open_hands",
+			"to": "you"
+		},
+		{
+			"say": "priya",
+			"text": "Red now, yellow soon, green walks, black beyond help. Tag them, and wash your hands after.",
+			"mood": "focused",
+			"gesture": "point",
+			"to": "you"
 		}
 	],
 	"board_report": [

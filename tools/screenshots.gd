@@ -402,6 +402,44 @@ func _ward_shots() -> void:
 		return w.conversation == "hc_family_complaint" and w.talk_ui.is_choosing(), chief)
 	await _ward_shot("129-day-50-tomorrow", 49, chair, "call", hooked, chief)
 
+	# Stage 12: no two weeks the same. Days are found for the sample doctor.
+	var sample := sample_profile_on_ward(43, chair)
+	var first_day := func(test: Callable) -> int:
+		var day := 43
+		while not test.call(day):
+			day += 1
+		return day
+	var rains: int = first_day.call(func(d: int) -> bool:
+		return ChiefDays.event_starts(sample, d) and ChiefDays.event_for(sample, d) == "monsoon" \
+			and ChiefDays.walkin_for(sample, d).is_empty())
+	await _ward_shot("130-the-rains-arrive", rains, chair, "", func(w: Ward) -> bool:
+		return w.conversation == "rounds_morning" and w.talk_ui.line_text().contains("The rains have come") \
+			and not w.talk_ui.is_typing(), chief)
+	var fair: int = first_day.call(func(d: int) -> bool:
+		return ChiefDays.event_for(sample, d) == "festival" and ChiefDays.rounds_puzzle(sample, d) == "triage" \
+			and ChiefDays.walkin_for(sample, d).is_empty() and not ChiefDays.busy_day(sample, d))
+	await _ward_shot("131-festival-crash", fair, chair, "triage", func(w: Ward) -> bool:
+		return w.view is TriageView and (w.view.task as TriageTask).tags.size() >= 2 \
+			and (w.view.task as TriageTask).selected.is_empty(), chief)
+	var bug: int = first_day.call(func(d: int) -> bool:
+		return ChiefDays.event_for(sample, d) == "outbreak" and ChiefDays.walkin_for(sample, d).is_empty())
+	await _ward_shot("132-outbreak-rota", bug, chair, "rota", func(w: Ward) -> bool:
+		return w.view is RotaView and (w.view.task as RotaTask).assigned.size() >= 3 \
+			and (w.view.task as RotaTask).selected.is_empty(), chief)
+	var walkin := ChiefDays.walkin_for(sample, ChiefDays.WALKIN_FROM)
+	await _ward_shot("133-a-walk-in", ChiefDays.WALKIN_FROM, chair, "patient", func(w: Ward) -> bool:
+		return w.conversation == "cb_%s_arrive" % walkin and w.talk_ui.is_choosing(), chief)
+	await _ward_shot("134-walk-in-on-the-table", ChiefDays.WALKIN_FROM, chair, "op", func(w: Ward) -> bool:
+		return w.operation != null and w.operation.phase == "timeout", chief)
+	var vip: int = first_day.call(func(d: int) -> bool:
+		return ChiefDays.call_for(sample, d) == "vip_queue" and ChiefDays.patient_today(sample, d).is_empty())
+	await _ward_shot("135-somebody-important", vip, chair, "call", func(w: Ward) -> bool:
+		return w.conversation == "hc_vip_queue" and w.talk_ui.is_choosing(), chief)
+	var eve: int = first_day.call(func(d: int) -> bool:
+		return ChiefDays.event_starts(sample, d + 1) and ChiefDays.walkin_for(sample, d + 1).is_empty() \
+			and ChiefDays.walkin_for(sample, d).is_empty() and not ChiefDays.is_report_day(d))
+	await _ward_shot("136-next-week", eve, chair, "call", hooked, chief)
+
 
 ## The drug chart with a line already flagged: the list, or the reasons.
 static func _chart_at(ward: Ward, picking: bool) -> bool:

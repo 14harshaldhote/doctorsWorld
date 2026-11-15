@@ -51,5 +51,13 @@
 	"verghese": {"name": "Mrs. Anjali Verghese", "role": "Patient · 47, bank cashier", "voice": 1.04, "trust": 40, "gender": "female", "pace": 1.02},
 	"relative_a": {"name": "Mr. Gaikwad", "role": "A son, with a complaint", "voice": 0.88, "gender": "male", "pace": 1.04},
 	"relative_b": {"name": "Mrs. Lele", "role": "A daughter, with a complaint", "voice": 1.06, "gender": "female", "pace": 1.04},
-	"relative_c": {"name": "Ms. Siddiqui", "role": "A sister, with a complaint", "voice": 1.12, "gender": "female", "pace": 1.06}
+	"relative_c": {"name": "Ms. Siddiqui", "role": "A sister, with a complaint", "voice": 1.12, "gender": "female", "pace": 1.06},
+	"arif": {"name": "Arif Mirza", "role": "Patient · 19, engineering student", "voice": 1.1, "trust": 45, "gender": "male", "pace": 1.06},
+	"mohan": {"name": "Mohan Tiwari", "role": "Patient · 54, delivers gas cylinders", "voice": 0.92, "trust": 45, "gender": "male", "pace": 1.04},
+	"savitri": {"name": "Mrs. Savitri Kale", "role": "Patient · 66, runs the tea stall at the bus stand", "voice": 0.96, "trust": 45, "gender": "female", "pace": 1.02},
+	"usha": {"name": "Mrs. Usha Krishnan", "role": "Patient · 61, retired headmistress", "voice": 1.0, "trust": 40, "gender": "female", "pace": 0.98},
+	"rosy": {"name": "Mrs. Rosy Pereira", "role": "Patient · 83, retired piano teacher", "voice": 1.06, "trust": 45, "gender": "female", "pace": 0.94},
+	"gurdeep": {"name": "Gurdeep Sandhu", "role": "Patient · 45, lorry driver", "voice": 0.86, "trust": 45, "gender": "male", "pace": 1.0},
+	"anwar": {"name": "Anwar Hussain", "role": "Patient · 67, retired tailor", "voice": 0.9, "trust": 45, "gender": "male", "pace": 0.94},
+	"kavita": {"name": "Kavita Bhave", "role": "Patient · 44, bus conductor", "voice": 1.02, "trust": 40, "gender": "female", "pace": 1.05}
 }

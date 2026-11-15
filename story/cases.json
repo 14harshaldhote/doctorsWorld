@@ -1968,5 +1968,1155 @@
 				"walks": "He walks to the kerb, still on the phone, still late."
 			}
 		]
+	},
+	"festival_triage": {
+		"kind": "triage",
+		"place": "The festival grounds",
+		"actor": "priya",
+		"brief": {
+			"easy": "Six off the first ambulances from the festival grounds. Red now, yellow soon, green walks, black beyond help. The rules are on the card. In order.",
+			"hard": "Eight of them, and the grounds are still emptying. The loud ones aren't the sick ones. You know that. Prove it.",
+			"extreme": "Ten, and I'm needed inside. No card, no checks from me. The rules are in your head, Chief."
+		},
+		"tagged": {
+			"red": "Red. {who} goes in first.",
+			"yellow": "Yellow. {who} can wait, but not long.",
+			"green": "Green. To the gate, please, and wait for a nurse.",
+			"black": "Black. Someone will sit with {who}."
+		},
+		"sent": {
+			"all": "Every tag right. Sending them in.",
+			"some": "Sending them in. Dr. Iyer will check the tags again inside.",
+			"under": "Sending them in. Chief, one you tagged to wait is going grey."
+		},
+		"casualties": [
+			{
+				"id": "burnt",
+				"from": "easy",
+				"who": "Boy with a burnt hand",
+				"short": "the boy with the burnt hand",
+				"walk": true,
+				"looks": "His hand in a bucket of water somebody gave him. A rocket went off in his fist.",
+				"walks": "He walks to the gate with his bucket. Sore, scared, and going to be fine."
+			},
+			{
+				"id": "smoke",
+				"from": "easy",
+				"who": "Woman in a green sari, coughing",
+				"short": "the woman in green",
+				"walk": false,
+				"rate": {
+					"easy": [
+						34,
+						40
+					],
+					"hard": [
+						32,
+						36
+					],
+					"extreme": [
+						31,
+						33
+					]
+				},
+				"refill": {
+					"easy": [
+						1,
+						2
+					]
+				},
+				"looks": "Sitting by the firework stall, breathing fast and shallow. She says it's only the smoke.",
+				"stays": "She tries to stand and can't find her breath.",
+				"why": "Over thirty breaths a minute is red, however she explains it. Hot smoke swells the airways shut."
+			},
+			{
+				"id": "stage",
+				"from": "easy",
+				"who": "Man pulled from under the stage",
+				"short": "the man from under the stage",
+				"walk": false,
+				"breathing": false,
+				"airway": 0.5,
+				"looks": "Dragged out from under the fallen stage. Not moving.",
+				"stays": "No answer at all.",
+				"why": "He wasn't breathing until you opened his airway, then he was. That's red, and every second counts."
+			},
+			{
+				"id": "tiger",
+				"from": "easy",
+				"who": "Girl with a painted face",
+				"short": "the girl with the painted face",
+				"walk": true,
+				"looks": "Face painted like a tiger, a grazed knee, asking where her mother is.",
+				"walks": "She walks to the gate holding a volunteer's hand. Stripes still on."
+			},
+			{
+				"id": "sweets",
+				"from": "easy",
+				"who": "Woman by the sweet stall",
+				"short": "the woman by the sweet stall",
+				"walk": false,
+				"rate": {
+					"easy": [
+						20,
+						26
+					],
+					"hard": [
+						24,
+						29
+					],
+					"extreme": [
+						27,
+						30
+					]
+				},
+				"refill": {
+					"easy": [
+						4,
+						5
+					],
+					"hard": [
+						3,
+						4
+					],
+					"extreme": [
+						3,
+						3
+					]
+				},
+				"looks": "Lying by the sweet stall, pale and clammy. She says it's only the crowd.",
+				"stays": "She can't get up. She says she'll rest a minute.",
+				"why": "A nail bed slow to pink up means blood loss you can't see. That's red."
+			},
+			{
+				"id": "wrist",
+				"from": "easy",
+				"who": "Man with a crooked wrist",
+				"short": "the man with the wrist",
+				"walk": false,
+				"rate": {
+					"easy": [
+						18,
+						24
+					],
+					"hard": [
+						22,
+						28
+					],
+					"extreme": [
+						26,
+						30
+					]
+				},
+				"refill": {
+					"easy": [
+						1,
+						1
+					],
+					"hard": [
+						1,
+						2
+					],
+					"extreme": [
+						2,
+						2
+					]
+				},
+				"looks": "Fell off the gate, climbing for a better view. His wrist has an extra bend in it.",
+				"stays": "He gets halfway up and sits back down, green in the face."
+			},
+			{
+				"id": "beam",
+				"from": "easy",
+				"who": "Man under the stage beam",
+				"short": "the man under the beam",
+				"walk": false,
+				"breathing": false,
+				"airway": false,
+				"looks": "Under the main beam of the stage. Eyes open, not moving.",
+				"stays": "No answer."
+			},
+			{
+				"id": "kurta",
+				"from": "hard",
+				"who": "Boy in a new kurta, silent",
+				"short": "the silent boy",
+				"walk": false,
+				"obeys": false,
+				"rate": {
+					"hard": [
+						16,
+						24
+					],
+					"extreme": [
+						20,
+						26
+					]
+				},
+				"refill": {
+					"hard": [
+						1,
+						2
+					]
+				},
+				"looks": "Sitting by the gate, staring at nothing. Not a mark on him.",
+				"stays": "He doesn't move when you ask. He doesn't look at you.",
+				"why": "He couldn't follow a simple command: a head injury until proven otherwise. Red."
+			},
+			{
+				"id": "crush",
+				"from": "hard",
+				"who": "Man crushed at the gate",
+				"short": "the man from the gate",
+				"walk": false,
+				"rate": {
+					"hard": [
+						27,
+						34
+					],
+					"extreme": [
+						29,
+						32
+					]
+				},
+				"refill": {
+					"hard": [
+						1,
+						2
+					]
+				},
+				"looks": "Lying on his side by the gate, holding his chest. Short, quick breaths.",
+				"stays": "He tries, gasps, and lies back.",
+				"why": "Over thirty breaths a minute is red: ribs broken in the crush, and a lung struggling under them."
+			},
+			{
+				"id": "crowd",
+				"from": "hard",
+				"who": "Woman pulled out of the crowd",
+				"short": "the woman from the crowd",
+				"walk": false,
+				"rate": {
+					"hard": [
+						20,
+						26
+					],
+					"extreme": [
+						24,
+						28
+					]
+				},
+				"refill": {
+					"hard": [
+						2,
+						3
+					],
+					"extreme": [
+						2,
+						3
+					]
+				},
+				"looks": "The crowd parted round her a minute ago. Very pale. Very apologetic.",
+				"stays": "Her legs won't hold her. She apologises for the fuss.",
+				"why": "Over two seconds for the nail bed to pink up: she's losing blood somewhere. Red."
+			},
+			{
+				"id": "glasses",
+				"from": "hard",
+				"who": "Old man with a sore hip",
+				"short": "the old man",
+				"walk": false,
+				"rate": {
+					"hard": [
+						16,
+						22
+					],
+					"extreme": [
+						18,
+						24
+					]
+				},
+				"refill": {
+					"hard": [
+						1,
+						2
+					],
+					"extreme": [
+						2,
+						2
+					]
+				},
+				"looks": "Sitting on the kerb, asking somebody to find his spectacles.",
+				"stays": "His hip won't let him stand. He'd like his spectacles."
+			},
+			{
+				"id": "parent",
+				"from": "hard",
+				"who": "Father with a cut forehead",
+				"short": "the father",
+				"walk": true,
+				"looks": "Blood down his face, shouting for his son, Ishaan.",
+				"walks": "He's already up, searching the crowd for his son."
+			},
+			{
+				"id": "seller",
+				"from": "extreme",
+				"who": "Firework seller, dazed",
+				"short": "the firework seller",
+				"walk": false,
+				"rate": {
+					"extreme": [
+						22,
+						30
+					]
+				},
+				"refill": {
+					"extreme": [
+						1,
+						2
+					]
+				},
+				"looks": "Sitting up, dazed, ears ringing, eyebrows gone. His stall went up all at once.",
+				"stays": "He stands, sways, and sits down hard."
+			},
+			{
+				"id": "tower",
+				"from": "extreme",
+				"who": "Man fallen from the lighting tower",
+				"short": "the man from the tower",
+				"walk": false,
+				"obeys": false,
+				"rate": {
+					"extreme": [
+						12,
+						18
+					]
+				},
+				"refill": {
+					"extreme": [
+						2,
+						2
+					]
+				},
+				"looks": "Lying very still under the lighting tower. Breathing slowly, and noisily.",
+				"stays": "Nothing. He snores.",
+				"why": "Slow, noisy breathing and no answer to a command: his brain is in trouble. Red."
+			},
+			{
+				"id": "bangles",
+				"from": "extreme",
+				"who": "Young woman with a cut leg",
+				"short": "the young woman",
+				"walk": false,
+				"rate": {
+					"extreme": [
+						24,
+						30
+					]
+				},
+				"refill": {
+					"extreme": [
+						2,
+						3
+					]
+				},
+				"looks": "A dupatta tied tight round her calf. Glass from the bangle stall. She tied it herself. She's very calm.",
+				"stays": "She can't stand on that leg. She doesn't try twice.",
+				"why": "Over two seconds for the nail bed to pink up: the bleeding has beaten her knot. Red."
+			},
+			{
+				"id": "selfie",
+				"from": "extreme",
+				"who": "Man with a selfie stick",
+				"short": "the man with the selfie stick",
+				"walk": true,
+				"looks": "Filming everything, narrating. A small cut over one eye.",
+				"walks": "He walks to the gate, still filming, still narrating."
+			}
+		]
+	},
+	"outbreak_rota": {
+		"kind": "rota",
+		"place": "The surgical floor, in the outbreak",
+		"actor": "priya",
+		"title": "Outbreak cover",
+		"brief": {
+			"easy": "The bug's taken Lata and two others. Six patients, three of us, and half of them have the bug. Every bed gets a name. The rules are on the card.",
+			"hard": "Eight patients, four of us, and Ananya's still a student. Keep the bug away from the ones who can't fight it. I'll check it when you sign.",
+			"extreme": "Ten patients, five of us, and the bug in every other bed. No card, no help. You know the rules, Chief."
+		},
+		"warn": {
+			"load": "{staff} can't carry that much. Somebody's three a.m. checks get missed.",
+			"iv": "{staff} isn't signed off for IV drugs here. {who} needs a nurse who can run that drip.",
+			"infection": "Not with {staff}. The same hands on an infection and on someone who can't fight one? That's how we lose a patient.",
+			"confused": "{who} needs watching, and {staff} will have too many to watch.",
+			"student": "{staff} is a student. {who} is too much for her on her own."
+		},
+		"placed": {
+			"line": "{who} with {staff}."
+		},
+		"explain": {
+			"load": "More than one nurse can carry, and the checks get missed.",
+			"iv": "Only a nurse signed off for IV can give drugs through a drip.",
+			"infection": "Hands that touch an infection carry it to the patient who can't fight it.",
+			"confused": "A confused patient needs a nurse with time to watch them, or they wander and fall.",
+			"student": "A student can't take the heaviest patients alone."
+		},
+		"signed": {
+			"all": "Signed. Every bed has a name, and nobody's carrying too much.",
+			"gap": "There's a bed with no name next to it, Chief.",
+			"some": "Signed. Somebody's carrying too much tonight."
+		},
+		"staff": [
+			{
+				"id": "priya",
+				"from": "easy",
+				"who": "Priya Nambiar",
+				"short": "Priya",
+				"capacity": 6,
+				"iv": true,
+				"role": "Staff nurse, in charge tonight"
+			},
+			{
+				"id": "neha",
+				"from": "easy",
+				"who": "Neha Joshi",
+				"short": "Neha",
+				"capacity": 4,
+				"iv": true,
+				"role": "Theatre nurse, borrowed: the list is cancelled"
+			},
+			{
+				"id": "joel",
+				"from": "easy",
+				"who": "Joel Rodrigues",
+				"short": "Joel",
+				"capacity": {
+					"easy": 5,
+					"extreme": 4
+				},
+				"iv": false,
+				"role": "Agency nurse, no IV here"
+			},
+			{
+				"id": "ananya",
+				"from": "hard",
+				"who": "Ananya Gupta",
+				"short": "Ananya",
+				"capacity": 3,
+				"student": true,
+				"role": "Student nurse, final year"
+			},
+			{
+				"id": "sunil",
+				"from": "extreme",
+				"who": "Sunil Rane",
+				"short": "Sunil",
+				"capacity": 3,
+				"iv": true,
+				"role": "Theatre nurse, borrowed for the night"
+			}
+		],
+		"patients": [
+			{
+				"id": "dutta",
+				"from": "easy",
+				"who": "Mr. Dutta",
+				"short": "Mr. Dutta",
+				"load": 2,
+				"iv": true,
+				"infectious": true,
+				"about": "The stomach bug. A drip running, and a door kept shut."
+			},
+			{
+				"id": "dalvi",
+				"from": "easy",
+				"who": "Mrs. Dalvi",
+				"short": "Mrs. Dalvi",
+				"load": 3,
+				"iv": true,
+				"infectious": true,
+				"about": "Eighty-two, the stomach bug, and her kidneys struggling. Drip and hourly urine."
+			},
+			{
+				"id": "kher",
+				"from": "easy",
+				"who": "Mr. Kher",
+				"short": "Mr. Kher",
+				"load": 1,
+				"infectious": true,
+				"about": "The stomach bug, nearly over. Eating rice and complaining about it."
+			},
+			{
+				"id": "bhalla",
+				"from": "easy",
+				"who": "Mrs. Bhalla",
+				"short": "Mrs. Bhalla",
+				"load": 3,
+				"iv": true,
+				"fragile": true,
+				"about": "Bowel operation yesterday. Drip, drain, pain pump. Keep the bug away."
+			},
+			{
+				"id": "bajaj",
+				"from": "easy",
+				"who": "Mr. Bajaj",
+				"short": "Mr. Bajaj",
+				"load": 2,
+				"iv": true,
+				"fragile": true,
+				"about": "On chemotherapy, with a fever. No white cells to spare."
+			},
+			{
+				"id": "mishra",
+				"from": "easy",
+				"who": "Mr. Mishra",
+				"short": "Mr. Mishra",
+				"load": 1,
+				"about": "Hernia repair this morning. Waiting for his son to drive him home."
+			},
+			{
+				"id": "kadam",
+				"from": "easy",
+				"who": "Mrs. Kadam",
+				"short": "Mrs. Kadam",
+				"load": 2,
+				"confused": true,
+				"infectious": true,
+				"about": "Seventy-nine. The bug has left her muddled. She sets off for the bus stop at night."
+			},
+			{
+				"id": "gill",
+				"from": "easy",
+				"who": "Mr. Gill",
+				"short": "Mr. Gill",
+				"load": 2,
+				"about": "Broken ankle in plaster. Needs help to the toilet, and asks politely every time."
+			},
+			{
+				"id": "thakur",
+				"from": "easy",
+				"who": "Mrs. Thakur",
+				"short": "Mrs. Thakur",
+				"load": 2,
+				"iv": true,
+				"infectious": true,
+				"about": "The stomach bug, and six months pregnant. Drip, and the midwife twice a day."
+			},
+			{
+				"id": "chandra",
+				"from": "easy",
+				"who": "Mr. Chandra",
+				"short": "Mr. Chandra",
+				"load": 1,
+				"about": "Gallbladder out yesterday. Walking the corridor in his slippers."
+			},
+			{
+				"id": "vaz",
+				"from": "hard",
+				"who": "Mrs. Vaz",
+				"short": "Mrs. Vaz",
+				"load": 2,
+				"iv": true,
+				"about": "Clear of the bug now, but dry as paper. Drip until she can drink."
+			},
+			{
+				"id": "shinde",
+				"from": "hard",
+				"who": "Mr. Shinde",
+				"short": "Mr. Shinde",
+				"load": 2,
+				"confused": true,
+				"about": "Coming round from a head injury. Asks the date every ten minutes."
+			},
+			{
+				"id": "sawant",
+				"from": "hard",
+				"who": "Miss Sawant",
+				"short": "Miss Sawant",
+				"load": 1,
+				"infectious": true,
+				"about": "A nurse from Ward 3 who caught the bug. Wants to go back to work. She can't."
+			},
+			{
+				"id": "lal",
+				"from": "extreme",
+				"who": "Mr. Lal",
+				"short": "Mr. Lal",
+				"load": 3,
+				"iv": true,
+				"infectious": true,
+				"about": "The bug, and a weak heart that can't take much fluid. Drip, and checks every hour."
+			},
+			{
+				"id": "bhide",
+				"from": "extreme",
+				"who": "Mrs. Bhide",
+				"short": "Mrs. Bhide",
+				"load": 3,
+				"fragile": true,
+				"about": "Kidney transplant last year. On drugs that stop her fighting anything."
+			},
+			{
+				"id": "kohli",
+				"from": "extreme",
+				"who": "Mr. Kohli",
+				"short": "Mr. Kohli",
+				"load": 1,
+				"confused": true,
+				"about": "Ninety-one, deaf, and convinced he's on a train to Delhi."
+			}
+		]
+	},
+	"cb_arif_history": {
+		"patient": "Arif Mirza",
+		"about": "19 · pain that moved to the lower right",
+		"actor": "arif",
+		"limit": 5,
+		"him": "him",
+		"his": "his",
+		"part": "belly",
+		"opening": "Ask quickly, doctor. I have a thermodynamics exam at nine. Well. I had one.",
+		"questions": [
+			{
+				"id": "pain",
+				"ask": "Where did the pain start, and where is it now?",
+				"weight": "key",
+				"answer": "Round my belly button, last night after dinner. By two in the morning it had moved down here, low on the right. Now it hurts to walk.",
+				"fact": "Pain started round the navel, moved to the lower right overnight",
+				"why": "Pain that starts in the middle and settles low on the right is the appendix's story."
+			},
+			{
+				"id": "allergy",
+				"ask": "Are you allergic to anything?",
+				"weight": "key",
+				"answer": "Penicillin. At school my lips swelled up like a duck's and my mother still tells everyone at weddings.",
+				"fact": "Allergic to penicillin: lips swelled",
+				"why": "The usual antibiotic in theatre is a penicillin. The board must say so, or it goes straight into his drip."
+			},
+			{
+				"id": "fever",
+				"ask": "Have you had a fever, or been sick?",
+				"weight": "key",
+				"answer": "Sick twice in the hostel bathroom. My roommate says I'm hot. He took my temperature with his hand. And then with a thermometer: thirty-eight.",
+				"fact": "Vomited twice, fever of thirty-eight",
+				"why": "Fever and vomiting with that pain: the appendix is inflamed now. Waiting risks it bursting."
+			},
+			{
+				"id": "meal",
+				"ask": "When did you last eat?",
+				"weight": "useful",
+				"answer": "Hostel dinner at eight. Dal, rice, and something they called paneer. I didn't finish it, which is a first.",
+				"fact": "Dinner at eight last night"
+			},
+			{
+				"id": "medicines",
+				"ask": "Have you taken anything for the pain?",
+				"weight": "useful",
+				"answer": "Two painkillers from the chemist by the gate. They did nothing. The chemist said they'd do nothing. He was right.",
+				"fact": "Two painkillers from the chemist, no help"
+			},
+			{
+				"id": "bowels",
+				"ask": "Have your bowels been normal?",
+				"weight": "useful",
+				"answer": "Normal until yesterday. Nothing since. Is that... medical?",
+				"fact": "Bowels not opened since yesterday"
+			},
+			{
+				"id": "exam",
+				"ask": "What's the exam?",
+				"weight": "none",
+				"answer": "Thermodynamics. Second year. Entropy always increases. That's the whole subject. Also my life."
+			},
+			{
+				"id": "friends",
+				"ask": "Who are the four boys in the corridor?",
+				"weight": "none",
+				"answer": "My roommates. They carried me down three floors. They want to know if they can have my appendix for the lab."
+			}
+		]
+	},
+	"cb_mohan_history": {
+		"patient": "Mohan Tiwari",
+		"about": "54 · groin lump, stuck since this morning",
+		"actor": "mohan",
+		"limit": 5,
+		"him": "him",
+		"his": "his",
+		"part": "groin",
+		"opening": "Fast, please, doctor. I've got forty cylinders on the tempo and the driver's eating my lunch.",
+		"questions": [
+			{
+				"id": "lump",
+				"ask": "When did the lump appear, and does it go back in?",
+				"weight": "key",
+				"answer": "Two years, maybe three. It always went back when I lay down. This morning I lifted a cylinder on the third floor and it came out and stayed out. Hard as a stone.",
+				"fact": "Groin lump for two years, stuck since this morning",
+				"why": "A hernia that won't go back can trap bowel and cut off its blood. That makes it urgent: today, not next week."
+			},
+			{
+				"id": "meal",
+				"ask": "When did you last eat?",
+				"weight": "key",
+				"answer": "Poha at five. A big plate. My wife says a man can't carry cylinders on an empty stomach.",
+				"fact": "Ate a plate of poha at five this morning",
+				"why": "A full stomach can come up into the lungs under anaesthetic. Dr. Khan needs to know, so she can protect his airway."
+			},
+			{
+				"id": "vomit",
+				"ask": "Have you been sick, or stopped passing wind?",
+				"weight": "key",
+				"answer": "Sick once, in the tempo. The driver wasn't pleased. And no wind since. My wife will say that's a miracle.",
+				"fact": "Vomited once, no wind since this morning",
+				"why": "Vomiting and no wind with a stuck hernia: the bowel inside is blocked. It can't wait for a list."
+			},
+			{
+				"id": "side",
+				"ask": "Which side is it?",
+				"weight": "useful",
+				"answer": "Right side. The cylinder side. I always carry on the right.",
+				"fact": "Lump on the right"
+			},
+			{
+				"id": "allergy",
+				"ask": "Are you allergic to anything?",
+				"weight": "useful",
+				"answer": "Nothing. Only to my supervisor.",
+				"fact": "No allergies"
+			},
+			{
+				"id": "medicines",
+				"ask": "Do you take any medicines?",
+				"weight": "useful",
+				"answer": "One tablet for blood pressure. Every morning, with the poha.",
+				"fact": "Blood pressure tablet, taken this morning"
+			},
+			{
+				"id": "floors",
+				"ask": "How many floors do you climb a day?",
+				"weight": "none",
+				"answer": "Eighty, ninety. The new buildings have lifts. The lifts have notices saying no gas cylinders. So, stairs."
+			},
+			{
+				"id": "children",
+				"ask": "Do you have children?",
+				"weight": "none",
+				"answer": "Two daughters. One is studying to be a nurse. I'll tell her I met the Chief. She won't believe it."
+			}
+		]
+	},
+	"cb_savitri_history": {
+		"patient": "Savitri Kale",
+		"about": "66 · deep cut across the left palm",
+		"actor": "savitri",
+		"limit": 5,
+		"him": "her",
+		"his": "her",
+		"part": "hand",
+		"opening": "Ask, ask. My stall is shut and the whole bus stand is drinking bad tea from the other woman.",
+		"questions": [
+			{
+				"id": "how",
+				"ask": "How did it happen?",
+				"weight": "key",
+				"answer": "Washing glasses at the stall, five o'clock. One cracked in my hand. Thick glass, the old kind. It went in deep.",
+				"fact": "Cut by a breaking glass while washing up",
+				"why": "Broken glass leaves slivers behind. Somebody has to look for them before the wound is closed."
+			},
+			{
+				"id": "tetanus",
+				"ask": "When did you last have a tetanus injection?",
+				"weight": "key",
+				"answer": "Tetanus? When my son was born. He's twenty now. So... twenty years? Is that bad?",
+				"fact": "Last tetanus jab twenty years ago",
+				"why": "A dirty wound and a jab twenty years old: she needs a booster. The board says 'up to date' unless somebody asks."
+			},
+			{
+				"id": "feel",
+				"ask": "Can you feel your fingertips, and move all your fingers?",
+				"weight": "key",
+				"answer": "I can feel them. I can move them. It hurts when I bend this one, but I can.",
+				"fact": "Feeling and movement in all fingers",
+				"why": "Feeling and movement mean the nerves and tendons are probably whole. That decides whether it's a stitch or a surgeon."
+			},
+			{
+				"id": "allergy",
+				"ask": "Are you allergic to anything?",
+				"weight": "useful",
+				"answer": "No. Nothing. I've been stung by everything at that bus stand.",
+				"fact": "No allergies"
+			},
+			{
+				"id": "medicines",
+				"ask": "Do you take any medicines?",
+				"weight": "useful",
+				"answer": "Sugar tablets. One in the morning. My sugar is good. Mostly. Except for the tea.",
+				"fact": "Tablets for diabetes"
+			},
+			{
+				"id": "hand",
+				"ask": "Which hand do you use most?",
+				"weight": "useful",
+				"answer": "The right. This is the left. God was kind. Not very kind. A little kind.",
+				"fact": "Right-handed; the cut is on the left"
+			},
+			{
+				"id": "stall",
+				"ask": "How long have you had the stall?",
+				"weight": "none",
+				"answer": "Thirty-one years. Same corner. Three bus companies have gone bankrupt. My stall hasn't."
+			},
+			{
+				"id": "price",
+				"ask": "How much is a cup of your tea?",
+				"weight": "none",
+				"answer": "Ten rupees. For doctors, twelve. You can afford it."
+			}
+		]
+	},
+	"cb_usha_history": {
+		"patient": "Usha Krishnan",
+		"about": "61 · pain under the right ribs, fever since last night",
+		"actor": "usha",
+		"limit": 5,
+		"him": "her",
+		"his": "her",
+		"part": "belly",
+		"opening": "I was a headmistress for twenty-two years. I'll know if you're not listening.",
+		"questions": [
+			{
+				"id": "pain",
+				"ask": "Tell me about the pain. Where is it, and when does it come?",
+				"weight": "key",
+				"answer": "Under my right ribs. It comes after meals, the rich ones. For three months. Last night, after my niece's engagement dinner, it came and didn't go.",
+				"fact": "Pain under the right ribs after rich meals, three months; constant since last night",
+				"why": "Pain under the right ribs after fatty food is the gallbladder's story: stones."
+			},
+			{
+				"id": "medicines",
+				"ask": "Do you take anything that thins the blood?",
+				"weight": "key",
+				"answer": "Aspirin, every morning, since my heart scare four years ago. The cardiologist said never miss it. I took it at seven.",
+				"fact": "Takes aspirin daily for her heart, took it at seven this morning",
+				"why": "Aspirin makes the liver bed ooze. The team needs to know, and keep blood ready."
+			},
+			{
+				"id": "fever",
+				"ask": "Have you had a fever, or turned yellow?",
+				"weight": "key",
+				"answer": "A fever since midnight. My husband checked: thirty-eight point four. He wrote it down. He writes everything down.",
+				"fact": "Fever since midnight, not yellow",
+				"why": "Fever means the gallbladder is inflamed now, not just full of stones. It needs to come out, not wait for a list."
+			},
+			{
+				"id": "allergy",
+				"ask": "Are you allergic to anything?",
+				"weight": "useful",
+				"answer": "Nothing. Except bad grammar.",
+				"fact": "No allergies"
+			},
+			{
+				"id": "meal",
+				"ask": "When did you last eat?",
+				"weight": "useful",
+				"answer": "The engagement dinner, at ten last night. Biryani. Two helpings. I regret the second.",
+				"fact": "Ate at ten last night"
+			},
+			{
+				"id": "vomit",
+				"ask": "Have you been sick?",
+				"weight": "useful",
+				"answer": "Once, at two in the morning. Into the bucket my husband had placed by the bed. He'd planned ahead.",
+				"fact": "Vomited once"
+			},
+			{
+				"id": "school",
+				"ask": "Which school were you headmistress of?",
+				"weight": "none",
+				"answer": "The municipal girls' school by the station. Three of your nurses were my pupils. They still call me 'Ma'am'."
+			},
+			{
+				"id": "niece",
+				"ask": "Was it a good engagement?",
+				"weight": "none",
+				"answer": "Very good. The boy is an engineer. They're always engineers."
+			}
+		]
+	},
+	"cb_rosy_history": {
+		"patient": "Rosy Pereira",
+		"about": "83 · fell at home, can't stand on the left leg",
+		"actor": "rosy",
+		"limit": 5,
+		"him": "her",
+		"his": "her",
+		"part": "hip",
+		"opening": "I taught piano for fifty years, young doctor. I can hear a wrong note. Ask your questions.",
+		"questions": [
+			{
+				"id": "fall",
+				"ask": "How did you fall?",
+				"weight": "key",
+				"answer": "Over my cat, at six this morning. She sleeps on the second step. She has done for nine years. Today I forgot.",
+				"fact": "Tripped over her cat at six this morning",
+				"why": "An old person's fall at home: a broken hip until proven otherwise. The X-ray decides the operation."
+			},
+			{
+				"id": "medicines",
+				"ask": "Do you take anything that thins the blood?",
+				"weight": "key",
+				"answer": "Warfarin, for my irregular heart. I took it last night as always. The ambulance man said that's important. Your nurse gave me something yellow at breakfast.",
+				"fact": "On warfarin, last dose last night; vitamin K given this morning",
+				"why": "Warfarin makes a hip bleed like a tap. The team must know, check her clotting, and reverse it before they cut."
+			},
+			{
+				"id": "allergy",
+				"ask": "Are you allergic to anything?",
+				"weight": "key",
+				"answer": "Penicillin. In 1971 I swelled up like a balloon at my own recital. I finished the Chopin. Then I went to hospital.",
+				"fact": "Allergic to penicillin: swelled up",
+				"why": "The usual antibiotic in theatre is a penicillin. The board must say so."
+			},
+			{
+				"id": "pain",
+				"ask": "Where does it hurt?",
+				"weight": "useful",
+				"answer": "The left hip, and down to the knee. When they lifted me it was like a thunderstorm.",
+				"fact": "Pain in the left hip, down to the knee"
+			},
+			{
+				"id": "home",
+				"ask": "Who lives with you?",
+				"weight": "useful",
+				"answer": "The cat. My niece comes on Sundays. Today is Wednesday, so I lay on the floor until the milkman came.",
+				"fact": "Lives alone; lay on the floor for an hour"
+			},
+			{
+				"id": "meal",
+				"ask": "When did you last eat?",
+				"weight": "useful",
+				"answer": "Toast and marmalade at eight last night. Nothing since. I wasn't in a position to make breakfast.",
+				"fact": "Last ate at eight last night"
+			},
+			{
+				"id": "cat",
+				"ask": "What's the cat called?",
+				"weight": "none",
+				"answer": "Clementine. She is not sorry. Cats are never sorry."
+			},
+			{
+				"id": "piano",
+				"ask": "Do you still play?",
+				"weight": "none",
+				"answer": "Every day. Scales at seven, Bach at eight. My neighbours set their clocks by me."
+			}
+		]
+	},
+	"cb_gurdeep_history": {
+		"patient": "Gurdeep Sandhu",
+		"about": "45 · lorry rolled over, steering wheel to the belly",
+		"actor": "gurdeep",
+		"limit": 5,
+		"him": "him",
+		"his": "his",
+		"part": "belly",
+		"opening": "Ask fast, doctor. Something inside isn't right. I've driven twenty-five years. I know when the engine's wrong.",
+		"questions": [
+			{
+				"id": "how",
+				"ask": "What happened?",
+				"weight": "key",
+				"answer": "The bend at the top of the ghat. The brakes went soft, the lorry went over. The wheel hit me here, under the left ribs. Hard.",
+				"fact": "Lorry rolled; steering wheel hit him under the left ribs",
+				"why": "A heavy blow under the left ribs can split the spleen, and a split spleen bleeds into the belly where nobody can see."
+			},
+			{
+				"id": "pain",
+				"ask": "Where does it hurt, and does it go anywhere?",
+				"weight": "key",
+				"answer": "Under the left ribs. And my left shoulder, which is strange. The wheel never touched my shoulder.",
+				"fact": "Pain under the left ribs and in the left shoulder tip",
+				"why": "Pain in the shoulder tip with a belly injury is blood under the diaphragm. It means bleeding inside."
+			},
+			{
+				"id": "dizzy",
+				"ask": "Do you feel dizzy or thirsty?",
+				"weight": "key",
+				"answer": "Dizzy when I sit up. And so thirsty. I asked your nurse for water and she said no. Very politely.",
+				"fact": "Dizzy sitting up, very thirsty",
+				"why": "Dizzy and thirsty after a blow: he's losing blood. That is why he can't drink: he may need theatre soon."
+			},
+			{
+				"id": "allergy",
+				"ask": "Are you allergic to anything?",
+				"weight": "useful",
+				"answer": "Nothing. Only to the toll booths.",
+				"fact": "No allergies"
+			},
+			{
+				"id": "meal",
+				"ask": "When did you last eat?",
+				"weight": "useful",
+				"answer": "Dhaba, at eleven. Dal and four rotis. Then the ghat.",
+				"fact": "Ate at eleven this morning"
+			},
+			{
+				"id": "medicines",
+				"ask": "Do you take any medicines?",
+				"weight": "useful",
+				"answer": "Nothing. Sometimes a tablet for my back. Not today.",
+				"fact": "No regular medicines"
+			},
+			{
+				"id": "load",
+				"ask": "What were you carrying?",
+				"weight": "none",
+				"answer": "Onions. Eighteen tonnes. They're all over the ghat road now. The village will eat well this week."
+			},
+			{
+				"id": "route",
+				"ask": "Where were you driving?",
+				"weight": "none",
+				"answer": "Nashik to Hyderabad. Twice a week, twenty-five years. I know every pothole by name."
+			}
+		]
+	},
+	"cb_anwar_history": {
+		"patient": "Anwar Hussain",
+		"about": "67 · groin lump, stuck since dawn",
+		"actor": "anwar",
+		"limit": 5,
+		"him": "him",
+		"his": "his",
+		"part": "groin",
+		"opening": "Ask, ask. But slowly. Every time I cough it gets worse, and I cough a lot.",
+		"questions": [
+			{
+				"id": "lump",
+				"ask": "When did the lump appear, and does it go back in?",
+				"weight": "key",
+				"answer": "A year. It came with the cough. It went back if I pushed. At dawn I coughed, and it came out and wouldn't go back. It's tight, and angry.",
+				"fact": "Groin lump for a year, stuck since dawn",
+				"why": "A hernia that won't go back can trap bowel and cut off its blood. That makes it urgent: today, not next week."
+			},
+			{
+				"id": "meal",
+				"ask": "When did you last eat?",
+				"weight": "key",
+				"answer": "A paratha at five, after prayers, with my tea. Only one. My daughter-in-law makes them very big.",
+				"fact": "Ate a paratha at five this morning",
+				"why": "A full stomach can come up into the lungs under anaesthetic. Dr. Khan needs to know, so she can protect his airway."
+			},
+			{
+				"id": "cough",
+				"ask": "Tell me about the cough.",
+				"weight": "key",
+				"answer": "Forty years of beedis. I stopped last year. The cough didn't. It's worst in the morning. Like a tractor starting.",
+				"fact": "Smoker's cough for years; stopped smoking last year",
+				"why": "A hard cough pushes on a weak spot, and after a repair it can burst the stitches. The repair has to be strong."
+			},
+			{
+				"id": "side",
+				"ask": "Which side is it?",
+				"weight": "useful",
+				"answer": "The left. My tailor's tape says the left side of my trousers has been tighter for a year.",
+				"fact": "Lump on the left"
+			},
+			{
+				"id": "allergy",
+				"ask": "Are you allergic to anything?",
+				"weight": "useful",
+				"answer": "No. Nothing. Not even to my daughter-in-law's cooking.",
+				"fact": "No allergies"
+			},
+			{
+				"id": "medicines",
+				"ask": "Do you take any medicines?",
+				"weight": "useful",
+				"answer": "Cough syrup. Brown. It doesn't work, but it tastes of something.",
+				"fact": "Cough syrup only"
+			},
+			{
+				"id": "shop",
+				"ask": "You were a tailor?",
+				"weight": "none",
+				"answer": "Forty-five years. I made the Mayor's wedding suit. He's on his third wife. Still the same suit."
+			},
+			{
+				"id": "grandchildren",
+				"ask": "Do you have grandchildren?",
+				"weight": "none",
+				"answer": "Five. They all want phones. I want them to want books. Nobody's winning."
+			}
+		]
+	},
+	"cb_kavita_history": {
+		"patient": "Kavita Bhave",
+		"about": "44 · pain under the right ribs since the night shift",
+		"actor": "kavita",
+		"limit": 5,
+		"him": "her",
+		"his": "her",
+		"part": "belly",
+		"opening": "I'm a bus conductor, doctor. I've heard every excuse. Don't give me one. Ask.",
+		"questions": [
+			{
+				"id": "pain",
+				"ask": "Tell me about the pain. Where is it, and when does it come?",
+				"weight": "key",
+				"answer": "Under my right ribs, into my back. It comes after food, for a few months. Last night on the late bus it came and stayed.",
+				"fact": "Pain under the right ribs into the back, after food, for months; constant since last night",
+				"why": "Pain under the right ribs after food is the gallbladder's story: stones."
+			},
+			{
+				"id": "medicines",
+				"ask": "Have you taken any painkillers or blood thinners?",
+				"weight": "key",
+				"answer": "Two aspirin at six this morning. I thought it was acidity. They did nothing, so I took the bus here instead.",
+				"fact": "Took two aspirin at six this morning",
+				"why": "Aspirin makes the liver bed ooze. The team needs to know, and keep blood ready."
+			},
+			{
+				"id": "fever",
+				"ask": "Have you had a fever, or turned yellow?",
+				"weight": "key",
+				"answer": "Shivering since four. Hot, then cold. Not yellow. My mirror would have said.",
+				"fact": "Fever and shivering since four this morning, not yellow",
+				"why": "Fever means the gallbladder is inflamed now, not just full of stones. It needs to come out, not wait for a list."
+			},
+			{
+				"id": "allergy",
+				"ask": "Are you allergic to anything?",
+				"weight": "useful",
+				"answer": "Nothing. Except passengers without change.",
+				"fact": "No allergies"
+			},
+			{
+				"id": "meal",
+				"ask": "When did you last eat?",
+				"weight": "useful",
+				"answer": "Vada pav at the depot, at eleven last night. Two. I won't lie to you.",
+				"fact": "Ate at eleven last night"
+			},
+			{
+				"id": "vomit",
+				"ask": "Have you been sick?",
+				"weight": "useful",
+				"answer": "Once, out of the bus window, between stops. Nobody noticed. It's that kind of route.",
+				"fact": "Vomited once"
+			},
+			{
+				"id": "route",
+				"ask": "Which route do you work?",
+				"weight": "none",
+				"answer": "The forty-two. Station to the industrial estate and back, nine times a night. I could do it asleep. I nearly have."
+			},
+			{
+				"id": "family",
+				"ask": "Is anyone with you?",
+				"weight": "none",
+				"answer": "My son. He's sixteen and he's been on his phone since we arrived. He's very worried. That's how he shows it."
+			}
+		]
 	}
 }

@@ -304,6 +304,22 @@ Here's everything, in order, so you can decide how much of your life to give it:
   turn faster, puzzles stop going easy on you, and the board raises its bar.
   There are milestone days, cake included. There is no last day. That's the
   job.
+- No two weeks are the same, which is not a compliment. Some weeks the rains
+  come and the highway turns to glass. Some weeks it's the festival: rockets
+  in fists, a crush at the gate, and half the staff on leave. Some weeks a
+  water main bursts and the stomach bug fills the beds and empties the nurses'
+  room, and you have to keep it away from everyone who can't fight it. Each
+  one costs you something, every morning, until it's over.
+- Strangers walk in, too: an engineering student with an exam at nine, the
+  man who delivers your gas cylinders, the tea lady from the bus stand, your
+  head nurse's old headmistress, a piano teacher who fell over her cat, a
+  lorry driver who walked in with a split spleen, an old tailor who inspects
+  your stitches, and a bus conductor who came in on her own bus. Once you've
+  operated on them, the interns get them in the simulator. Forever.
+- Fourteen kinds of hard call now, and none comes back inside a week:
+  somebody important wants to skip the queue, the antivenom runs out in snake
+  season, a resident falls asleep at a red light, the scanner dies, the
+  television wants a hero, and Dr. Kapoor drops by with a proposal and a smile.
 - Every day ends on a card with your winning run, how close the next review
   or board report is, and a line about tomorrow, which is usually worse.
 

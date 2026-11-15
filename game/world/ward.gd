@@ -504,6 +504,23 @@ func _build_people() -> void:
 		"glasses": 3, "scrubs": 4, "coat": false, "stethoscope": false}, AvatarConfig.Mood.ANGRY, "kurta")
 	_person("relative_c", {"skin": 6, "face": 1, "body": 0, "height": 2, "hair_style": 5, "hair_colour": 0, "eyes": 6, "brows": 1,
 		"scrubs": 7, "coat": false, "stethoscope": false}, AvatarConfig.Mood.WORRIED, "kurta")
+	# The walk-ins of the endless days.
+	_person("arif", {"skin": 4, "face": 0, "body": 0, "height": 3, "hair_style": 3, "hair_colour": 0, "brows": 2,
+		"glasses": 2, "coat": false, "stethoscope": false}, AvatarConfig.Mood.WORRIED, "patient")
+	_person("mohan", {"skin": 6, "face": 2, "body": 2, "height": 2, "hair_style": 1, "hair_colour": 5, "facial_hair": 3,
+		"brows": 3, "coat": false, "stethoscope": false}, AvatarConfig.Mood.TIRED, "patient")
+	_person("savitri", {"skin": 6, "face": 1, "body": 1, "height": 1, "hair_style": 7, "hair_colour": 6, "brows": 4,
+		"scrubs": 6, "coat": false, "stethoscope": false}, AvatarConfig.Mood.HAPPY, "kurta")
+	_person("usha", {"skin": 5, "face": 3, "body": 1, "height": 2, "hair_style": 7, "hair_colour": 5, "brows": 3,
+		"glasses": 4, "coat": false, "stethoscope": false}, AvatarConfig.Mood.CALM, "patient")
+	_person("rosy", {"skin": 2, "face": 5, "body": 1, "height": 0, "hair_style": 9, "hair_colour": 6, "brows": 4,
+		"glasses": 1, "coat": false, "stethoscope": false}, AvatarConfig.Mood.CALM, "patient")
+	_person("gurdeep", {"skin": 3, "face": 4, "body": 2, "height": 4, "hair_style": 0, "hair_colour": 0, "facial_hair": 5,
+		"brows": 3, "coat": false, "stethoscope": false}, AvatarConfig.Mood.WORRIED, "patient")
+	_person("anwar", {"skin": 5, "face": 5, "body": 1, "height": 2, "hair_style": 1, "hair_colour": 6, "facial_hair": 5,
+		"glasses": 3, "brows": 4, "coat": false, "stethoscope": false}, AvatarConfig.Mood.TIRED, "patient")
+	_person("kavita", {"skin": 4, "face": 2, "body": 1, "height": 2, "hair_style": 6, "hair_colour": 0, "eyes": 4, "brows": 1,
+		"coat": false, "stethoscope": false}, AvatarConfig.Mood.TIRED, "patient")
 	# Patients who sleep through the week, so the ward is full.
 	_person("bg1", {"skin": 8, "face": 5, "body": 2, "hair_style": 1, "hair_colour": 5, "facial_hair": 5,
 		"coat": false, "stethoscope": false}, AvatarConfig.Mood.TIRED, "patient")
