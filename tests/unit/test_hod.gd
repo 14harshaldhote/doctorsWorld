@@ -477,9 +477,8 @@ func test_only_a_surgeon_who_told_her_can_be_head_of_surgery() -> void:
 	expect(ward.profile.has_flag("hos_iyer"))
 
 
-func test_after_the_last_day_the_quiet_days_go_on() -> void:
+func test_after_the_last_day_the_chiefs_days_begin() -> void:
 	var ward := _ward(29, ["jump_24", "hos_iyer"])
 	ward.profile.rank_held = Rank.CHIEF
 	expect(not WardStory.DAYS.has(29), "no story left to tell")
-	expect(_play_day(ward, CAREFUL), "the day ends")
-	expect(ward.profile.has_flag("teaching_scan_done"), "teaching films, like any quiet day")
+	expect_equal(ward.beats[0]["talk"], "cb_banerjee_morning", "the Chief's casebook opens (see test_chief)")

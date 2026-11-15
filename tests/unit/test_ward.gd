@@ -175,10 +175,12 @@ func test_the_review_promotes_the_doctor_to_junior_resident() -> void:
 	expect(ward.profile.has_flag("promoted"))
 
 
-func test_quiet_days_after_the_review_have_teaching_films() -> void:
-	var ward := _ward(29, ["promoted", "jump_9", "jump_14", "jump_19", "jump_24"])
-	expect(_play_day(ward, CAREFUL))
-	expect(ward.profile.has_flag("teaching_scan_right"), "the coin is read as a coin")
+func test_a_day_with_no_story_falls_back_to_teaching_films() -> void:
+	# Every day now has a story (the Chief's days go on for ever), but the
+	# fallback stays whole.
+	expect(not StoryBook.conversation("ward", "quiet_morning").is_empty(), "the quiet morning is written")
+	expect(StoryBook.chapter("cases").has("teaching_scan"), "and the teaching films exist")
+	expect_equal(str(Ward.QUIET[1]["tasks"][0][1]), "teaching_scan")
 
 
 func test_examination_buttons_sit_on_the_patient_and_taps_pick_them() -> void:

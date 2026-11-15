@@ -100,6 +100,10 @@ func choose(index: int) -> void:
 	var effect := str(result.get("effect", ""))
 	if effect.is_empty():
 		effect = _describe(changes)
+	# What a Chief's reply did to the hospital goes on the end of it.
+	var standing := Standing.describe(result.get("standing", {}))
+	if not standing.is_empty():
+		effect = standing if effect.is_empty() else "%s  %s" % [effect, standing]
 	ui.show_result(str(result.get("said", "")), effect, str(result.get("detail", "")))
 	_just_chose = true
 	# The player's reply is shown, never said aloud: on to the answer.

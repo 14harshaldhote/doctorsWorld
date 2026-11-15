@@ -9,6 +9,12 @@ signal letter_closed
 
 ## The letter closes by itself after this long if nobody taps.
 const LETTER_TIME := 9.0
+## How long the end-of-day card stays if nobody taps it away.
+const END_CARD_TIME := 7.5
+## A tap can't close the end-of-day card before this (a stray tap from the
+## screen before it), and after one it goes in this long.
+const END_CARD_MIN := 1.0
+const END_CARD_OUT := 0.45
 
 var profile: PlayerProfile
 
@@ -22,6 +28,12 @@ var _card_title: Label
 var _card_sub: Label
 var _card_time := 0.0
 var _card_t := 0.0
+var _card_hooks: VBoxContainer
+var _card_streak: Label
+var _card_goal: Label
+var _card_next: Label
+var _card_hint: Label
+var _end_card := false
 var _letter: PanelContainer
 var _letter_t := -1.0
 var _confetti: Confetti
@@ -58,6 +70,30 @@ func _build_card() -> void:
 	_card_sub = UiKit.label("", 15, UiKit.TEXT_KICKER, UiKit.heavy_font())
 	_card_sub.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_card.add_child(_card_sub)
+	# Under an end-of-day card: what keeps the career moving.
+	_card_hooks = UiKit.vbox(6)
+	_card_hooks.name = "Hooks"
+	_card_hooks.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_card_hooks.visible = false
+	_card.add_child(_card_hooks)
+	var gap := Control.new()
+	gap.custom_minimum_size = Vector2(0, UiKit.px(8))
+	_card_hooks.add_child(gap)
+	_card_streak = UiKit.label("", 15, UiKit.AMBER, UiKit.heavy_font())
+	_card_streak.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_card_hooks.add_child(_card_streak)
+	_card_goal = UiKit.label("", 13, UiKit.MINT, UiKit.heavy_font())
+	_card_goal.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_card_hooks.add_child(_card_goal)
+	_card_next = UiKit.label("", 17, Color.WHITE, UiKit.heading_medium_font())
+	_card_next.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_card_next.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_card_next.custom_minimum_size = Vector2(UiKit.px(560), 0)
+	_card_next.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	_card_hooks.add_child(_card_next)
+	_card_hint = UiKit.label("Tap to go on", 11, UiKit.TEXT_KICKER, UiKit.heavy_font())
+	_card_hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_card_hooks.add_child(_card_hint)
 	_card.modulate.a = 0.0
 
 
@@ -142,9 +178,69 @@ func card(title: String, sub: String, time: float) -> void:
 	_card_sub.visible = not sub.is_empty()
 	_card_time = maxf(time, 0.1)
 	_card_t = 0.0
+	_card_hooks.visible = false
+	_end_card = false
+	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_fade.color = Color(0, 0, 0, 1)
 	_fade_to = _fade.color
 	_fade_from = _fade.color
+
+
+## The card that ends a day: the day's own line, and under it what makes the
+## next day worth starting ({"streak", "goal", "tomorrow"}, see DayHooks).
+## It stays until tapped (or END_CARD_TIME); returns how long that is.
+func end_card(title: String, sub: String, hooks: Dictionary, time: float = END_CARD_TIME) -> float:
+	card(title, sub, time)
+	_end_card = true
+	var streak := str(hooks.get("streak", ""))
+	var goal := str(hooks.get("goal", ""))
+	var next := str(hooks.get("tomorrow", ""))
+	_card_streak.text = streak
+	_card_streak.visible = not streak.is_empty()
+	_card_goal.text = goal
+	_card_goal.visible = not goal.is_empty()
+	_card_next.text = next
+	_card_next.visible = not next.is_empty()
+	_card_hooks.visible = true
+	# The whole screen is the button.
+	mouse_filter = Control.MOUSE_FILTER_STOP
+	return _card_time
+
+
+## True while an end-of-day card is up.
+func end_card_open() -> bool:
+	return _end_card and _card_t < _card_time
+
+
+## What the end-of-day card says under the day's line, top to bottom.
+func end_card_lines() -> PackedStringArray:
+	var lines := PackedStringArray()
+	if _card_hooks.visible:
+		for line: Label in [_card_streak, _card_goal, _card_next]:
+			if line.visible:
+				lines.append(line.text)
+	return lines
+
+
+## A tap on the end-of-day card: it goes, and the next day starts. Returns
+## false when it is too soon (or there is no such card).
+func skip_end_card() -> bool:
+	if not end_card_open() or _card_t < END_CARD_MIN:
+		return false
+	_card_time = minf(_card_time, _card_t + END_CARD_OUT)
+	return true
+
+
+## How long the card on screen has left.
+func card_left() -> float:
+	return maxf(0.0, _card_time - _card_t)
+
+
+func _gui_input(event: InputEvent) -> void:
+	var button := event as InputEventMouseButton
+	if button != null and button.button_index == MOUSE_BUTTON_LEFT and not button.pressed and skip_end_card():
+		Sfx.play(self, "tap", -8.0)
+		accept_event()
 
 
 ## Confetti over everything, for a promotion. Nothing with Reduce motion on.

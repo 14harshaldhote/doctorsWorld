@@ -9,7 +9,7 @@ extends RefCounted
 ## the interview that makes a Head of Department; then Days 24 to 28, six
 ## months on, as Head of Department (stage 10): the nurses' strike, a day
 ## case that comes back, the board's vote for Chief of Medicine, and the last
-## day, with a new intern of your own. Quiet days follow.
+## day, with a new intern of your own. The Chief's days follow (ChiefDays).
 ##
 ## Beats use the Ward's keys (see Ward.DAYS) plus:
 ##   "where"     "seminar" for a beat in the seminar room (no walking)
@@ -42,7 +42,7 @@ const TIME_JUMPS := {
 	24: ["Six months later", "Head of Department. Dr. Rao's old office, a door that sticks, and everybody's problems before your own."],
 }
 ## The story chapters the Ward reads conversations from, after "ward".
-const CHAPTERS := ["junior", "senior", "surgeon", "hod"]
+const CHAPTERS := ["junior", "senior", "surgeon", "hod", "chief"]
 ## Story days that are night shifts (the first week's night is Ward.NIGHT_DAY).
 const NIGHTS := [16]
 

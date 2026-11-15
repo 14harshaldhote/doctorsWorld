@@ -82,6 +82,9 @@ var _banter: Array = []
 var _banter_clock := 0.0
 var _walking_home: Array[String] = []
 var _day_end_in := -1.0
+var _end_in := -1.0
+## The day's last card, over everything.
+var overlay: StoryOverlay
 
 
 func _init(for_profile: PlayerProfile = null, with_arrival: bool = false) -> void:
@@ -120,6 +123,10 @@ func _ready() -> void:
 	talk_ui.name = "Conversation"
 	talk_ui.mode = ConversationUi.Mode.TALK
 	layer.add_child(talk_ui)
+	overlay = StoryOverlay.new(profile)
+	overlay.name = "Overlay"
+	layer.add_child(overlay)
+	overlay.fade("clear", 0.01)
 	story = StoryPlayer.new(StoryRunner.new(profile), talk_ui, self)
 	story.actors = _actors()
 	story.finished.connect(_on_talk_finished)
@@ -582,6 +589,13 @@ func _on_talk_finished(_skipped: bool) -> void:
 	save_requested.emit()
 
 
+## The first day's card, and what tomorrow brings.
+func _end_day() -> void:
+	hud.set_talking(true)
+	_end_in = overlay.end_card("Day %d · %s" % [profile.day, profile.clock_text()], "Riverside General · Your first day",
+		DayHooks.end_card(profile, profile.day))
+
+
 func _walk_home(id: String) -> void:
 	story.walk(id, people[id]["home"], 1.3)
 	_walking_home.append(id)
@@ -607,6 +621,9 @@ func _unhandled_input(event: InputEvent) -> void:
 
 ## Handles a tap on the screen: talk to a person, or walk to the floor.
 func tap(screen_point: Vector2) -> void:
+	if _end_in > 0.0:
+		overlay.skip_end_card()
+		return
 	if story.is_playing():
 		return
 	var person := person_at(screen_point)
@@ -732,10 +749,16 @@ func _key_direction() -> Vector2:
 func _process(delta: float) -> void:
 	story.update(delta)
 	_update_banter(delta)
+	overlay.tick(delta)
 	if _day_end_in > 0.0:
 		_day_end_in -= delta
 		if _day_end_in <= 0.0:
-			# The game moves on to the next day, and this scene goes away.
+			_end_day()
+	if _end_in > 0.0:
+		# A tap on the card cuts it short; then the game moves on to the
+		# next day, and this scene goes away.
+		_end_in = minf(_end_in - delta, overlay.card_left())
+		if _end_in <= 0.0:
 			day_finished.emit()
 			return
 	for id: String in _walking_home.duplicate():

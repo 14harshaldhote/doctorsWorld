@@ -129,10 +129,15 @@ func test_the_end_of_day_one_leads_to_the_skills_lab_on_day_two() -> void:
 			lobby.talk_ui.tap()
 		lobby._process(1.0 / 30.0)
 	expect(main.screen == lobby, "a moment to take in the goodbye")
-	for frame in 120:
+	var hooked := PackedStringArray()
+	for frame in 600:
 		if main.screen != lobby:
 			break
+		if lobby.overlay.end_card_open():
+			hooked = lobby.overlay.end_card_lines()
+			lobby.overlay.skip_end_card()
 		lobby._process(1.0 / 30.0)
+	expect(" ".join(hooked).contains("Tomorrow: the skills lab"), "the day ends on a card about tomorrow (%s)" % [hooked])
 	var lab := main.screen as SkillsLab
 	expect(lab != null, "then Day 2 starts in the skills lab")
 	expect_equal(main.profile.day, 2)
@@ -493,7 +498,7 @@ func test_a_head_of_department_s_months_end_as_chief_of_medicine() -> void:
 	for flag: String in ["jump_24", "strike_backed", "op_sinha_won", "sinha_together", "strike_rota_right",
 			"strike_no_agency", "hos_sethi", "lesson_ask"]:
 		expect(profile.has_flag(flag), flag)
-	expect(main.screen is Ward and profile.day == 29, "the next morning is an ordinary day")
+	expect(main.screen is Ward and profile.day == 29, "the next morning is the first of the Chief's days")
 	var saved: PlayerProfile = SaveStore.new(SAVE).load_or_start()["profile"]
 	expect_equal(saved.rank(), Rank.CHIEF, "the promotion is saved")
 	print("    head of department months: %d XP, level %d, %s" % [profile.total_xp, profile.level(), Rank.title(profile.rank())])

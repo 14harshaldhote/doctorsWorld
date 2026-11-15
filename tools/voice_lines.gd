@@ -67,7 +67,35 @@ func _extra_runs() -> void:
 				for day in [3, 4]:
 					_play_theatre(quality, "", {"procedure": "bile_leak", "difficulty": level, "allergy_known": known,
 						"scrub_nurse": "neha"}, day)
+		_chief_runs(quality)
 	print("The extra runs noted %d more lines." % (Speech.heard.size() - before))
+
+
+## The Chief's days: every casebook patient on the table at every
+## difficulty (with what they said known and not known) and once in the
+## simulator, tonight's rota and the highway crash with many seeds, and
+## the generated days themselves, including a new tier and a milestone.
+func _chief_runs(quality: String) -> void:
+	for id: String in ChiefDays.CASEBOOK:
+		var entry: Dictionary = ChiefDays.CASEBOOK[id]
+		var team: Array = entry["team"]
+		for level: String in OperationTask.DIFFICULTIES:
+			for known: bool in [true, false]:
+				var setup := {"procedure": entry["procedure"], "difficulty": level, "casebook": ChiefDays.casebook_setup(id),
+					"lead": team[0], "scrub_nurse": team[1], "anaesthetist": team[2], "intensity": 1.3}
+				for key: String in entry.get("op_flags", {}):
+					setup[key] = known
+				_play_theatre(quality, "", setup, 3 + int(known))
+		for level: String in ["hard", "extreme"]:
+			_play_theatre(quality, "", {"procedure": entry["procedure"], "difficulty": level, "lead": "iyer",
+				"scrub_nurse": "neha", "anaesthetist": "khan", "casebook": ChiefDays.casebook_setup(id, true)}, 5)
+	for level: String in OperationTask.DIFFICULTIES:
+		for with_seed in [1, 2, 3, 4, 5, 6, 7, 8]:
+			_play_rota("chief_rota", level, with_seed, quality)
+			_play_triage(level, with_seed, quality, "chief_triage")
+	for doctor_name: String in NAMES.slice(0, 2):
+		for day in [29, 30, 31, 32, 33, 34, 35, 36, 38, 39, 42, 46, 50]:
+			_play_ward(day, doctor_name, quality)
 
 
 func _play_theatre(quality: String, complication: String, setup: Dictionary = {}, day: int = 3) -> void:
@@ -99,6 +127,8 @@ func _play_ward(day: int, doctor_name: String, quality: String) -> void:
 	var rank := Rank.SURGEON if day >= 19 else (Rank.SENIOR_RESIDENT if day >= 14 else Rank.JUNIOR_RESIDENT)
 	if day >= 24:
 		rank = Rank.HEAD_OF_DEPARTMENT
+	if day >= ChiefDays.FIRST_DAY:
+		rank = Rank.CHIEF
 	doctor.total_xp = LevelCurve.total_xp_to_reach(Rank.FIRST_LEVELS[rank]) + 400
 	doctor.rank_held = rank
 	for flag: String in ["op_rohit_done", "op_rohit_won", "promoted", "beds_saved", "rider_treated", "jump_9"]:
@@ -109,6 +139,9 @@ func _play_ward(day: int, doctor_name: String, quality: String) -> void:
 		doctor.set_flag("jump_19")
 	if day >= 24:
 		doctor.set_flag("jump_24")
+	if day >= ChiefDays.FIRST_DAY:
+		for flag: String in ["chief_won", "strike_backed", "sinha_told"]:
+			doctor.set_flag(flag)
 	var ward := Ward.new(doctor)
 	root.add_child(ward)
 	var finished := [false]
@@ -119,8 +152,25 @@ func _play_ward(day: int, doctor_name: String, quality: String) -> void:
 	ward.free()
 
 
-func _play_triage(level: String, with_seed: int, quality: String) -> void:
-	var task := TriageTask.new("bus_triage", with_seed, level)
+func _play_rota(case_id: String, level: String, with_seed: int, quality: String) -> void:
+	var task := RotaTask.new(case_id, with_seed, level)
+	var view := RotaView.new(task)
+	root.add_child(view)
+	var bot := AutoPlayer.new()
+	bot.quality = quality
+	bot.pace = 0.1
+	var waited := 0.0
+	while not task.finished and waited < 120.0:
+		if quality == "shaky" and level != "extreme" and int(waited * 10.0) % 37 == 0:
+			view.ask_hint()
+		bot.step(view, 0.1)
+		view.tick(0.1)
+		waited += 0.1
+	view.free()
+
+
+func _play_triage(level: String, with_seed: int, quality: String, case_id: String = "bus_triage") -> void:
+	var task := TriageTask.new(case_id, with_seed, level)
 	var view := TriageView.new(task)
 	root.add_child(view)
 	var bot := AutoPlayer.new()

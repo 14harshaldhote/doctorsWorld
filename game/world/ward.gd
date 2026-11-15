@@ -125,7 +125,7 @@ const DAYS := {
 			"page": "Dr. Iyer: We're ready for you. Don't run."},
 	],
 }
-## Every quiet day after the review.
+## A day with no story of its own (none now: the Chief's days follow Day 28).
 const QUIET := [
 	{"id": "morning", "talk": "quiet_morning", "with": "iyer"},
 	{"id": "films", "row": "Teaching films", "go": "lightbox", "tasks": [["scan", "teaching_scan"]],
@@ -491,6 +491,19 @@ func _build_people() -> void:
 		"glasses": 1, "brows": 4, "scrubs": 5, "coat": false, "stethoscope": false}, AvatarConfig.Mood.CALM, "kurta")
 	_person("saxena", {"skin": 5, "face": 3, "height": 1, "hair_style": 6, "hair_colour": 0, "eyes": 5, "brows": 1,
 		"scrubs": 1}, AvatarConfig.Mood.WORRIED)
+	# The Chief's days: Mr. Malhotra's son, a CarePlus day case, and three
+	# families at the complaints desk.
+	var teen := _person("dev", {"skin": 2, "face": 0, "body": 0, "height": 2, "hair_style": 3, "hair_colour": 0, "brows": 2,
+		"coat": false, "stethoscope": false}, AvatarConfig.Mood.WORRIED, "patient")
+	teen.scale = Vector3.ONE * 0.9
+	_person("verghese", {"skin": 5, "face": 1, "body": 1, "height": 2, "hair_style": 8, "hair_colour": 1, "brows": 1,
+		"glasses": 2, "coat": false, "stethoscope": false}, AvatarConfig.Mood.ANGRY, "patient")
+	_person("relative_a", {"skin": 5, "face": 2, "body": 2, "height": 3, "hair_style": 0, "hair_colour": 5, "facial_hair": 3,
+		"brows": 3, "scrubs": 5, "coat": false, "stethoscope": false, "watch": true}, AvatarConfig.Mood.ANGRY, "casual")
+	_person("relative_b", {"skin": 3, "face": 3, "body": 1, "height": 1, "hair_style": 9, "hair_colour": 6, "brows": 4,
+		"glasses": 3, "scrubs": 4, "coat": false, "stethoscope": false}, AvatarConfig.Mood.ANGRY, "kurta")
+	_person("relative_c", {"skin": 6, "face": 1, "body": 0, "height": 2, "hair_style": 5, "hair_colour": 0, "eyes": 6, "brows": 1,
+		"scrubs": 7, "coat": false, "stethoscope": false}, AvatarConfig.Mood.WORRIED, "kurta")
 	# Patients who sleep through the week, so the ward is full.
 	_person("bg1", {"skin": 8, "face": 5, "body": 2, "hair_style": 1, "hair_colour": 5, "facial_hair": 5,
 		"coat": false, "stethoscope": false}, AvatarConfig.Mood.TIRED, "patient")
@@ -766,7 +779,14 @@ func _stage_day() -> void:
 			put("iyer", "desk:left")
 			put("you", "desk")
 		_:
-			if WardStory.STAGING.has(profile.day):
+			if ChiefDays.is_chief_day(profile.day):
+				_apply_puts(ChiefDays.staging(profile.day))
+				# Staff who come in as patients change out of their scrubs.
+				var patient_rig := rig_for(ChiefDays.patient_for(profile.day))
+				if patient_rig != null and not ChiefDays.outfit(profile.day).is_empty():
+					patient_rig.outfit = ChiefDays.outfit(profile.day)
+					patient_rig.build()
+			elif WardStory.STAGING.has(profile.day):
 				_apply_puts(WardStory.STAGING[profile.day])
 			elif profile.day > WardStory.FIRST_DAY:
 				_apply_puts(WardStory.QUIET_STAGING)
@@ -836,6 +856,8 @@ func _stage_beat(entry: Dictionary) -> void:
 # --- The day ----------------------------------------------------------------------
 
 func _begin_day() -> void:
+	if ChiefDays.is_chief_day(profile.day):
+		ChiefDays.prepare(profile, profile.day)
 	for flag: String in DAY_FLAGS.get(profile.day, WardStory.DAY_FLAGS.get(profile.day, [])):
 		profile.set_flag(flag, false)
 	for case_id: String in DAY_CASES.get(profile.day, WardStory.DAY_CASES.get(profile.day, [])):
@@ -879,6 +901,8 @@ func _show_day_card() -> void:
 
 func _beats_for(day: int) -> Array[Dictionary]:
 	var found: Array[Dictionary] = []
+	if ChiefDays.is_chief_day(day):
+		return ChiefDays.beats(profile, day)
 	var source: Array = DAYS.get(day, WardStory.DAYS.get(day, QUIET))
 	for beat: Dictionary in source:
 		found.append(beat)
@@ -897,6 +921,8 @@ func _day_line() -> String:
 			return "Surgical ward · Dr. Rao's round"
 		8:
 			return "Review day"
+	if ChiefDays.is_chief_day(profile.day):
+		return ChiefDays.day_line(profile, profile.day)
 	return str(WardStory.DAY_LINES.get(profile.day, "Surgical ward · A quiet day"))
 
 
@@ -919,6 +945,8 @@ func _next_beat() -> void:
 		_end_day()
 		return
 	var current := beat()
+	if ChiefDays.is_chief_day(profile.day):
+		ChiefDays.before_beat(profile, current)
 	task_queue = (current.get("tasks", []) as Array).duplicate(true)
 	if place != "theatre":
 		Music.cue(_place_music())
@@ -1147,8 +1175,8 @@ func _end_day() -> void:
 	var title := "Day %d · %s" % [profile.day, "07:00" if night else profile.clock_text()]
 	if REVIEWS.has(profile.day):
 		title = "%s · %s" % [profile.full_title(), Rank.title(profile.rank())]
-	overlay.card(title, _end_line() + "   +%d XP" % SHIFT_XP, DAY_END_DELAY)
-	_end_in = DAY_END_DELAY
+	# What the day did, and under it what makes tomorrow worth starting.
+	_end_in = overlay.end_card(title, _end_line() + "   +%d XP" % SHIFT_XP, DayHooks.end_card(profile, profile.day))
 	hud.refresh_profile()
 	_refresh_hud()
 	save_requested.emit()
@@ -1174,6 +1202,8 @@ func _end_line() -> String:
 			return "Mr. Fernandes has a tube and a plan. Ward 4's beds are on the board's agenda."
 		8:
 			return "Junior Resident, from Monday."
+	if ChiefDays.is_chief_day(profile.day):
+		return ChiefDays.end_line(profile, profile.day)
 	var story_line := WardStory.end_line(profile, profile.day)
 	return story_line if not story_line.is_empty() else "A quiet day. Quiet days are rare."
 
@@ -1182,6 +1212,9 @@ func _end_line() -> String:
 
 ## A tap in the world: the place the beat sends the doctor, or the floor.
 func tap(screen_point: Vector2) -> void:
+	if mode == "end":
+		overlay.skip_end_card()
+		return
 	if view != null:
 		if not view.result_open():
 			view.world_tap(screen_point)
@@ -1393,7 +1426,7 @@ func open_task(task_id: String, which_case: String) -> void:
 		spot = "Ambulance bay"
 	var shift := "Major incident" if task_id == "triage" else ("On call" if night else "Ward round")
 	if task_id == "rota":
-		shift = "Strike day"
+		shift = "Strike day" if which_case == "strike_rota" else "Night cover"
 	view.kicker_override = "%s · %s" % [shift, spot]
 	_layer.add_child(view)
 	_layer.move_child(view, talk_ui.get_index())
@@ -1457,6 +1490,8 @@ func _on_task_finished(task: TrainingTask) -> void:
 		profile.set_flag(case_id + "_gap", not rota.uncovered().is_empty())
 	profile.set_flag(case_id + "_done")
 	profile.set_flag(case_id + "_right", right)
+	if ChiefDays.is_chief_day(profile.day):
+		ChiefDays.after_task(profile, task)
 	for item: String in seen:
 		profile.set_flag(case_id + "_" + item)
 	if not patient.is_empty() and story.runner.start_trust(patient) >= 0:
@@ -1543,6 +1578,8 @@ func _enter_theatre(procedure: String) -> void:
 	var entry := beat()
 	_queued_procedure = procedure
 	var data := Procedures.get_procedure(procedure)
+	if entry.has("casebook"):
+		data = Procedures.for_patient(data, ChiefDays.casebook_setup(str(entry["casebook"]), bool(entry.get("sim", false))))
 	mode = "story"
 	hud.set_talking(true)
 	var patient := str(entry.get("patient", ""))
@@ -1575,6 +1612,10 @@ func open_operation(procedure: String) -> void:
 	active = procedure
 	mode = "task"
 	var setup := {"procedure": procedure, "called": profile.called(), "difficulty": _case_level(entry)}
+	if entry.has("casebook"):
+		# A Chief's patient on the table, and the day's pressure on the team.
+		setup["casebook"] = ChiefDays.casebook_setup(str(entry["casebook"]), bool(entry.get("sim", false)))
+		setup["intensity"] = ChiefDays.intensity(profile, profile.day)
 	var known: Dictionary = entry.get("op_flags", {})
 	for key: String in known:
 		setup[key] = WardStory.holds(profile, str(known[key]))
@@ -1614,13 +1655,14 @@ func _case_seed(procedure: String) -> int:
 	return absi(hash("%s|%d|%s|%d" % [profile.name, profile.day, procedure, profile.total_xp])) % 1000003 + 1
 
 
-## The case's difficulty: one of the beat's "levels", picked by the seed.
+## The case's difficulty: one of the beat's "levels", picked by the seed,
+## likelier to be hard the further the career has gone (see DayHooks).
 func _case_level(entry: Dictionary) -> String:
 	var levels: Array = entry.get("levels", [])
 	if levels.is_empty():
 		return ""
 	var dice := SeededRandom.new(_case_seed("level" + str(entry.get("id", ""))))
-	return str(dice.pick(levels))
+	return DayHooks.pick_level(levels, DayHooks.weights_for(profile), dice.next_float())
 
 
 func _on_operation_finished(op: OperationTask) -> void:
@@ -1642,6 +1684,9 @@ func _on_operation_finished(op: OperationTask) -> void:
 	if story.runner.start_trust(patient) >= 0:
 		profile.change_trust(patient, {"won": 5, "struggled": 1, "failed": -2}[op.outcome], story.runner.start_trust(patient))
 	results.append({"id": op.id, "case": patient, "score": op.score(), "right": op.outcome == "won"})
+	DayHooks.record_operation(profile, op.outcome)
+	if ChiefDays.is_chief_day(profile.day):
+		ChiefDays.after_operation(profile, op.outcome, bool(beat().get("sim", false)))
 	profile.pass_minutes(55 if op.outcome == "won" else 80)
 	view.show_result("+%d XP%s" % [xp, " · new best" if best else ""])
 	hud.refresh_profile()
@@ -1789,7 +1834,8 @@ func update(delta: float) -> void:
 			else:
 				_finish_beat()
 	if _end_in > 0.0:
-		_end_in -= delta
+		# A tap on the end-of-day card cuts it short.
+		_end_in = minf(_end_in - delta, overlay.card_left())
 		if _end_in <= 0.0:
 			day_finished.emit()
 			return

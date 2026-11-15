@@ -84,6 +84,7 @@ var _gather_wait := 0.0
 var _marker: Node3D
 var _marker_time := 0.0
 var _home_in := -1.0
+var _end_in := -1.0
 
 
 func _init(for_profile: PlayerProfile = null) -> void:
@@ -380,6 +381,16 @@ func _recovery_text() -> String:
 	return "ICU: Rohit is awake and complaining about the food. Dr. Iyer was right about that."
 
 
+## Out of the door: the day's card, and what tomorrow brings.
+func _end_day() -> void:
+	mode = "end"
+	var stars := 0
+	for id: String in TrainingTask.IDS:
+		stars += maxi(0, TrainingTask.stars_for(profile.best_score(id)))
+	var line := "Skills lab · %d of %d stations · %d stars" % [trained_count(), TrainingTask.IDS.size(), stars]
+	_end_in = overlay.end_card("Day %d · %s" % [profile.day, profile.clock_text()], line, DayHooks.end_card(profile, profile.day))
+
+
 ## True once the day's training is done and the doctor may leave.
 func can_go_home() -> bool:
 	return profile.has_flag("training_done")
@@ -663,6 +674,9 @@ func _unhandled_input(event: InputEvent) -> void:
 
 ## A tap on the screen: picks something in the task, a station, or the floor.
 func tap(screen_point: Vector2) -> void:
+	if mode == "end":
+		overlay.skip_end_card()
+		return
 	if view != null:
 		if not view.result_open():
 			view.world_tap(screen_point)
@@ -854,6 +868,11 @@ func update(delta: float) -> void:
 	if _home_in > 0.0:
 		_home_in -= delta
 		if _home_in <= 0.0:
+			_end_day()
+	if _end_in > 0.0:
+		# A tap on the end-of-day card cuts it short.
+		_end_in = minf(_end_in - delta, overlay.card_left())
+		if _end_in <= 0.0:
 			day_finished.emit()
 			return
 	if _marker_time > 0.0:

@@ -102,6 +102,13 @@ VOICES = {
     "kapoor": {"mix": {"hm_psi": 0.5, "am_liam": 0.5}, "speed": 1.05},
     "sinha": {"mix": {"hf_beta": 0.55, "bf_lily": 0.45}, "speed": 0.95},
     "saxena": {"mix": {"hf_beta": 0.55, "af_sky": 0.45}, "speed": 1.06},
+    # The Chief's days: Mr. Malhotra's son, a CarePlus day case, and three
+    # families at the complaints desk.
+    "dev": {"mix": {"hm_psi": 0.45, "am_puck": 0.35, "af_sky": 0.2}, "speed": 1.06},
+    "verghese": {"mix": {"hf_alpha": 0.55, "af_jessica": 0.45}, "speed": 1.02},
+    "relative_a": {"mix": {"hm_omega": 0.55, "am_onyx": 0.45}, "speed": 1.04},
+    "relative_b": {"mix": {"hf_alpha": 0.6, "af_kore": 0.4}, "speed": 1.03},
+    "relative_c": {"mix": {"hf_beta": 0.55, "af_river": 0.45}, "speed": 1.05},
 }
 # The player's doctor: never voiced.
 PLAYER = "you"
@@ -129,6 +136,11 @@ RESPELL = {
     "Chawla": "Chaav-laa", "Iqbal": "Ik-baal", "Naidu": "Nai-doo", "Hegde": "Heg-day", "Kamath": "Kaa-mat",
     "Desai": "De-sai", "Bedi": "Bay-dee", "Lobo": "Lo-bo", "Ghosh": "Gohsh", "Rodrigues": "Rod-ree-gues",
     "CarePlus": "Care Plus", "Ma'am": "Mam",
+    "Verghese": "Ver-geese", "Anjali": "Un-ja-lee", "Gaikwad": "Gike-waad", "Lele": "Lay-lay",
+    "Siddiqui": "Sid-dee-kee", "Bela": "Bay-la", "payesh": "pa-yesh", "Bhosale": "Bho-sa-lay",
+    "Rizvi": "Riz-vee", "Menezes": "Me-nay-zes", "Patil": "Paa-til", "Saini": "Sai-nee", "Bakshi": "Buck-shee",
+    "Kurian": "Koo-ree-an", "D'Mello": "D Mello", "Pawar": "Pa-waar", "Rane": "Raa-nay", "Mitali": "Mi-taa-lee",
+    "dupatta": "du-putta",
 }
 TITLES = {"Dr.": "Doctor", "Mr.": "Mister", "Mrs.": "Missus", "Ms.": "Miz"}
 ACRONYMS = ["ICU", "VIP", "MBBS", "ECG", "CPR", "OPD", "MRI", "HIV", "IVF", "DNA", "CCTV", "ENT", "NICU", "HR", "INR", "CT", "MDT"]

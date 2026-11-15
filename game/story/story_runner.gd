@@ -15,6 +15,7 @@ extends RefCounted
 ##   {"do": "walk", "who": "you", "to": "podium"}
 ##       An action for the scene to perform (walk, give, shot, card...).
 ##   {"trust": {"grace": 2}}, {"flag": "met_grace"}, {"unflag": "x"}, {"xp": 10}, {"minutes": 5}
+##   {"standing": {"staff": 4, "money": -3}}  the hospital's standing, for a Chief (see Standing)
 ##       Silent changes to the career.
 ##   {"if": "flag_name", "then": [...], "else": [...]}   ("!flag" means not set;
 ##   "a&b" both, "a|b" either)
@@ -26,8 +27,8 @@ extends RefCounted
 const MOODS := ["calm", "happy", "worried", "focused", "tired", "angry", "shocked"]
 const LINE_KEYS := ["say", "text", "mood", "gesture", "head", "to"]
 const OPTION_KEYS := ["tone", "text", "skill", "trust", "flag", "xp", "effect", "detail", "then", "gesture", "mood", "if",
-	"again"]
-const SILENT_KEYS := ["trust", "flag", "unflag", "xp", "minutes"]
+	"again", "standing", "unflag", "minutes"]
+const SILENT_KEYS := ["trust", "flag", "unflag", "xp", "minutes", "standing"]
 
 var profile: PlayerProfile
 var cast: Dictionary
@@ -39,6 +40,9 @@ var _pending: Array = []
 var _pending_step := {}
 var _about := ""
 var _finished := true
+## What the last step or reply did to the hospital's standing (see
+## Standing.change), for the line under a reply.
+var _standing_moved := {}
 
 
 func _init(for_profile: PlayerProfile = null, with_cast: Dictionary = {}) -> void:
@@ -132,6 +136,7 @@ func choose(index: int) -> Dictionary:
 		"effect": fill(str(option.get("effect", ""))),
 		"detail": fill(str(option.get("detail", ""))),
 		"trust": changes,
+		"standing": _standing_moved,
 	}
 
 
@@ -256,6 +261,9 @@ func _apply(step: Dictionary) -> Dictionary:
 		profile.total_xp += maxi(0, int(step["xp"]))
 	if step.has("minutes"):
 		profile.pass_minutes(int(step["minutes"]))
+	_standing_moved = {}
+	if typeof(step.get("standing")) == TYPE_DICTIONARY:
+		_standing_moved = Standing.change(profile, step["standing"])
 	return changes
 
 
@@ -308,6 +316,7 @@ static func _validate_step(step: Dictionary, known_cast: Dictionary, actions: Ar
 					problems.append("%s: unknown key %s in a reply" % [place, key])
 			problems.append_array(_validate_look(option, place))
 			problems.append_array(_validate_trust(option, known_cast, place))
+			problems.append_array(_validate_standing(option, place))
 			if option.has("then"):
 				problems.append_array(validate(option["then"], known_cast, actions, place + ".then"))
 		var exits := (options as Array).filter(func(option: Variant) -> bool:
@@ -339,6 +348,7 @@ static func _validate_step(step: Dictionary, known_cast: Dictionary, actions: Ar
 		if not silent:
 			problems.append("%s: the step does nothing" % at)
 		problems.append_array(_validate_trust(step, known_cast, at))
+		problems.append_array(_validate_standing(step, at))
 	return problems
 
 
@@ -350,6 +360,20 @@ static func _validate_look(step: Dictionary, at: String) -> PackedStringArray:
 		problems.append("%s: unknown gesture %s" % [at, step["gesture"]])
 	if step.has("head") and str(step["head"]) not in AvatarRig.HEAD_GESTURES:
 		problems.append("%s: unknown head movement %s" % [at, step["head"]])
+	return problems
+
+
+static func _validate_standing(step: Dictionary, at: String) -> PackedStringArray:
+	var problems := PackedStringArray()
+	var standing: Variant = step.get("standing")
+	if standing == null:
+		return problems
+	if typeof(standing) != TYPE_DICTIONARY:
+		problems.append("%s: standing must map meters to changes" % at)
+		return problems
+	for meter: Variant in standing:
+		if str(meter) not in Standing.METERS:
+			problems.append("%s: unknown standing meter %s" % [at, meter])
 	return problems
 
 

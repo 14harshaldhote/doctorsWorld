@@ -65,7 +65,8 @@ how you know you're winning.
 
 ## What works right now
 
-All ten stages are in, from convocation to the corner office. The old 2D
+All ten stages are in, from convocation to the corner office, and then the
+corner office keeps going. For ever. Like a mortgage. The old 2D
 version has been retired (it's kept safe on the `swift-prototype` branch).
 Here's everything, in order, so you can decide how much of your life to give it:
 
@@ -285,6 +286,26 @@ Here's everything, in order, so you can decide how much of your life to give it:
   Grace tell you where everyone ended up. Rohit builds bridges. Dr. Rao grows
   roses. Then the pager goes off, because it always does, and the ward carries
   on without an ending, the way wards do.
+- Then you're the Chief, and it never stops. The first week is a casebook of
+  people you already know, now on the other side of the bed: Mrs. Banerjee
+  with a cut arm and a tin of biscuits, Mr. Malhotra's teenage son (and Mr.
+  Malhotra, with demands), Tom on his own operating table, Salim from that
+  night years ago, Mrs. Mehra and her phoning son, a CarePlus day case with a
+  belly full of bile, and finally Sister Grace, who has been hiding a pain for
+  a month and is furious you noticed.
+- Every day brings a hard call: the night nurses' budget, a drug company with
+  a cheque, cameras at the door, a family with a lawyer's card. Your answers
+  move three numbers (staff, money, and whether the town trusts you), and
+  every fifth day the board reads them back to you, slowly.
+- After that the days are made fresh every morning, for as long as you can
+  stand it: a night rota from a ward full of different patients, crashes on
+  the highway, a simulator case in front of interns who are placing bets on
+  you. Every ten days the town grows and the hospital gets busier: patients
+  turn faster, puzzles stop going easy on you, and the board raises its bar.
+  There are milestone days, cake included. There is no last day. That's the
+  job.
+- Every day ends on a card with your winning run, how close the next review
+  or board report is, and a line about tomorrow, which is usually worse.
 
 Screenshots of every screen are rebuilt automatically after each change, on
 the [`screenshots` branch](../../tree/screenshots).

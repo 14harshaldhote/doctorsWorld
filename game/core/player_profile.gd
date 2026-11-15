@@ -30,6 +30,10 @@ var skills := {}
 ## The rank the hospital has given the player (a Rank value). Experience
 ## makes a promotion possible; the review on the ward makes it happen.
 var rank_held := Rank.INTERN
+## Whole numbers the career keeps count of, by name: operations won in a
+## row ("op_streak"), the best run ("op_streak_best"), and, for a Chief, the
+## hospital's standing (see Standing).
+var counters := {}
 
 const DAY_START := 7 * 60
 
@@ -109,6 +113,22 @@ func record_score(skill: String, points: int) -> bool:
 	return true
 
 
+## A number the career keeps count of, or start if it has never been set.
+func count(id: String, start: int = 0) -> int:
+	return int(counters.get(id, start))
+
+
+func set_count(id: String, value: int) -> void:
+	counters[id] = value
+
+
+## Adds to a count, kept between low and high. Returns the new value.
+func add_count(id: String, delta: int, start: int = 0, low: int = 0, high: int = 1000000) -> int:
+	var value := clampi(count(id, start) + delta, low, high)
+	counters[id] = value
+	return value
+
+
 func level() -> int:
 	return LevelCurve.level_for_xp(total_xp)
 
@@ -146,6 +166,7 @@ func to_dict() -> Dictionary:
 		"flags": flags.duplicate(),
 		"skills": skills.duplicate(),
 		"rank": rank_held,
+		"counters": counters.duplicate(),
 	}
 
 
@@ -186,6 +207,12 @@ static func from_dict(data: Variant) -> PlayerProfile:
 	var held: Variant = data.get("rank")
 	if typeof(held) in [TYPE_INT, TYPE_FLOAT]:
 		profile.rank_held = clampi(int(held), Rank.INTERN, Rank.CHIEF)
+	var counts: Variant = data.get("counters")
+	if typeof(counts) == TYPE_DICTIONARY:
+		for id: Variant in counts:
+			var value: Variant = counts[id]
+			if typeof(id) == TYPE_STRING and typeof(value) in [TYPE_INT, TYPE_FLOAT]:
+				profile.counters[id] = clampi(int(value), -1000000, 1000000)
 	var best: Variant = data.get("skills")
 	if typeof(best) == TYPE_DICTIONARY:
 		for skill: Variant in best:

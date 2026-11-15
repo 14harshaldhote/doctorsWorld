@@ -509,6 +509,9 @@ func _after_consent() -> void:
 
 ## A tap in the world: the bed, the sink, or the floor.
 func tap(screen_point: Vector2) -> void:
+	if mode == "end":
+		overlay.skip_end_card()
+		return
 	if view != null:
 		if not view.result_open():
 			view.world_tap(screen_point)
@@ -698,6 +701,7 @@ func _on_task_finished(task: TrainingTask) -> void:
 	profile.record_score("appendix", op.score())
 	profile.set_flag("op_rohit_done")
 	profile.set_flag("op_rohit_" + op.outcome)
+	DayHooks.record_operation(profile, op.outcome)
 	for which: String in ["bleeding", "pressure", "reaction", "burst", "wrong_side"]:
 		profile.set_flag("op_" + which, which in op.happened)
 	var trust := {"won": 5, "struggled": 1, "failed": -3}
@@ -791,8 +795,8 @@ func _end_day() -> void:
 	var where := {"won": "Rohit is asleep on the ward, minus one appendix.",
 		"struggled": "Rohit is in recovery, stable.",
 		"failed": "Rohit is in intensive care for the night."}
-	overlay.card("Day %d · %s" % [profile.day, profile.clock_text()], str(where.get(operation.outcome, "")), DAY_END_DELAY)
-	_end_in = DAY_END_DELAY
+	_end_in = overlay.end_card("Day %d · %s" % [profile.day, profile.clock_text()], str(where.get(operation.outcome, "")),
+		DayHooks.end_card(profile, profile.day))
 	_refresh_hud()
 	save_requested.emit()
 
@@ -869,7 +873,8 @@ func update(delta: float) -> void:
 		if _intro_in <= 0.0:
 			_talk("morning", "iyer")
 	if _end_in > 0.0:
-		_end_in -= delta
+		# A tap on the end-of-day card cuts it short.
+		_end_in = minf(_end_in - delta, overlay.card_left())
 		if _end_in <= 0.0:
 			day_finished.emit()
 			return

@@ -74,6 +74,11 @@ func _init(which_case: String = "strike_rota", with_seed: int = 1, level: String
 	_say(str(briefs.get(difficulty, briefs.get("easy", "Everyone needs someone. Mind the rules."))))
 
 
+## The strike's own name for the puzzle; any other night is cover.
+func title() -> String:
+	return str(_case.get("title", "Strike-day cover" if case_id == "strike_rota" else "Tonight's cover"))
+
+
 ## Who is working and who needs them. Staff and patients name the level they
 ## first appear at; staff limits can shrink on harder days. Of the rolls that
 ## can be done, the one nearest the day's tightness is kept.

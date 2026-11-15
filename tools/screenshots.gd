@@ -366,6 +366,42 @@ func _ward_shots() -> void:
 	await _ward_shot("116-the-end", 28, last + ["hos_sethi", "lesson_ask"], "ending", func(w: Ward) -> bool:
 		return w.mode == "end" and w.overlay.fade_amount() > 0.9, head)
 
+	# Stage 11: the Chief's days, for ever.
+	var chief := Ward.pick_tones(["Warm", "Patient", "Kind", "Calm", "Listen", "Gentle", "Sorry", "Promote", "Everything",
+		"Town", "Staff"])
+	var chair := last + ["hos_iyer", "lesson_ask", "strike_backed", "sinha_together"]
+	var hooked := func(w: Ward) -> bool:
+		return w.mode == "end" and w.overlay.end_card_lines().size() >= 2 and w.overlay.card_left() < 6.5
+	await _ward_shot("117-first-morning-as-chief", 29, chair, "", func(w: Ward) -> bool:
+		return w.conversation == "cb_banerjee_morning" and w.talk_ui.is_choosing(), chief)
+	await _ward_shot("118-mrs-banerjee-is-back", 29, chair, "patient", func(w: Ward) -> bool:
+		return w.view is HistoryView and (w.view.task as HistoryTask).asked.size() >= 2, chief)
+	await _ward_shot("119-a-hard-call", 29, chair, "call", func(w: Ward) -> bool:
+		return w.conversation == "hc_night_nurses" and w.talk_ui.is_choosing(), chief)
+	await _ward_shot("120-tomorrow", 29, chair, "call", hooked, chief)
+	await _ward_shot("121-mr-malhotras-son", 30, chair, "patient", func(w: Ward) -> bool:
+		return w.conversation == "cb_dev_arrive" and w.talk_ui.is_choosing(), chief)
+	await _ward_shot("122-tom-on-the-table", 31, chair, "op", func(w: Ward) -> bool:
+		return w.operation != null and w.operation.phase == "timeout", chief)
+	await _ward_shot("123-tonights-rota", 31, chair, "rota", func(w: Ward) -> bool:
+		return w.view is RotaView and (w.view.task as RotaTask).assigned.size() >= 3 \
+			and (w.view.task as RotaTask).selected.is_empty(), chief)
+	await _ward_shot("124-the-highway-crash", 32, chair, "triage", func(w: Ward) -> bool:
+		return w.view is TriageView and (w.view.task as TriageTask).tags.size() >= 2 \
+			and (w.view.task as TriageTask).selected.is_empty(), chief)
+	await _ward_shot("125-sister-grace", 35, chair, "patient", func(w: Ward) -> bool:
+		return w.conversation == "cb_grace_arrive" and w.talk_ui.is_choosing(), chief)
+	await _ward_shot("126-board-report", 38, chair, "report", func(w: Ward) -> bool:
+		return w.conversation == "board_report" and w.talk_ui.is_choosing(), chief)
+	await _ward_shot("127-the-simulator", 47, chair, "sim", func(w: Ward) -> bool:
+		return w.operation != null and w.operation.phase == "act", chief)
+	var desk := 39
+	while ChiefDays.call_for(sample_profile_on_ward(desk), desk) != "family_complaint":
+		desk += 1
+	await _ward_shot("128-complaints-desk", desk, chair, "call", func(w: Ward) -> bool:
+		return w.conversation == "hc_family_complaint" and w.talk_ui.is_choosing(), chief)
+	await _ward_shot("129-day-50-tomorrow", 49, chair, "call", hooked, chief)
+
 
 ## The drug chart with a line already flagged: the list, or the reasons.
 static func _chart_at(ward: Ward, picking: bool) -> bool:

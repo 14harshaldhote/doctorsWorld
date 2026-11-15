@@ -160,6 +160,9 @@ func _init(with_seed: int = 1, with_setup: Dictionary = {}) -> void:
 		"procedure": "appendix", "difficulty": ""}
 	setup.merge(with_setup, true)
 	procedure = Procedures.get_procedure(str(setup["procedure"]))
+	if typeof(setup.get("casebook")) == TYPE_DICTIONARY:
+		# Somebody else on the table: a patient from the Chief's casebook.
+		procedure = Procedures.for_patient(procedure, setup["casebook"])
 	id = str(procedure["id"])
 	difficulty = str(setup["difficulty"]) if str(setup["difficulty"]) in DIFFICULTIES else ""
 	for entry: Dictionary in procedure["steps"]:
@@ -199,6 +202,13 @@ func step_title(which: String) -> String:
 
 func title() -> String:
 	return str(procedure["title"])
+
+
+## How much faster trouble drains the patient than the difficulty alone
+## says: 1.0 through the story, more on a Chief's later days or with the
+## theatre short of staff (setup "intensity").
+func intensity() -> float:
+	return clampf(float(setup.get("intensity", 1.0)), 0.5, 2.0)
 
 
 ## "Rohit Kulkarni".
@@ -1333,7 +1343,7 @@ func _start_complication(which: String) -> void:
 	happened.append(which)
 	_set_vital_goal()
 	var data := _data(which)
-	_drain = float(data.get("drain", 2.0)) * float(DRAIN_SCALE.get(difficulty, 1.0))
+	_drain = float(data.get("drain", 2.0)) * float(DRAIN_SCALE.get(difficulty, 1.0)) * intensity()
 	if str(data.get("kind", "")) == "call":
 		_begin_call(str(data["tool"]), _fill(str(data["call"])))
 		return

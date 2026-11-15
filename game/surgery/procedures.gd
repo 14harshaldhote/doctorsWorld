@@ -199,6 +199,62 @@ static func get_procedure(id: String) -> Dictionary:
 	return made
 
 
+## A procedure for somebody else: a patient from the Chief's casebook in
+## place of the one the story wrote it for. who gives:
+##   "patient", "first"   the new names ("Grace Mathew", "Grace")
+##   "pronoun", "theatre", "lead", "antibiotic"   only if they change
+##   "swaps"     [[old, new], ...] put through every line (the old patient's
+##               job, what they ate, what was found inside them)
+##   "timeout"   {row id: {field: value}} laid over the board's rows
+##   "end_lines", "outcome_lines", "notes"   laid over the procedure's own
+## The old patient's names are swapped everywhere first.
+static func for_patient(procedure: Dictionary, who: Dictionary) -> Dictionary:
+	var swaps: Array = []
+	var old_full := str(procedure.get("patient", ""))
+	var old_first := str(procedure.get("first", old_full))
+	if not old_full.is_empty() and who.has("patient"):
+		swaps.append([old_full, str(who["patient"])])
+	if not old_first.is_empty() and who.has("first"):
+		swaps.append([old_first, str(who["first"])])
+	swaps.append_array(who.get("swaps", []))
+	var made: Dictionary = _swapped(procedure, swaps)
+	for key: String in ["patient", "first", "pronoun", "theatre", "lead", "antibiotic", "count_line"]:
+		if who.has(key):
+			made[key] = who[key]
+	for key: String in ["end_lines", "outcome_lines", "notes"]:
+		if who.has(key):
+			var merged: Dictionary = (made.get(key, {}) as Dictionary).duplicate()
+			merged.merge(who[key], true)
+			made[key] = merged
+	var rows: Dictionary = who.get("timeout", {})
+	for row: Dictionary in made.get("timeout", []):
+		if rows.has(str(row.get("id", ""))):
+			row.merge(rows[str(row["id"])], true)
+	return made
+
+
+## A deep copy of value with every [old, new] pair swapped in its text.
+static func _swapped(value: Variant, swaps: Array) -> Variant:
+	match typeof(value):
+		TYPE_STRING:
+			var text := str(value)
+			for pair: Array in swaps:
+				text = text.replace(str(pair[0]), str(pair[1]))
+			return text
+		TYPE_DICTIONARY:
+			var made: Dictionary = (value as Dictionary).duplicate()
+			for key: Variant in made:
+				made[key] = _swapped(made[key], swaps)
+			return made
+		TYPE_ARRAY:
+			# A copy of the same kind of list (some are lists of text only).
+			var list: Array = (value as Array).duplicate()
+			for index in list.size():
+				list[index] = _swapped(list[index], swaps)
+			return list
+	return value
+
+
 static func ids() -> Array[String]:
 	return ["appendix", "wound", "gallbladder", "hernia", "hip", "spleen", "obstruction", "bile_leak"]
 
