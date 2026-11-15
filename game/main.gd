@@ -25,6 +25,7 @@ func _ready() -> void:
 			GameSettings.current.set_volume(bus, 0.0)
 	SettingsPanel.save_path = settings_path
 	GameSettings.current.apply(get_window())
+	_note_play()
 	music = Music.new()
 	music.name = "Music"
 	add_child(music)
@@ -41,10 +42,24 @@ func _ready() -> void:
 	show_title()
 
 
-## A line being read aloud stops when the game goes to the background.
+## A line being read aloud stops when the game goes to the background, and
+## the reminders are brought up to date. Coming back counts as a session.
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_APPLICATION_PAUSED or what == NOTIFICATION_WM_CLOSE_REQUEST:
 		Speech.stop()
+		if profile != null:
+			Reminders.refresh(profile)
+	elif what == NOTIFICATION_APPLICATION_RESUMED:
+		_note_play()
+
+
+## Remembers when the player plays (for the reminders' hour) and writes a
+## fresh reminder plan, which replaces any still waiting.
+func _note_play() -> void:
+	if Reminders.supported():
+		Reminders.note_play(GameSettings.current)
+		GameSettings.current.save_to(settings_path)
+	Reminders.refresh(profile)
 
 
 func _exit_tree() -> void:
@@ -189,7 +204,23 @@ func show_ward() -> void:
 
 
 func _on_day_finished() -> void:
-	_start_day(profile.day + 1)
+	var finished := profile.day
+	if Reminders.should_ask(GameSettings.current, finished):
+		ask_about_reminders(finished)
+		return
+	_start_day(finished + 1)
+
+
+## After the first day (and the first review): would the player like a page
+## when patients are waiting? The next day starts once they answer.
+func ask_about_reminders(finished: int) -> ReminderAsk:
+	var ask := ReminderAsk.new()
+	ask.answered.connect(func(yes: bool) -> void:
+		Reminders.answer(GameSettings.current, profile, finished, yes)
+		GameSettings.current.save_to(settings_path)
+		_start_day(finished + 1))
+	add_child(ask)
+	return ask
 
 
 func _start_day(day: int) -> void:
@@ -210,3 +241,4 @@ func _on_menu_choice(choice: String) -> void:
 func _save() -> void:
 	if store.save(profile) == OK:
 		has_save = true
+	Reminders.refresh(profile)

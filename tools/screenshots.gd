@@ -9,6 +9,18 @@ extends SceneTree
 
 const FRAMES_TO_SETTLE := 10
 
+
+## A phone that has allowed reminders, for the reminder shots.
+class ShotPhone extends ReminderBackend:
+	func supported() -> bool:
+		return true
+
+	func status() -> String:
+		return "granted"
+
+	func send(_payload: String) -> void:
+		pass
+
 var _out := "shots"
 var _prefix := "shot"
 var _only := ""
@@ -439,6 +451,24 @@ func _ward_shots() -> void:
 		return ChiefDays.event_starts(sample, d + 1) and ChiefDays.walkin_for(sample, d + 1).is_empty() \
 			and ChiefDays.walkin_for(sample, d).is_empty() and not ChiefDays.is_report_day(d))
 	await _ward_shot("136-next-week", eve, chair, "call", hooked, chief)
+
+	# Stage 13: reminders, the privacy policy and the acknowledgements.
+	var backend_before := Reminders.backend
+	Reminders.use_backend(ShotPhone.new())
+	var asked := Lobby.new(sample_profile_at_work())
+	await _shot("137-reminder-ask", asked, func() -> void:
+		asked.stage_for_screenshot("walk")
+		asked.add_child(ReminderAsk.new()))
+	GameSettings.current.reminders = true
+	var about_title := TitleScreen.new(sample_profile())
+	await _shot("138-settings-reminders", about_title, func() -> void: about_title.open_settings().show_about())
+	var privacy_title := TitleScreen.new(sample_profile())
+	await _shot("139-privacy", privacy_title, func() -> void: privacy_title.open_settings().open_reader("Privacy"))
+	var thanks_title := TitleScreen.new(sample_profile())
+	await _shot("140-acknowledgements", thanks_title, func() -> void:
+		thanks_title.open_settings().open_reader("Acknowledgements"))
+	GameSettings.current.reminders = false
+	Reminders.use_backend(backend_before)
 
 
 ## The drug chart with a line already flagged: the list, or the reasons.

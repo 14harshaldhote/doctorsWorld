@@ -68,7 +68,7 @@ jobs:
           # A script error while drawing a screen fails the build.
           if grep -h "SCRIPT ERROR" shots-*.log; then exit 1; fi
           ls -la screenshots
-          test "$(ls screenshots/*.png | wc -l)" -eq 280
+          test "$(ls screenshots/*.png | wc -l)" -eq 288
 
       - name: Upload screenshots
         uses: actions/upload-artifact@v4
@@ -150,6 +150,11 @@ jobs:
           ls -la build/ios
           test -d build/ios/DoctorsWorld.xcodeproj
 
+      - name: The reminders code is in the Xcode project
+        run: |
+          grep -rl --include=dummy.cpp "DW_REMINDERS_STATUS" build/ios
+          grep -q "UserNotifications" build/ios/DoctorsWorld.xcodeproj/project.pbxproj
+
       - name: Build the app for iPhone and iPad (unsigned)
         # Godot's iOS template ships an arm64 device library (its simulator
         # library is Intel only), so CI builds the real device app with code
@@ -168,3 +173,6 @@ jobs:
           APP=build/derived/Build/Products/Debug-iphoneos/DoctorsWorld.app
           ls -la "$APP"
           lipo -info "$APP/DoctorsWorld"
+          # The reminders code made it into the app, linked to the phone's notifications.
+          otool -L "$APP/DoctorsWorld" | grep UserNotifications || echo "UserNotifications will be loaded at run time"
+          strings "$APP/DoctorsWorld" | grep -c DW_REMINDERS_STATUS

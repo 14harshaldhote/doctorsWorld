@@ -3,7 +3,7 @@ extends RefCounted
 ## The player's settings for this device: how loud the music, sound effects
 ## and voices are, whether lines are read aloud (how fast, and in which
 ## voice for the player's doctor), the text size, reduced motion, the
-## colour-blind-safe monitor and the graphics mode. They belong to the device, not the career,
+## colour-blind-safe monitor, the graphics mode and reminders. They belong to the device, not the career,
 ## so a new career keeps them. Kept in their own small JSON file, written
 ## safely the same way as the save.
 
@@ -32,6 +32,13 @@ var graphics := "smooth"
 var read_aloud := true
 ## Index into Speech.SPEEDS: slower, normal, faster.
 var speech_speed := 1
+## Reminders on the phone (see Reminders): off until the player says yes.
+var reminders := false
+## How many times the game has asked about reminders.
+var reminders_asked := 0
+## The local hours the last few sessions started, to send reminders when
+## the player usually plays.
+var play_hours: Array[int] = []
 
 
 func text_scale() -> float:
@@ -64,7 +71,8 @@ func set_volume(bus: String, value: float) -> void:
 func to_dict() -> Dictionary:
 	return {"music": music, "effects": effects, "voices": voices, "text_size": text_size,
 		"reduce_motion": reduce_motion, "colour_safe": colour_safe, "graphics": graphics,
-		"read_aloud": read_aloud, "speech_speed": speech_speed}
+		"read_aloud": read_aloud, "speech_speed": speech_speed, "reminders": reminders,
+		"reminders_asked": reminders_asked, "play_hours": play_hours.duplicate()}
 
 
 ## Reads saved settings, keeping the default for anything missing or broken.
@@ -81,7 +89,13 @@ static func from_dict(data: Variant) -> GameSettings:
 		made.text_size = clampi(int(raw["text_size"]), 0, TEXT_SCALES.size() - 1)
 	if typeof(raw.get("speech_speed")) in [TYPE_INT, TYPE_FLOAT]:
 		made.speech_speed = clampi(int(raw["speech_speed"]), 0, 2)
-	for toggle: String in ["reduce_motion", "colour_safe", "read_aloud"]:
+	if typeof(raw.get("reminders_asked")) in [TYPE_INT, TYPE_FLOAT]:
+		made.reminders_asked = clampi(int(raw["reminders_asked"]), 0, 99)
+	if typeof(raw.get("play_hours")) == TYPE_ARRAY:
+		for hour: Variant in raw["play_hours"]:
+			if typeof(hour) in [TYPE_INT, TYPE_FLOAT]:
+				made.play_hours.append(clampi(int(hour), 0, 23))
+	for toggle: String in ["reduce_motion", "colour_safe", "read_aloud", "reminders"]:
 		if typeof(raw.get(toggle)) == TYPE_BOOL:
 			made.set(toggle, raw[toggle])
 	if str(raw.get("graphics", "")) in GRAPHICS:

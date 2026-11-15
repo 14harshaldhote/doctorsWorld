@@ -3,8 +3,9 @@ extends Control
 ## The settings, over whatever screen opened them (the title screen or the
 ## pause menu): music, sound effects and voice volume, reading lines aloud
 ## (on or off, how fast, your doctor's voice), text size, reduced motion, the
-## colour-blind-safe monitor and the graphics mode. Every change
-## takes effect at once so you can hear and see it; Done saves them.
+## colour-blind-safe monitor, the graphics mode and reminders, plus the
+## privacy policy and acknowledgements. Every change takes effect at once so
+## you can hear and see it; Done saves them.
 
 signal closed
 
@@ -15,6 +16,12 @@ var settings: GameSettings
 var sliders := {}
 var choice_rows := {}
 var done_button: Button
+var reminder_note: Label
+## The About buttons (privacy policy, acknowledgements).
+var about_row: Control
+var scroll: ScrollContainer
+## The privacy policy or acknowledgements, while open.
+var reader: ReaderPanel
 var _values := {}
 
 
@@ -61,7 +68,7 @@ func _ready() -> void:
 	done_button.pressed.connect(close)
 	header.add_child(done_button)
 
-	var scroll := ScrollContainer.new()
+	scroll = ScrollContainer.new()
 	scroll.name = "Scroll"
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
@@ -85,6 +92,23 @@ func _ready() -> void:
 		modes.append(GameSettings.GRAPHICS_NAMES[mode])
 	left.add_child(_choice_row("graphics", "Graphics", modes, GameSettings.GRAPHICS.find(settings.graphics),
 		"Battery saver runs at 30 frames a second, for older phones."))
+	if Reminders.supported():
+		left.add_child(_section("Reminders"))
+		left.add_child(_choice_row("reminders", "Reminders", ["Off", "On"], 1 if settings.reminders else 0,
+			_reminder_note()))
+		var rows: Array = left.get_children()
+		var note_row := rows[rows.size() - 1] as Control
+		reminder_note = note_row.get_child(note_row.get_child_count() - 1) as Label
+	left.add_child(_section("About"))
+	var about := UiKit.flow(8)
+	about.name = "About"
+	about_row = about
+	left.add_child(about)
+	for entry: Array in [["Privacy", "Privacy policy"], ["Acknowledgements", "Acknowledgements"]]:
+		var button := UiKit.ghost_button(entry[1], 40, 15)
+		button.name = entry[0]
+		button.pressed.connect(open_reader.bind(entry[0]))
+		about.add_child(button)
 
 	# Text size goes first on the right, so a player who needs it never has
 	# to scroll (with small text) to find it.
@@ -181,6 +205,13 @@ func _on_choice(key: String, index: int) -> void:
 			settings.read_aloud = index > 0
 			if index > 0:
 				settings.speech_speed = index - 1
+		"reminders":
+			if settings == GameSettings.current:
+				Reminders.set_enabled(settings, index == 1)
+			else:
+				settings.reminders = index == 1
+			if reminder_note != null:
+				reminder_note.text = _reminder_note()
 	if settings == GameSettings.current:
 		# Let the player hear the change.
 		match key:
@@ -193,6 +224,30 @@ func _on_choice(key: String, index: int) -> void:
 		settings.apply_display(get_window())
 	if key == "text_size" and is_inside_tree() and settings == GameSettings.current:
 		UiKit.refresh_text(get_tree().root)
+
+
+## Scrolls down to the About buttons once the panel is laid out.
+func show_about() -> void:
+	await get_tree().process_frame
+	await get_tree().process_frame
+	if is_inside_tree():
+		scroll.ensure_control_visible(about_row)
+
+
+func _reminder_note() -> String:
+	if Reminders.blocked():
+		return "Switched off for Doctors World in your device's Settings app. Allow notifications there first."
+	return "A page when patients are waiting: at most one a day, never at night, and nothing after a week away."
+
+
+## Opens the privacy policy ("Privacy") or the acknowledgements.
+func open_reader(which: String) -> ReaderPanel:
+	if reader != null:
+		reader.queue_free()
+	reader = ReaderPanel.privacy() if which == "Privacy" else ReaderPanel.acknowledgements()
+	reader.closed.connect(func() -> void: reader = null)
+	add_child(reader)
+	return reader
 
 
 ## Saves and closes.

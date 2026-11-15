@@ -322,6 +322,18 @@ Here's everything, in order, so you can decide how much of your life to give it:
   television wants a hero, and Dr. Kapoor drops by with a proposal and a smile.
 - Every day ends on a card with your winning run, how close the next review
   or board report is, and a line about tomorrow, which is usually worse.
+- Reminders, if you want them, and only if you say so. After your first day
+  Dr. Iyer offers to page you when patients are waiting: a stranger in
+  Emergency, the rains arriving, a winning run about to go cold. One a day at
+  the hour you usually play, never at night, and after a week of silence
+  from you, silence from them. Which is more than the real ones manage.
+- A privacy policy, which is short because there's nothing to say: the game
+  collects nothing, sends nothing and knows nothing about you except your
+  doctor's haircut. It's in Settings, and in [docs/PRIVACY.md](docs/PRIVACY.md)
+  for anyone who likes reading these.
+- Acknowledgements, also in Settings: the free software it's built with
+  (Godot, the Kokoro voices, the fonts), every licence they came with, and a
+  thank-you to the night shift.
 
 Screenshots of every screen are rebuilt automatically after each change, on
 the [`screenshots` branch](../../tree/screenshots).
