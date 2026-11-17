@@ -122,9 +122,32 @@ VOICES = {
 # The player's doctor: never voiced.
 PLAYER = "you"
 
-# A line's mood changes its pace a little.
+# A line's mood changes its pace a little (lines outside the story).
 MOOD_SPEED = {"calm": 0.97, "happy": 1.04, "focused": 1.02, "worried": 1.05, "angry": 1.06,
               "tired": 0.9, "shocked": 1.03}
+
+# How a story line is played, by its mood. Kokoro reads every sentence the
+# same way, so each sentence is made on its own and the line is put back
+# together the way a person talks: a slightly different pace and pitch per
+# sentence and small natural pauses between them. Moods stay gentle (soft,
+# ordinary speech, never shouting): a touch quicker and brighter when happy
+# or worried, slower and quieter when tired. pitch is in semitones (the
+# voice's own character is kept), gain in dB, gap scales the pauses.
+DIRECTION_VERSION = 4
+MOODS = {
+    "": {"speed": 1.0, "pitch": 0.0, "gain": 0.0, "gap": 1.0},
+    "calm": {"speed": 0.97, "pitch": -0.2, "gain": -0.5, "gap": 1.05},
+    "happy": {"speed": 1.04, "pitch": 0.5, "gain": 0.3, "gap": 0.9},
+    "focused": {"speed": 1.02, "pitch": 0.0, "gain": 0.0, "gap": 0.9},
+    "worried": {"speed": 1.04, "pitch": 0.4, "gain": 0.0, "gap": 0.85},
+    "angry": {"speed": 1.05, "pitch": -0.3, "gain": 1.0, "gap": 0.85},
+    "tired": {"speed": 0.93, "pitch": -0.5, "gain": -1.0, "gap": 1.15},
+    "shocked": {"speed": 1.04, "pitch": 0.7, "gain": 0.8, "gap": 1.1},
+}
+# The pause after a sentence, in seconds, by how it ends.
+PAUSES = {".": 0.18, "?": 0.2, "!": 0.15, "...": 0.34, "-": 0.12}
+# Every acted line is a little softer: the hiss and edge of the top end off.
+SOFT_ABOVE = 6500
 
 # Names the voice says wrongly as written, spelt the way they are said.
 RESPELL = {
@@ -468,7 +491,7 @@ def level(samples, target_db=-19.0, peak=0.89):
     return out.astype(np.float32)
 
 
-def word_times(text, length):
+def word_times(text, length, lead_max=0.08):
     """When each word ends (seconds): spread over the clip by letters, with
     a pause's worth after commas and full stops."""
     words = text.split()
@@ -483,7 +506,7 @@ def word_times(text, length):
             weight += 5
         weights.append(weight)
     total = float(sum(weights))
-    lead = min(0.08, length * 0.1)
+    lead = min(lead_max, length * 0.1)
     span = max(0.01, length - lead * 2)
     times = []
     done = 0.0
@@ -499,14 +522,108 @@ def render(model_dir, who, text, speed, ending="."):
     said = spoken(text)
     if said and said[-1] not in ".?!,;:":
         said += ending
-    samples, rate = kokoro(model_dir).create(said, voice=style(model_dir, who), speed=speed * voice["speed"],
-                                             lang="en-gb")
-    assert rate == RATE
-    samples = trim(np.asarray(samples, dtype=np.float32))
+    samples = trim(say(model_dir, who, said, speed * voice["speed"]))
     if voice.get("child"):
         samples = child(samples)
     samples = phone(samples) if voice.get("phone") else room(samples)
     return level(samples)
+
+
+def say(model_dir, who, said, speed):
+    samples, rate = kokoro(model_dir).create(said, voice=style(model_dir, who), speed=speed, lang="en-gb")
+    assert rate == RATE
+    return np.asarray(samples, dtype=np.float32)
+
+
+def sentences(said):
+    """A spoken line in its sentences: [(text, how it ends)]. Trailing
+    off (...) and breaking off (a dash) count as ends too."""
+    pieces = []
+    for match in re.finditer(r"(.+?)(\.\.\.|…|[.?!]+|\s-\s|$)(?=\s|$)", said):
+        text, end = match.group(1).strip(), match.group(2).strip()
+        if not text:
+            continue
+        mark = "..." if end in ("...", "…") else ("-" if end == "-" else (end[-1:] if end else "."))
+        pieces.append((text + ("," if mark == "-" else end), mark))
+    # A word or two on its own ("What?" "Good.") is said in one breath with
+    # what follows, the way people do, instead of being drawn out alone.
+    grouped = []
+    for text, mark in pieces:
+        if grouped and len(grouped[-1][0].split()) < 3 and grouped[-1][1] != "...":
+            grouped[-1] = (grouped[-1][0] + " " + text, mark)
+        else:
+            grouped.append((text, mark))
+    if len(grouped) > 1 and len(grouped[-1][0].split()) < 3 and grouped[-2][1] != "...":
+        grouped[-2:] = [(grouped[-2][0] + " " + grouped[-1][0], grouped[-1][1])]
+    return grouped or [(said, ".")]
+
+
+def wobble(*key):
+    """A steady random number in [-1, 1] for a key: the same line always
+    comes out the same, but no two sentences are read alike."""
+    digest = hashlib.sha1(json.dumps(key).encode()).digest()
+    return int.from_bytes(digest[:4], "big") / 0x7FFFFFFF - 1.0
+
+
+def shift_pitch(samples, semitones):
+    """Raises or lowers the voice without changing its speed or character."""
+    if abs(semitones) < 0.05:
+        return samples
+    ratio = 2 ** (semitones / 12.0)
+    out = subprocess.run(["ffmpeg", "-v", "error", "-f", "f32le", "-ar", str(RATE), "-ac", "1", "-i", "-",
+                          "-af", "rubberband=pitch=%.5f:formant=preserved:pitchq=quality" % ratio,
+                          "-f", "f32le", "-ar", str(RATE), "-ac", "1", "-"],
+                         input=samples.astype("<f4").tobytes(), capture_output=True, check=True).stdout
+    return np.frombuffer(out, dtype="<f4").astype(np.float32)
+
+
+def performed(model_dir, who, text, mood):
+    """A story line as it's acted: float samples and when each word ends."""
+    voice = VOICES[who]
+    act = MOODS.get(mood, MOODS[""])
+    said = spoken(text)
+    if said and said[-1] not in ".?!,;:":
+        said += "."
+    parts = sentences(said)
+    out = []
+    times = []
+    at = 0.0
+    for index, (piece, mark) in enumerate(parts):
+        words = len(piece.split())
+        pace = act["speed"] * (1.0 + 0.03 * wobble(who, text, index, "pace"))
+        if mark == "!":
+            pace *= 1.02
+        if words <= 2:
+            pace *= 0.96  # "Good." "Twice?" is never rushed
+        if mood == "tired":
+            pace *= 1.0 - 0.015 * index  # running out of steam
+        samples = trim(say(model_dir, who, piece, pace * voice["speed"]), keep=0.03)
+        pitch = act["pitch"] + 0.25 * wobble(who, text, index, "pitch")
+        if mark == "?":
+            pitch += 0.2
+        elif mark == "!":
+            pitch += 0.15
+        samples = shift_pitch(samples, pitch)
+        if mark == "!":
+            samples = samples * 1.06
+        length = len(samples) / RATE
+        times += [round(at + t, 3) for t in word_times(piece, length, lead_max=0.03)]
+        out.append(samples)
+        at += length
+        if index < len(parts) - 1:
+            gap = PAUSES[mark] * act["gap"] * (1.0 + 0.2 * wobble(who, text, index, "gap"))
+            if words <= 2:
+                gap *= 1.1
+            out.append(np.zeros(int(RATE * gap), dtype=np.float32))
+            at += gap
+    samples = np.concatenate(out)
+    from scipy.signal import butter, sosfilt
+    samples = sosfilt(butter(1, SOFT_ABOVE, btype="low", fs=RATE, output="sos"), samples).astype(np.float32)
+    if voice.get("child"):
+        samples = child(samples)
+        times = [round(t / 1.12, 3) for t in times]
+    samples = phone(samples) if voice.get("phone") else room(samples)
+    return level(samples, -19.0 + act["gain"]), times
 
 
 def encode(samples, path):
@@ -517,19 +634,29 @@ def encode(samples, path):
     os.replace(path + ".tmp.ogg", path)
 
 
-def clip_name(who, text, speed, ending):
-    digest = hashlib.sha1(json.dumps([VOICES[who], spoken(text), round(speed, 3), ending]).encode()).hexdigest()
+def clip_name(who, text, speed, ending, mood=None):
+    said = [VOICES[who], spoken(text), round(speed, 3), ending]
+    if mood is not None:
+        # An acted story line: remade whenever its direction changes.
+        said += [DIRECTION_VERSION, mood, MOODS.get(mood, MOODS[""]), PAUSES, SOFT_ABOVE]
+    digest = hashlib.sha1(json.dumps(said).encode()).hexdigest()
     return "%s/%s.ogg" % (who.replace(".", "_"), digest[:12])
 
 
 def make_clip(job):
     """Makes one clip. Returns its name and manifest part."""
-    model_dir, who, text, speed, ending = job
-    name = clip_name(who, text, speed, ending)
-    samples = render(model_dir, who, text, speed, ending)
-    length = round(len(samples) / RATE, 3)
+    model_dir, who, text, speed, ending = job[:5]
+    mood = job[5] if len(job) > 5 else None
+    name = clip_name(*job[1:])
+    if mood is None:
+        samples = render(model_dir, who, text, speed, ending)
+        length = round(len(samples) / RATE, 3)
+        words = word_times(spoken(text), length)
+    else:
+        samples, words = performed(model_dir, who, text, mood)
+        length = round(len(samples) / RATE, 3)
     encode(samples, os.path.join(OUT, name))
-    return name, {"clip": name, "length": length, "words": word_times(spoken(text), length)}
+    return name, {"clip": name, "length": length, "words": words}
 
 
 def made_before():
@@ -553,7 +680,7 @@ def plan(model_dir, only):
     numbered = {}   # who -> numbers they need clips for
     skipped = []
 
-    def add(who, text, mood, templated):
+    def add(who, text, mood, templated, acted=False):
         if who == PLAYER or (only and who not in only):
             return
         if who not in VOICES:
@@ -564,6 +691,9 @@ def plan(model_dir, only):
             return
         speed = MOOD_SPEED.get(mood, 1.0)
         split = number_parts(text) if templated and re.search(r"\d", text) else None
+        if acted:
+            lines.append((who, normalize(text), [(model_dir, who, text, 1.0, ".", mood)]))
+            return
         if split is None:
             lines.append((who, normalize(text), [(model_dir, who, text, speed, ".")]))
             return
@@ -583,7 +713,7 @@ def plan(model_dir, only):
             needed.update(range(low, high + 1))
 
     for who, text, mood in story:
-        add(who, text, mood, False)
+        add(who, text, mood, False, acted=True)
     for who, text in catalogue_lines(story):
         add(who, text, "", True)
     for who, text in fact_lines():
@@ -603,10 +733,15 @@ def main():
     parser.add_argument("--jobs", type=int, default=os.cpu_count() or 2)
     parser.add_argument("--only", default="", help="comma list of cast ids to remake")
     parser.add_argument("--sample", nargs=2, metavar=("WHO", "TEXT"), help="write one line to sample.ogg")
+    parser.add_argument("--mood", default=None, help="with --sample: act the line in this mood")
     args = parser.parse_args()
     if args.sample:
         who, text = args.sample
-        encode(render(args.model, who, text, 1.0), os.path.join(os.getcwd(), "sample.ogg"))
+        if args.mood is None:
+            samples = render(args.model, who, text, 1.0)
+        else:
+            samples = performed(args.model, who, text, args.mood)[0]
+        encode(samples, os.path.join(os.getcwd(), "sample.ogg"))
         print("wrote sample.ogg")
         return
     only = set(filter(None, args.only.split(",")))

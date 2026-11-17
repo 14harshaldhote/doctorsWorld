@@ -360,6 +360,14 @@ Here's everything, in order, so you can decide how much of your life to give it:
   questions. Choose well.
 - The drill card talks. Dr. Iyer, Sister Grace or Tom says their piece and
   then tells you the story, out loud, in their own recorded voice.
+- People have stopped walking through each other. Also through beds, walls
+  and the side room's furniture. Doctors now go round things and wait their
+  turn, which is more than most real corridors manage.
+- The voices sound less like a station announcement. Every sentence gets its
+  own pace and pitch and a breath before the next, softly, the way tired
+  people actually talk at six in the morning.
+- The first two weeks were rewritten in the way people speak, not the way
+  they write. More "na", fewer speeches. Dr. Iyer is exactly as unimpressed.
 
 Screenshots of every screen are rebuilt automatically after each change, on
 the [`screenshots` branch](../../tree/screenshots).

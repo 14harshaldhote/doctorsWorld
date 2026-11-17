@@ -618,13 +618,7 @@ func _send(id: String, to: Vector3, speed: float) -> void:
 	var rig := rig_for(id)
 	if rig == null:
 		return
-	var start := Vector2(rig.position.x, rig.position.z)
-	var goal := Vector2(to.x, to.z)
-	var path := walk_area.find_path(start, goal)
-	if path.is_empty() and start.distance_to(goal) > 0.05:
-		path.append(goal)
-	elif not path.is_empty() and path[path.size() - 1].distance_to(goal) > 0.05:
-		path.append(goal)
+	var path := Crowd.plan(rig, to, _actors().values(), walk_area)
 	if path.is_empty():
 		_routes.erase(id)
 		return
@@ -642,29 +636,10 @@ func _update_routes(delta: float) -> void:
 			continue
 		var rig := rig_for(id)
 		var route: Dictionary = _routes[id]
-		var path: PackedVector2Array = route["path"]
-		var me := Vector2(rig.position.x, rig.position.z)
-		var step := float(route["speed"]) * delta
-		var moved := Vector2.ZERO
-		while step > 0.0 and not path.is_empty():
-			var to_next := path[0] - me
-			if to_next.length() <= step:
-				me = path[0]
-				moved += to_next
-				step -= to_next.length()
-				path.remove_at(0)
-			else:
-				moved += to_next.normalized() * step
-				me += to_next.normalized() * step
-				step = 0.0
-		rig.position = Vector3(me.x, rig.position.y, me.y)
-		if moved.length() > 0.0001:
-			rig.rotation.y = lerp_angle(rig.rotation.y, atan2(moved.x, moved.y), minf(1.0, delta * 10.0))
-		rig.moving = 1.0
-		route["path"] = path
-		if path.is_empty():
+		if Crowd.advance(rig, route, delta, _actors().values(), walk_area):
 			rig.moving = 0.0
 			_routes.erase(id)
+			Crowd.make_room(rig, _actors().values(), walk_area)
 			if id == "you" and mode == "approach":
 				_arrive()
 			elif id == "you" and mode == "walk":

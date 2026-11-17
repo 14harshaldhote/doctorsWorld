@@ -6,73 +6,73 @@
 		{"do": "face", "who": "you", "at": "iyer"},
 		{"do": "face", "who": "iyer", "at": "you"},
 		{"say": "iyer", "text": "{called}? You're late.", "mood": "focused", "gesture": "fold_arms"},
-		{"say": "iyer", "text": "Good. It means you're nervous.", "mood": "calm", "gesture": "explain"},
-		{"say": "iyer", "text": "I'm Meera Iyer. For the next year, every mistake you make is my mistake. So you won't make many.",
+		{"say": "iyer", "text": "Hm. That's fine. It means you're nervous.", "mood": "calm", "gesture": "explain"},
+		{"say": "iyer", "text": "I'm Meera Iyer. For the next year, every mistake you make is my mistake. So let's not make too many, okay?",
 			"gesture": "chest"},
 		{"choose": [
-			{"tone": "Apologise", "text": "Sorry, Dr. Iyer. The bus... no. No excuses. It won't happen again.",
+			{"tone": "Apologise", "text": "Sorry, Dr. Iyer. The bus was... no. No excuses. It won't happen again.",
 				"trust": {"iyer": 2}, "then": [
-				{"say": "iyer", "text": "Don't apologise. Fix it. Tomorrow, 6:45.", "gesture": "point", "head": "nod"}
+				{"say": "iyer", "text": "Don't say sorry. Just fix it. Tomorrow, six forty-five.", "gesture": "point", "head": "nod"}
 			]},
-			{"tone": "Be precise", "text": "It's 6:58. Technically I'm two minutes early.", "trust": {"iyer": -3},
+			{"tone": "Be precise", "text": "It's 6:58. So technically I'm two minutes early.", "trust": {"iyer": -3},
 				"flag": "corrected_iyer", "then": [
 				{"say": "iyer", "text": "Two minutes early is late here. Technically.", "mood": "angry", "gesture": "wag"}
 			]},
 			{"tone": "Be honest", "text": "I walked round the block twice before I could come in.", "trust": {"iyer": 5},
 				"flag": "honest_with_iyer", "then": [
-				{"say": "iyer", "text": "Twice? Good. Nervous doctors check things twice. Keep that.", "mood": "happy",
+				{"say": "iyer", "text": "Twice? Good. Nervous doctors check things twice. Hold on to that.", "mood": "happy",
 					"gesture": "open_hands", "head": "nod"}
 			]}
 		]},
-		{"say": "iyer", "text": "This coffee is mine. This is yours.", "gesture": "offer", "mood": "calm"},
+		{"say": "iyer", "text": "This coffee is mine. And this one's yours.", "gesture": "offer", "mood": "calm"},
 		{"do": "hold", "who": "you", "item": "letter", "side": "L"},
 		{"do": "drop", "who": "you", "side": "R"},
 		{"do": "give", "from": "iyer", "to": "you", "item": "pager"},
 		{"do": "pager", "text": "Dr. Iyer: Welcome to Riverside. Sister Grace is at the desk."},
-		{"say": "iyer", "text": "When it beeps, you move. Go and meet Sister Grace at the desk. She runs this hospital. I just operate in it.",
+		{"say": "iyer", "text": "When this beeps, you move. Now go and meet Sister Grace at the desk. Honestly, she runs this hospital. I just operate in it.",
 			"gesture": "point"},
 		{"say": "you", "text": "Yes, Doctor.", "head": "nod", "mood": "focused"},
 		{"do": "start_day"}
 	],
 
 	"grace": [
-		{"say": "grace", "text": "So you're the new intern. {called}, is it?", "mood": "happy", "gesture": "explain"},
-		{"say": "grace", "text": "Rule one: wash your hands. Rule two: see rule one.", "gesture": "wag", "head": "nod"},
+		{"say": "grace", "text": "So you're the new intern. {called}, right?", "mood": "happy", "gesture": "explain"},
+		{"say": "grace", "text": "Rule one, wash your hands. Rule two... see rule one.", "gesture": "wag", "head": "nod"},
 		{"choose": [
-			{"tone": "Warm", "text": "I've heard you're the one who really runs this place.", "trust": {"grace": 5}, "then": [
-				{"say": "grace", "text": "Flattery. Good start. It won't get you out of night shifts.", "mood": "happy", "gesture": "shrug"}
+			{"tone": "Warm", "text": "People say you're the one who really runs this place.", "trust": {"grace": 5}, "then": [
+				{"say": "grace", "text": "Flattery, hm? Nice start. Still won't get you out of night shifts.", "mood": "happy", "gesture": "shrug"}
 			]},
 			{"tone": "Curious", "text": "And rule three?", "trust": {"grace": 3}, "then": [
-				{"say": "grace", "text": "Rule three: never ask a nurse what rule three is. Come back tomorrow.", "gesture": "point",
+				{"say": "grace", "text": "Rule three is, never ask a nurse what rule three is. Come back tomorrow.", "gesture": "point",
 					"mood": "calm"}
 			]},
 			{"tone": "Brisk", "text": "Understood. Where do I sign in?", "trust": {"grace": -2}, "then": [
-				{"say": "grace", "text": "Register's there. Smile next time. It's free.", "mood": "calm", "gesture": "point"}
+				{"say": "grace", "text": "Register's just there. And smile next time, na? It's free.", "mood": "calm", "gesture": "point"}
 			]}
 		]},
-		{"say": "grace", "text": "Your locker is 214. Your ID badge comes tomorrow, if HR remembers. HR rarely remembers.",
+		{"say": "grace", "text": "Your locker is 214. ID badge comes tomorrow, if HR remembers. They usually don't.",
 			"gesture": "open_hands"},
 		{"minutes": 10}
 	],
 	"grace_again": [
-		{"say": "grace", "text": "Locker 214. Hands washed. Go and be useful.", "gesture": "point"}
+		{"say": "grace", "text": "Locker 214. Hands washed. Now go be useful.", "gesture": "point"}
 	],
 
 	"nair": [
-		{"say": "nair", "text": "Are you a real doctor? You look about twelve.", "mood": "tired", "gesture": "point"},
+		{"say": "nair", "text": "You're a real doctor? You look about twelve.", "mood": "tired", "gesture": "point"},
 		{"choose": [
 			{"tone": "Joke", "text": "Twelve and a half, sir. The half matters.", "trust": {"nair": 4}, "then": [
 				{"say": "nair", "text": "Ha! A doctor with jokes. That's new.", "mood": "happy", "gesture": "open_hands"}
 			]},
-			{"tone": "Ask", "text": "Fully qualified, as of a few weeks ago. How long have you been waiting?", "skill": "History",
+			{"tone": "Ask", "text": "Fully qualified, a few weeks ago. How long have you been waiting?", "skill": "History",
 				"trust": {"nair": 5}, "flag": "asked_nair_wait",
 				"detail": "Mr. Nair has waited since 6 a.m. with a swollen knee, and nobody has asked him about it.", "then": [
-				{"say": "nair", "text": "Since six. My knee is the size of a coconut. Nobody asks me anything.", "mood": "worried",
+				{"say": "nair", "text": "Since six. My knee is the size of a coconut, and nobody's asked me a thing.", "mood": "worried",
 					"gesture": "open_hands"},
-				{"say": "nair", "text": "You asked. Write that down somewhere.", "mood": "calm", "gesture": "point"}
+				{"say": "nair", "text": "Well. You asked. Write that down somewhere.", "mood": "calm", "gesture": "point"}
 			]},
 			{"tone": "Defensive", "text": "I'm a doctor. Please wait your turn.", "trust": {"nair": -4}, "then": [
-				{"say": "nair", "text": "Waiting is all I do. I'm a professional.", "mood": "angry", "gesture": "fold_arms"}
+				{"say": "nair", "text": "Waiting is all I do. I'm a professional now.", "mood": "angry", "gesture": "fold_arms"}
 			]}
 		]},
 		{"minutes": 5}
@@ -82,7 +82,7 @@
 	],
 
 	"leela": [
-		{"say": "leela", "text": "He swallowed a coin. He says it was an accident. It was not.", "mood": "worried", "gesture": "open_hands"},
+		{"say": "leela", "text": "He swallowed a coin. He says it was an accident. It was not an accident.", "mood": "worried", "gesture": "open_hands"},
 		{"say": "aarav", "text": "It was a shiny one!", "mood": "happy", "gesture": "raise", "to": "you"},
 		{"choose": [
 			{"tone": "Calm", "text": "Most coins pass on their own. Has he been sick, or in pain?", "skill": "History",
@@ -91,26 +91,26 @@
 					"gesture": "shrug"}
 			]},
 			{"tone": "Light", "text": "At least it wasn't a big one.", "trust": {"leela": -3}, "then": [
-				{"say": "leela", "text": "It was a five rupee coin, Doctor. It was a big one.", "mood": "angry", "gesture": "wag"}
+				{"say": "leela", "text": "It was a five rupee coin, Doctor. That's a big one.", "mood": "angry", "gesture": "wag"}
 			]}
 		]},
 		{"say": "leela", "text": "The scan room said one hour. That was two hours ago.", "mood": "tired", "gesture": "shrug"},
 		{"minutes": 5}
 	],
 	"leela_again": [
-		{"say": "leela", "text": "Still waiting for the scan. Aarav has found another coin. I'm watching him.", "gesture": "point"}
+		{"say": "leela", "text": "Still waiting for the scan. And now Aarav's found another coin. I'm watching him.", "gesture": "point"}
 	],
 
 	"iyer_report": [
-		{"say": "iyer", "text": "Well? Did Grace scare you?", "mood": "calm", "gesture": "explain"},
+		{"say": "iyer", "text": "So? Did Grace scare you?", "mood": "calm", "gesture": "explain"},
 		{"if": "asked_nair_wait", "then": [
-			{"say": "iyer", "text": "Mr. Nair says you asked how long he'd waited. Nobody asks. Remember that feeling.",
+			{"say": "iyer", "text": "Mr. Nair says you asked how long he'd been waiting. Nobody asks him. Remember how that felt.",
 				"mood": "happy", "head": "nod"}
 		]},
 		{"if": "corrected_iyer", "then": [
-			{"say": "iyer", "text": "And tomorrow, be early by more than two minutes.", "gesture": "wag"}
+			{"say": "iyer", "text": "And tomorrow, try being early by more than two minutes.", "gesture": "wag"}
 		]},
-		{"say": "iyer", "text": "That's Day 1. Tomorrow, seven sharp, the skills lab. Grace and I will find out what your hands can do.",
+		{"say": "iyer", "text": "That's Day 1 done. Tomorrow, seven sharp, the skills lab. Grace and I want to see what your hands can do.",
 			"gesture": "point", "mood": "happy"},
 		{"say": "iyer", "text": "Now go home. Sleep. Come back sharper.", "gesture": "wave", "head": "nod"},
 		{"minutes": 5}

@@ -21,7 +21,7 @@ func _init() -> void:
 	id = "stitch"
 	name = "SuturePad"
 	spot = Vector3(0, 0, 0.82)
-	trainer_spot = Vector3(0.9, 0, -0.62)
+	trainer_spot = Vector3(0.95, 0, -0.4)
 	close_from = Vector3(0.0, 1.48, 0.5)
 	close_at = Vector3(0.0, 0.86, -0.03)
 	close_fov = 42.0

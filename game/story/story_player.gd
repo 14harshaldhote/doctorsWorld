@@ -117,19 +117,32 @@ func skip() -> void:
 	for id: String in _walks:
 		var rig: AvatarRig = actors.get(id)
 		if rig != null:
-			var to: Vector3 = _walks[id]["to"]
-			rig.position = Vector3(to.x, rig.position.y, to.z)
+			var path: PackedVector2Array = _walks[id]["path"]
+			if not path.is_empty():
+				var end := path[path.size() - 1]
+				rig.global_position = Vector3(end.x, rig.global_position.y, end.y)
+			rig.moving = 0.0
+			Crowd.make_room(rig, actors.values(), Crowd.area_for(rig, _area()))
 	_walks.clear()
 	_finish(true)
 
 
-## Sends a character walking in a straight line (outside any story too).
+## Sends a character walking (outside any story too): round the furniture
+## on the stage's floor and round the people on it (see Crowd).
 func walk(id: String, to: Vector3, speed: float = WALK_SPEED) -> void:
 	var rig: AvatarRig = actors.get(id)
 	if rig == null:
 		return
-	_walks[id] = {"to": to, "speed": speed}
+	rig.sitting = false
+	var path := Crowd.plan(rig, to, actors.values(), _area())
+	_walks[id] = {"to": to, "speed": speed, "path": path}
 	rig.moving = 1.0
+
+
+## The stage's floor plan, if it has one.
+func _area() -> WalkArea:
+	var area: Variant = stage.get("walk_area") if stage != null else null
+	return area as WalkArea
 
 
 func is_walking(id: String) -> bool:
@@ -288,9 +301,7 @@ func _perform(step: Dictionary) -> void:
 		"walk":
 			if rig == null:
 				return
-			var to := _point(step.get("to"), rig)
-			_walks[who] = {"to": to, "speed": float(step.get("speed", WALK_SPEED))}
-			rig.moving = 1.0
+			walk(who, _point(step.get("to"), rig), float(step.get("speed", WALK_SPEED)))
 			if wait:
 				_block(0.0, func() -> bool: return not _walks.has(who))
 		"face":
@@ -402,19 +413,11 @@ func _update_walks(delta: float) -> void:
 		if rig == null or not is_instance_valid(rig):
 			_walks.erase(id)
 			continue
-		var walk: Dictionary = _walks[id]
-		var to: Vector3 = walk["to"]
-		var here := rig.global_position
-		var flat := Vector2(to.x - here.x, to.z - here.z)
-		var step := float(walk["speed"]) * delta
-		if flat.length() <= step:
-			rig.global_position = Vector3(to.x, here.y, to.z)
+		var route: Dictionary = _walks[id]
+		if Crowd.advance(rig, route, delta, actors.values(), _area()):
 			rig.moving = 0.0
 			_walks.erase(id)
-			continue
-		var move := flat.normalized() * step
-		rig.global_position += Vector3(move.x, 0, move.y)
-		rig.rotation.y = lerp_angle(rig.rotation.y, atan2(flat.x, flat.y), minf(1.0, delta * 10.0))
+			Crowd.make_room(rig, actors.values(), Crowd.area_for(rig, _area()))
 
 
 func _update_turns(delta: float) -> void:

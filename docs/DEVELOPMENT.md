@@ -27,6 +27,7 @@ plan"). This file covers how to build, run and test the game.
 | 13. Reminders, privacy and thanks | Reminders on the phone to bring the player back (`Reminders`, `ReminderBackend`, `ReminderAsk`): a page about the day waiting (the story day, the casebook patient, a walk-in, a hard week starting, a milestone, the board report or the day's hard call), then a run to save or a slipping number, then two gentle nudges, then silence. One a day at the hour the player usually plays (kept between 10:00 and 20:00), none after a week away, and every launch and save replaces the plan. Off until the player says yes: the game asks after Day 1 and once more after the first review (`Reminders.should_ask`), the phone then asks for permission, and Settings has an on/off row. The iOS side is `addons/dw_reminders` (see Reminders below). Settings > About opens the privacy policy and the acknowledgements (`AboutTexts`, `ReaderPanel`): thanks, every part of Godot with its copyright holders, and every licence text. The policy is also in [docs/PRIVACY.md](PRIVACY.md) for the App Store | Done |
 | 14. Training through the career, and fewer ways to get stuck | A drill between every day from the end of Day 3 to the start of Day 28 (`Drills`, `DrillCard`, `SkillsLab` with a `drill` station): the save moves to the next morning as soon as a day ends, with `Drills.FLAG` set, and `Main.show_hospital` opens the skills lab for one station (monitor, IV line, stitching, instruments, scrubbing in, in turn) before the day. A card shows a true story (`TrainingFacts`, six per station) and the XP on offer; the first score pays `Drills.xp` (for turning up, each star and a new best, times 1 + half the rank) and clears the flag; Skip goes straight on. Every Day 2 score card ends with a story too (`TrainingView.fact`). Fixes from a playthrough audit: a day started again after the game closed halfway goes back to that morning (`PlayerProfile.begin_day`, the `morning` snapshot in the save), so a review can no longer promote twice and XP can't be earned twice; the ward's and theatre's place to go counts from a tap on its bed or person or the floor beside it, or from walking up to it, and its tag is pinned to the screen's edge with an arrow when the place is off screen or under a panel (`LobbyHud.set_tag(..., pin)`, `tag_hit`) | Done |
 | 15. Turning up pays, new patients, a card that talks | XP for opening the game on a new real-world day (`DailyReward`: 10 XP, plus 5 for each day in a row up to a week, times 1 + half the rank; `PlayerProfile.last_played` and the counter `day_streak`), on a `WelcomeCard` over the day's screen, which waits for it. The XP goes into the morning snapshot too, so a day that starts over keeps it. The history station joins the drills (`Drills.ORDER` has six stations) with a practice patient each time it comes round (`Drills.HISTORY_CASES`, four new cases in `story/cases.json`, all acted by Dr. Iyer). The trainer reads the drill card aloud: the opener, then the true story (`DrillCard._read_aloud`); the facts and openers moved to `story/facts.json` so `tools/make_voices.py` records them (`fact_lines()`) | Done |
+| 16. Nobody walks through anybody, voices that sound like people | One walking system for everyone (`Crowd`): every walk plans its way round furniture and round anyone standing still (`WalkArea.find_path` with people), steps aside or waits for anyone in the way on every frame, ends beside someone instead of inside them, and gets up off a bed or out of furniture before it sets off. The stitch trainer's spot moved out of the lab wall. `test_crowd.gd` plays the first days and two ward weeks frame by frame and fails on any overlap. Story lines are acted: each sentence is made on its own with its own pace and pitch and put back together with small pauses, gently shaped by the line's mood (`MOODS` in `tools/make_voices.py`). The first two weeks of dialogue were rewritten to sound spoken | Done |
 
 The earlier SwiftUI and SpriteKit prototype is kept on the git branch
 `swift-prototype`.
@@ -372,6 +373,20 @@ practice patients in `story/cases.json` with the same shape as
 that waste a question). `SkillsLab.open_task` passes the case to
 `TrainingTask.make` only in drill mode, so Day 2 keeps Mr. Kumar.
 
+## People moving
+
+Every walk goes through `Crowd`: `Crowd.plan()` finds a way round the
+furniture and round anyone standing still (people's spots go into
+`WalkArea.find_path` as solid for that search), and `Crowd.advance()` moves
+the walker one frame, turning aside (right first, so two people pass on the
+same side) or waiting for anyone within `GAP` (0.5 m between centres). A walk
+blocked for `REPLAN_AFTER` finds another way once; blocked for `GIVE_UP`, or
+nearly there, it ends where it is. Someone who has stopped where a walk ends
+moves its end beside them. `Crowd.make_room()` moves anyone put down on top
+of someone. The ward's theatre and seminar room sit on other floors, so the
+ward's walk area only applies to people on its own floor. `Crowd.problems()`
+lists every overlap on a frame; `test_crowd.gd` uses it on whole days.
+
 ## A new day
 
 `DailyReward.claim(profile)` runs at the top of `Main.show_hospital`: the
@@ -487,6 +502,17 @@ setting plays the clip faster or slower and a pitch shift on that bus keeps
 the voice's pitch. Words are reached on a clock from each clip's word times,
 so the text and the lips keep pace with it, as with the device's voices.
 `test_recorded_voices.gd` checks every story line has a recording.
+
+Story lines are acted rather than read (`performed()`): Kokoro reads every
+sentence alike, so each sentence (a word or two goes with its neighbour) is
+made on its own with a slightly different pace and pitch, then they're
+joined with short pauses that depend on how each ends (`PAUSES`). The mood
+nudges pace, pitch, loudness and pauses (`MOODS`), kept gentle on purpose:
+soft, ordinary speech, never shouting. Pitch moves with ffmpeg's rubberband
+filter, keeping the voice's character. `--sample WHO TEXT --mood tired`
+tries a line. Changing `MOODS`, `PAUSES` or `DIRECTION_VERSION` remakes the
+story clips; lines from code and cases keep their plain reading. Kokoro
+can't really act, so real feeling still needs recorded people.
 
 ### The device's voices
 

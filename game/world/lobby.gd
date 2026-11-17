@@ -70,6 +70,8 @@ var talking_with := ""
 var conversation := ""
 
 var _path := PackedVector2Array()
+## Seconds the player's walk has been held up by someone in the way.
+var _blocked := 0.0
 var _talk_target := ""
 var _marker: Node3D
 var _marker_time := 0.0
@@ -391,8 +393,6 @@ func _add_person(id: String, look: AvatarConfig, at: Vector3, facing: float, moo
 	rig.voice_pitch = float(StoryBook.cast().get(id, {}).get("voice", 1.0))
 	add_child(rig)
 	people[id] = {"rig": rig, "facing": facing, "home": at}
-	if outfit == "doctor" or id in ["tom", "priya"]:
-		walk_area.add_blocker(Rect2(at.x - 0.25, at.z - 0.25, 0.5, 0.5))
 	return rig
 
 
@@ -666,8 +666,8 @@ func _floor_point(screen_point: Vector2) -> Variant:
 
 
 func walk_to(target: Vector2) -> void:
-	var start := Vector2(player.position.x, player.position.z)
-	_path = walk_area.find_path(start, target)
+	_path = Crowd.plan(player, Vector3(target.x, 0, target.y), _actors().values(), walk_area)
+	_blocked = 0.0
 	if not _path.is_empty():
 		var end := _path[_path.size() - 1]
 		_marker.position = Vector3(end.x, 0.02, end.y)
@@ -703,20 +703,16 @@ func _physics_process(delta: float) -> void:
 		_talk_target = ""
 		moved = _step(keys.normalized() * WALK_SPEED * delta)
 	elif not _path.is_empty():
-		var me := Vector2(player.position.x, player.position.z)
-		var next := _path[0]
-		var to_next := next - me
-		var step := WALK_SPEED * delta
-		if to_next.length() <= step:
-			player.position = Vector3(next.x, 0, next.y)
-			moved = to_next
-			_path.remove_at(0)
-			if _path.is_empty() and not _talk_target.is_empty():
+		var route := {"path": _path, "speed": WALK_SPEED, "blocked": _blocked}
+		var done := Crowd.advance(player, route, delta, _actors().values(), walk_area)
+		_path = route["path"]
+		_blocked = float(route.get("blocked", 0.0))
+		moved = route.get("moved", Vector2.ZERO)
+		if done:
+			_path = PackedVector2Array()
+			if not _talk_target.is_empty():
 				_start_talk(_talk_target)
 				return
-		else:
-			moved = to_next.normalized() * step
-			player.position += Vector3(moved.x, 0, moved.y)
 	if moved.length() > 0.0001:
 		_facing = atan2(moved.x, moved.y)
 	player.moving = 1.0 if moved.length() > 0.0001 else 0.0
@@ -726,8 +722,9 @@ func _physics_process(delta: float) -> void:
 ## Moves by a step if the floor allows it, sliding along walls otherwise.
 func _step(step: Vector2) -> Vector2:
 	var me := Vector2(player.position.x, player.position.z)
+	var near := Crowd.others(player, _actors().values())
 	for attempt: Vector2 in [step, Vector2(step.x, 0), Vector2(0, step.y)]:
-		if attempt != Vector2.ZERO and walk_area.is_walkable(me + attempt):
+		if attempt != Vector2.ZERO and walk_area.is_walkable(me + attempt) and Crowd._clear(me, me + attempt, near):
 			player.position += Vector3(attempt.x, 0, attempt.y)
 			return attempt
 	return Vector2.ZERO

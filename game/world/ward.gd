@@ -210,6 +210,8 @@ var _beat_in := -1.0
 var _end_in := -1.0
 var _day_card_in := -1.0
 var _queued_procedure := ""
+## People put down this frame, checked for standing in someone else.
+var _just_put: Array[AvatarRig] = []
 
 
 func _init(for_profile: PlayerProfile = null) -> void:
@@ -627,6 +629,7 @@ func put(id: String, where: String) -> void:
 				return
 		rig.position = station.mark(how)
 		_face(rig, station.pillow_point())
+		_just_put.append(rig)
 		return
 	rig.position = mark(where)
 	var facing: Variant = _mark_facing(where)
@@ -637,6 +640,19 @@ func put(id: String, where: String) -> void:
 		rig.rotation.y = PI
 	if place_name == "seminar" and seminar.is_seat(how):
 		rig.sitting = true
+	_just_put.append(rig)
+
+
+## Anyone just put down on top of someone else steps into the nearest free
+## spot (see Crowd), once everyone for the moment has been placed.
+func _settle_crowd() -> void:
+	if _just_put.is_empty():
+		return
+	var moved := _just_put.duplicate()
+	_just_put.clear()
+	for rig: AvatarRig in moved:
+		if is_instance_valid(rig):
+			Crowd.make_room(rig, story.actors.values(), Crowd.area_for(rig, walk_area))
 
 
 func _face(rig: AvatarRig, point: Vector3) -> void:
@@ -1375,13 +1391,7 @@ func _send(who: String, to: Vector3, speed: float) -> void:
 		return
 	rig.sitting = false
 	rig.lying = false
-	var start := Vector2(rig.position.x, rig.position.z)
-	var goal := Vector2(to.x, to.z)
-	var path := walk_area.find_path(start, goal)
-	if path.is_empty() and start.distance_to(goal) > 0.05:
-		path.append(goal)
-	elif not path.is_empty() and path[path.size() - 1].distance_to(goal) > 0.05:
-		path.append(goal)
+	var path := Crowd.plan(rig, to, story.actors.values(), walk_area)
 	if path.is_empty():
 		_routes.erase(id)
 		return
@@ -1398,29 +1408,10 @@ func _update_routes(delta: float) -> void:
 			continue
 		var rig := rig_for(id)
 		var route: Dictionary = _routes[id]
-		var path: PackedVector2Array = route["path"]
-		var me := Vector2(rig.position.x, rig.position.z)
-		var step := float(route["speed"]) * delta
-		var moved := Vector2.ZERO
-		while step > 0.0 and not path.is_empty():
-			var to_next := path[0] - me
-			if to_next.length() <= step:
-				me = path[0]
-				moved += to_next
-				step -= to_next.length()
-				path.remove_at(0)
-			else:
-				moved += to_next.normalized() * step
-				me += to_next.normalized() * step
-				step = 0.0
-		rig.position = Vector3(me.x, 0, me.y)
-		if moved.length() > 0.0001:
-			rig.rotation.y = lerp_angle(rig.rotation.y, atan2(moved.x, moved.y), minf(1.0, delta * 10.0))
-		rig.moving = 1.0
-		route["path"] = path
-		if path.is_empty():
+		if Crowd.advance(rig, route, delta, story.actors.values(), walk_area):
 			rig.moving = 0.0
 			_routes.erase(id)
+			Crowd.make_room(rig, story.actors.values(), Crowd.area_for(rig, walk_area))
 			if _leaving.has(id):
 				_leaving.erase(id)
 				_hide(id)
@@ -1923,8 +1914,10 @@ func update(delta: float) -> void:
 		if _end_in <= 0.0:
 			day_finished.emit()
 			return
+	_settle_crowd()
 	story.update(delta)
 	_update_routes(delta)
+	_settle_crowd()
 	if view != null:
 		view.tick(delta)
 		var station := station_for(active)

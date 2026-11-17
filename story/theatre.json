@@ -47,7 +47,7 @@
 		},
 		{
 			"say": "iyer",
-			"text": "You explain it. I'll stand right here, pretending not to listen.",
+			"text": "You explain it. I'll stand right here and pretend I'm not listening.",
 			"gesture": "fold_arms"
 		},
 		{
@@ -57,7 +57,7 @@
 	"consent": [
 		{
 			"say": "sunita",
-			"text": "Doctor, finally! Tell them it's gas. He ate street food. Pani puri. I told him not to.",
+			"text": "Doctor, finally! Tell them it's just gas. He ate street food. Pani puri. I told him not to!",
 			"mood": "worried",
 			"gesture": "explain"
 		},
@@ -106,7 +106,7 @@
 						},
 						{
 							"say": "rohit",
-							"text": "I didn't want to miss the exam. It started round my belly button. Now it's low on the right, and coughing hurts.",
+							"text": "I didn't want to miss the exam. It started round my belly button. Now it's low down on the right, and it hurts when I cough.",
 							"mood": "worried",
 							"gesture": "chest"
 						},
@@ -141,13 +141,13 @@
 						},
 						{
 							"say": "sunita",
-							"text": "Oh! Yes. Penicillin. His whole face swelled up. It was so long ago, I forgot.",
+							"text": "Oh! Yes, yes. Penicillin. His whole face swelled up. It was so long ago, I forgot.",
 							"mood": "shocked",
 							"gesture": "chest"
 						},
 						{
 							"say": "iyer",
-							"text": "And that is why we ask. Write it down, big.",
+							"text": "And that's why we ask. Write it down. Big.",
 							"gesture": "point",
 							"to": "you",
 							"head": "nod"
@@ -169,7 +169,7 @@
 					"then": [
 						{
 							"say": "sunita",
-							"text": "Thursday. Engineering finals. His father and I saved for four years for that college.",
+							"text": "Thursday. Engineering finals. His father and I saved four years for that college.",
 							"gesture": "explain"
 						},
 						{
@@ -218,7 +218,7 @@
 											"else": [
 												{
 													"say": "sunita",
-													"text": "Today? Can't it wait until after Thursday? Three days!",
+													"text": "Today? Can't it wait till after Thursday? It's only three days!",
 													"mood": "worried",
 													"gesture": "open_hands"
 												},
@@ -249,7 +249,7 @@
 															"then": [
 																{
 																	"say": "iyer",
-																	"text": "A few hours. Not a minute longer. I'll book theatre for two o'clock.",
+																	"text": "A few hours. Not a minute more. I'll book theatre for two o'clock.",
 																	"mood": "focused",
 																	"gesture": "point"
 																},
@@ -306,7 +306,7 @@
 										},
 										{
 											"say": "iyer",
-											"text": "This afternoon, then. Two o'clock. Not one minute later.",
+											"text": "This afternoon, then. Two o'clock. Not a minute later.",
 											"mood": "focused",
 											"gesture": "point",
 											"to": "you"
@@ -338,7 +338,7 @@
 										},
 										{
 											"say": "sunita",
-											"text": "...Then sign. Since nobody listens to me.",
+											"text": "...Then sign. Nobody listens to me anyway.",
 											"mood": "angry",
 											"gesture": "fold_arms"
 										}
@@ -398,13 +398,13 @@
 					"then": [
 						{
 							"say": "sunita",
-							"text": "Not funny!",
+							"text": "That's not funny!",
 							"mood": "angry",
 							"gesture": "wag"
 						},
 						{
 							"say": "rohit",
-							"text": "It was a bit funny.",
+							"text": "It was a little bit funny.",
 							"mood": "happy"
 						}
 					]
@@ -418,7 +418,7 @@
 	"scrub": [
 		{
 			"say": "tom",
-			"text": "Morning, Doctor. Same as the lab, but faster. The patient's already asleep in there.",
+			"text": "Morning, Doctor. Same as the lab, just faster. He's already asleep in there.",
 			"gesture": "explain"
 		},
 		{
@@ -529,7 +529,7 @@
 				},
 				{
 					"say": "sunita",
-					"text": "After I hug him.",
+					"text": "...After I hug him.",
 					"mood": "happy",
 					"head": "tilt"
 				}
@@ -540,7 +540,7 @@
 			"then": [
 				{
 					"say": "iyer",
-					"text": "There was some bleeding. Your doctor had it clamped before I could say the word.",
+					"text": "There was some bleeding. Your doctor had it clamped before I could even say it.",
 					"gesture": "explain",
 					"to": "sunita"
 				}
@@ -695,7 +695,7 @@
 						},
 						{
 							"say": "iyer",
-							"text": "He's young and strong. I expect him to wake up tomorrow and complain about the food.",
+							"text": "He's young, he's strong. I expect him to wake up tomorrow and complain about the food.",
 							"gesture": "explain",
 							"to": "sunita"
 						},
@@ -728,7 +728,7 @@
 						},
 						{
 							"say": "iyer",
-							"text": "What happened in there is on us. All of us. He's in intensive care tonight, and he will recover.",
+							"text": "What happened in there is on us. All of us. He's in intensive care tonight, and he will get better.",
 							"mood": "angry",
 							"gesture": "open_hands",
 							"to": "sunita"
@@ -744,7 +744,7 @@
 					"then": [
 						{
 							"say": "iyer",
-							"text": "No. You'll explain. Then I'll add the parts you leave out.",
+							"text": "No. You explain. Then I'll add whatever you leave out.",
 							"mood": "focused",
 							"gesture": "point",
 							"to": "you"
@@ -755,7 +755,7 @@
 						},
 						{
 							"say": "sunita",
-							"text": "Alive. Okay. Alive.",
+							"text": "Alive. Okay. He's alive.",
 							"mood": "worried",
 							"head": "down"
 						}
@@ -767,7 +767,7 @@
 	"debrief_won": [
 		{
 			"say": "iyer",
-			"text": "Clean work. You called early, you didn't panic, and you listened to Khan.",
+			"text": "Clean work. You called it early, you didn't panic, and you listened to Khan.",
 			"mood": "happy",
 			"gesture": "explain"
 		},
@@ -776,7 +776,7 @@
 			"then": [
 				{
 					"say": "iyer",
-					"text": "And you asked about allergies. Half the interns I've had would have killed him with that injection.",
+					"text": "And you asked about allergies. Half the interns I've had would've killed him with that injection.",
 					"gesture": "point"
 				}
 			]
@@ -792,7 +792,7 @@
 					"then": [
 						{
 							"say": "iyer",
-							"text": "Flattery. Noted. Still works.",
+							"text": "Flattery. Noted. Still works, though.",
 							"mood": "happy",
 							"head": "tilt"
 						}
@@ -832,7 +832,7 @@
 	"debrief_struggled": [
 		{
 			"say": "iyer",
-			"text": "You got there. Not prettily, but you got there.",
+			"text": "You got there. Not pretty, but you got there.",
 			"mood": "calm",
 			"gesture": "fold_arms"
 		},
@@ -841,7 +841,7 @@
 			"then": [
 				{
 					"say": "iyer",
-					"text": "The allergy. Ask every patient, every time. Mothers forget. Charts lie. You check.",
+					"text": "The allergy. Ask every patient, every time. Mothers forget. Charts lie. So you check.",
 					"mood": "focused",
 					"gesture": "wag"
 				}
@@ -852,7 +852,7 @@
 			"then": [
 				{
 					"say": "iyer",
-					"text": "And now you know what waiting costs. Sometimes the kind answer is the fast one.",
+					"text": "And now you know what waiting costs. Sometimes the kind answer is the quick one.",
 					"mood": "focused",
 					"gesture": "explain"
 				}
@@ -863,7 +863,7 @@
 			"then": [
 				{
 					"say": "iyer",
-					"text": "The board said left. You said yes. Read the board like it's lying to you.",
+					"text": "The board said left, and you said yes. Read that board like it's lying to you.",
 					"mood": "focused",
 					"gesture": "point"
 				}
@@ -880,7 +880,7 @@
 					"then": [
 						{
 							"say": "iyer",
-							"text": "Better is all I ask. Perfect is for brochures.",
+							"text": "Better is all I'm asking. Perfect is for brochures.",
 							"head": "nod"
 						}
 					]
@@ -894,7 +894,7 @@
 					"then": [
 						{
 							"say": "iyer",
-							"text": "Rohit didn't get a first-one discount.",
+							"text": "Rohit didn't get a first-time discount.",
 							"mood": "focused",
 							"gesture": "fold_arms"
 						}
@@ -904,7 +904,7 @@
 		},
 		{
 			"say": "iyer",
-			"text": "Go home. Sleep. Tomorrow is another day full of people who need you.",
+			"text": "Go home. Sleep. Tomorrow's full of people who need you.",
 			"gesture": "open_hands"
 		},
 		{
@@ -938,7 +938,7 @@
 					"then": [
 						{
 							"say": "iyer",
-							"text": "Some of it was. Own your part, learn it by heart, and come back tomorrow.",
+							"text": "Some of it was. Own your part, learn it properly, and come back tomorrow.",
 							"head": "nod"
 						}
 					]
@@ -952,7 +952,7 @@
 					"then": [
 						{
 							"say": "iyer",
-							"text": "Everyone thinks that once. The good ones think it, then come back the next morning anyway.",
+							"text": "Everyone thinks that once. The good ones think it... and come back the next morning anyway.",
 							"gesture": "explain",
 							"mood": "calm"
 						}

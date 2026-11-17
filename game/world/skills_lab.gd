@@ -840,13 +840,7 @@ func _send(id: String, to: Vector3, speed: float) -> void:
 	var rig := rig_for(id)
 	if rig == null:
 		return
-	var start := Vector2(rig.position.x, rig.position.z)
-	var goal := Vector2(to.x, to.z)
-	var path := walk_area.find_path(start, goal)
-	if path.is_empty() and start.distance_to(goal) > 0.05:
-		path.append(goal)
-	elif not path.is_empty() and path[path.size() - 1].distance_to(goal) > 0.05:
-		path.append(goal)
+	var path := Crowd.plan(rig, to, _actors().values(), walk_area)
 	if path.is_empty():
 		_routes.erase(id)
 		return
@@ -865,32 +859,14 @@ func _update_routes(delta: float) -> void:
 			continue
 		var rig := rig_for(id)
 		var route: Dictionary = _routes[id]
-		var path: PackedVector2Array = route["path"]
-		var me := Vector2(rig.position.x, rig.position.z)
-		var step := float(route["speed"]) * delta
-		var moved := Vector2.ZERO
-		while step > 0.0 and not path.is_empty():
-			var to_next := path[0] - me
-			if to_next.length() <= step:
-				me = path[0]
-				moved += to_next
-				step -= to_next.length()
-				path.remove_at(0)
-			else:
-				moved += to_next.normalized() * step
-				me += to_next.normalized() * step
-				step = 0.0
-		rig.position = Vector3(me.x, 0, me.y)
-		if moved.length() > 0.0001:
-			var heading := atan2(moved.x, moved.y)
-			if id == "you":
-				_facing = heading
-			rig.rotation.y = lerp_angle(rig.rotation.y, heading, minf(1.0, delta * 10.0))
-		rig.moving = 1.0
-		route["path"] = path
-		if path.is_empty():
+		var done := Crowd.advance(rig, route, delta, _actors().values(), walk_area)
+		var moved: Vector2 = route.get("moved", Vector2.ZERO)
+		if id == "you" and moved.length() > 0.0001:
+			_facing = atan2(moved.x, moved.y)
+		if done:
 			rig.moving = 0.0
 			_routes.erase(id)
+			Crowd.make_room(rig, _actors().values(), walk_area)
 			_on_route_end(id)
 
 
@@ -934,8 +910,9 @@ func _walk_with_keys(delta: float) -> void:
 	active = ""
 	var step := keys.normalized() * WALK_SPEED * delta
 	var me := Vector2(player.position.x, player.position.z)
+	var near := Crowd.others(player, _actors().values())
 	for attempt: Vector2 in [step, Vector2(step.x, 0), Vector2(0, step.y)]:
-		if attempt != Vector2.ZERO and walk_area.is_walkable(me + attempt):
+		if attempt != Vector2.ZERO and walk_area.is_walkable(me + attempt) and Crowd._clear(me, me + attempt, near):
 			player.position += Vector3(attempt.x, 0, attempt.y)
 			_facing = atan2(attempt.x, attempt.y)
 			player.rotation.y = _facing

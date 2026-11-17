@@ -12,6 +12,8 @@ var cell: float
 var blockers: Array[Rect2] = []
 var _grid: AStarGrid2D
 var _dirty := true
+## Where others stand, while find_path() works out a way round them.
+var _avoid := PackedVector2Array()
 
 
 func _init(area_bounds: Rect2, character_radius: float = 0.3, cell_size: float = 0.25) -> void:
@@ -63,28 +65,60 @@ func closest_walkable(point: Vector2) -> Vector2:
 	return _cell_centre(_nearest_open_cell(clamped))
 
 
-## True if a character can walk straight from a to b.
+## True if a character can walk straight from a to b (and, while a path is
+## being found, without brushing past anyone standing in the way).
 func line_clear(a: Vector2, b: Vector2) -> bool:
 	var length := a.distance_to(b)
 	var steps := maxi(1, ceili(length / (cell * 0.5)))
 	for index in range(steps + 1):
-		if not is_walkable(a.lerp(b, float(index) / steps)):
+		var point := a.lerp(b, float(index) / steps)
+		if not is_walkable(point):
 			return false
+		for spot in _avoid:
+			if spot.distance_to(point) < Crowd.GAP:
+				return false
 	return true
 
 
 ## Waypoints from one point to another, ending at the closest walkable
-## point to the target. Empty if there is no way there.
-func find_path(from: Vector2, to: Vector2) -> PackedVector2Array:
+## point to the target. Empty if there is no way there. people are where
+## others stand: the path keeps clear of them (by Crowd.GAP) when it can.
+func find_path(from: Vector2, to: Vector2, people: PackedVector2Array = PackedVector2Array()) -> PackedVector2Array:
 	var target := closest_walkable(to)
 	var start := from if is_walkable(from) else closest_walkable(from)
 	var result := PackedVector2Array()
+	_avoid = PackedVector2Array()
+	for spot in people:
+		# Someone standing on the start or the goal can't be walked around.
+		if spot.distance_to(start) > Crowd.GAP and spot.distance_to(target) > Crowd.GAP:
+			_avoid.append(spot)
 	if line_clear(start, target):
 		result.append(target)
+		_avoid = PackedVector2Array()
 		return result
 	_build_grid()
-	var ids := _grid.get_id_path(_nearest_open_cell(start), _nearest_open_cell(target))
+	var closed: Array[Vector2i] = []
+	for spot in _avoid:
+		var reach := ceili(Crowd.GAP / cell)
+		var home := Vector2i(((spot - bounds.position) / cell).floor())
+		for dx in range(-reach, reach + 1):
+			for dy in range(-reach, reach + 1):
+				var id := home + Vector2i(dx, dy)
+				if _grid.region.has_point(id) and not _grid.is_point_solid(id) \
+						and _cell_centre(id).distance_to(spot) < Crowd.GAP:
+					_grid.set_point_solid(id, true)
+					closed.append(id)
+	var from_cell := _nearest_open_cell(start)
+	var to_cell := _nearest_open_cell(target)
+	var ids := _grid.get_id_path(from_cell, to_cell)
+	for id in closed:
+		_grid.set_point_solid(id, false)
+	if ids.is_empty() and not closed.is_empty():
+		# No way round the people: the plain path, and steering on the way.
+		_avoid = PackedVector2Array()
+		ids = _grid.get_id_path(_nearest_open_cell(start), _nearest_open_cell(target))
 	if ids.is_empty():
+		_avoid = PackedVector2Array()
 		return result
 	var points: Array[Vector2] = [start]
 	for id in ids:
@@ -100,6 +134,7 @@ func find_path(from: Vector2, to: Vector2) -> PackedVector2Array:
 				break
 		result.append(points[furthest])
 		index = furthest
+	_avoid = PackedVector2Array()
 	return result
 
 

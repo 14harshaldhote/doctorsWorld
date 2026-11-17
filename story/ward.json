@@ -8,30 +8,30 @@
 		},
 		{
 			"say": "grace",
-			"text": "Bed one: Rohit Kulkarni, day one after his appendix. His mother hasn't left that chair since.",
+			"text": "Bed one, Rohit Kulkarni, first day after his appendix. His mother hasn't left that chair since.",
 			"gesture": "point"
 		},
 		{
 			"say": "grace",
-			"text": "Bed five: Mrs. Banerjee, seventy-seven, pneumonia. Coughs like a tractor and calls everyone 'beta'.",
+			"text": "Bed five, Mrs. Banerjee, seventy-seven, pneumonia. Coughs like a tractor and calls everyone beta.",
 			"mood": "happy"
 		},
 		{
 			"say": "grace",
-			"text": "Three, four and six are sleeping off their operations. And Emergency is sending us a new one.",
+			"text": "Three, four and six are sleeping off their operations. And Emergency's sending us a new one.",
 			"mood": "calm",
 			"gesture": "explain"
 		},
 		{
 			"say": "iyer",
-			"text": "This week you're on the ward, {called}. Rounds, admissions, families. Wednesday night you're on call.",
+			"text": "This week you're on the ward, {called}. Rounds, admissions, families. And Wednesday night, you're on call.",
 			"mood": "focused",
 			"gesture": "explain",
 			"to": "you"
 		},
 		{
 			"say": "iyer",
-			"text": "And a warning. Every bed on this ward is full, and Mr. Malhotra counts beds the way misers count coins.",
+			"text": "One warning. Every bed on this ward is full, and Mr. Malhotra counts beds the way misers count coins.",
 			"gesture": "wag"
 		},
 		{
@@ -61,7 +61,7 @@
 					"then": [
 						{
 							"say": "grace",
-							"text": "Good. The ones who aren't scared of families don't last.",
+							"text": "Good. The ones who aren't scared of families don't last long.",
 							"mood": "happy",
 							"head": "nod"
 						},
@@ -108,7 +108,7 @@
 				},
 				{
 					"say": "rohit",
-					"text": "Mum. I'm fine. I'm... mostly fine.",
+					"text": "Mum, I'm fine. I'm... mostly fine.",
 					"mood": "tired",
 					"head": "down"
 				},
@@ -138,7 +138,7 @@
 						},
 						{
 							"say": "iyer",
-							"text": "There was some bleeding. It's stopped. He's doing well.",
+							"text": "There was some bleeding. It's stopped now. He's doing well.",
 							"mood": "calm",
 							"to": "sunita"
 						}
@@ -152,7 +152,7 @@
 						},
 						{
 							"say": "sunita",
-							"text": "He ate two idlis. Two! Yesterday he couldn't drink water.",
+							"text": "He ate two idlis. Two! Yesterday he couldn't even drink water.",
 							"mood": "happy",
 							"gesture": "clap"
 						}
@@ -162,13 +162,13 @@
 		},
 		{
 			"say": "rohit",
-			"text": "So. My exams are on Thursday. I can go, right?",
+			"text": "So... my exams are on Thursday. I can go, right?",
 			"mood": "worried",
 			"gesture": "explain"
 		},
 		{
 			"say": "sunita",
-			"text": "Say yes. Please. He's worked three years for this.",
+			"text": "Please say yes. He's worked three years for this.",
 			"mood": "worried",
 			"gesture": "open_hands",
 			"to": "you"
@@ -200,7 +200,7 @@
 						},
 						{
 							"say": "rohit",
-							"text": "...Okay. Okay. At least I get to revise in bed.",
+							"text": "...Okay. Okay. At least I can revise in bed.",
 							"mood": "calm",
 							"head": "nod"
 						}
@@ -216,14 +216,14 @@
 					"then": [
 						{
 							"say": "iyer",
-							"text": "Careful, {called}. Hope is a promise to a mother.",
+							"text": "Careful, {called}. Hope is a promise, to a mother.",
 							"mood": "focused",
 							"gesture": "wag",
 							"to": "you"
 						},
 						{
 							"say": "sunita",
-							"text": "Wednesday. I'm holding you to it, Doctor.",
+							"text": "Wednesday. I'm holding you to that, Doctor.",
 							"mood": "calm",
 							"gesture": "point"
 						}
@@ -240,7 +240,7 @@
 					"then": [
 						{
 							"say": "iyer",
-							"text": "No. He'll split his wound open on a bench. Thursday is a no.",
+							"text": "No. He'll split that wound open on an exam bench. Thursday is a no.",
 							"mood": "angry",
 							"gesture": "wag",
 							"to": "you"
@@ -254,7 +254,7 @@
 						},
 						{
 							"say": "rohit",
-							"text": "Right. Sorry. I knew it, really.",
+							"text": "Right. Sorry. I knew, really.",
 							"mood": "tired",
 							"head": "down"
 						}
@@ -264,7 +264,7 @@
 		},
 		{
 			"say": "iyer",
-			"text": "Good. Now: Emergency's patient is in the admissions bay.",
+			"text": "Good. Now, Emergency's patient is in the admissions bay.",
 			"mood": "calm",
 			"gesture": "point"
 		}
@@ -278,13 +278,13 @@
 		},
 		{
 			"say": "lakshmi",
-			"text": "It comes like a wave. Then it squeezes. Then it goes. Then it comes back.",
+			"text": "It comes like a wave. Then it squeezes. Then it goes. And then it comes back.",
 			"mood": "worried",
 			"gesture": "chest"
 		},
 		{
 			"say": "lakshmi",
-			"text": "Doctor, I have a pressure cooker on at home. Can this be quick?",
+			"text": "Doctor, I've left a pressure cooker on at home. Can this be quick?",
 			"mood": "worried",
 			"gesture": "open_hands"
 		},
@@ -324,7 +324,7 @@
 		},
 		{
 			"say": "iyer",
-			"text": "History first, then examine her. Questions are limited, {called}. So is her patience.",
+			"text": "History first, then examine her. You don't get many questions, {called}. And she doesn't have much patience.",
 			"mood": "focused",
 			"gesture": "fold_arms",
 			"to": "you"
@@ -345,7 +345,7 @@
 			"else": [
 				{
 					"say": "iyer",
-					"text": "Look again at what you found. Pain under the right ribs, a fever, and she stopped mid-breath. Gallbladder.",
+					"text": "Look again at what you found. Pain under the right ribs, a fever, and she caught her breath. Gallbladder.",
 					"mood": "focused",
 					"gesture": "wag",
 					"to": "you"
@@ -357,7 +357,7 @@
 			"then": [
 				{
 					"say": "iyer",
-					"text": "And you found the metformin. We stop it before surgery and watch her sugar.",
+					"text": "And you found the metformin. We stop it before surgery and keep an eye on her sugar.",
 					"mood": "calm",
 					"head": "nod",
 					"to": "you"
@@ -372,7 +372,7 @@
 				},
 				{
 					"say": "iyer",
-					"text": "Medicines, {called}. Always medicines.",
+					"text": "Medicines, {called}. Always ask about medicines.",
 					"mood": "focused",
 					"gesture": "wag",
 					"to": "you"
@@ -387,7 +387,7 @@
 		},
 		{
 			"say": "lakshmi",
-			"text": "My son is going to call. He'll want to know everything. Everything.",
+			"text": "My son's going to call. He'll want to know everything. Everything.",
 			"mood": "worried",
 			"head": "down"
 		},
@@ -400,7 +400,7 @@
 	"arjun_call": [
 		{
 			"say": "arjun",
-			"text": "Hello? Hello? Mummy, turn the phone. I can see the ceiling. Is that the doctor?",
+			"text": "Hello? Hello? Mummy, turn the phone, I can only see the ceiling. Is that the doctor?",
 			"mood": "worried"
 		},
 		{
@@ -411,7 +411,7 @@
 		},
 		{
 			"say": "arjun",
-			"text": "Doctor, I want the truth. Is it cancer? Why does she need surgery? Is it because of her sugar?",
+			"text": "Doctor, just tell me the truth. Is it cancer? Why does she need surgery? Is it her sugar?",
 			"mood": "angry"
 		},
 		{
@@ -461,7 +461,7 @@
 					"then": [
 						{
 							"say": "arjun",
-							"text": "Can tell me? I'm her son! I pay for... fine. Gallstones. Fine.",
+							"text": "Can tell me? I'm her son! I'm the one who pays for... fine. Gallstones. Fine.",
 							"mood": "angry"
 						},
 						{
@@ -489,7 +489,7 @@
 						},
 						{
 							"say": "arjun",
-							"text": "DIABETIC? Mummy! Doctor, thank you. At least someone tells me things.",
+							"text": "Diabetic? Mummy! Doctor, thank you. At least someone tells me things.",
 							"mood": "angry"
 						},
 						{
@@ -505,7 +505,7 @@
 		},
 		{
 			"say": "arjun",
-			"text": "Doctor, I'm getting on a plane. Thursday. Look after her.",
+			"text": "Doctor, I'm getting on a plane. Thursday. Please look after her.",
 			"mood": "worried"
 		}
 	],
@@ -523,12 +523,12 @@
 		},
 		{
 			"say": "malhotra",
-			"text": "Bed one: the appendix boy. He's walking, he's eating, send him home.",
+			"text": "Bed one, the appendix boy. He's walking, he's eating. Send him home.",
 			"gesture": "explain"
 		},
 		{
 			"say": "malhotra",
-			"text": "Bed two: the gallstones lady. Tablets, home, back in six weeks for her operation. Everybody wins.",
+			"text": "Bed two, the gallstones lady. Tablets, home, back in six weeks for the operation. Everybody wins.",
 			"mood": "happy",
 			"gesture": "open_hands"
 		},
@@ -585,7 +585,7 @@
 					"then": [
 						{
 							"say": "malhotra",
-							"text": "Not safe. Everybody says not safe. Emergency also is not safe, Doctor, with six on trolleys.",
+							"text": "Not safe, not safe. Everybody says not safe. Emergency is also not safe, Doctor, with six on trolleys.",
 							"mood": "angry",
 							"gesture": "wag"
 						},
@@ -616,7 +616,7 @@
 						},
 						{
 							"say": "grace",
-							"text": "{called}. She has a fever.",
+							"text": "{called}... she has a fever.",
 							"mood": "worried",
 							"head": "shake",
 							"to": "you"
@@ -634,7 +634,7 @@
 		},
 		{
 			"say": "malhotra",
-			"text": "Good. Good. I have a board meeting about the side room. Private rooms pay, Doctor. Remember that.",
+			"text": "Good, good. I have a board meeting about the side room. Private rooms pay, Doctor. Remember that.",
 			"mood": "calm",
 			"gesture": "point"
 		},
@@ -649,7 +649,7 @@
 			"then": [
 				{
 					"say": "iyer",
-					"text": "Mrs. Pillai came back at three this morning. Fever of thirty-nine, yellow as a turmeric root.",
+					"text": "Mrs. Pillai came back at three this morning. Fever of thirty-nine, yellow as turmeric.",
 					"mood": "angry",
 					"gesture": "fold_arms"
 				},
@@ -669,7 +669,7 @@
 							"then": [
 								{
 									"say": "iyer",
-									"text": "Good. Say it to her too. Then never send a fever home again.",
+									"text": "Good. Tell her that too. And never send a fever home again.",
 									"mood": "calm",
 									"head": "nod"
 								}
@@ -696,7 +696,7 @@
 			"else": [
 				{
 					"say": "iyer",
-					"text": "Mrs. Pillai's on my list at ten. Gallbladder out, sugar watched. You did that well.",
+					"text": "Mrs. Pillai's on my list at ten. Gallbladder out, sugar watched. You handled that well.",
 					"mood": "happy",
 					"gesture": "explain"
 				},
@@ -705,7 +705,7 @@
 					"then": [
 						{
 							"say": "grace",
-							"text": "And Rohit ate all his lunch yesterday. He's going home this morning. He asked for you.",
+							"text": "And Rohit ate all his lunch yesterday. He's going home this morning. He was asking for you.",
 							"mood": "happy",
 							"to": "you"
 						}
@@ -715,7 +715,7 @@
 		},
 		{
 			"say": "grace",
-			"text": "Admissions again. A young man. He arrived with a phone in one hand and an uncle in the other.",
+			"text": "Admissions again. A young man. Came in with a phone in one hand and an uncle in the other.",
 			"mood": "calm",
 			"gesture": "shrug"
 		},
@@ -729,7 +729,7 @@
 	"kunal_arrive": [
 		{
 			"say": "kunal",
-			"text": "Finally! Do you know how long I've been on this trolley? Forty minutes. I'm live-streaming it.",
+			"text": "Finally! Do you know how long I've been on this trolley? Forty minutes. I'm live-streaming this.",
 			"mood": "angry",
 			"gesture": "explain"
 		},
@@ -757,7 +757,7 @@
 					"then": [
 						{
 							"say": "kunal",
-							"text": "Fine. Look. But gently. I play the guitar.",
+							"text": "Fine. Look. But gently, okay? I play the guitar.",
 							"mood": "calm",
 							"head": "tilt"
 						}
@@ -773,7 +773,7 @@
 					"then": [
 						{
 							"say": "kunal",
-							"text": "Wow. Did you get that, everyone? 'The same care'. Wow.",
+							"text": "Wow. Did you all hear that? 'The same care'. Wow.",
 							"mood": "angry",
 							"gesture": "open_hands"
 						}
@@ -851,7 +851,7 @@
 						},
 						{
 							"say": "malhotra",
-							"text": "The chairman will call me. And I will call you, {called}.",
+							"text": "The chairman will call me. And then I'll call you, {called}.",
 							"mood": "angry",
 							"gesture": "point"
 						},
@@ -880,7 +880,7 @@
 						},
 						{
 							"say": "malhotra",
-							"text": "Observation. Hm. I can sell that to the chairman.",
+							"text": "Observation. Hm. That I can sell to the chairman.",
 							"mood": "calm",
 							"gesture": "think"
 						}
@@ -900,7 +900,7 @@
 					"then": [
 						{
 							"say": "kunal",
-							"text": "Was that so hard? You've been very helpful. Follow me on Instagram.",
+							"text": "See, was that so hard? Very helpful. Follow me on Instagram.",
 							"mood": "happy",
 							"gesture": "point"
 						},
@@ -919,7 +919,7 @@
 	"aarav_arrive": [
 		{
 			"say": "leela",
-			"text": "Doctor! We met on your first day, remember? He swallowed something. Again.",
+			"text": "Doctor! We met on your first day, remember? He's swallowed something. Again.",
 			"mood": "worried",
 			"gesture": "open_hands"
 		},
@@ -931,7 +931,7 @@
 		},
 		{
 			"say": "leela",
-			"text": "The TV remote is open on the floor. Or it was a coin from my purse. I don't know!",
+			"text": "The TV remote is lying open on the floor. Or it was a coin from my purse. I don't know!",
 			"mood": "worried",
 			"gesture": "chest"
 		},
@@ -969,7 +969,7 @@
 					"then": [
 						{
 							"say": "leela",
-							"text": "Please hurry.",
+							"text": "Please, hurry.",
 							"mood": "worried",
 							"head": "down"
 						}
@@ -1002,7 +1002,7 @@
 			"else": [
 				{
 					"say": "iyer",
-					"text": "Look at the edge again. Two rings: a halo. And the step from the side. It's a battery.",
+					"text": "Look at the edge again. Two rings, a halo. And that step from the side. It's a battery.",
 					"mood": "angry",
 					"gesture": "wag",
 					"to": "you"
@@ -1044,7 +1044,7 @@
 					"then": [
 						{
 							"say": "aarav",
-							"text": "Can I keep the X-ray?",
+							"text": "Can I keep the X-ray, then?",
 							"mood": "happy",
 							"gesture": "point"
 						},
@@ -1083,12 +1083,12 @@
 		},
 		{
 			"say": "sethi",
-			"text": "Two rules. Call me if someone is dying. Don't call me if they're not.",
+			"text": "Two rules. Call me if someone's dying. Don't call me if they're not.",
 			"gesture": "raise"
 		},
 		{
 			"say": "sethi",
-			"text": "I'm in the doctors' room. I'll be asleep. I'll forgive you exactly once.",
+			"text": "I'll be in the doctors' room. Asleep. I'll forgive you exactly once.",
 			"mood": "calm",
 			"gesture": "point"
 		},
@@ -1132,7 +1132,7 @@
 		},
 		{
 			"say": "priya",
-			"text": "Mrs. Banerjee is awake again. She won't settle until a doctor sees her.",
+			"text": "Mrs. Banerjee's awake again. She won't settle till a doctor sees her.",
 			"mood": "calm",
 			"to": "you"
 		},
@@ -1144,7 +1144,7 @@
 	"banerjee_night": [
 		{
 			"say": "banerjee",
-			"text": "Beta. You came. I can't sleep. Every time I close my eyes I cough.",
+			"text": "Beta. You came. I can't sleep. Every time I close my eyes, I cough.",
 			"mood": "tired",
 			"gesture": "chest"
 		},
@@ -1153,7 +1153,7 @@
 			"then": [
 				{
 					"say": "banerjee",
-					"text": "And that boy in the glass room has his music on. All night. Thump, thump.",
+					"text": "And that boy in the glass room has his music on. All night. Thump, thump, thump.",
 					"mood": "angry",
 					"gesture": "point"
 				}
@@ -1239,13 +1239,13 @@
 	"rider_arrive": [
 		{
 			"say": "priya",
-			"text": "Motorbike. No helmet. A passer-by brought him in and left. No wallet, no name.",
+			"text": "Motorbike. No helmet. Someone brought him in and left. No wallet, no name.",
 			"mood": "worried",
 			"gesture": "explain"
 		},
 		{
 			"say": "priya",
-			"text": "His pressure's falling. Where do you want me?",
+			"text": "His pressure's dropping. Where do you want me?",
 			"mood": "focused",
 			"gesture": "open_hands",
 			"to": "you"
@@ -1260,7 +1260,7 @@
 	"rider_after": [
 		{
 			"say": "priya",
-			"text": "Theatre's free. Blood bank wants a signature. And... your phone, Doctor. Administration.",
+			"text": "Theatre's free. Blood bank wants a signature. And... your phone, Doctor. It's administration.",
 			"mood": "worried",
 			"gesture": "hold"
 		},
@@ -1271,7 +1271,7 @@
 		},
 		{
 			"say": "malhotra",
-			"text": "No ID. No insurance. No deposit. The policy is clear: stabilise and transfer to the government hospital.",
+			"text": "No ID. No insurance. No deposit. The policy is clear. Stabilise and transfer to the government hospital.",
 			"mood": "focused"
 		},
 		{
@@ -1317,18 +1317,18 @@
 						},
 						{
 							"say": "sethi",
-							"text": "I heard 'artery'. Theatre. Now. Mr. Malhotra, send me the bill. Personally.",
+							"text": "I heard 'artery'. Theatre, now. Mr. Malhotra, send the bill to me. Personally.",
 							"mood": "angry",
 							"gesture": "point"
 						},
 						{
 							"say": "malhotra",
-							"text": "...Fine. Fine! Theatre.",
+							"text": "...Fine. Fine. Theatre.",
 							"mood": "angry"
 						},
 						{
 							"say": "sethi",
-							"text": "Good call, calling. I'll scrub. You keep pressing.",
+							"text": "Good call, calling me. I'll scrub. You keep pressing.",
 							"mood": "focused",
 							"head": "nod",
 							"to": "you"
@@ -1362,7 +1362,7 @@
 						},
 						{
 							"say": "sethi",
-							"text": "Who is transferring a bleeding artery? Nobody. Theatre, now. We'll talk later, {called}.",
+							"text": "Who's transferring a bleeding artery? Nobody. Theatre, now. We'll talk later, {called}.",
 							"mood": "angry",
 							"gesture": "wag"
 						}
@@ -1428,7 +1428,7 @@
 						},
 						{
 							"say": "priya",
-							"text": "His name's Salim Sheikh. His daughter. His wife's on her way.",
+							"text": "His name's Salim Sheikh. That was his daughter. His wife's on her way.",
 							"mood": "calm",
 							"to": "you"
 						},
@@ -1452,7 +1452,7 @@
 			"then": [
 				{
 					"say": "iyer",
-					"text": "A bleeding artery and you reached for the transfer form. He nearly died in our lift.",
+					"text": "A bleeding artery, and you reached for the transfer form. He nearly died in our lift.",
 					"mood": "angry",
 					"gesture": "wag"
 				},
@@ -1502,7 +1502,7 @@
 		},
 		{
 			"say": "iyer",
-			"text": "Today, Dr. Rao does his round. Head of Surgery. And Mr. Fernandes in bed six came in overnight.",
+			"text": "Today Dr. Rao does his round. Head of Surgery. And Mr. Fernandes in bed six came in overnight.",
 			"mood": "calm",
 			"gesture": "explain"
 		},
@@ -1522,13 +1522,13 @@
 		},
 		{
 			"say": "salim",
-			"text": "Fourteen orders a day, Doctor. Rain or sun. Last night a car came round the corner. Then nothing.",
+			"text": "Fourteen orders a day, Doctor. Rain or sun. Last night a car came round the corner, and then... nothing.",
 			"mood": "calm",
 			"head": "down"
 		},
 		{
 			"say": "salim",
-			"text": "Who pays for all this? I have twelve hundred rupees in the bank.",
+			"text": "Who's going to pay for all this? I have twelve hundred rupees in the bank.",
 			"mood": "worried",
 			"gesture": "open_hands"
 		},
@@ -1543,7 +1543,7 @@
 					"then": [
 						{
 							"say": "salim",
-							"text": "And my bike? No, don't answer. The bike is a problem for a man who can stand.",
+							"text": "And my bike? No, don't tell me. The bike is a problem for a man who can stand.",
 							"mood": "calm",
 							"head": "nod"
 						}
@@ -1570,7 +1570,7 @@
 	"joseph_arrive": [
 		{
 			"say": "maria",
-			"text": "Doctor! Finally. Papa's been vomiting all night. Green. Do something.",
+			"text": "Doctor! Finally. Papa's been vomiting all night. Green. Please, do something.",
 			"mood": "worried",
 			"gesture": "open_hands"
 		},
@@ -1583,7 +1583,7 @@
 		},
 		{
 			"say": "joseph",
-			"text": "My children. Thirty years they've argued about who loves me more. Neither of them asks me anything.",
+			"text": "My children. Thirty years they've argued about who loves me more. And neither of them asks me anything.",
 			"mood": "calm",
 			"head": "tilt"
 		},
@@ -1601,7 +1601,7 @@
 			"then": [
 				{
 					"say": "iyer",
-					"text": "Adhesions. The old scar's bands have kinked his bowel. Often a tube and a drip let it settle.",
+					"text": "Adhesions. Bands from the old scar have kinked his bowel. Often a tube and a drip let it settle.",
 					"mood": "calm",
 					"gesture": "explain"
 				}
@@ -1609,7 +1609,7 @@
 			"else": [
 				{
 					"say": "iyer",
-					"text": "His old scar, the tinkling, no hernia. It's adhesions: bands from his old surgery.",
+					"text": "His old scar, the tinkling sounds, no hernia. It's adhesions. Bands from his old surgery.",
 					"mood": "focused",
 					"gesture": "wag",
 					"to": "you"
@@ -1649,13 +1649,13 @@
 					"then": [
 						{
 							"say": "joseph",
-							"text": "I want to see my granddaughter married in December. If a tube in my nose gets me there, a tube it is.",
+							"text": "I want to see my granddaughter married in December. If a tube in my nose gets me there, then a tube it is.",
 							"mood": "calm",
 							"gesture": "explain"
 						},
 						{
 							"say": "joseph",
-							"text": "And if it needs the knife, I'll take the knife. But not today, and not because anybody shouted.",
+							"text": "And if it needs the knife, I'll take the knife. But not today. And not because anybody shouted.",
 							"mood": "happy",
 							"gesture": "wag"
 						},
@@ -1716,7 +1716,7 @@
 					"then": [
 						{
 							"say": "iyer",
-							"text": "A blocked bowel at home is a death sentence. He stays, with a tube and a drip.",
+							"text": "A blocked bowel at home could kill him. He stays, with a tube and a drip.",
 							"mood": "angry",
 							"gesture": "wag",
 							"to": "you"
@@ -1735,13 +1735,13 @@
 	"rao_round": [
 		{
 			"say": "rao",
-			"text": "Ah. The famous intern. Anand Rao. I've heard about your week from three directions.",
+			"text": "Ah. The famous intern. Anand Rao. I've heard about your week from three different directions.",
 			"mood": "calm",
 			"gesture": "explain"
 		},
 		{
 			"say": "malhotra",
-			"text": "Dr. Rao, the board meets on Monday. Ward 4 runs over a hundred percent. Four general beds become two private rooms. It pays for the ward.",
+			"text": "Dr. Rao, the board meets on Monday. Ward 4 is running over a hundred percent. Four general beds become two private rooms. That pays for the ward.",
 			"mood": "focused",
 			"gesture": "open_hands",
 			"to": "rao"
@@ -1755,7 +1755,7 @@
 		},
 		{
 			"say": "malhotra",
-			"text": "Go elsewhere. Or go home sooner. Efficiency.",
+			"text": "They go elsewhere. Or home sooner. Efficiency.",
 			"mood": "calm",
 			"gesture": "shrug",
 			"to": "rao"
@@ -1826,7 +1826,7 @@
 						},
 						{
 							"say": "rao",
-							"text": "Mr. Malhotra. Write that in your spreadsheet.",
+							"text": "Mr. Malhotra. Put that in your spreadsheet.",
 							"mood": "happy",
 							"head": "nod",
 							"to": "malhotra"
@@ -1880,7 +1880,7 @@
 						},
 						{
 							"say": "rao",
-							"text": "Lights on and nobody in the beds. Hm.",
+							"text": "Lights on, and nobody in the beds. Hm.",
 							"mood": "tired",
 							"head": "shake"
 						}
@@ -1903,7 +1903,7 @@
 	"letters": [
 		{
 			"say": "grace",
-			"text": "Post for you, {called}. A week on the ward and already you get post.",
+			"text": "Post for you, {called}. One week on the ward and you're already getting post.",
 			"mood": "happy",
 			"gesture": "offer"
 		},
@@ -1930,7 +1930,7 @@
 			"then": [
 				{
 					"say": "grace",
-					"text": "Mrs. Pillai asked for a different doctor for her follow-up. That's a letter too, of a kind.",
+					"text": "Mrs. Pillai asked for a different doctor for her follow-up. That's a letter too, in its way.",
 					"mood": "calm",
 					"head": "shake"
 				}
@@ -1938,7 +1938,7 @@
 			"else": [
 				{
 					"say": "grace",
-					"text": "Mrs. Pillai. 'My son sent mangoes. Some are for you. Do not tell him I said so.'",
+					"text": "Mrs. Pillai. 'My son sent mangoes. Some are for you. Don't tell him I said so.'",
 					"mood": "happy",
 					"gesture": "explain"
 				}
@@ -1949,7 +1949,7 @@
 			"then": [
 				{
 					"say": "grace",
-					"text": "And this is from Aarav. It's a robot. It's you. The robot is holding a battery.",
+					"text": "And this one's from Aarav. It's a robot. It's you. The robot is holding a battery.",
 					"mood": "happy",
 					"gesture": "open_hands"
 				}
@@ -1957,7 +1957,7 @@
 			"else": [
 				{
 					"say": "grace",
-					"text": "And this is from Aarav. It's a robot. It has a very big X-ray.",
+					"text": "And this one's from Aarav. It's a robot. With a very big X-ray.",
 					"mood": "happy",
 					"gesture": "open_hands"
 				}
@@ -1979,7 +1979,7 @@
 					"else": [
 						{
 							"say": "grace",
-							"text": "And Salim's wife left sweets for the night staff. You're the night staff.",
+							"text": "And Salim's wife left sweets for the night staff. That's you.",
 							"mood": "happy",
 							"gesture": "offer"
 						}
@@ -2000,7 +2000,7 @@
 		},
 		{
 			"say": "grace",
-			"text": "Go on. Dr. Rao is waiting. Shoulders back.",
+			"text": "Go on. Dr. Rao's waiting. Shoulders back.",
 			"mood": "calm",
 			"gesture": "point"
 		}
@@ -2008,7 +2008,7 @@
 	"review": [
 		{
 			"say": "rao",
-			"text": "Sit, {called}. Or stand. This isn't a trial. Or it is, but a short one.",
+			"text": "Sit, {called}. Or stand. This isn't a trial. Well, it is, but a short one.",
 			"mood": "calm",
 			"gesture": "open_hands"
 		},
@@ -2057,7 +2057,7 @@
 			"then": [
 				{
 					"say": "iyer",
-					"text": "Sent home a fever under pressure. Owned it the next morning. Hasn't done it since.",
+					"text": "Sent a fever home under pressure. Owned it the next morning. Hasn't done it since.",
 					"mood": "focused",
 					"gesture": "fold_arms",
 					"to": "rao"
@@ -2076,7 +2076,7 @@
 			"then": [
 				{
 					"say": "sethi",
-					"text": "Reached for a form when a man was bleeding. Learnt from it, I think. I hope.",
+					"text": "Reached for a form while a man was bleeding. Learnt from it, I think. I hope.",
 					"mood": "tired",
 					"head": "tilt",
 					"to": "rao"
@@ -2111,7 +2111,7 @@
 			"then": [
 				{
 					"say": "sethi",
-					"text": "And Mrs. Banerjee slept, for the first time in a week, because someone held her hand.",
+					"text": "And Mrs. Banerjee slept for the first time in a week, because someone held her hand.",
 					"mood": "calm",
 					"head": "nod",
 					"to": "rao"
@@ -2123,7 +2123,7 @@
 			"then": [
 				{
 					"say": "rao",
-					"text": "You told Mr. Malhotra the truth in front of me. Ward 4 keeps its beds. Nobody's done that in years.",
+					"text": "You told Mr. Malhotra the truth, right in front of me. Ward 4 keeps its beds. Nobody's done that in years.",
 					"mood": "happy",
 					"gesture": "explain"
 				}
@@ -2145,7 +2145,7 @@
 		},
 		{
 			"say": "rao",
-			"text": "From Monday: Junior Resident. Congratulations, Doctor.",
+			"text": "From Monday, Junior Resident. Congratulations, Doctor.",
 			"mood": "happy",
 			"gesture": "offer"
 		},
@@ -2177,7 +2177,7 @@
 					"then": [
 						{
 							"say": "rao",
-							"text": "Good. More is coming. Theatre lists, Monday. Bring that confidence and a spare pair of socks.",
+							"text": "Good. More's coming. Theatre lists, Monday. Bring that confidence. And a spare pair of socks.",
 							"mood": "happy",
 							"gesture": "point"
 						}
@@ -2211,13 +2211,13 @@
 	"quiet_morning": [
 		{
 			"say": "iyer",
-			"text": "Morning, {called}. Quiet day. Don't say the word 'quiet' out loud, it's bad luck.",
+			"text": "Morning, {called}. Quiet day. Don't say 'quiet' out loud, it's bad luck.",
 			"mood": "happy",
 			"gesture": "wag"
 		},
 		{
 			"say": "iyer",
-			"text": "Theatre lists start soon. Until then, teaching films at the lightbox. Sharp eyes save lives.",
+			"text": "Theatre lists start soon. Till then, teaching films at the lightbox. Sharp eyes save lives.",
 			"mood": "calm",
 			"gesture": "point"
 		}
@@ -2236,7 +2236,7 @@
 			"else": [
 				{
 					"say": "iyer",
-					"text": "A coin, {called}. Look before you call the scope team at midnight.",
+					"text": "A coin, {called}. Look properly before you call the scope team at midnight.",
 					"mood": "focused",
 					"gesture": "wag"
 				}
