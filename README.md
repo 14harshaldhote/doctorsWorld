@@ -328,6 +328,26 @@ Here's everything, in order, so you can decide how much of your life to give it:
   the rules. On hard there's a clock. On extreme there's a clock and nobody
   will help you. Every third day as Chief, one of them happens again,
   differently.
+- A 60-second case every day, the same one for every doctor in the
+  country, because suffering is better shared. One emergency, three
+  questions, one minute: a sugar that's too low or too high or not the
+  problem at all, a child swelling up after an injection, a stroke on the
+  clock, an ECG, a baby whose grandmother has stopped all milk "to rest the
+  stomach", and a kerosene stove with toothpaste on the burns (of course).
+  Easy on Monday, hard by Thursday, extreme at the weekend, because that's
+  when casualty is. Play every day for a streak. Miss one and it starts
+  again from one, and Dr. Iyer will know.
+- A weekly mystery: one patient nobody can diagnose, a new clue every
+  weekday, and one guess all week. Guess on Monday for a lot of XP and the
+  risk of looking silly, or wait for Friday and be sure, like a consultant.
+  A monsoon fever with very specific calves, a farmer who keeps coming
+  back, a man whose stomach cramps two scans and a "gas" couldn't explain,
+  feet that tingle for a reason that isn't "just age". Get it wrong and
+  the explanation is waiting for you anyway, smugly.
+- Twenty badges, each with a line that stops it going to your head: five
+  crises without a slip, a perfect minute, a mystery solved on two clues,
+  ten operations in a row, a month ahead of Varun. Earned once, kept for
+  good, worth nothing, wanted badly.
 - After that the days are made fresh every morning, for as long as you can
   stand it: a night rota from a ward full of different patients, crashes on
   the highway, a simulator case in front of interns who are placing bets on

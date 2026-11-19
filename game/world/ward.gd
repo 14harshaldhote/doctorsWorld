@@ -1237,6 +1237,9 @@ func _end_day() -> void:
 		title = "%s · %s" % [profile.full_title(), Rank.title(profile.rank())]
 	# What the day did, and under it what makes tomorrow worth starting.
 	_end_in = overlay.end_card(title, _end_line() + "   +%d XP" % SHIFT_XP, DayHooks.end_card(profile, profile.day))
+	var badges := Badges.check(profile)
+	if not badges.is_empty():
+		hud.toast(Badges.toast_text(badges))
 	hud.refresh_profile()
 	_refresh_hud()
 	save_requested.emit()
@@ -1602,6 +1605,9 @@ func _on_task_finished(task: TrainingTask) -> void:
 		for step_id in crisis.wrong_steps():
 			seen.append("missed_" + step_id)
 		DayHooks.record_crisis(profile, right)
+		if right:
+			# Kept for good (the badge for every kind), unlike the day's flags.
+			profile.set_flag("ever_right_crisis_" + crisis.case_id)
 	profile.set_flag(case_id + "_done")
 	profile.set_flag(case_id + "_right", right)
 	if ChiefDays.is_chief_day(profile.day):

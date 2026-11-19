@@ -583,5 +583,43 @@
    "say": "grace",
    "text": "We failed, Doctor. The ward's on notice. And somebody hid a BP machine. Somebody."
   }
+ },
+ "quick": {
+  "brief_easy": {
+   "say": "iyer",
+   "text": "Sixty seconds, Doctor. Casualty doesn't wait for you to finish your chai. Read the card, then decide."
+  },
+  "brief_hard": {
+   "say": "iyer",
+   "text": "One minute on the clock, and the facts are hiding in the small print. Like every patient's history, na."
+  },
+  "brief_extreme": {
+   "say": "iyer",
+   "text": "Sixty seconds, no hints, and a patient who did not read the textbook. Go."
+  },
+  "right": {
+   "say": "iyer",
+   "text": "Correct. Next."
+  },
+  "wrong": {
+   "say": "iyer",
+   "text": "No. Read the card again, and faster."
+  },
+  "hint": {
+   "say": "iyer",
+   "text": "Every answer is on the card. One number decides it. Find the number."
+  },
+  "end_all": {
+   "say": "iyer",
+   "text": "Every answer right, inside the minute. Don't let it go to your head. Tomorrow's case is already waiting."
+  },
+  "end_some": {
+   "say": "iyer",
+   "text": "Some right, some not. In casualty that's called a normal Tuesday. Same time tomorrow."
+  },
+  "end_none": {
+   "say": "iyer",
+   "text": "Not one. I'm not angry, I'm just disappointed. Read the explanations, and come back tomorrow."
+  }
  }
 }

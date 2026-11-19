@@ -1,0 +1,325 @@
+{
+ "_about": "The weekly mysteries (game/core/weekly_mystery.gd): five clues, one opening each weekday, one guess.",
+ "mysteries": [
+  {
+   "id": "lepto",
+   "title": "The monsoon fever",
+   "patient": "Mr. Santosh Kadam, 34, office peon, Kurla",
+   "clues": [
+    "Fever, headache and a body ache 'like a truck went over me', five days now. Paracetamol from the chemist, twice.",
+    "His calves hurt so much he can't climb the stairs at the station. He says it's the calves, specifically. He's very specific.",
+    "Last Tuesday the trains stopped and he waded home through knee-deep flood water. 'Everyone did, Doctor. What to do?'",
+    "His eyes are red, but there's no discharge and nothing itches. His urine has gone dark and there's not much of it. Creatinine 3.1.",
+    "Today he's yellow. Platelets 62,000, bilirubin 6. The rat poison shop near his chawl is doing very good business."
+   ],
+   "options": [
+    {
+     "id": "dengue",
+     "text": "Dengue"
+    },
+    {
+     "id": "malaria",
+     "text": "Malaria"
+    },
+    {
+     "id": "lepto",
+     "text": "Leptospirosis"
+    },
+    {
+     "id": "typhoid",
+     "text": "Typhoid"
+    },
+    {
+     "id": "hepa",
+     "text": "Hepatitis A"
+    },
+    {
+     "id": "scrub",
+     "text": "Scrub typhus"
+    }
+   ],
+   "answer": "lepto",
+   "explain": "Flood water, rats, terrible calf pain, red eyes without discharge, then kidneys and jaundice: leptospirosis. Every Mumbai monsoon. Doxycycline or penicillin, and dialysis if the kidneys stop."
+  },
+  {
+   "id": "scrub",
+   "title": "The farmer who kept coming back",
+   "patient": "Mr. Dattu Shelar, 47, farmer, Ratnagiri",
+   "clues": [
+    "Fever for eight days, high, with chills. Malaria test negative twice. Typhoid test 'weakly positive', which means nothing.",
+    "Bad headache, a dry cough, and his eyes are a bit red. Two courses of antibiotics from the village clinic did nothing.",
+    "Lymph nodes swollen in the armpit. Liver enzymes up, platelets 90,000.",
+    "Before the fever, he spent a week clearing scrub and long grass on the bund behind his field.",
+    "Under his left arm, where nobody looked: a painless black scab with a red ring round it, like a cigarette burn."
+   ],
+   "options": [
+    {
+     "id": "typhoid",
+     "text": "Typhoid"
+    },
+    {
+     "id": "scrub",
+     "text": "Scrub typhus"
+    },
+    {
+     "id": "lepto",
+     "text": "Leptospirosis"
+    },
+    {
+     "id": "tb",
+     "text": "Tuberculosis"
+    },
+    {
+     "id": "dengue",
+     "text": "Dengue"
+    },
+    {
+     "id": "malaria",
+     "text": "Malaria"
+    }
+   ],
+   "answer": "scrub",
+   "explain": "Fever that ignores ordinary antibiotics, bush clearing, and an eschar hiding in the armpit: scrub typhus, from a mite bite. Doxycycline works in a day or two. Always look in the armpits and the groin."
+  },
+  {
+   "id": "lead",
+   "title": "The battery man's stomach",
+   "patient": "Mr. Iqbal Shaikh, 38, Dharavi",
+   "clues": [
+    "Belly cramps on and off for two months, bad enough to bend him double. Two scans: nothing. 'Gas,' said the last doctor.",
+    "Constipated, tired, and his haemoglobin is 9. Iron tablets for a month have changed nothing.",
+    "His right wrist has gone weak; he can't lift his hand back. He keeps dropping his chai glass.",
+    "He works in a small battery recycling unit. No gloves, no mask, and lunch on the workbench.",
+    "A thin blue-grey line along his gums. The blood film shows red cells with little dots in them (basophilic stippling)."
+   ],
+   "options": [
+    {
+     "id": "appendix",
+     "text": "Grumbling appendix"
+    },
+    {
+     "id": "ulcer",
+     "text": "Peptic ulcer"
+    },
+    {
+     "id": "lead",
+     "text": "Lead poisoning"
+    },
+    {
+     "id": "porphyria",
+     "text": "Porphyria"
+    },
+    {
+     "id": "iron",
+     "text": "Iron deficiency"
+    },
+    {
+     "id": "stone",
+     "text": "Kidney stone"
+    }
+   ],
+   "answer": "lead",
+   "explain": "Colicky belly pain, anaemia that iron doesn't fix, wrist drop, a gum line and stippled red cells, in a battery recycler: lead. Blood lead level, out of the exposure, and chelation if it's high."
+  },
+  {
+   "id": "b12",
+   "title": "The tingling feet",
+   "patient": "Mrs. Shobha Agarwal, 58, retired teacher",
+   "clues": [
+    "Her feet tingle and burn, worse at night. She's been told it's 'just age'. She disagrees, strongly.",
+    "She's tired all the time, a bit breathless on the stairs, and pale. Her tongue is red, smooth and sore.",
+    "Strictly vegetarian all her life, no eggs. Diabetic for twelve years, on metformin the whole time.",
+    "Haemoglobin 9.2, but the red cells are big: MCV 112. Iron studies normal.",
+    "She's become forgetful, and in the dark she sways when she closes her eyes. Her daughter thought it was the start of dementia."
+   ],
+   "options": [
+    {
+     "id": "neuropathy",
+     "text": "Diabetic neuropathy"
+    },
+    {
+     "id": "b12",
+     "text": "Vitamin B12 deficiency"
+    },
+    {
+     "id": "iron",
+     "text": "Iron deficiency"
+    },
+    {
+     "id": "thyroid",
+     "text": "Underactive thyroid"
+    },
+    {
+     "id": "dementia",
+     "text": "Early dementia"
+    },
+    {
+     "id": "leprosy",
+     "text": "Leprosy"
+    }
+   ],
+   "answer": "b12",
+   "explain": "Big red cells, a sore tongue, tingling, unsteadiness in the dark and forgetfulness, in a lifelong vegetarian on metformin: B12 deficiency. Injections fix it, if it's caught before the nerves give up."
+  },
+  {
+   "id": "thyroid",
+   "title": "Tired, cold and gaining",
+   "patient": "Mrs. Pooja Bhatt, 41, bank clerk",
+   "clues": [
+    "Exhausted for six months. She sleeps nine hours and wakes up tired. Her husband says she's 'just lazy now'.",
+    "Five kilos up without eating more. Constipated. She wears a sweater in May, in Nagpur.",
+    "Her skin is dry, her hair is falling out, and her periods have become heavy.",
+    "Her voice is hoarse, her face looks puffy in the mornings, and her pulse is 54.",
+    "Her ankle reflexes come back slowly, like they're thinking about it. Cholesterol has gone up too."
+   ],
+   "options": [
+    {
+     "id": "depression",
+     "text": "Depression"
+    },
+    {
+     "id": "thyroid",
+     "text": "Underactive thyroid (hypothyroidism)"
+    },
+    {
+     "id": "anaemia",
+     "text": "Anaemia"
+    },
+    {
+     "id": "pcos",
+     "text": "PCOS"
+    },
+    {
+     "id": "diabetes",
+     "text": "Diabetes"
+    },
+    {
+     "id": "lazy",
+     "text": "Lazy, as the husband says"
+    }
+   ],
+   "answer": "thyroid",
+   "explain": "Tired, cold, weight up, constipated, dry skin, heavy periods, a slow pulse and slow reflexes: an underactive thyroid. A TSH test and a tablet a day. Somebody should also have a word with the husband."
+  },
+  {
+   "id": "tb_spine",
+   "title": "The back that wouldn't get better",
+   "patient": "Mr. Ravi Yadav, 26, delivery rider",
+   "clues": [
+    "Back pain for three months, in the middle of the back. Physiotherapy and painkillers: no change.",
+    "The pain wakes him at night. He's lost six kilos and doesn't feel like eating.",
+    "A low fever every evening, and sweats that soak the sheet. His roommate had a cough 'for a long time' last year.",
+    "Pressing on one bone in the middle of his back makes him jump. A small bump is starting to stick out there.",
+    "The X-ray shows two vertebrae collapsing into each other, and the disc between them is gone."
+   ],
+   "options": [
+    {
+     "id": "disc",
+     "text": "Slipped disc"
+    },
+    {
+     "id": "tb",
+     "text": "Tuberculosis of the spine"
+    },
+    {
+     "id": "cancer",
+     "text": "Cancer spread to the spine"
+    },
+    {
+     "id": "strain",
+     "text": "Muscle strain from the bike"
+    },
+    {
+     "id": "as",
+     "text": "Ankylosing spondylitis"
+    },
+    {
+     "id": "osteo",
+     "text": "Osteoporosis"
+    }
+   ],
+   "answer": "tb",
+   "explain": "Months of back pain with night pain, weight loss, evening fevers and sweats, a contact with a cough, and two vertebrae eaten away with the disc: TB of the spine (Pott's). Six months or more of TB treatment, free under the national programme."
+  },
+  {
+   "id": "coeliac",
+   "title": "The boy who stopped growing",
+   "patient": "Kunal Arora, 8, Ludhiana",
+   "clues": [
+    "Short for his age, and smaller than his younger cousin. His mother says he 'eats like a horse'.",
+    "Loose, pale, smelly stools, and a big belly on thin arms and legs.",
+    "Anaemic. A year of iron syrup hasn't helped at all.",
+    "It all started at about one year old, around when his grandmother began giving him chapatis.",
+    "A blood test for tissue transglutaminase antibodies comes back strongly positive."
+   ],
+   "options": [
+    {
+     "id": "worms",
+     "text": "Worms"
+    },
+    {
+     "id": "coeliac",
+     "text": "Coeliac disease"
+    },
+    {
+     "id": "tb",
+     "text": "Abdominal TB"
+    },
+    {
+     "id": "thal",
+     "text": "Thalassaemia"
+    },
+    {
+     "id": "short",
+     "text": "Just short, like his father"
+    },
+    {
+     "id": "lactose",
+     "text": "Milk intolerance"
+    }
+   ],
+   "answer": "coeliac",
+   "explain": "Poor growth, pale fatty stools, a big belly, anaemia that iron can't fix, all starting with wheat: coeliac disease. Common in North India. No wheat, ever, and he catches up."
+  },
+  {
+   "id": "thal",
+   "title": "The anaemia that iron didn't fix",
+   "patient": "Ms. Neha Sindhi, 19, engineering student",
+   "clues": [
+    "Her haemoglobin is 10.4. The college doctor started iron tablets. A year later: 10.5.",
+    "She feels fine. She's never had heavy periods, and she eats well (her hostel mess disagrees).",
+    "The red cells are very small: MCV 63. But her red cell count is high, 6.1 million.",
+    "Her ferritin is normal. So is her serum iron.",
+    "HbA2 on electrophoresis: 5.6%. Her parents are first cousins, and her mother 'has also been anaemic forever'."
+   ],
+   "options": [
+    {
+     "id": "iron",
+     "text": "Iron deficiency"
+    },
+    {
+     "id": "thal",
+     "text": "Thalassaemia trait (minor)"
+    },
+    {
+     "id": "b12",
+     "text": "B12 deficiency"
+    },
+    {
+     "id": "chronic",
+     "text": "Anaemia of chronic disease"
+    },
+    {
+     "id": "worms",
+     "text": "Hookworm"
+    },
+    {
+     "id": "sickle",
+     "text": "Sickle cell disease"
+    }
+   ],
+   "answer": "thal",
+   "explain": "Very small cells with a high red cell count, normal iron and a raised HbA2: beta thalassaemia trait. Stop the iron. And test the partner before marriage, because two traits can make a child with thalassaemia major."
+  }
+ ]
+}

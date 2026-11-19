@@ -518,6 +518,9 @@ func _ward_shots() -> void:
 	# Stage 18: the eight crises, each in the middle of being solved.
 	await _crisis_shots(careful)
 
+	# Stage 19: the 60-second case, the weekly mystery and the badges.
+	await _daily_shots()
+
 
 ## The career map over the ward: the road and the race, a Chief's road,
 ## the wall of letters, one letter open, and the end card with the post.
@@ -557,6 +560,46 @@ func _career_shots(careful: Callable) -> void:
 	await _ward_shot("150-end-card-post", 8, ["beds_checked", "banerjee_room", "rider_treated", "rider_named",
 		"joseph_asked", "beds_saved"], "", func(w: Ward) -> bool:
 		return w.mode == "end" and w.overlay.end_card_lines().size() >= 4 and w.overlay.card_left() < 6.5, careful)
+
+
+## The Today page (a Thursday: four clues open), the 60-second case in
+## play, the mystery once guessed, and the wall of badges.
+func _daily_shots() -> void:
+	DailyReward.today_override = "2026-11-19"
+	var fresh := sample_profile_on_ward(12, ["beds_checked", "rider_treated"])
+	fresh.set_count("daily_case_date", DailyCase.date_number("2026-11-18"))
+	fresh.set_count("daily_case_streak", 4)
+	fresh.set_count("daily_case_best", 4)
+	var today := CareerMap.new(fresh, "today")
+	await _shot("159-today-page", today, func() -> void:
+		today.pick_mystery(str(WeeklyMystery.current()["options"][1]["id"])))
+	var playing := CareerMap.new(sample_profile_on_ward(12, ["beds_checked"]), "today")
+	await _shot("160-daily-case", playing, func() -> void:
+		var view := playing.start_daily_case()
+		await process_frame
+		var task := view.task as CrisisTask
+		view.pick(str(CrisisTask.right_answer(task.current())))
+		view.confirm()
+		view.pick(str(AutoPlayer.crisis_wrong_answer(task.current())))
+		view.tick(0.0)
+		for frame in 90:
+			view._type_coach(1.0 / 30.0)
+		task.time_total = 23.0
+		view.tick(0.0)
+		playing.set_process(false))
+	var solved := sample_profile_on_ward(12, ["beds_checked"])
+	WeeklyMystery.guess(solved, str(WeeklyMystery.current()["answer"]), "2026-11-18")
+	var guessed := CareerMap.new(solved, "today")
+	await _shot("161-mystery-solved", guessed, func() -> void:
+		await process_frame
+		guessed.scroll.scroll_vertical = int(guessed.scroll.get_v_scroll_bar().max_value))
+	var proud := sample_profile_on_ward(52, ["beds_checked"])
+	proud.set_flag("promoted")
+	for counter: Array in [["crises", 6], ["crises_right", 5], ["daily_cases", 9], ["daily_case_best", 7],
+			["daily_cases_perfect", 3], ["op_streak_best", 6], ["rival_won", 1]]:
+		proud.set_count(str(counter[0]), int(counter[1]))
+	await _shot("162-badges", CareerMap.new(proud, "badges"))
+	DailyReward.today_override = ""
 
 
 ## The crises on their story days: [shot, day, step on show, answers given].

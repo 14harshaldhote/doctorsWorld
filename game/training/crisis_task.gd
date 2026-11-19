@@ -50,6 +50,9 @@ var hints_used := 0
 var timeouts := 0
 ## Seconds left on an urgent step's clock (-1: no clock).
 var time_left := -1.0
+## Seconds left on a clock for the whole case (-1: none). The daily
+## 60-second case has one; when it runs out every step left is too slow.
+var time_total := -1.0
 ## Who said the coach line on show.
 var speaker := "grace"
 ## Anything the story needs to know about how it went (flags to set).
@@ -226,6 +229,8 @@ func _lock(timed_out: bool) -> void:
 
 func _end() -> void:
 	time_left = -1.0
+	if time_total >= 0.0 and timeouts > 0:
+		_note(false, "The minute ran out with %d question%s left." % [timeouts, "" if timeouts == 1 else "s"])
 	if hints_used > 0 and hint_cost() > 0:
 		_note(false, "%d hint%s (-%d)." % [hints_used, "" if hints_used == 1 else "s", hints_used * hint_cost()])
 	var right := marks.filter(func(m: float) -> bool: return m >= 0.999).size()
@@ -238,7 +243,18 @@ func _end() -> void:
 
 func tick(delta: float) -> void:
 	super(delta)
-	if finished or time_left < 0.0:
+	if finished:
+		return
+	if time_total >= 0.0:
+		time_total -= delta
+		if time_total <= 0.0:
+			time_total = 0.0
+			var guard := steps.size()
+			while not finished and guard > 0:
+				guard -= 1
+				_lock(not can_confirm())
+			return
+	if time_left < 0.0:
 		return
 	time_left -= delta
 	if time_left <= 0.0:

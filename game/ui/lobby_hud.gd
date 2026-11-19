@@ -26,6 +26,7 @@ var _menu: PanelContainer
 var _settings: SettingsPanel
 var _career: CareerMap
 var _career_badge: Label
+var _today_dot: Panel
 var _toast: PanelContainer
 var _toast_label: Label
 var _toast_time := 0.0
@@ -250,6 +251,20 @@ func _build_buttons() -> void:
 			_career_badge.offset_top = -UiKit.px(4)
 			_career_badge.offset_bottom = UiKit.px(16)
 			button.add_child(_career_badge)
+			# A small mint dot while today's 60-second case or the week's
+			# mystery guess is waiting.
+			_today_dot = Panel.new()
+			_today_dot.name = "TodayDot"
+			_today_dot.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			var mint := StyleBoxFlat.new()
+			mint.bg_color = UiKit.MINT
+			mint.set_corner_radius_all(int(UiKit.px(6)))
+			_today_dot.add_theme_stylebox_override("panel", mint)
+			_today_dot.offset_left = -UiKit.px(3)
+			_today_dot.offset_right = UiKit.px(9)
+			_today_dot.offset_top = -UiKit.px(3)
+			_today_dot.offset_bottom = UiKit.px(9)
+			button.add_child(_today_dot)
 	refresh_letters()
 
 
@@ -355,10 +370,17 @@ func refresh_letters() -> void:
 	var unread := Letters.unread_count(profile)
 	_career_badge.text = str(unread)
 	_career_badge.visible = unread > 0
+	if _today_dot != null:
+		_today_dot.visible = profile != null and CareerMap.today_waiting(profile)
 
 
 func career_badge() -> String:
 	return _career_badge.text if _career_badge != null and _career_badge.visible else ""
+
+
+## Whether the mint dot for today's case or the week's guess shows.
+func today_dot() -> bool:
+	return _today_dot != null and _today_dot.visible
 
 
 ## Shows a short message under the clock for a few seconds.

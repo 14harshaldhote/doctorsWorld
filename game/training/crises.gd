@@ -110,13 +110,17 @@ static func lines() -> Dictionary:
 
 ## What the coach says for a crisis's line key ("" if it isn't written).
 static func line(crisis: String, key: String) -> String:
-	var entry: Variant = (lines().get(crisis, {}) as Dictionary).get(key, {})
+	# The daily quick cases share one set of lines.
+	var group := "quick" if crisis.begins_with("quick_") else crisis
+	var entry: Variant = (lines().get(group, {}) as Dictionary).get(key, {})
 	return str((entry as Dictionary).get("text", "")) if entry is Dictionary else ""
 
 
 # --- Building a crisis ----------------------------------------------------------------
 
 static func build(crisis: String, dice: SeededRandom, level: String, context: Dictionary = {}) -> Dictionary:
+	if crisis.begins_with("quick_"):
+		return QuickCases.build(crisis, dice, level)
 	var made: Dictionary
 	match crisis:
 		"power_cut":

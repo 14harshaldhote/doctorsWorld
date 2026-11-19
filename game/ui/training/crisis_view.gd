@@ -180,8 +180,12 @@ func _sync() -> void:
 		button.disabled = blocked
 		_mark(button, key, on)
 	var urgent := crisis.time_left >= 0.0 and not crisis.finished
-	_clock.visible = urgent
-	if urgent:
+	var minute := crisis.time_total >= 0.0 and not crisis.finished
+	_clock.visible = urgent or minute
+	if minute:
+		# The 60-second case: one clock for the whole case.
+		_clock.text = "%d second%s left" % [ceili(crisis.time_total), "" if ceili(crisis.time_total) == 1 else "s"]
+	elif urgent:
 		_clock.text = "%d seconds to decide" % ceili(crisis.time_left)
 	_hint.visible = crisis.hints_allowed() and not crisis.finished
 	var cost := crisis.hint_cost()
