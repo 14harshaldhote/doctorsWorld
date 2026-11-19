@@ -295,6 +295,8 @@ func _on_menu_choice(choice: String) -> void:
 			show_creator(true)
 		"title":
 			show_title()
+		"save":
+			_save()
 
 
 func _save() -> void:

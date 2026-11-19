@@ -31,6 +31,8 @@ var _card_t := 0.0
 var _card_hooks: VBoxContainer
 var _card_streak: Label
 var _card_goal: Label
+var _card_rival: Label
+var _card_post: Label
 var _card_next: Label
 var _card_hint: Label
 var _end_card := false
@@ -85,6 +87,20 @@ func _build_card() -> void:
 	_card_goal = UiKit.label("", 13, UiKit.MINT, UiKit.heavy_font())
 	_card_goal.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_card_hooks.add_child(_card_goal)
+	_card_rival = UiKit.label("", 13, UiKit.CORAL, UiKit.heavy_font())
+	_card_rival.name = "Rival"
+	_card_rival.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_card_rival.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_card_rival.custom_minimum_size = Vector2(UiKit.px(560), 0)
+	_card_rival.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	_card_hooks.add_child(_card_rival)
+	_card_post = UiKit.label("", 13, UiKit.AMBER, UiKit.heavy_font())
+	_card_post.name = "Post"
+	_card_post.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_card_post.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_card_post.custom_minimum_size = Vector2(UiKit.px(560), 0)
+	_card_post.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	_card_hooks.add_child(_card_post)
 	_card_next = UiKit.label("", 17, Color.WHITE, UiKit.heading_medium_font())
 	_card_next.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_card_next.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -199,6 +215,12 @@ func end_card(title: String, sub: String, hooks: Dictionary, time: float = END_C
 	_card_streak.visible = not streak.is_empty()
 	_card_goal.text = goal
 	_card_goal.visible = not goal.is_empty()
+	var rival := str(hooks.get("rival", ""))
+	_card_rival.text = rival
+	_card_rival.visible = not rival.is_empty()
+	var post := str(hooks.get("post", ""))
+	_card_post.text = post
+	_card_post.visible = not post.is_empty()
 	_card_next.text = next
 	_card_next.visible = not next.is_empty()
 	_card_hooks.visible = true
@@ -216,7 +238,7 @@ func end_card_open() -> bool:
 func end_card_lines() -> PackedStringArray:
 	var lines := PackedStringArray()
 	if _card_hooks.visible:
-		for line: Label in [_card_streak, _card_goal, _card_next]:
+		for line: Label in [_card_streak, _card_goal, _card_rival, _card_post, _card_next]:
 			if line.visible:
 				lines.append(line.text)
 	return lines

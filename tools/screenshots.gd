@@ -512,6 +512,49 @@ func _ward_shots() -> void:
 		asking.settle_camera()
 		asking.set_process(false))
 
+	# Stage 17: the career map, the race with Varun, and the letters.
+	await _career_shots(careful)
+
+
+## The career map over the ward: the road and the race, a Chief's road,
+## the wall of letters, one letter open, and the end card with the post.
+func _career_shots(careful: Callable) -> void:
+	var racing := sample_profile_on_ward(6, ["beds_checked", "rider_treated"])
+	racing.set_count("rival_from", 4)
+	racing.set_count("rival_base", racing.total_xp - 560)
+	var on_map := Ward.new(racing)
+	await _shot("146-career-map", on_map, func() -> void:
+		on_map.play_until(func() -> bool: return on_map.mode == "walk", careful, AutoPlayer.new())
+		on_map.settle_camera()
+		on_map.hud.open_career()
+		on_map.set_process(false))
+	var chief := sample_profile_on_ward(41, ["rider_treated", "joseph_asked", "aarav_battery_found", "kunal_room",
+		"mehra_charmed", "raju_first", "zoya_lead", "crash_credit_priya", "sinha_told"])
+	chief.rank_held = Rank.CHIEF
+	chief.total_xp = LevelCurve.total_xp_to_reach(Rank.FIRST_LEVELS[Rank.CHIEF]) + 4200
+	chief.set_count("rival_from", 38)
+	chief.set_count("rival_base", chief.total_xp - 1150)
+	chief.set_count("rival_won", 4)
+	chief.set_count("rival_lost", 2)
+	chief.set_count("op_streak_best", 6)
+	var chief_map := CareerMap.new(chief)
+	await _shot("147-career-map-chief", chief_map, func() -> void:
+		await process_frame
+		chief_map.scroll.scroll_vertical = int(chief_map.scroll.get_v_scroll_bar().max_value))
+	var wall_doctor := sample_profile_on_ward(14, ["joseph_asked", "aarav_battery_found", "kunal_room", "mehra_charmed",
+		"raju_first", "banerjee_room"])
+	for slot: Dictionary in Letters.slots().slice(0, 4):
+		Letters.mark_read(wall_doctor, slot)
+	await _shot("148-letters-wall", CareerMap.new(wall_doctor, "letters"))
+	var reading := CareerMap.new(sample_profile_on_ward(9, ["aarav_battery_found"]), "letters")
+	await _shot("149-letter-open", reading, func() -> void:
+		for slot: Dictionary in Letters.slots():
+			if str(slot["id"]) == "aarav":
+				reading.open_letter(slot))
+	await _ward_shot("150-end-card-post", 8, ["beds_checked", "banerjee_room", "rider_treated", "rider_named",
+		"joseph_asked", "beds_saved"], "", func(w: Ward) -> bool:
+		return w.mode == "end" and w.overlay.end_card_lines().size() >= 4 and w.overlay.card_left() < 6.5, careful)
+
 
 ## The drug chart with a line already flagged: the list, or the reasons.
 static func _chart_at(ward: Ward, picking: bool) -> bool:

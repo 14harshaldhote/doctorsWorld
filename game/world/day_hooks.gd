@@ -118,6 +118,7 @@ static func record_operation(profile: PlayerProfile, outcome: String) -> void:
 			profile.set_count("op_lost", 0)
 			profile.set_count("op_streak_ended", 0)
 		"failed":
+			Rival.patient_lost(profile)
 			profile.set_count("op_streak_ended", profile.count("op_streak"))
 			profile.set_count("op_streak_ended_day", profile.day)
 			profile.set_count("op_streak", 0)
@@ -187,6 +188,8 @@ static func tomorrow(profile: PlayerProfile, day: int) -> String:
 
 
 ## Everything under the day's own line on the end-of-day card:
-## {"streak": ..., "goal": ..., "tomorrow": ...}, each "" when there is nothing to say.
+## {"streak", "goal", "rival", "post", "tomorrow"}, each "" when there is
+## nothing to say.
 static func end_card(profile: PlayerProfile, day: int) -> Dictionary:
-	return {"streak": streak_line(profile), "goal": goal_line(profile), "tomorrow": tomorrow(profile, day)}
+	return {"streak": streak_line(profile), "goal": goal_line(profile), "rival": Rival.line(profile, day),
+		"post": Letters.post_line(profile, day), "tomorrow": tomorrow(profile, day)}

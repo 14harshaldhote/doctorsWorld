@@ -37,6 +37,11 @@ func _draw() -> void:
 				p.call(4, 18), p.call(4, 4)]), colour, width)
 			draw_polyline(PackedVector2Array([p.call(20, 4), p.call(14, 4), p.call(12, 6), p.call(12, 20), p.call(14, 18),
 				p.call(20, 18), p.call(20, 4)]), colour, width)
+		"map":
+			draw_polyline(PackedVector2Array([p.call(3, 6), p.call(9, 4), p.call(15, 6), p.call(21, 4), p.call(21, 18),
+				p.call(15, 20), p.call(9, 18), p.call(3, 20), p.call(3, 6)]), colour, width)
+			draw_line(p.call(9, 4), p.call(9, 18), colour, width)
+			draw_line(p.call(15, 6), p.call(15, 20), colour, width)
 		"team":
 			draw_arc(p.call(9, 8), s * 3.2 / 24.0, 0, TAU, 16, colour, width)
 			draw_arc(p.call(9, 21), s * 6.0 / 24.0, PI, TAU, 16, colour, width)

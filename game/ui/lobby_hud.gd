@@ -2,7 +2,7 @@ class_name LobbyHud
 extends Control
 ## Everything drawn over the hospital while walking around: the doctor's
 ## badge and XP, the clock, the pager, today's tasks, name tags and speech
-## bubbles over people, and the Phone / Casebook / Team / Menu buttons.
+## bubbles over people, and the Phone / Career / Team / Menu buttons.
 ## Conversations themselves are drawn by ConversationUi on top.
 
 signal menu_choice(choice: String)
@@ -24,6 +24,8 @@ var _bubbles := {}
 var _talking := false
 var _menu: PanelContainer
 var _settings: SettingsPanel
+var _career: CareerMap
+var _career_badge: Label
 var _toast: PanelContainer
 var _toast_label: Label
 var _toast_time := 0.0
@@ -205,7 +207,7 @@ func _build_buttons() -> void:
 	_corner(row, false, false, 12, 12)
 	add_child(row)
 	_buttons = row
-	for entry: Array in [["Phone", "phone"], ["Casebook", "book"], ["Team", "team"], ["Menu", "menu"]]:
+	for entry: Array in [["Phone", "phone"], ["Career", "map"], ["Team", "team"], ["Menu", "menu"]]:
 		var button := Button.new()
 		button.name = entry[0]
 		button.custom_minimum_size = Vector2(UiKit.px(60), UiKit.px(60))
@@ -229,6 +231,26 @@ func _build_buttons() -> void:
 		inside.add_child(caption)
 		button.pressed.connect(_on_corner_button.bind(entry[0]))
 		row.add_child(button)
+		if entry[0] == "Career":
+			# How many letters are waiting to be read.
+			_career_badge = UiKit.label("", 11, UiKit.INK, UiKit.heavy_font())
+			_career_badge.name = "Badge"
+			_career_badge.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+			_career_badge.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+			_career_badge.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			var dot := StyleBoxFlat.new()
+			dot.bg_color = UiKit.AMBER
+			dot.set_corner_radius_all(int(UiKit.px(10)))
+			_career_badge.add_theme_stylebox_override("normal", dot)
+			_career_badge.custom_minimum_size = Vector2(UiKit.px(20), UiKit.px(20))
+			_career_badge.anchor_left = 1.0
+			_career_badge.anchor_right = 1.0
+			_career_badge.offset_left = -UiKit.px(16)
+			_career_badge.offset_right = UiKit.px(4)
+			_career_badge.offset_top = -UiKit.px(4)
+			_career_badge.offset_bottom = UiKit.px(16)
+			button.add_child(_career_badge)
+	refresh_letters()
 
 
 func _build_menu() -> void:
@@ -272,8 +294,10 @@ func _on_corner_button(which: String) -> void:
 	if which == "Menu":
 		_menu.visible = true
 		return
-	var unlocks := {"Phone": "Your phone rings from Day 2.", "Casebook": "Your casebook opens with your first patient.",
-		"Team": "You'll meet the whole team on your first ward round."}
+	if which == "Career":
+		open_career()
+		return
+	var unlocks := {"Phone": "Your phone rings from Day 2.", "Team": "You'll meet the whole team on your first ward round."}
 	toast(unlocks.get(which, ""))
 
 
@@ -303,7 +327,38 @@ func settings_panel() -> SettingsPanel:
 
 
 func menu_open() -> bool:
-	return _menu.visible or _settings != null
+	return _menu.visible or _settings != null or _career != null
+
+
+## Opens the career map (the road, the race, the letters) over the game.
+func open_career(first_page: String = "map") -> CareerMap:
+	if _career != null:
+		return _career
+	_career = CareerMap.new(profile, first_page)
+	_career.closed.connect(func() -> void:
+		_career = null
+		refresh_letters()
+		# A letter read is worth keeping even if the game closes next.
+		menu_choice.emit("save"))
+	add_child(_career)
+	return _career
+
+
+func career_map() -> CareerMap:
+	return _career
+
+
+## The Career button's badge: letters waiting to be read.
+func refresh_letters() -> void:
+	if _career_badge == null:
+		return
+	var unread := Letters.unread_count(profile)
+	_career_badge.text = str(unread)
+	_career_badge.visible = unread > 0
+
+
+func career_badge() -> String:
+	return _career_badge.text if _career_badge != null and _career_badge.visible else ""
 
 
 ## Shows a short message under the clock for a few seconds.
@@ -316,6 +371,7 @@ func toast(text: String) -> void:
 
 
 func refresh_profile() -> void:
+	refresh_letters()
 	var progress := LevelCurve.progress(profile.total_xp)
 	var level := int(progress["level"])
 	_level_label.text = "%s · Level %d" % [Rank.title(profile.rank()), level]

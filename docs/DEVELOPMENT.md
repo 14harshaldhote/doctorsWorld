@@ -28,6 +28,7 @@ plan"). This file covers how to build, run and test the game.
 | 14. Training through the career, and fewer ways to get stuck | A drill between every day from the end of Day 3 to the start of Day 28 (`Drills`, `DrillCard`, `SkillsLab` with a `drill` station): the save moves to the next morning as soon as a day ends, with `Drills.FLAG` set, and `Main.show_hospital` opens the skills lab for one station (monitor, IV line, stitching, instruments, scrubbing in, in turn) before the day. A card shows a true story (`TrainingFacts`, six per station) and the XP on offer; the first score pays `Drills.xp` (for turning up, each star and a new best, times 1 + half the rank) and clears the flag; Skip goes straight on. Every Day 2 score card ends with a story too (`TrainingView.fact`). Fixes from a playthrough audit: a day started again after the game closed halfway goes back to that morning (`PlayerProfile.begin_day`, the `morning` snapshot in the save), so a review can no longer promote twice and XP can't be earned twice; the ward's and theatre's place to go counts from a tap on its bed or person or the floor beside it, or from walking up to it, and its tag is pinned to the screen's edge with an arrow when the place is off screen or under a panel (`LobbyHud.set_tag(..., pin)`, `tag_hit`) | Done |
 | 15. Turning up pays, new patients, a card that talks | XP for opening the game on a new real-world day (`DailyReward`: 10 XP, plus 5 for each day in a row up to a week, times 1 + half the rank; `PlayerProfile.last_played` and the counter `day_streak`), on a `WelcomeCard` over the day's screen, which waits for it. The XP goes into the morning snapshot too, so a day that starts over keeps it. The history station joins the drills (`Drills.ORDER` has six stations) with a practice patient each time it comes round (`Drills.HISTORY_CASES`, four new cases in `story/cases.json`, all acted by Dr. Iyer). The trainer reads the drill card aloud: the opener, then the true story (`DrillCard._read_aloud`); the facts and openers moved to `story/facts.json` so `tools/make_voices.py` records them (`fact_lines()`) | Done |
 | 16. Nobody walks through anybody, voices that sound like people | One walking system for everyone (`Crowd`): every walk plans its way round furniture and round anyone standing still (`WalkArea.find_path` with people), steps aside or waits for anyone in the way on every frame, ends beside someone instead of inside them, and gets up off a bed or out of furniture before it sets off. The stitch trainer's spot moved out of the lab wall. `test_crowd.gd` plays the first days and two ward weeks frame by frame and fails on any overlap. Story lines are acted: each sentence is made on its own with its own pace and pitch and put back together with small pauses, gently shaped by the line's mood (`MOODS` in `tools/make_voices.py`). The first two weeks of dialogue were rewritten to sound spoken | Done |
+| 17. The career map, a rival and letters | The Career button (it replaced the Casebook corner button) opens `CareerMap` over the paused game: every rank as a stop (`Career.STOPS`: done, here with the goals for the next stop, or locked with a teaser), the roads a Senior Resident will choose between (only Surgery open), the never-ending days, and the race with Dr. Varun Khanna (`Rival`). Letters from patients (`Letters`, `story/letters.json`) arrive as their day ends, the first letter in a slot whose condition holds; the Letters page is a wall of every slot, sealed, empty or arrived, and reading one marks it read. The end-of-day card adds a line about the race and one about the post. The ward, theatre, skills lab and lobby now stop their clocks while any menu is open | Done |
 
 The earlier SwiftUI and SpriteKit prototype is kept on the git branch
 `swift-prototype`.
@@ -386,6 +387,47 @@ moves its end beside them. `Crowd.make_room()` moves anyone put down on top
 of someone. The ward's theatre and seminar room sit on other floors, so the
 ward's walk area only applies to people on its own floor. `Crowd.problems()`
 lists every overlap on a frame; `test_crowd.gd` uses it on whole days.
+
+## The career map
+
+`CareerMap` (game/ui/career_map.gd) is opened by `LobbyHud.open_career()`
+from the Career corner button in every scene with a HUD; `menu_open()` is
+true while it is up, so the scene stops its clock (`update` returns early)
+and ignores taps. Closing it emits `menu_choice("save")`, so a letter read is
+saved straight away. The HUD's amber badge counts unread letters
+(`refresh_letters`).
+
+- `Career.stops(profile)`: one stop per rank, `done`, `here` or `locked`; a
+  locked stop shows its `teaser`. `Career.goals(profile)` lists the next
+  review (from `DayHooks.REVIEW_DAYS`) and level for the stop the doctor is
+  on, or a Chief's board report and next milestone, plus the best run and
+  how many letters are on the wall. `Career.ROADS` are the roads at Senior
+  Resident; only Surgery is open.
+- `Rival` is Dr. Varun Khanna, a batchmate at CarePlus on the same rung of
+  the ladder. The race compares XP earned in a "month": Days 4-8, 9-13,
+  14-18, 19-23, 24-27, then every ten days from 28 (`STRETCHES`,
+  `CHIEF_STRETCH`). `Rival.begin_day` (called by `Ward._begin_day`) starts a
+  month's count from the doctor's XP that morning (`rival_base`) and settles
+  the month before into `rival_won`, `rival_lost` or `rival_tied`. A
+  promotion's top-up is added to `rival_base` in `Ward._promote`, so reviews
+  never decide a month. Varun earns `PACE` a day plus a day's line from
+  `DAYS` (picked by a hash of the day, so it is the same for everyone), and
+  `LOSS_PUSH` for each patient the player loses (`DayHooks.record_operation`).
+  A career that reaches the race partway through a month races from that day
+  (`rival_since`). The counters are part of the day's morning snapshot, so a
+  day played again counts nothing twice.
+- `Letters` reads `story/letters.json`: `slots`, each with an `after` day and
+  a list of `letters`, each with a `when` condition (`WardStory.holds`
+  syntax; empty means always), `from`, `title` and `body` (`{called}` is the
+  doctor's name). The first letter whose condition holds is the one that
+  comes, once the doctor is past the slot's day; no match means nobody wrote.
+  `Letters.post_line` is the end card's line for the letters arriving as a
+  day ends. Reading sets `letter_read_<slot>` in the flags and in the
+  morning snapshot. Square brackets in a letter are shown as written.
+
+To add a letter, add a slot (in day order) or another letter to a slot,
+with a condition on a flag the story really sets; `test_career.gd` checks
+both.
 
 ## A new day
 

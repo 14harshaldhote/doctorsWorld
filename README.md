@@ -297,6 +297,24 @@ Here's everything, in order, so you can decide how much of your life to give it:
   a cheque, cameras at the door, a family with a lawyer's card. Your answers
   move three numbers (staff, money, and whether the town trusts you), and
   every fifth day the board reads them back to you, slowly.
+- A career map, because apparently you need a map to know you're lost. Every
+  rank from Intern to Chief is a stop on the road: the ones you've done, the
+  one you're on with exactly what stands between you and the next (a review,
+  a level, a board that reads reports slowly), and the locked ones teasing
+  what's coming. Further down, the road splits into Emergency, the
+  Children's ward and Heart, which are "coming", in the way a lift in a
+  government hospital is "coming".
+- Dr. Varun Khanna, your batchmate, took the CarePlus job, the CarePlus car
+  and a twelve-foot hoarding of his own face at the highway signal. Every
+  month you race him on XP earned, not on promotions, so you can't win by
+  turning up to a review. He has good days, bad days and a podcast. Lose a
+  patient and he gets a push. He will tell the WhatsApp group either way.
+- Letters. The people you looked after write to you, and what you did
+  decides who writes and what they say. Rohit writes from home, or from the
+  ICU. Aarav sends a crayon robot. Mrs. Mehra sends tea, or a copy of her
+  complaint to the board. Some people don't write at all, and their space on
+  the wall stays empty, which is its own kind of letter. Twenty-four places
+  on the wall, and the last one is a hundred days away.
 - After that the days are made fresh every morning, for as long as you can
   stand it: a night rota from a ward full of different patients, crashes on
   the highway, a simulator case in front of interns who are placing bets on

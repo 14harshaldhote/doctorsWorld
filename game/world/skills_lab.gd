@@ -928,6 +928,10 @@ func _process(delta: float) -> void:
 
 ## Time passes only here, so tests and the screenshot tool can play the lab.
 func update(delta: float) -> void:
+	if hud != null and hud.menu_open():
+		# The game waits while the menu, the settings or the career map is open:
+		# no patient gets worse behind it.
+		return
 	overlay.tick(delta)
 	if _clear_in > 0.0:
 		_clear_in -= delta

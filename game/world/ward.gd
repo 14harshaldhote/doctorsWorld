@@ -898,6 +898,7 @@ func _begin_day() -> void:
 	profile.begin_day()
 	if ChiefDays.is_chief_day(profile.day):
 		ChiefDays.prepare(profile, profile.day)
+	Rival.begin_day(profile)
 	for flag: String in DAY_FLAGS.get(profile.day, WardStory.DAY_FLAGS.get(profile.day, [])):
 		profile.set_flag(flag, false)
 	for case_id: String in DAY_CASES.get(profile.day, WardStory.DAY_CASES.get(profile.day, [])):
@@ -1196,6 +1197,8 @@ func _promote() -> void:
 	var next := Rank.next(profile.rank_held)
 	var needed := LevelCurve.total_xp_to_reach(Rank.FIRST_LEVELS[next]) if next >= 0 else 0
 	profile.total_xp += maxi(REVIEW_XP, needed - profile.total_xp)
+	# A promotion's XP isn't a day's work: the race with Varun ignores it.
+	profile.add_count("rival_base", profile.total_xp - before)
 	profile.promote()
 	profile.set_flag("promoted")
 	Music.fanfare()
@@ -1882,6 +1885,10 @@ func _process(delta: float) -> void:
 
 ## Time passes only here, so tests and the screenshot tool can play the day.
 func update(delta: float) -> void:
+	if hud != null and hud.menu_open():
+		# The game waits while the menu, the settings or the career map is open:
+		# no patient gets worse behind it.
+		return
 	overlay.tick(delta)
 	if _clear_in > 0.0:
 		_clear_in -= delta

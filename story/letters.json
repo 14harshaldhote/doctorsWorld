@@ -1,0 +1,121 @@
+{
+	"_about": "Letters from people the doctor looked after. Each slot is one place on the wall; its letters are alternatives, the first whose 'when' holds arrives at the end of day 'after'. A slot with no letter that holds stays empty for that career.",
+	"slots": [
+		{"id": "nair", "after": 4, "letters": [
+			{"when": "", "from": "Mr. Prakash Nair", "title": "Still a coconut. Smaller.",
+				"body": "Doctor,\n\nThe knee is now the size of a lemon. A big lemon, but still. The orthopaedic man saw me after only three hours. I told him a young doctor asked me how long I'd been waiting, and he looked at me like I was making it up.\n\nI was not making it up. Write that down somewhere, na.\n\nPrakash Nair\n(Professional waiter, retired)"}
+		]},
+		{"id": "rohit", "after": 8, "letters": [
+			{"when": "op_rohit_failed", "from": "Rohit Kulkarni", "title": "From the ICU, then the ward, then home",
+				"body": "Dear Doctor,\n\nThey say I was very sick. I mostly remember the ICU ceiling, which has 114 tiles. I counted twice, like a nervous doctor.\n\nMum shouted at me for one full day for hiding the pain. Then she hugged me for two. I'm sitting the supplementary exam in August. Dr. Iyer says I can, and nobody argues with Dr. Iyer.\n\nThank you for not giving up on me.\nRohit"},
+			{"when": "", "from": "Rohit Kulkarni", "title": "The appendix boy writes",
+				"body": "Dear Doctor,\n\nThank you for not giving up on me. Also for the scar, which is very small. My friends wanted a big one. I've told them it was a shark.\n\nI'm writing my exams next month. Dr. Iyer says I can. Mum has told every aunty in Pune that a doctor saved me, so if anybody from Pune calls you, sorry in advance.\n\nRohit\n(Engineering, final year, no more pani puri)"}
+		]},
+		{"id": "pillai", "after": 8, "letters": [
+			{"when": "beds_agreed", "from": "Lakshmi Pillai", "title": "A different doctor, please",
+				"body": "Doctor,\n\nI have asked for a different doctor for my follow-up. You were very polite when you sent me home with a fever. The ambulance at three in the morning was also very polite.\n\nI am not angry. I am a mother, we don't get angry, we get disappointed. My son is angry. He is in Dubai, so it's quite far away, thankfully.\n\nGet well soon from this, na.\nLakshmi Pillai"},
+			{"when": "", "from": "Lakshmi Pillai", "title": "Mangoes. Don't tell Arjun.",
+				"body": "Doctor,\n\nMy son sent mangoes from Dubai. A whole box, by air, like they don't grow mangoes in India. Some are for you. Do not tell him I said so, he'll want a photo of you eating them.\n\nThe gallbladder is gone. The pressure cooker survived, my neighbour turned it off. Everybody is fine except my sugar, which you will be happy to know I am watching.\n\nLakshmi Pillai"}
+		]},
+		{"id": "aarav", "after": 8, "letters": [
+			{"when": "aarav_battery_found", "from": "Aarav, age 6", "title": "A robot (it's you)",
+				"body": "[A drawing in crayon. A robot with a stethoscope holds a small round battery in one claw. Underneath, in very big letters:]\n\nTHIS IS YOU. YOU FOUND THE BATERY. I AM NOT ALOWED REMOTES NOW.\n\n[In smaller, neater writing:] He asked if he could post it himself. He also asked if he could post a coin. The answer was no. Thank you, Doctor. - Leela"},
+			{"when": "", "from": "Aarav, age 6", "title": "A robot with an X-ray",
+				"body": "[A drawing in crayon. A robot holds an X-ray almost as big as itself.]\n\nTHIS IS MY XRAY. IT IS VERY BIG. I AM FAMUS IN CLASS.\n\n[In smaller writing:] The scope team got it out in time. Next time, please, Doctor, look a little longer. A mother asks. - Leela"}
+		]},
+		{"id": "pooja", "after": 8, "letters": [
+			{"when": "pooja_answered", "from": "Pooja Sheikh, age 9", "title": "A slice of birthday cake",
+				"body": "Dear Doctor who answered Papa's phone,\n\nThis is a slice of my birthday cake. Chocolate. Mummy wrapped it in foil so it might be a bit squashed, sorry.\n\nPapa says you talked to me like I was a grown-up. I am nine, so I nearly am. Papa came home in a wheelchair and promised to buy a helmet. I am checking.\n\nPooja"},
+			{"when": "rider_treated", "from": "Mrs. Sheikh", "title": "Sweets for the night staff",
+				"body": "Doctor,\n\nThese sweets are for the night staff. Somebody said you are the night staff.\n\nMy husband came in with no name and no wallet, and you took him to theatre anyway. At the government hospital they'd have asked for a deposit first. I know because my brother waited there for four hours, na.\n\nSalim is home. He talks about his bike more than about me. That's how I know he's better.\n\nNasreen Sheikh"}
+		]},
+		{"id": "fernandes", "after": 8, "letters": [
+			{"when": "joseph_asked", "from": "Mr. Joseph Fernandes", "title": "You're invited to a wedding",
+				"body": "My dear Doctor,\n\nThe tube came out, the bowel settled, and nobody shouted. Well, Maria shouted once, but at Peter, so it doesn't count.\n\nMy granddaughter marries in December, in Margao. You are invited. You were the only one in that room who asked me what I wanted, at eighty-one, after thirty years of my children deciding for me.\n\nBring someone. Don't bring a tube.\nJoseph Fernandes"}
+		]},
+		{"id": "banerjee", "after": 9, "letters": [
+			{"when": "banerjee_room", "from": "Mrs. Banerjee", "title": "From the quiet little room",
+				"body": "Beta,\n\nI went home after nine days. The cough is gone, mostly. My neighbour says I sound like a tractor in second gear now, instead of fourth.\n\nSister told me someone fought for that little glass room so I could sleep. I slept. I dreamt of the sea, and my husband was listening to it on his radio.\n\nThank you for holding my hand. Hold everybody's, na. Old people don't ask.\nIla Banerjee"},
+			{"when": "", "from": "Mrs. Banerjee", "title": "Thump, thump, thump",
+				"body": "Beta,\n\nI went home after two weeks. That boy in the glass room played his music every night. Thump, thump. I learnt all his songs. I don't like any of them.\n\nThe cough is better. The other patients on my side of the ward are also coughing now, so I'm not lonely.\n\nYou were kind to me at night. That I will remember. The music also I will remember, unfortunately.\nIla Banerjee"}
+		]},
+		{"id": "kunal", "after": 9, "letters": [
+			{"when": "kunal_room", "from": "Kunal Bhatia", "title": "Five stars. Follow me.",
+				"body": "Hey Doc!!\n\nFive stars for the side room. The TV had 300 channels and the nurse only rolled her eyes twice. My stream got 40,000 views. My wrist is fine, by the way, it was a sprain. You were right. Don't tell my uncle.\n\nFollow me on Instagram, I tagged the hospital. Mr. Malhotra liked the post. Twice.\n\nKunal\n(influencer, guitarist, survivor)"},
+			{"when": "kunal_home", "from": "Kunal Bhatia", "title": "Review updated to two stars",
+				"body": "Doc,\n\nI've updated my review from one star to two. The splint is actually quite aesthetic. My followers think I broke it doing something cool. I have not corrected them.\n\nMy uncle still says I should have had the side room. My mother says a sprain is a sprain and a pneumonia is a pneumonia. Nobody listens to my mother. Except you, apparently.\n\nKunal"}
+		]},
+		{"id": "mehra", "after": 13, "letters": [
+			{"when": "mehra_charmed", "from": "Mrs. Kamala Mehra", "title": "Tea, on Sunday",
+				"body": "Doctor,\n\nYou made me wait for a bricklayer. I was very insulted for nearly a full afternoon. Then you told me his bowel was dying while I complained about my lunch.\n\nMy husband laid bricks before Suresh became important. I had forgotten. You reminded me without knowing.\n\nCome for tea on Sunday. Not for Suresh, not for the board. For me. Bring nothing, I have too many things.\nKamala Mehra"},
+			{"when": "mehra_complaint", "from": "Mrs. Kamala Mehra", "title": "Copy of a letter to the board",
+				"body": "To the Board of Riverside City Hospital, copy to the young doctor concerned.\n\nI wish to complain about manners. I was told, to my face, that I was not an emergency.\n\nI have since learnt that the bricklayer was, in fact, an emergency, and that he kept his bowel. I am pleased for him. I still wish to complain about manners. Both things can be true, na.\n\nYours, with displeasure and a normal heart tracing,\nKamala Mehra"}
+		]},
+		{"id": "raju", "after": 13, "letters": [
+			{"when": "raju_first", "from": "Raju Yadav", "title": "One brick with your name",
+				"body": "Doctor sahib,\n\nI am back at work. Light work only, the contractor says, so I carry half the bricks and complain about the other half.\n\nI am building a room on my house for my mother. The first brick has your name on it, in chalk. The rain will wash it off, but I wrote it, so it counts.\n\nYou saw me first, even with a big lady from the board waiting. On a building site nobody sees you first.\nRaju"}
+		]},
+		{"id": "farida", "after": 13, "letters": [
+			{"when": "farida_consented_honest", "from": "Farida Ansari", "title": "Words are measurements",
+				"body": "Dear Doctor,\n\nI tell my students that words are measurements, and that 'rarely' and 'very rarely' are different quantities. You were the first doctor who used them correctly with me.\n\nThe operation went the way you said it probably would. I'm back in the lab. A Class 11 boy set his sleeve on fire on Monday. Small fire, big lesson.\n\nWith correct units,\nFarida Ansari"}
+		]},
+		{"id": "bansal", "after": 13, "letters": [
+			{"when": "bansal_sethi_told", "from": "Mr. Ramesh Bansal", "title": "Interest, compounded",
+				"body": "Dear Doctor,\n\nForty years in a bank teaches you to read small print. You read mine. A leaking aneurysm, they said, not a kidney stone. The vascular people were very grand about it.\n\nI am told a young doctor argued with a senior about my belly. In banking we call that a whistle-blower and transfer them to Nagpur. I hope they don't do that to you.\n\nGratitude, with compound interest,\nR. K. Bansal (retd.)"}
+		]},
+		{"id": "zoya", "after": 18, "letters": [
+			{"when": "zoya_lead", "from": "Dr. Zoya Qureshi", "title": "My first night alone",
+				"body": "Hi,\n\nFirst night on my own. Nobody died. Two people tried. One pulled out his own drip and asked for biryani at 3 a.m.\n\nI kept thinking about when you said I'd lead and you'd catch me before I fell. I didn't fall. I wobbled. A lot. Thank you for letting me wobble.\n\nZoya\n(PS: I've told my intern exactly the same thing. She looked terrified. So did I.)"},
+			{"when": "", "from": "Dr. Zoya Qureshi", "title": "Notes from an intern",
+				"body": "Hi,\n\nI'm writing this at 2 a.m. in the doctors' room, so excuse the handwriting. I wanted to say thank you for the year. You watched every chart I wrote, which was very annoying and also exactly right.\n\nNext time I'd like to lead a bit sooner, na. I'll be ready. Probably.\n\nZoya"}
+		]},
+		{"id": "gomes", "after": 18, "letters": [
+			{"when": "gomes_own_consent", "from": "Mrs. Philomena Gomes", "title": "I heard every bad speech",
+				"body": "My dear Doctor,\n\nI wore my hearing aid to the wedding. It whistled during the vows, so everybody heard me too. I heard every speech. They were all terrible. Francis cried at his own.\n\nYou are the only doctor who thought I might be deaf instead of daft. At eighty-one, people decide you are daft very quickly. It saves them time.\n\nGod bless you, and speak up, child.\nPhilomena Gomes"}
+		]},
+		{"id": "imran", "after": 18, "letters": [
+			{"when": "imran_truth", "from": "Imran Ali", "title": "The company paid",
+				"body": "Doctor,\n\nThe company paid. All of it. Because you wrote in my notes that I fell, at work, with no harness, and the time. Their lawyer read it twice and stopped arguing.\n\nI'm back on scaffolding. With a harness now. My mother checks it every morning, like it's school.\n\nThanks for writing the truth. Most people write what's easy.\nImran"}
+		]},
+		{"id": "kurup", "after": 23, "letters": [
+			{"when": "kurup_promise", "from": "Mrs. Shanta Kurup", "title": "In writing, with stamps",
+				"body": "Dear Doctor,\n\nForty years in the post office. I trust nothing that is not in writing, stamped and signed.\n\nVenu went to the hospital last month for his eyes. He saw the new rule on the theatre wall: nobody signs a count correct unless they finished it themselves. He took a photo. It is on our fridge, next to the grandchildren.\n\nYou kept your promise. In writing. That is rarer than you think.\nShanta Kurup (retd. postmistress)"}
+		]},
+		{"id": "priya", "after": 23, "letters": [
+			{"when": "crash_credit_priya", "from": "Priya", "title": "My mother framed the newspaper",
+				"body": "Doctor,\n\nMy mother framed the newspaper. The one with the nurses who ran the bay on the day of the bus crash. I'm in the front, looking like I haven't slept, because I hadn't.\n\nTwelve years of nursing and it's the first time anybody photographed us instead of the doctor holding a file. She's told the whole colony.\n\nDon't let it go to your head. Mr. Malhotra still hasn't recovered.\nPriya"}
+		]},
+		{"id": "sinha", "after": 28, "letters": [
+			{"when": "sinha_told", "from": "Mrs. Rekha Sinha", "title": "Corrected, with red ink",
+				"body": "Doctor,\n\nI teach Hindi to fifteen-year-olds. I can tell when someone is telling the truth by their grammar. Dr. Sethi's grammar was terrible that day. His truth was fine.\n\nSomething went wrong in my operation and somebody told me before it was convenient. That is rare, na. I have corrected my opinion of doctors. Slightly. In pencil, not pen.\n\nRekha Sinha"}
+		]},
+		{"id": "rohit_grad", "after": 33, "letters": [
+			{"when": "op_rohit_failed", "from": "Rohit Kulkarni, B.Tech.", "title": "Supplementary, then graduation",
+				"body": "Dear Doctor,\n\nSupplementary exam in August, then the rest of college, then today: graduation. Mum wore three different sarees in one day and cried in all of them.\n\nI'm starting at a company that makes hospital equipment. I want to build a monitor that beeps before things go wrong, not after. Dr. Iyer said 'Good. Make it quieter.'\n\nYour first appendix,\nRohit"},
+			{"when": "", "from": "Rohit Kulkarni, B.Tech.", "title": "Graduated. Mum cried. Twice.",
+				"body": "Dear Doctor,\n\nI graduated! Mum cried twice. Once at the ceremony, once when she saw the photographer's bill.\n\nI've built an app that tracks which hospital beds are free. Mr. Malhotra wants to buy it. I've doubled the price. He said I'd make an excellent administrator. I'm choosing to take that as an insult.\n\nYour first appendix,\nRohit"}
+		]},
+		{"id": "aarav_grown", "after": 40, "letters": [
+			{"when": "", "from": "Aarav, age 9", "title": "I will be a doctor",
+				"body": "Dear Doctor,\n\nI am nine now and I don't swallow things any more. Except once, a button, but it was a long time ago (in March).\n\nWhen I grow up I will be a doctor like you and look at X-rays very carefully. Mama says I have to study biology first. I said I already know about batteries. She said that's not biology, that's a crime.\n\nFrom Aarav Thomas\n(future doctor)"}
+		]},
+		{"id": "pooja_grown", "after": 50, "letters": [
+			{"when": "pooja_answered|rider_treated", "from": "Pooja Sheikh, age 12", "title": "Papa has a helmet now",
+				"body": "Dear Doctor,\n\nI am twelve now. Papa has a scooter now instead of the old bike, and a helmet, which I check every morning. He says I am worse than a traffic policeman. I take that as a compliment.\n\nHe still does fourteen orders a day. On my birthday he does only ten, and the cake is always chocolate. You know why.\n\nPooja"}
+		]},
+		{"id": "nair_back", "after": 60, "letters": [
+			{"when": "", "from": "Mr. Prakash Nair", "title": "Forty minutes. Progress.",
+				"body": "Doctor,\n\nNew knee, both sides now. I came for my check-up and waited only forty minutes. Forty! I nearly didn't know what to do with myself.\n\nI hear you run the whole place now. Somebody at the desk said 'the Chief'. I said, I knew the Chief when the Chief looked twelve and a half. Nobody believed me.\n\nPrakash Nair"}
+		]},
+		{"id": "arjun", "after": 75, "letters": [
+			{"when": "lakshmi_told", "from": "Arjun Pillai", "title": "Back from Dubai",
+				"body": "Doctor,\n\nI moved back from Dubai. Mummy said she needed someone to watch her sugar. Actually she wanted someone to argue with in person.\n\nYou told me the truth about her diabetes on a video call, while I was shouting. I've thought about that a lot. I shout less now. My wife says thank you.\n\nMangoes are coming. A whole tree's worth, from a farm this time.\nArjun Pillai"},
+			{"when": "", "from": "Arjun Pillai", "title": "Mangoes, from closer",
+				"body": "Doctor,\n\nI moved back from Dubai. Mummy needed someone to watch her sugar, and also someone to tell things to slowly, in her own time. I'm learning.\n\nShe still won't tell me everything. You were right to let her choose what I hear. I didn't like it then.\n\nMangoes are coming, from a farm this time, not by air. She says the air ones were showing off.\nArjun Pillai"}
+		]},
+		{"id": "iyer_100", "after": 100, "letters": [
+			{"when": "", "from": "Dr. Meera Iyer", "title": "One hundred days",
+				"body": "{called},\n\nOne hundred days. I've kept count, which you'll pretend not to find touching.\n\nYou were two minutes late on your first morning. Technically early. You've been early ever since, including in the places that matter: the question before the knife, the allergy nobody asked about, the family nobody listened to.\n\nI still check your notes. Don't take it personally. I check everybody's.\n\nMeera\n(PS: The coffee is still mine.)"}
+		]}
+	]
+}

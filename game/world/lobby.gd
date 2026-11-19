@@ -744,6 +744,9 @@ func _key_direction() -> Vector2:
 
 
 func _process(delta: float) -> void:
+	if hud != null and hud.menu_open():
+		# The game waits while the menu, the settings or the career map is open.
+		return
 	story.update(delta)
 	_update_banter(delta)
 	overlay.tick(delta)
