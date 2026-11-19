@@ -177,6 +177,13 @@ static func next_review(day: int) -> int:
 	return found
 
 
+## A crisis handled: how many, and how many handled without a single slip.
+static func record_crisis(profile: PlayerProfile, right: bool) -> void:
+	profile.add_count("crises", 1)
+	if right:
+		profile.add_count("crises_right", 1)
+
+
 ## The line about tomorrow shown as a day ends.
 static func tomorrow(profile: PlayerProfile, day: int) -> String:
 	for entry: Array in TOMORROW.get(day, []):

@@ -743,6 +743,10 @@ static func beats(profile: PlayerProfile, day: int) -> Array[Dictionary]:
 				found.append(beat)
 			found.append(_sim_beat(profile, day))
 			found.append(_call_beat(call_for(profile, day), day))
+	# Every third day something goes wrong, before the day's last beat.
+	var crisis := Crises.beat(profile, day)
+	if not crisis.is_empty():
+		found.insert(maxi(1, found.size() - 1), crisis)
 	if is_report_day(day):
 		found.append({"id": "report", "row": "The board's report", "where": "seminar", "at": 17 * 60,
 			"card": ["Seminar room · 17:00", "Mrs. Rajan has your numbers. So does Mr. Malhotra. So, somehow, does the newspaper."],
@@ -1076,7 +1080,10 @@ static func after_operation(profile: PlayerProfile, outcome: String, sim: bool) 
 ## What a puzzle's result does: a rota that holds keeps the nurses, a
 ## crash sorted right keeps the town's trust.
 static func after_task(profile: PlayerProfile, task: TrainingTask) -> void:
-	if task is RotaTask:
+	if task is CrisisTask:
+		# The town hears how a crisis went: well handled, or on WhatsApp.
+		Standing.change(profile, {"public": 2, "staff": 1} if (task as CrisisTask).all_right() else {"public": -2})
+	elif task is RotaTask:
 		var rota := task as RotaTask
 		if not rota.uncovered().is_empty():
 			Standing.change(profile, {"staff": -4, "public": -2})

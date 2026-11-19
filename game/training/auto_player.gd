@@ -51,6 +51,8 @@ func step(view: TrainingView, delta: float) -> void:
 			_triage(view as TriageView)
 		"rota":
 			_rota(view as RotaView)
+		"crisis":
+			_crisis(view as CrisisView)
 		_:
 			if view is OperationView:
 				_operation(view as OperationView, delta)
@@ -232,6 +234,68 @@ func _rota(view: RotaView) -> void:
 				with = str(member["id"])
 				break
 	view.give_to(with)
+
+
+## Answers a crisis one tap at a time: the right answer to every step;
+## "shaky" gets the last step wrong, "bad" gets every step wrong.
+func _crisis(view: CrisisView) -> void:
+	if not _act():
+		return
+	var crisis := view.task as CrisisTask
+	var step := crisis.current()
+	var wrong := quality == "bad" or (quality == "shaky" and crisis.step_index == crisis.steps.size() - 1)
+	var want: Variant = crisis_wrong_answer(step) if wrong else CrisisTask.right_answer(step)
+	match crisis.kind():
+		"one":
+			if str(crisis.picked) != str(want):
+				view.pick(str(want))
+				return
+		"each":
+			for item_id: String in (want as Dictionary):
+				if crisis.choice_of(item_id) != str(want[item_id]):
+					view.assign(item_id, str(want[item_id]))
+					return
+		"some":
+			for item_id: Variant in (want as Array):
+				if not crisis.is_picked(str(item_id)):
+					view.toggle(str(item_id))
+					return
+	view.confirm()
+
+
+## An answer to a crisis step that is certainly wrong.
+static func crisis_wrong_answer(step: Dictionary) -> Variant:
+	var right: Variant = CrisisTask.right_answer(step)
+	match str(step.get("kind", "one")):
+		"one":
+			for option: Dictionary in step.get("options", []):
+				if str(option["id"]) != str(right):
+					return str(option["id"])
+		"each":
+			var given := {}
+			for item_id: String in (right as Dictionary):
+				var other := ""
+				for choice: Dictionary in step.get("choices", []):
+					if str(choice["id"]) != str(right[item_id]) and not choice.has("limit"):
+						other = str(choice["id"])
+						break
+				given[item_id] = other
+			return given
+		"some":
+			if step.has("values"):
+				# Only the worst job: the one that costs points.
+				var worst := ""
+				var lowest := 999
+				for item: Dictionary in step.get("items", []):
+					var value := int((step["values"] as Dictionary).get(str(item["id"]), 0))
+					if value < lowest:
+						lowest = value
+						worst = str(item["id"])
+				return [worst]
+			for item: Dictionary in step.get("items", []):
+				if str(item["id"]) not in (right as Array):
+					return [str(item["id"])]
+	return right
 
 
 ## Examines like a careful doctor: a bleed first, then gentle places

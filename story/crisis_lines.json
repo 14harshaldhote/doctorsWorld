@@ -1,0 +1,587 @@
+{
+ "_about": "What the coach says during each crisis (game/training/crises.gd). Every line is recorded by tools/make_voices.py.",
+ "power_cut": {
+  "brief_easy": {
+   "say": "tom",
+   "text": "Arre, the lights! Don't worry, the generator kicks in within a minute. Usually. Tell me what you need, Doctor."
+  },
+  "brief_hard": {
+   "say": "tom",
+   "text": "Lights gone, generator coughing like a Pune rickshaw. The card's on the trolley, Doctor. Read it before you do anything brave."
+  },
+  "brief_extreme": {
+   "say": "tom",
+   "text": "Everything's dead, and the generator's diesel was 'arranged' by purchase. No hints from me today, Doctor. Your call."
+  },
+  "s1_right_general": {
+   "say": "tom",
+   "text": "Good, the bag's going and Dr. Khan is counting breaths. Now we need light, na."
+  },
+  "s1_wrong_general": {
+   "say": "tom",
+   "text": "Doctor, the ventilator's dead! Nobody was breathing for the patient! Dr. Khan grabbed the bag. Now light, quickly."
+  },
+  "s1_right_spinal": {
+   "say": "tom",
+   "text": "Haan, good. Calm voice, still patient. Awake people in the dark imagine the worst. Now, light."
+  },
+  "s1_wrong_spinal": {
+   "say": "tom",
+   "text": "The patient's awake, Doctor, and now panicking with an open wound. Dr. Khan is talking them down. Light, now."
+  },
+  "s1_hint": {
+   "say": "tom",
+   "text": "First ask yourself who is breathing for the patient right now. Read the anaesthetic line on the card."
+  },
+  "s2_right": {
+   "say": "tom",
+   "text": "Light! Not pretty, but light. Keep it steady on the wound, everybody."
+  },
+  "s2_wrong_kit": {
+   "say": "tom",
+   "text": "The kit was checked on Monday, Doctor. My handwriting is on it. The headlamp was sitting right there, charged and insulted."
+  },
+  "s2_wrong_flat": {
+   "say": "tom",
+   "text": "The headlamp is decorating somebody's balcony for Diwali, Doctor. It's on the card. Phones out, everyone."
+  },
+  "s2_hint": {
+   "say": "tom",
+   "text": "What does the card say about the emergency kit? Use what's actually in the room, not what's supposed to be."
+  },
+  "s3_right_keyhole": {
+   "say": "tom",
+   "text": "Hands still. Nobody moves a thing inside till the camera's back. Good."
+  },
+  "s3_wrong_keyhole": {
+   "say": "tom",
+   "text": "Doctor, those instruments are inside a belly nobody can see. Moving them blind is how livers get personal. Hold still."
+  },
+  "s3_right_bleeding": {
+   "say": "tom",
+   "text": "Pressure, and patience. The bleeding's slowing. My heart is not, but the bleeding is."
+  },
+  "s3_wrong_bleeding": {
+   "say": "tom",
+   "text": "Clamping in the dark catches whatever's nearby, Doctor. And the diathermy needs power. Press. Just press."
+  },
+  "s3_right_closing": {
+   "say": "tom",
+   "text": "Good. We stop, and count again with light. Swabs love dark corners."
+  },
+  "s3_wrong_closing": {
+   "say": "tom",
+   "text": "Doctor, that count was from before the dark. Things fall when people panic. We count again, full stop."
+  },
+  "s3_hint": {
+   "say": "tom",
+   "text": "Read what was happening on the card: keyhole, bleeding, or closing. Each one wants something different."
+  },
+  "s4_right": {
+   "say": "tom",
+   "text": "Correct. The patient's numbers first. The surgeon's comfort can wait in the queue like everyone else."
+  },
+  "s4_wrong_ups": {
+   "say": "tom",
+   "text": "Ten minutes of power, Doctor, and you spent it on the surgeon? The monitor and the anaesthetic machine keep the patient alive."
+  },
+  "s4_wrong_dead": {
+   "say": "tom",
+   "text": "No monitor means you become the monitor, Doctor. Pulse, cuff, every three minutes, out loud."
+  },
+  "s4_hint": {
+   "say": "tom",
+   "text": "Check the card: is the UPS alive or dead? Then ask what keeps the patient safe, not what finishes the job."
+  },
+  "s5_right": {
+   "say": "tom",
+   "text": "Lights back, settings checked. Now we can thank the generator. Quietly."
+  },
+  "s5_wrong": {
+   "say": "tom",
+   "text": "Arre, the lights came back, not the settings! Machines restart on their own ideas, Doctor. Check first."
+  },
+  "s5_hint": {
+   "say": "tom",
+   "text": "The power's back. What did the machines switch on to, and is it what the patient needs?"
+  },
+  "end_all": {
+   "say": "tom",
+   "text": "Patient stable, wound clean, everyone still employed. I'm writing to the generator company. Strongly."
+  },
+  "end_some": {
+   "say": "tom",
+   "text": "Patient's okay. Some of that was luck, Doctor, and luck doesn't come with a maintenance contract."
+  },
+  "end_none": {
+   "say": "tom",
+   "text": "Patient survived, thanks to Dr. Khan and God, in that order. We'll practise this in daylight, na?"
+  }
+ },
+ "ramesh": {
+  "brief_easy": {
+   "say": "grace",
+   "text": "Two Ramesh Kumars, Doctor. Same age, same ward, one gallbladder between them. Check properly, please."
+  },
+  "brief_hard": {
+   "say": "grace",
+   "text": "Two Ramesh Kumars, and the night staff banded them in a hurry. Somebody's band may be lying. Look closely."
+  },
+  "brief_extreme": {
+   "say": "grace",
+   "text": "Two Ramesh Kumars, a hurried night shift, and theatre shouting for the nine o'clock. No hints today, Doctor. Read every digit."
+  },
+  "s1_right": {
+   "say": "grace",
+   "text": "Exactly. His own name and birthday, and the band against the slip. Not 'You're Ramesh, na?'."
+  },
+  "s1_wrong": {
+   "say": "grace",
+   "text": "Doctor, every hungry man says yes to 'You're Ramesh, na?'. Two identifiers: his own mouth, and his band."
+  },
+  "s1_hint": {
+   "say": "grace",
+   "text": "Which checks can't be fooled by a polite patient or a lazy whiteboard? Pick only those."
+  },
+  "s2_right_clean": {
+   "say": "grace",
+   "text": "Correct. His birthday, his band and the slip all agree. The other Ramesh gets breakfast and an apology."
+  },
+  "s2_right_misprint": {
+   "say": "grace",
+   "text": "Well caught. His birthday matches, but his band's number is swapped. We re-band him, then theatre."
+  },
+  "s2_right_swapped": {
+   "say": "grace",
+   "text": "Very good. Their birthdays match each other's bands. Swapped! Nobody moves till they're re-banded."
+  },
+  "s2_wrong": {
+   "say": "grace",
+   "text": "Doctor, read the digits again. What he said, what his band says, what the slip says. All three, or nobody goes."
+  },
+  "s2_hint": {
+   "say": "grace",
+   "text": "Match each man's spoken birthday to his own band, then the band to the slip. Every digit, not just the name."
+  },
+  "s3_right": {
+   "say": "grace",
+   "text": "Right. Clear fluids two hours, milk and food six. You've just saved me a fight with anaesthesia."
+  },
+  "s3_wrong": {
+   "say": "grace",
+   "text": "Doctor, clear fluids are two hours. Milk, chai and food are six. Count from what he had, not from what he wishes he hadn't."
+  },
+  "s3_hint": {
+   "say": "grace",
+   "text": "Is what he had a clear fluid or food? Clear is two hours. Milk, chai, biscuits and food are six."
+  },
+  "end_all": {
+   "say": "grace",
+   "text": "Right man, right band, right time. Theatre's happy. The other Ramesh is happier. He's eating poha."
+  },
+  "end_some": {
+   "say": "grace",
+   "text": "We got there, Doctor. Slowly. Theatre sends their love, and their schedule."
+  },
+  "end_none": {
+   "say": "grace",
+   "text": "Doctor, if I hadn't checked again, the wrong Ramesh would be losing a perfectly good gallbladder. Please."
+  }
+ },
+ "crowd": {
+  "brief_easy": {
+   "say": "grace",
+   "text": "Twenty relatives, one corridor, and the security guard is 'on tea'. They want a doctor. That's you."
+  },
+  "brief_hard": {
+   "say": "grace",
+   "text": "They're angry, Doctor, and someone's filming. Read the card. See what they're actually angry about."
+  },
+  "brief_extreme": {
+   "say": "grace",
+   "text": "It's getting ugly out there. Security is 'coming'. Keep your voice low, and no hints from me today."
+  },
+  "s1_right": {
+   "say": "grace",
+   "text": "Good. The next of kin first. The volume can wait outside."
+  },
+  "s1_wrong": {
+   "say": "grace",
+   "text": "Doctor, the loudest person is never the one who has the right to know. Find the next of kin."
+  },
+  "s1_hint": {
+   "say": "grace",
+   "text": "Who actually has the right to hear this first? Not the one with the biggest voice."
+  },
+  "s2_right": {
+   "say": "grace",
+   "text": "Good. Chairs, a closed door, and I stay. Nobody gets bad news standing up."
+  },
+  "s2_wrong": {
+   "say": "grace",
+   "text": "Arre, Doctor, not like that! Bad news is given sitting down, in a private room, with a nurse."
+  },
+  "s2_hint": {
+   "say": "grace",
+   "text": "Where would you want to hear the worst news of your life? Not standing in a corridor."
+  },
+  "s3_right": {
+   "say": "grace",
+   "text": "That's it. You said sorry for exactly what was hurting them. Listen to how quiet it's gone."
+  },
+  "s3_wrong": {
+   "say": "grace",
+   "text": "Doctor, listen to what they're shouting about. Answer that, in plain words, first."
+  },
+  "s3_hint": {
+   "say": "grace",
+   "text": "The card says what they keep repeating. Say sorry for that, plainly, before anything else."
+  },
+  "s4_right": {
+   "say": "grace",
+   "text": "Good. Calm, out, together. Security's here now. Nobody was a hero, and everybody's fine."
+  },
+  "s4_wrong": {
+   "say": "grace",
+   "text": "Doctor! When something becomes a weapon, the talking is over. Out, calmly, and call one one two."
+  },
+  "s4_hint": {
+   "say": "grace",
+   "text": "Is this still a conversation, or has it become something else? Safety first, explanations later."
+  },
+  "s5_right_accident": {
+   "say": "grace",
+   "text": "Gently and correctly. A road accident is a medico-legal case. Kindness is explaining that, not skipping it."
+  },
+  "s5_wrong_accident": {
+   "say": "grace",
+   "text": "Doctor, a death after an accident must be reported. The police and the post-mortem are the law, not our choice."
+  },
+  "s5_right_natural": {
+   "say": "grace",
+   "text": "Correct. A known cause gets a certificate, not a post-mortem. The corporator will find someone else to shout at."
+  },
+  "s5_wrong_natural": {
+   "say": "grace",
+   "text": "Doctor, a natural death with a known cause needs a death certificate. Not a post-mortem to calm a politician."
+  },
+  "s5_hint": {
+   "say": "grace",
+   "text": "Was this an accident, or an illness with a known cause? That decides what the law asks for."
+  },
+  "end_all": {
+   "say": "grace",
+   "text": "They're still crying, but they're not shouting. That's the best this room ever gets, Doctor."
+  },
+  "end_some": {
+   "say": "grace",
+   "text": "It calmed down. Some of that was you, some was the chai I sent in. Let's not ask which."
+  },
+  "end_none": {
+   "say": "grace",
+   "text": "Doctor, that went badly, and the video's already on three WhatsApp groups. We'll talk about this."
+  }
+ },
+ "donors": {
+  "brief_easy": {
+   "say": "priya",
+   "text": "Five family members, all very keen, all very sure they're perfect donors. Check them, Doctor."
+  },
+  "brief_hard": {
+   "say": "priya",
+   "text": "Six donors, and every one of them says 'I'm totally healthy'. They also said the uncle doesn't drink."
+  },
+  "brief_extreme": {
+   "say": "priya",
+   "text": "Seven donors, three units needed, and a family that lies with love. No hints today, Doctor."
+  },
+  "s1_right": {
+   "say": "priya",
+   "text": "Every unit compatible and safe. The blood bank is impressed, and they're never impressed."
+  },
+  "s1_wrong": {
+   "say": "priya",
+   "text": "Doctor, not everyone on that list can give. Check the group, the limits, and the small print: drinks, tattoos, tablets."
+  },
+  "s1_hint": {
+   "say": "priya",
+   "text": "First the group: can it go into this patient? Then age, weight, haemoglobin, and what they've had recently."
+  },
+  "s2_right": {
+   "say": "priya",
+   "text": "Two of us, at the bed, against the band. Boring and correct, the best kind of correct."
+  },
+  "s2_wrong": {
+   "say": "priya",
+   "text": "Doctor, a name on the bag isn't enough. Two people check it at the bed, against the band. Every time."
+  },
+  "s2_hint": {
+   "say": "priya",
+   "text": "Most transfusion disasters are the wrong bag in the right patient. How do we stop that?"
+  },
+  "end_all": {
+   "say": "priya",
+   "text": "Blood's running, the patient's pinking up, and the uncle has been told, kindly, to stop drinking at weddings."
+  },
+  "end_some": {
+   "say": "priya",
+   "text": "The patient's getting blood. One donor's going home very offended. He'll live."
+  },
+  "end_none": {
+   "say": "priya",
+   "text": "Doctor, the blood bank sent half of them back. Please read the donor rules. I'll laminate them for you."
+  }
+ },
+ "insurance": {
+  "brief_easy": {
+   "say": "malhotra",
+   "text": "The TPA has returned the form. Two mistakes, they say. I say, find them before they find more."
+  },
+  "brief_hard": {
+   "say": "malhotra",
+   "text": "The insurer's desk has a new officer. Young, keen, reads everything. Terrible. Check every field."
+  },
+  "brief_extreme": {
+   "say": "malhotra",
+   "text": "This one reads forms with a magnifying glass, Doctor, and he dislikes hospitals. No hints. I am not a doctor."
+  },
+  "s1_right": {
+   "say": "malhotra",
+   "text": "Every mismatch found. The TPA will have to invent a new reason to reject us. They will, but still."
+  },
+  "s1_wrong": {
+   "say": "malhotra",
+   "text": "Doctor, the insurer will find what you missed. They're paid to. Check the form against the documents, letter by letter."
+  },
+  "s1_hint": {
+   "say": "malhotra",
+   "text": "Lay every line next to the Aadhaar, the policy card, the doctor's note and the costing sheet. Letter by letter."
+  },
+  "s2_right": {
+   "say": "malhotra",
+   "text": "Correct. Waiting periods: the first thirty days, then the specific ones. The family hears it from us, today."
+  },
+  "s2_wrong": {
+   "say": "malhotra",
+   "text": "Doctor, read the policy date. First thirty days, nothing except accidents. Some illnesses wait two years. And no fake accidents."
+  },
+  "s2_hint": {
+   "say": "malhotra",
+   "text": "How long has the policy been running, and is this an emergency or a planned operation like a hernia?"
+  },
+  "s3_right": {
+   "say": "malhotra",
+   "text": "Patient first, paperwork second. The accounts department will faint, but they faint every month."
+  },
+  "s3_wrong": {
+   "say": "malhotra",
+   "text": "Doctor, an appendix doesn't wait for approval. Operate. Approval or the bill follows. My department will cope. Somehow."
+  },
+  "s3_right_hernia": {
+   "say": "malhotra",
+   "text": "The truth on the form, and help with the cost. Even I can't find a flaw in that, and I try."
+  },
+  "s3_wrong_hernia": {
+   "say": "malhotra",
+   "text": "Doctor, the insurer checks. 'Emergency hernia, two years old' gets the hospital blacklisted. Write what it is."
+  },
+  "s3_hint": {
+   "say": "malhotra",
+   "text": "What does the patient need right now, and what will the form honestly say?"
+  },
+  "end_all": {
+   "say": "malhotra",
+   "text": "Claim clean, family informed, nobody committed fraud. I may put you on the billing committee. That's a threat."
+  },
+  "end_some": {
+   "say": "malhotra",
+   "text": "The claim went in. It'll come back once, as all claims do. Next time, fewer surprises, please."
+  },
+  "end_none": {
+   "say": "malhotra",
+   "text": "Doctor, the claim's rejected, the family is upset, and I have a headache. Please learn the policy rules."
+  }
+ },
+ "snakebite": {
+  "brief_easy": {
+   "say": "priya",
+   "text": "Snakebite, Doctor, two hours on a tempo from the village. Read the signs. The snake isn't here to ask."
+  },
+  "brief_hard": {
+   "say": "priya",
+   "text": "Snakebite, and the village is very sure what snake it was. They're usually wrong. The signs aren't."
+  },
+  "brief_extreme": {
+   "say": "priya",
+   "text": "Snakebite, middle of the night, no senior answering. The antivenom fridge is open. No hints, Doctor. Go."
+  },
+  "s1_right": {
+   "say": "priya",
+   "text": "Right. The signs and the clotting test together. Now, the antivenom."
+  },
+  "s1_wrong": {
+   "say": "priya",
+   "text": "Doctor, read it again. Drooping and trouble swallowing is the nerves. Bleeding, and blood that won't clot, is the blood."
+  },
+  "s1_hint": {
+   "say": "priya",
+   "text": "Look at the eyelids and the swallowing, then the gums, the urine and the twenty-minute clotting test."
+  },
+  "s2_right": {
+   "say": "priya",
+   "text": "Ten vials, slowly, adrenaline drawn up. Snakes don't do half measures, so neither do we."
+  },
+  "s2_right_none": {
+   "say": "priya",
+   "text": "Correct. No signs of venom, no antivenom yet. We watch, and repeat the clotting test every six hours."
+  },
+  "s2_wrong": {
+   "say": "priya",
+   "text": "Doctor, with venom signs it's ten vials, children included. With no signs, none yet. Half doses help nobody."
+  },
+  "s2_hint": {
+   "say": "priya",
+   "text": "Are there any signs of venom at all? If yes, the dose doesn't shrink for anyone."
+  },
+  "s3_right": {
+   "say": "priya",
+   "text": "Good. First aid fixed without making it worse. The village will be told, nicely, about ropes and razors."
+  },
+  "s3_wrong": {
+   "say": "priya",
+   "text": "Doctor, that makes it worse. Ropes are loosened slowly after the antivenom, cuts are cleaned, splints stay."
+  },
+  "s3_hint": {
+   "say": "priya",
+   "text": "What did the village actually do, and how do we undo it without flooding the body with venom?"
+  },
+  "s4_right": {
+   "say": "priya",
+   "text": "Right call. You're thinking about the hours after, not just the minutes. That's the job."
+  },
+  "s4_wrong": {
+   "say": "priya",
+   "text": "Doctor, the next six hours matter as much as the first. Breathing first, repeat doses, and no early discharge."
+  },
+  "s4_hint": {
+   "say": "priya",
+   "text": "What is the venom doing now: still bleeding, weaker breathing, or nothing at all?"
+  },
+  "end_all": {
+   "say": "priya",
+   "text": "Stable, and the family has stopped arguing about which snake it was. Mostly."
+  },
+  "end_some": {
+   "say": "priya",
+   "text": "They'll be okay. Some of that was you, Doctor, and some of that was a very forgiving snake."
+  },
+  "end_none": {
+   "say": "priya",
+   "text": "Doctor, the registrar had to come in at four in the morning. He is not happy. Let's revise snakebite, na?"
+  }
+ },
+ "dengue": {
+  "brief_easy": {
+   "say": "iyer",
+   "text": "Five families, two units of platelets, and every one of them has a cousin who's a doctor on WhatsApp. Decide."
+  },
+  "brief_hard": {
+   "say": "iyer",
+   "text": "Six patients, two units, and on most of these sheets the platelet count is the least interesting number."
+  },
+  "brief_extreme": {
+   "say": "iyer",
+   "text": "Seven patients, two units, and two of them are in trouble their families can't see. No hints today, Doctor."
+  },
+  "s1_right": {
+   "say": "iyer",
+   "text": "Good. Platelets to the two who need them, fluids for the ones in danger, and home for the rest."
+  },
+  "s1_wrong": {
+   "say": "iyer",
+   "text": "No. The count isn't everything. Shock needs fluids, warning signs need the ward, and platelets are for the very low or the bleeding."
+  },
+  "s1_hint": {
+   "say": "iyer",
+   "text": "Look for shock first: the pulse pressure, cold hands. Then bleeding. Then the count. Then warning signs."
+  },
+  "s2_right": {
+   "say": "iyer",
+   "text": "Paracetamol only, fluids, and the truth about papaya. You'll be very popular. Not."
+  },
+  "s2_wrong": {
+   "say": "iyer",
+   "text": "Ibuprofen thins the blood when the platelets are already low. Paracetamol only. And papaya isn't a drip."
+  },
+  "s2_hint": {
+   "say": "iyer",
+   "text": "Which painkillers make bleeding worse? And can a juice replace the fluids in a drip?"
+  },
+  "end_all": {
+   "say": "iyer",
+   "text": "Two units, the two right patients, and nobody in shock left on the ward. That's dengue season done properly."
+  },
+  "end_some": {
+   "say": "iyer",
+   "text": "Most of them are where they should be. Most. In dengue season, most isn't quite enough."
+  },
+  "end_none": {
+   "say": "iyer",
+   "text": "Doctor, someone in shock waited on the ward and the platelets went to the wrong arm. Read the warning signs again."
+  }
+ },
+ "inspection": {
+  "brief_easy": {
+   "say": "grace",
+   "text": "The inspectors are parking, Doctor. Thirty minutes. Safety first. The damp patch can stay damp."
+  },
+  "brief_hard": {
+   "say": "grace",
+   "text": "Thirty minutes, ten jobs, and the inspectors always open the sluice room. Always."
+  },
+  "brief_extreme": {
+   "say": "grace",
+   "text": "Twenty-five minutes, twelve jobs, and the lead inspector is the one who shut a hospital in Satara. No hints."
+  },
+  "s1_right": {
+   "say": "grace",
+   "text": "Everything that keeps patients safe, done honestly, and on time. I could hug you, but they're watching."
+  },
+  "s1_wrong": {
+   "say": "grace",
+   "text": "Doctor, the crash cart, the oxygen and the drugs register come before pretty beds. And we never hide anything."
+  },
+  "s1_hint": {
+   "say": "grace",
+   "text": "What hurts a patient if it's wrong? Do those first. And the crash cart needs its key before anything else."
+  },
+  "s2_right": {
+   "say": "grace",
+   "text": "Honest, with the paperwork. The inspector actually smiled. Nineteen years here, I've never seen that."
+  },
+  "s2_wrong": {
+   "say": "grace",
+   "text": "Doctor, expired vials happen everywhere. Lying about them closes wards. Show the log."
+  },
+  "s2_hint": {
+   "say": "grace",
+   "text": "Expired drugs happen in every hospital. What happens to the ones that lie about it?"
+  },
+  "over_budget": {
+   "say": "grace",
+   "text": "That won't fit in the time we have, Doctor. Something else has to go first."
+  },
+  "end_all": {
+   "say": "grace",
+   "text": "Passed, with a remark that says 'well maintained'. I'm framing it. Next to my retirement countdown."
+  },
+  "end_some": {
+   "say": "grace",
+   "text": "Passed, with three remarks. Mr. Malhotra wants a meeting. Mr. Malhotra always wants a meeting."
+  },
+  "end_none": {
+   "say": "grace",
+   "text": "We failed, Doctor. The ward's on notice. And somebody hid a BP machine. Somebody."
+  }
+ }
+}

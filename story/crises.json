@@ -1,0 +1,402 @@
+{
+ "crisis_power_cut_arrive": [
+  {
+   "say": "khan",
+   "text": "Pressure fine, oxygen fine. Lovely quiet afternoon, {called}. Somebody remind me never to say that out loud.",
+   "mood": "calm",
+   "gesture": "shrug"
+  },
+  {
+   "say": "tom",
+   "text": "The electrician says the wiring is 'mostly fine'. Mostly. I've put the emergency kit on the trolley anyway.",
+   "mood": "focused",
+   "gesture": "point"
+  },
+  {
+   "say": "khan",
+   "text": "And the generator was 'serviced' last month. By the same man who services the canteen's toaster.",
+   "mood": "tired",
+   "head": "tilt"
+  }
+ ],
+ "crisis_power_cut_after": [
+  {
+   "if": "crisis_power_cut_right",
+   "then": [
+    {
+     "say": "khan",
+     "text": "Generator's steady. You kept your head, {called}. Half the hospital didn't even keep its lights.",
+     "mood": "happy",
+     "gesture": "open_hands",
+     "to": "you"
+    },
+    {
+     "say": "tom",
+     "text": "I'm writing 'excellent' in the incident form. They'll think it's sarcasm. It isn't.",
+     "mood": "happy",
+     "head": "nod"
+    }
+   ],
+   "else": [
+    {
+     "say": "khan",
+     "text": "We got through it. Next time, think first about who is breathing for the patient. Everything else comes after.",
+     "mood": "focused",
+     "gesture": "wag",
+     "to": "you"
+    },
+    {
+     "say": "tom",
+     "text": "Incident form tonight. I'll write it kindly. Kindly-ish.",
+     "mood": "tired",
+     "head": "down"
+    }
+   ]
+  },
+  {
+   "say": "tom",
+   "text": "And that headlamp gets checked every Monday from now on. By me. Personally. Forever.",
+   "mood": "focused",
+   "gesture": "fold_arms"
+  }
+ ],
+ "crisis_ramesh_arrive": [
+  {
+   "say": "grace",
+   "text": "Theatre's on the phone asking for 'Ramesh Kumar'. Just that. As if that narrows it down in India.",
+   "mood": "tired",
+   "gesture": "shrug"
+  },
+  {
+   "say": "grace",
+   "text": "Bed 3 and Bed 5, both Ramesh Kumar, both in their fifties, both fasting and grumpy, both answer to 'uncle'.",
+   "mood": "focused",
+   "gesture": "point"
+  },
+  {
+   "say": "grace",
+   "text": "One gallbladder is coming out today. Only one. Check properly, Doctor.",
+   "mood": "worried",
+   "gesture": "wag",
+   "to": "you"
+  }
+ ],
+ "crisis_ramesh_after": [
+  {
+   "if": "crisis_ramesh_right",
+   "then": [
+    {
+     "say": "grace",
+     "text": "Right man on the trolley. Theatre said thank you, which they have never said before. I've written down the date.",
+     "mood": "happy",
+     "gesture": "open_hands",
+     "to": "you"
+    }
+   ],
+   "else": [
+    {
+     "say": "grace",
+     "text": "I've re-checked the bands myself. Next time we check before the porter arrives, not after, na?",
+     "mood": "focused",
+     "gesture": "wag",
+     "to": "you"
+    }
+   ]
+  },
+  {
+   "say": "grace",
+   "text": "And somebody give the other Ramesh his breakfast. He's been staring at my tiffin for an hour.",
+   "mood": "calm",
+   "head": "tilt"
+  }
+ ],
+ "crisis_crowd_arrive": [
+  {
+   "say": "relative_a",
+   "text": "Where is the doctor? Somebody answer us!",
+   "mood": "angry",
+   "gesture": "raise"
+  },
+  {
+   "say": "relative_b",
+   "text": "Nobody told us anything. Nobody!",
+   "mood": "angry",
+   "gesture": "open_hands"
+  },
+  {
+   "say": "grace",
+   "text": "Doctor, the patient passed away. The family is here, and so is half the colony. Breathe first. Then we talk.",
+   "mood": "worried",
+   "head": "down",
+   "to": "you"
+  }
+ ],
+ "crisis_crowd_after": [
+  {
+   "if": "crisis_crowd_right",
+   "then": [
+    {
+     "say": "relative_c",
+     "text": "Thank you for telling us properly. Nobody else did.",
+     "mood": "tired",
+     "head": "nod"
+    },
+    {
+     "say": "grace",
+     "text": "They've gone down with the forms. That's as good as this day was ever going to get, Doctor.",
+     "mood": "calm",
+     "head": "nod",
+     "to": "you"
+    }
+   ],
+   "else": [
+    {
+     "say": "grace",
+     "text": "Security walked them down. It'll be in tomorrow's paper, hopefully with a photo of the wrong doctor.",
+     "mood": "worried",
+     "head": "down",
+     "to": "you"
+    }
+   ]
+  },
+  {
+   "say": "grace",
+   "text": "Sit for two minutes. I've put tea on the desk. Don't argue with me.",
+   "mood": "calm",
+   "gesture": "offer",
+   "to": "you"
+  }
+ ],
+ "crisis_donors_arrive": [
+  {
+   "say": "priya",
+   "text": "The blood bank has nothing in the patient's group, Doctor. Nothing. The fridge is basically a cupboard.",
+   "mood": "worried",
+   "gesture": "open_hands"
+  },
+  {
+   "say": "priya",
+   "text": "So the whole family has lined up outside to donate. One uncle came straight from a wedding, by the smell of it.",
+   "mood": "tired",
+   "gesture": "point"
+  },
+  {
+   "say": "priya",
+   "text": "Everyone says they're perfectly healthy. Everyone always says that.",
+   "mood": "focused",
+   "head": "tilt",
+   "to": "you"
+  }
+ ],
+ "crisis_donors_after": [
+  {
+   "if": "crisis_donors_right",
+   "then": [
+    {
+     "say": "priya",
+     "text": "Units cross-matched and running. The pressure's coming up, and the family is very proud of itself.",
+     "mood": "happy",
+     "head": "nod",
+     "to": "you"
+    }
+   ],
+   "else": [
+    {
+     "say": "priya",
+     "text": "The blood bank sent units back, Doctor. We lost time we didn't have. Donor rules before needles, please.",
+     "mood": "worried",
+     "gesture": "wag",
+     "to": "you"
+    }
+   ]
+  },
+  {
+   "say": "priya",
+   "text": "Now the uncle wants to know if he can donate after the next wedding. I said no. Firmly.",
+   "mood": "calm",
+   "gesture": "shrug"
+  }
+ ],
+ "crisis_insurance_arrive": [
+  {
+   "say": "malhotra",
+   "text": "Doctor, the insurance company has sent the form back. With comments. In red ink.",
+   "mood": "focused",
+   "gesture": "hold"
+  },
+  {
+   "say": "malhotra",
+   "text": "Every rejected claim is money this hospital has already spent. I would like it back. So would my blood pressure.",
+   "mood": "worried",
+   "gesture": "explain",
+   "to": "you"
+  }
+ ],
+ "crisis_insurance_after": [
+  {
+   "if": "crisis_insurance_right",
+   "then": [
+    {
+     "say": "malhotra",
+     "text": "Clean form, honest answers. The TPA officer called it 'unusually correct'. I've never been so moved by paperwork.",
+     "mood": "happy",
+     "gesture": "open_hands",
+     "to": "you"
+    }
+   ],
+   "else": [
+    {
+     "say": "malhotra",
+     "text": "The claim is in trouble, Doctor. I'll speak to the TPA. Meanwhile, please learn waiting periods. Please.",
+     "mood": "tired",
+     "head": "shake",
+     "to": "you"
+    }
+   ]
+  },
+  {
+   "say": "malhotra",
+   "text": "Also, the family thanked us. Nobody thanks the insurance desk. I'm a little emotional. Tell no one.",
+   "mood": "calm",
+   "head": "down"
+  }
+ ],
+ "crisis_snakebite_arrive": [
+  {
+   "say": "priya",
+   "text": "Snakebite! Two hours on a tempo from the village, and the whole family came along.",
+   "mood": "worried",
+   "gesture": "point"
+  },
+  {
+   "say": "priya",
+   "text": "One cousin brought a dead snake in a plastic bag. Nobody's sure it's the one that bit.",
+   "mood": "shocked",
+   "gesture": "hold"
+  },
+  {
+   "say": "priya",
+   "text": "The twenty-minute clotting test is done. The card's on the trolley. Read it before the family tells you their theory.",
+   "mood": "focused",
+   "head": "nod",
+   "to": "you"
+  }
+ ],
+ "crisis_snakebite_after": [
+  {
+   "if": "crisis_snakebite_right",
+   "then": [
+    {
+     "say": "priya",
+     "text": "Stable. Antivenom logged, family calmed, and the dead snake has been asked to leave the building.",
+     "mood": "happy",
+     "head": "nod",
+     "to": "you"
+    }
+   ],
+   "else": [
+    {
+     "say": "priya",
+     "text": "We sorted it, with the registrar shouting down the phone. The snakebite protocol is on the wall, Doctor. In big letters.",
+     "mood": "worried",
+     "gesture": "point",
+     "to": "you"
+    }
+   ]
+  },
+  {
+   "say": "priya",
+   "text": "The grandmother says she'll bring sweets every year. Last year's snakebite family still does.",
+   "mood": "calm",
+   "head": "tilt"
+  }
+ ],
+ "crisis_dengue_arrive": [
+  {
+   "say": "iyer",
+   "text": "Dengue season, {called}. Every bed has a fever, every family has a platelet count, and every count is on WhatsApp.",
+   "mood": "tired",
+   "gesture": "open_hands",
+   "to": "you"
+  },
+  {
+   "say": "iyer",
+   "text": "Two units of platelets. That's all, till tomorrow. Platelets aren't sweets. We don't give them to whoever shouts loudest.",
+   "mood": "focused",
+   "gesture": "wag"
+  }
+ ],
+ "crisis_dengue_after": [
+  {
+   "if": "crisis_dengue_right",
+   "then": [
+    {
+     "say": "iyer",
+     "text": "Good. The ones in danger got fluids, the low counts got platelets, and the rest got paracetamol and a lecture.",
+     "mood": "happy",
+     "head": "nod",
+     "to": "you"
+    }
+   ],
+   "else": [
+    {
+     "say": "iyer",
+     "text": "Look again at who was in shock. The count is the loudest number on the sheet, not the most important one.",
+     "mood": "focused",
+     "gesture": "wag",
+     "to": "you"
+    }
+   ]
+  },
+  {
+   "say": "iyer",
+   "text": "And tell the families: papaya leaves make a lovely salad. They are not a treatment.",
+   "mood": "calm",
+   "gesture": "shrug"
+  }
+ ],
+ "crisis_inspection_arrive": [
+  {
+   "say": "grace",
+   "text": "The inspectors are in the car park, Doctor. Mr. Malhotra is already sweating through his good shirt.",
+   "mood": "worried",
+   "gesture": "point"
+  },
+  {
+   "say": "grace",
+   "text": "I've made a list of everything that's wrong. It's long. We can't do all of it, so we do what matters.",
+   "mood": "focused",
+   "gesture": "hold",
+   "to": "you"
+  }
+ ],
+ "crisis_inspection_after": [
+  {
+   "if": "crisis_inspection_right",
+   "then": [
+    {
+     "say": "grace",
+     "text": "Passed! The inspector wrote 'well-organised ward'. Mr. Malhotra wants it on a banner outside.",
+     "mood": "happy",
+     "gesture": "cheer",
+     "to": "you"
+    }
+   ],
+   "else": [
+    {
+     "say": "grace",
+     "text": "Remarks, Doctor. Several. We'll fix them by next week. Honestly, this time.",
+     "mood": "tired",
+     "head": "down",
+     "to": "you"
+    }
+   ]
+  },
+  {
+   "say": "grace",
+   "text": "And will somebody please paint that damp patch. It's been there since the day I joined.",
+   "mood": "calm",
+   "head": "tilt"
+  }
+ ]
+}

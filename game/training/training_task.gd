@@ -25,6 +25,7 @@ const TITLES := {
 	"chart": "Check the drug chart",
 	"triage": "Sort the casualties",
 	"rota": "Strike-day cover",
+	"crisis": "A crisis",
 }
 ## Who runs each station.
 const TRAINERS := {
@@ -39,6 +40,7 @@ const TRAINERS := {
 	"chart": "zoya",
 	"triage": "priya",
 	"rota": "grace",
+	"crisis": "grace",
 }
 
 var id := ""

@@ -124,7 +124,7 @@ func test_every_story_file_is_valid() -> void:
 		expect(names.has(expected), "chapter %s exists" % expected)
 	for chapter_name in names:
 		# Banter, patient cases, the drills' true stories and the letters are data, not conversations.
-		if chapter_name in ["banter", "cases", "facts", "letters"]:
+		if chapter_name in ["banter", "cases", "facts", "letters", "crisis_lines"]:
 			continue
 		var chapter := StoryBook.chapter(chapter_name)
 		expect(not chapter.is_empty(), "%s has conversations" % chapter_name)

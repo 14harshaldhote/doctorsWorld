@@ -315,6 +315,19 @@ Here's everything, in order, so you can decide how much of your life to give it:
   complaint to the board. Some people don't write at all, and their space on
   the wall stays empty, which is its own kind of letter. Twenty-four places
   on the wall, and the last one is a hundred days away.
+- Things go wrong, as they do in an Indian hospital, usually at once. The
+  lights die in the middle of an operation. Two Ramesh Kumars, one
+  gallbladder. A corridor full of grieving, furious relatives and one cousin
+  filming. The blood bank has nothing, so the whole family queues up to
+  donate, including the uncle who came straight from a wedding. An insurance
+  form with a misspelt surname and a waiting period nobody read. A snakebite
+  at three in the morning, a fever ward with five families and two units of
+  platelets, and inspectors in the car park with thirty minutes' notice.
+  Every one is rolled fresh from the facts (which blood group, which band,
+  what he drank at 7:30, which snake), so you can't learn the answers, only
+  the rules. On hard there's a clock. On extreme there's a clock and nobody
+  will help you. Every third day as Chief, one of them happens again,
+  differently.
 - After that the days are made fresh every morning, for as long as you can
   stand it: a night rota from a ward full of different patients, crashes on
   the highway, a simulator case in front of interns who are placing bets on

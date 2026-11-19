@@ -80,6 +80,8 @@ func test_a_board_day_reports_on_the_hospital() -> void:
 func test_every_day_for_two_thousand_days_is_built_from_real_pieces() -> void:
 	var cast := StoryBook.cast()
 	var chief := StoryBook.chapter("chief")
+	# The crises' talks are in their own chapter (stage 18).
+	chief.merge(StoryBook.chapter("crises"))
 	var cases := StoryBook.chapter("cases")
 	var doctor := _doctor(29)
 	for day in range(ChiefDays.FIRST_DAY, 2000):
@@ -96,6 +98,8 @@ func test_every_day_for_two_thousand_days_is_built_from_real_pieces() -> void:
 			for task: Array in beat.get("tasks", []):
 				if str(task[0]) == "operate":
 					expect(not Procedures.get_procedure(str(task[1])).is_empty(), "Day %d: %s exists" % [day, task[1]])
+				elif str(task[0]) == "crisis":
+					expect(str(task[1]) in Crises.IDS, "Day %d: crisis %s exists" % [day, task[1]])
 				else:
 					expect(cases.has(str(task[1])), "Day %d: case %s exists" % [day, task[1]])
 		expect(not ChiefDays.day_line(doctor, day).is_empty(), "Day %d has a line on its card" % day)

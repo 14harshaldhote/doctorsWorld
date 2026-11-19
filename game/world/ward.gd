@@ -846,6 +846,12 @@ func _stage_beat(entry: Dictionary) -> void:
 	if entry.has("slide"):
 		seminar.slide.text = str(entry["slide"])
 	_apply_puts(entry.get("put", []))
+	for who: String in entry.get("gowned", []):
+		var gowned := player if who == "you" else rig_for(who)
+		if gowned != null:
+			Theatre.dress_for_theatre(gowned, who != "khan")
+	if entry.has("gowned"):
+		theatre_set.show_operation("Theatre 2", str(entry.get("row", "")))
 	match "%d:%s" % [profile.day, entry.get("id", "")]:
 		"4:rohit":
 			_send("iyer", bed("bed1").mark("other"), PEOPLE_SPEED)
@@ -905,6 +911,11 @@ func _begin_day() -> void:
 		for flag: String in profile.flags.keys():
 			if flag.begins_with(case_id + "_"):
 				profile.set_flag(flag, false)
+	var crisis := Crises.for_day(profile, profile.day)
+	if not crisis.is_empty():
+		for flag: String in profile.flags.keys():
+			if flag.begins_with("crisis_%s_" % crisis):
+				profile.set_flag(flag, false)
 	night = profile.day == NIGHT_DAY or profile.day in WardStory.NIGHTS
 	if night:
 		profile.minutes = maxi(profile.minutes, NIGHT_START)
@@ -947,6 +958,10 @@ func _beats_for(day: int) -> Array[Dictionary]:
 	var source: Array = DAYS.get(day, WardStory.DAYS.get(day, QUIET))
 	for beat: Dictionary in source:
 		found.append(beat)
+	# The day's crisis comes before its last beat.
+	var crisis := Crises.beat(profile, day)
+	if not crisis.is_empty():
+		found.insert(maxi(0, found.size() - 1), crisis)
 	return found
 
 
@@ -1129,6 +1144,8 @@ func _on_talk_finished(_skipped: bool) -> void:
 		open_operation(_queued_procedure)
 	elif finished == str(current.get("after", "")):
 		_apply_puts(current.get("put_end", []))
+		if current.has("gowned"):
+			_leave_theatre()
 		_finish_beat()
 	save_requested.emit()
 
@@ -1446,6 +1463,8 @@ func open_task(task_id: String, which_case: String) -> void:
 		task = TriageTask.new(which_case, _case_seed("triage"), _case_level(beat()))
 	elif task_id == "rota":
 		task = RotaTask.new(which_case, _case_seed("rota"), _case_level(beat()))
+	elif task_id == "crisis":
+		task = CrisisTask.new(which_case, _case_seed("crisis_" + which_case), _case_level(beat()))
 	else:
 		task = TrainingTask.make(task_id, 7 + profile.day * 3, which_case)
 	if task_id == "scan":
@@ -1465,6 +1484,11 @@ func open_task(task_id: String, which_case: String) -> void:
 		# At the nurses' station, with the head nurse before she walks out.
 		view = RotaView.new(task, self)
 		talking_with = (task as RotaTask).actor
+		_camera_speaker = talking_with
+	elif task_id == "crisis":
+		# Wherever it happens, with whoever is in the middle of it.
+		view = CrisisView.new(task, self)
+		talking_with = (task as CrisisTask).actor
 		_camera_speaker = talking_with
 	else:
 		var station := bed(active_bed)
@@ -1502,7 +1526,11 @@ func open_task(task_id: String, which_case: String) -> void:
 		spot = "Nurses' station"
 	elif task_id == "triage":
 		spot = "Ambulance bay"
+	elif task_id == "crisis":
+		spot = (task as CrisisTask).spot
 	var shift := "Major incident" if task_id == "triage" else ("On call" if night else "Ward round")
+	if task_id == "crisis":
+		shift = "Crisis"
 	if task_id == "rota":
 		shift = "Strike day" if which_case == "strike_rota" else "Night cover"
 	view.kicker_override = "%s · %s" % [shift, spot]
@@ -1513,9 +1541,9 @@ func open_task(task_id: String, which_case: String) -> void:
 	var station_now := station_for(task_id)
 	if station_now != null:
 		station_now.reset_task(task)
-	player.visible = task_id in ["chart", "triage", "rota"]
+	player.visible = task_id in ["chart", "triage", "rota", "crisis"]
 	hud.set_talking(true)
-	_camera_mode = "talk" if task_id in ["chart", "triage", "rota"] else "close"
+	_camera_mode = "talk" if task_id in ["chart", "triage", "rota", "crisis"] else "close"
 
 
 func _on_task_finished(task: TrainingTask) -> void:
@@ -1566,6 +1594,14 @@ func _on_task_finished(task: TrainingTask) -> void:
 		for rule in rota.broken_rules():
 			seen.append(rule)
 		profile.set_flag(case_id + "_gap", not rota.uncovered().is_empty())
+	elif task is CrisisTask:
+		var crisis := task as CrisisTask
+		# Crisis flags carry a prefix: "dengue" or "crowd" alone could be anything.
+		case_id = "crisis_" + crisis.case_id
+		right = crisis.all_right()
+		for step_id in crisis.wrong_steps():
+			seen.append("missed_" + step_id)
+		DayHooks.record_crisis(profile, right)
 	profile.set_flag(case_id + "_done")
 	profile.set_flag(case_id + "_right", right)
 	if ChiefDays.is_chief_day(profile.day):
@@ -1638,6 +1674,10 @@ func _go_to_place(where: String) -> void:
 		return
 	var was := place
 	place = where
+	if where == "ward" and player != null and player.position.y < -1.0:
+		# Back up from the theatre or the seminar room: the doctor comes out
+		# by the nurses' station, not still sitting far below the ward.
+		put("you", "desk")
 	theatre_set.visible = where == "theatre"
 	table.visible = where == "theatre"
 	seminar.visible = where == "seminar"

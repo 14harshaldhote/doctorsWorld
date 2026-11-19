@@ -29,6 +29,7 @@ plan"). This file covers how to build, run and test the game.
 | 15. Turning up pays, new patients, a card that talks | XP for opening the game on a new real-world day (`DailyReward`: 10 XP, plus 5 for each day in a row up to a week, times 1 + half the rank; `PlayerProfile.last_played` and the counter `day_streak`), on a `WelcomeCard` over the day's screen, which waits for it. The XP goes into the morning snapshot too, so a day that starts over keeps it. The history station joins the drills (`Drills.ORDER` has six stations) with a practice patient each time it comes round (`Drills.HISTORY_CASES`, four new cases in `story/cases.json`, all acted by Dr. Iyer). The trainer reads the drill card aloud: the opener, then the true story (`DrillCard._read_aloud`); the facts and openers moved to `story/facts.json` so `tools/make_voices.py` records them (`fact_lines()`) | Done |
 | 16. Nobody walks through anybody, voices that sound like people | One walking system for everyone (`Crowd`): every walk plans its way round furniture and round anyone standing still (`WalkArea.find_path` with people), steps aside or waits for anyone in the way on every frame, ends beside someone instead of inside them, and gets up off a bed or out of furniture before it sets off. The stitch trainer's spot moved out of the lab wall. `test_crowd.gd` plays the first days and two ward weeks frame by frame and fails on any overlap. Story lines are acted: each sentence is made on its own with its own pace and pitch and put back together with small pauses, gently shaped by the line's mood (`MOODS` in `tools/make_voices.py`). The first two weeks of dialogue were rewritten to sound spoken | Done |
 | 17. The career map, a rival and letters | The Career button (it replaced the Casebook corner button) opens `CareerMap` over the paused game: every rank as a stop (`Career.STOPS`: done, here with the goals for the next stop, or locked with a teaser), the roads a Senior Resident will choose between (only Surgery open), the never-ending days, and the race with Dr. Varun Khanna (`Rival`). Letters from patients (`Letters`, `story/letters.json`) arrive as their day ends, the first letter in a slot whose condition holds; the Letters page is a wall of every slot, sealed, empty or arrived, and reading one marks it read. The end-of-day card adds a line about the race and one about the post. The ward, theatre, skills lab and lobby now stop their clocks while any menu is open | Done |
+| 18. Crises | Eight hospital crises played as puzzles (`CrisisTask`, `CrisisView`, built by `Crises` in game/training/crises.gd): a power cut in theatre, two patients with the same name, an angry family after a death, the family's blood donors, an insurance form, a snakebite, dengue triage with two units of platelets, and an inspection in thirty minutes. Each is rolled from a seed at easy, hard or extreme. They come on Days 10, 14, 15, 16, 17, 20, 24 and 26 (the beat before each day's last), then every third Chief's day from Day 36 in a seeded order. The coach's lines are in `story/crisis_lines.json`, the talks before and after in `story/crises.json` | Done |
 
 The earlier SwiftUI and SpriteKit prototype is kept on the git branch
 `swift-prototype`.
@@ -428,6 +429,46 @@ saved straight away. The HUD's amber badge counts unread letters
 To add a letter, add a slot (in day order) or another letter to a slot,
 with a condition on a flag the story really sets; `test_career.gd` checks
 both.
+
+## Crises
+
+`Crises` (game/training/crises.gd) builds each crisis from a `SeededRandom`:
+the title, the spot, the card of facts, and the steps. `CrisisTask` plays
+them; `CrisisView` shows the facts on a card under the header and the step
+on the right. A step is one of three kinds:
+
+- `one`: pick one option (`options`, `answer`).
+- `each`: give every item one of the `choices`; a choice with a `limit` runs
+  out (dengue's two units of platelets). Marked by the share right.
+- `some`: pick the items that fit. With `need`, enough safe ones (each
+  unsafe pick costs half a needed one); with `budget`, `costs` and `values`,
+  the best plan that fits (`CrisisTask.best_plan`, a search over every set):
+  a job only counts with the job it `needs`, and a `critical` job left out
+  costs `CRITICAL_MISSED`. Otherwise the right set, wrong picks cancelling
+  right ones.
+
+`urgent` steps get a clock on hard (30 s) and extreme (18 s); whatever is
+picked when it runs out is the answer. Hints are free on easy, cost
+`HINT_COST` on hard and don't exist on extreme. Each step names the coach's
+line keys (`right`, `wrong`, `hint`) in `story/crisis_lines.json`, under the
+crisis, with `brief_<level>`, `end_all`, `end_some` and `end_none` (and
+`over_budget` for the inspection); every line is spoken by the crisis's
+`ACTORS` entry and recorded like any story line, so no `{called}` in them.
+
+On the ward a crisis is a beat (`Crises.beat`): `Ward._beats_for` puts it
+before the day's last beat on the story days (`STORY_DAYS`) and
+`ChiefDays.beats` before the last beat every `CHIEF_EVERY` days from
+`CHIEF_FROM`, in rounds of all eight (`Crises._order`, seeded by the
+doctor's name, never the same one twice running). A beat with `gowned`
+dresses those people for theatre and undresses them after (`_leave_theatre`).
+Flags are `crisis_<id>_done`, `crisis_<id>_right` and
+`crisis_<id>_missed_<step>`; `DayHooks.record_crisis` counts `crises` and
+`crises_right`, and on a Chief's day the town's trust moves with the result.
+
+To add a crisis: a builder in `Crises.build`, an entry in `IDS`, `BEATS` and
+`ACTORS`, its lines and talks, and a place in the schedule. `test_crises.gd`
+plays every crisis at every level over forty seeds, right and wrong, and
+checks every line key it can reach is written.
 
 ## A new day
 

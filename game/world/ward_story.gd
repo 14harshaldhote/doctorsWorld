@@ -42,7 +42,7 @@ const TIME_JUMPS := {
 	24: ["Six months later", "Head of Department. Dr. Rao's old office, a door that sticks, and everybody's problems before your own."],
 }
 ## The story chapters the Ward reads conversations from, after "ward".
-const CHAPTERS := ["junior", "senior", "surgeon", "hod", "chief"]
+const CHAPTERS := ["junior", "senior", "surgeon", "hod", "chief", "crises"]
 ## Story days that are night shifts (the first week's night is Ward.NIGHT_DAY).
 const NIGHTS := [16]
 

@@ -515,6 +515,9 @@ func _ward_shots() -> void:
 	# Stage 17: the career map, the race with Varun, and the letters.
 	await _career_shots(careful)
 
+	# Stage 18: the eight crises, each in the middle of being solved.
+	await _crisis_shots(careful)
+
 
 ## The career map over the ward: the road and the race, a Chief's road,
 ## the wall of letters, one letter open, and the end card with the post.
@@ -554,6 +557,33 @@ func _career_shots(careful: Callable) -> void:
 	await _ward_shot("150-end-card-post", 8, ["beds_checked", "banerjee_room", "rider_treated", "rider_named",
 		"joseph_asked", "beds_saved"], "", func(w: Ward) -> bool:
 		return w.mode == "end" and w.overlay.end_card_lines().size() >= 4 and w.overlay.card_left() < 6.5, careful)
+
+
+## The crises on their story days: [shot, day, step on show, answers given].
+const CRISIS_SHOTS := [["151-crisis-power-cut", 20, 0, 0], ["152-crisis-ramesh", 10, 1, 0], ["153-crisis-crowd", 24, 2, 0],
+	["154-crisis-donors", 17, 0, 2], ["155-crisis-insurance", 14, 0, 2], ["156-crisis-snakebite", 16, 0, 0],
+	["157-crisis-dengue", 15, 0, 3], ["158-crisis-inspection", 26, 0, 3]]
+
+
+func _crisis_shots(careful: Callable) -> void:
+	for entry: Array in CRISIS_SHOTS:
+		await _ward_shot(str(entry[0]), int(entry[1]), [], "crisis", _crisis_at.bind(int(entry[2]), int(entry[3])), careful)
+
+
+## A crisis on the given step with that many answers picked so far.
+static func _crisis_at(ward: Ward, step: int, given: int) -> bool:
+	if not ward.view is CrisisView or ward.view.result_open():
+		return false
+	var crisis := ward.view.task as CrisisTask
+	if crisis.step_index != step:
+		return false
+	var count := 0
+	match crisis.kind():
+		"one":
+			count = 0 if str(crisis.picked).is_empty() else 1
+		_:
+			count = (crisis.picked as Dictionary).size() if crisis.picked is Dictionary else (crisis.picked as Array).size()
+	return count >= given
 
 
 ## The drug chart with a line already flagged: the list, or the reasons.
