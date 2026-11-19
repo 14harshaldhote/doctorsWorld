@@ -90,6 +90,8 @@ static func record(profile: PlayerProfile, task: CrisisTask, date: String = "") 
 	profile.add_count("daily_cases", 1)
 	if perfect:
 		profile.add_count("daily_cases_perfect", 1)
+		# Kept for good: the badge for every kind of case.
+		Badges.keep_flag(profile, "ever_right_" + task.case_id)
 	var xp := BASE_XP + task.score() / 2 + STREAK_XP * mini(run - 1, 6) + (PERFECT_XP if perfect else 0)
 	profile.total_xp += xp
 	if int(profile.morning.get("day", -1)) == profile.day:

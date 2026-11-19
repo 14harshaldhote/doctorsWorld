@@ -308,7 +308,7 @@ func test_every_badge_is_written_and_has_a_rule_that_can_hold() -> void:
 		expect_equal(badge.size(), 5, "%s: five parts" % at)
 		for part in 4:
 			expect(not str(badge[part]).is_empty(), "%s: part %d written" % [at, part])
-		expect(str((badge[4] as Array)[0]) in ["count", "flag", "day", "rank", "letters", "sharp", "all_crises"],
+		expect(str((badge[4] as Array)[0]) in ["count", "flag", "day", "rank", "letters", "sharp", "all_crises", "all_quick"],
 			"%s: a known rule" % at)
 	expect_equal(ids.size(), Badges.ALL.size(), "every badge has its own id")
 	expect(Badges.check(_doctor(1, Rank.INTERN)).is_empty(), "a new intern has earned nothing")
@@ -460,3 +460,100 @@ func test_the_career_button_shows_a_dot_while_today_waits() -> void:
 	expect(not hud.today_dot(), "nothing waits: no dot")
 	var intern := add_node(LobbyHud.new(_doctor(2, Rank.INTERN))) as LobbyHud
 	expect(not intern.today_dot(), "no dot before the ward")
+
+
+# --- Stage 20: six more cases, story beats, an earlier start --------------------------------
+
+func test_the_new_cases_follow_the_real_rules() -> void:
+	for with_seed in range(1, 150):
+		for level: String in LEVELS:
+			var at := "seed %d %s" % [with_seed, level]
+			var head := CrisisTask.new("quick_head", with_seed, level)
+			var gcs := int(str(head.steps[0]["answer"]).substr(1))
+			expect(gcs >= 3 and gcs <= 15, "%s: a real score (%d)" % [at, gcs])
+			for option: Dictionary in head.steps[0]["options"]:
+				var n := int(str(option["id"]).substr(1))
+				expect(n >= 3 and n <= 15, "%s: every score offered is possible (%d)" % [at, n])
+			var facts := str(head.facts)
+			var urgent := gcs < 13 or "three times" in facts or "panda" in facts or "one ear" in facts
+			var ct := str(head.steps[1]["answer"])
+			expect_equal(ct, "hour" if urgent else ("eight" if "warfarin" in facts else "none"), "%s: the CT rule" % at)
+			if gcs <= 8:
+				expect_equal(str(head.steps[2]["answer"]), "tube", "%s: 8 or less gets a tube" % at)
+			var sepsis := CrisisTask.new("quick_sepsis", with_seed, level)
+			var sf := str(sepsis.facts)
+			var score := int("26 a minute" in sf) + int("86/50" in sf) + int("nonsense" in sf)
+			expect_equal(str(sepsis.steps[0]["answer"]), "n%d" % score, "%s: qSOFA" % at)
+			var heat := CrisisTask.new("quick_heat", with_seed, level)
+			var stroke := "Confused" in str(heat.facts)
+			expect_equal(str(heat.steps[0]["answer"]), "stroke" if stroke else "exhaustion", "%s: heat" % at)
+			expect_equal(str(heat.steps[2]["answer"]), "t39" if stroke else "none", "%s: stop cooling at 39" % at)
+			var fit := CrisisTask.new("quick_seizure", with_seed, level)
+			if "pregnant" in str(fit.facts):
+				expect_equal(level, "extreme", "%s: eclampsia only on extreme" % at)
+				expect_equal(str(fit.steps[0]["answer"]), "magnesium", "%s: magnesium for eclampsia" % at)
+			else:
+				expect_equal(str(fit.steps[1]["answer"]), "lorazepam" if "working" in str(fit.facts) else "midazolam",
+					"%s: the route follows the line" % at)
+			var asthma := CrisisTask.new("quick_asthma", with_seed, level)
+			if level == "easy":
+				expect(str(asthma.steps[0]["answer"]) != "life", "%s: no life-threatening attack on easy" % at)
+			var poison := CrisisTask.new("quick_poison", with_seed, level)
+			if "paracetamol" in str(poison.facts):
+				expect(level != "easy", "%s: the paracetamol case starts on hard" % at)
+				var kg := int(Array(str(poison.facts[0]).split(", "))[-1].get_slice(" ", 0))
+				var tablets := int(str(poison.facts[1]).get_slice(" ", 1))
+				expect_equal(str(poison.steps[0]["answer"]), "n%d" % (tablets * 500 / kg), "%s: mg per kg" % at)
+
+
+func test_the_meeting_days_get_a_quick_case_with_the_right_patient() -> void:
+	for day: int in [21, 23, 27]:
+		var case_id := str(Crises.STORY_DAYS[day])
+		expect(case_id.begins_with("quick_"), "day %d has a quick case" % day)
+		var doctor := _doctor(day, Rank.SURGEON)
+		var beat := Crises.beat(doctor, day)
+		expect_equal(str(beat["crisis"]), case_id)
+		expect_equal(str(beat["with"]), "iyer")
+		for talk: String in ["crisis_%s_arrive" % case_id, "crisis_%s_after" % case_id]:
+			expect(not StoryBook.conversation("crises", talk).is_empty(), "%s is written" % talk)
+		for with_seed in range(1, 20):
+			var story := CrisisTask.new(case_id, with_seed, "hard", {"story": true})
+			var who: String = {"quick_heat": "constable", "quick_asthma": "painter", "quick_sepsis": "Mrs. Shanti Kamble"}[case_id]
+			expect(who in str(story.facts[0]), "day %d seed %d: the patient the talk names" % [day, with_seed])
+			expect_equal(story.time_total, -1.0, "no minute on the ward")
+
+
+func test_the_today_page_opens_on_day_one_after_meeting_dr_iyer() -> void:
+	DailyReward.today_override = THURSDAY
+	var first := _doctor(1, Rank.INTERN)
+	expect(not CareerMap.today_waiting(first), "not before Dr. Iyer")
+	first.set_flag("met_iyer")
+	expect(CareerMap.today_waiting(first), "from meeting her on Day 1")
+	var map := add_node(CareerMap.new(first, "today")) as CareerMap
+	expect(map.find_child("StartCase", true, false) != null, "the case can start on Day 1")
+	expect(map.start_daily_case() != null)
+
+
+func test_varun_writes_on_the_first_evening() -> void:
+	var doctor := _doctor(1, Rank.INTERN)
+	expect("Varun" in Rival.line(doctor, 1), "a WhatsApp on Day 1")
+	expect("Day 4" in Rival.line(doctor, 1), "and when the race starts")
+	expect_equal(Rival.line(doctor, 2), "", "then quiet until the race")
+	expect("Varun" in str(DayHooks.end_card(doctor, 1)["rival"]))
+
+
+func test_every_kind_of_quick_case_right_earns_the_casualty_badge() -> void:
+	var doctor := _doctor()
+	for index in QuickCases.IDS.size() - 1:
+		doctor.set_flag("ever_right_" + str(QuickCases.IDS[index]))
+	expect(not ("all_quick" in Badges.check(doctor)), "not with one missing")
+	var task := CrisisTask.new(str(QuickCases.IDS[-1]), 3, "easy")
+	_play(task, true)
+	DailyCase.record(doctor, task, THURSDAY)
+	expect(doctor.has_flag("ever_right_" + str(QuickCases.IDS[-1])), "a perfect case marks its kind")
+	expect("all_quick" in Badges.check(doctor), "all twelve")
+	doctor.morning = {"day": doctor.day, "flags": {}}
+	doctor.set_count("daily_cases", 29)
+	doctor.add_count("daily_cases", 1)
+	expect("minute_thirty" in Badges.check(doctor))
+	expect(bool((doctor.morning["flags"] as Dictionary).get("badge_minute_thirty", false)), "a badge survives a restarted day")

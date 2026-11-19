@@ -142,8 +142,15 @@ static func lead(profile: PlayerProfile, through_day: int) -> int:
 	return yours(profile) - his(profile, through_day)
 
 
+## Varun's WhatsApp on the end card of Day 1, before the race begins.
+const FIRST_MESSAGE := "Varun on WhatsApp: \"Day one at CarePlus: a car, a parking spot, a nameplate. Day one at Riverside? Let me guess. A pager.\" Your race starts on Day 4."
+
+
 ## The end-of-day card's line about the race, or "".
 static func line(profile: PlayerProfile, day: int) -> String:
+	if day == 1:
+		# The first evening: he's not racing you yet, just letting you know.
+		return FIRST_MESSAGE
 	if not racing(profile) or profile.count("rival_from") != stretch_start(day):
 		return ""
 	var ahead := lead(profile, day)

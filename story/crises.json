@@ -398,5 +398,123 @@
    "mood": "calm",
    "head": "tilt"
   }
+ ],
+ "crisis_quick_heat_arrive": [
+  {
+   "say": "priya",
+   "text": "The traffic constable from the signal outside, Doctor. Collapsed in the sun, mid-whistle. His friends carried him in on a barricade.",
+   "mood": "worried",
+   "gesture": "point"
+  },
+  {
+   "say": "iyer",
+   "text": "Forty-six degrees out there, and he was in full uniform since eight. Hot or just tired? Tell me which, quickly.",
+   "mood": "focused",
+   "head": "tilt",
+   "to": "you"
+  }
+ ],
+ "crisis_quick_heat_after": [
+  {
+   "if": "crisis_quick_heat_right",
+   "then": [
+    {
+     "say": "iyer",
+     "text": "Good. Right call, right speed. He's asking for his cap. And his whistle. Mostly his whistle.",
+     "mood": "happy",
+     "head": "nod",
+     "to": "you"
+    }
+   ],
+   "else": [
+    {
+     "say": "iyer",
+     "text": "Heat doesn't wait for you to think it over, {called}. Read the card again tonight, na.",
+     "mood": "worried",
+     "gesture": "wag",
+     "to": "you"
+    }
+   ]
+  },
+  {
+   "say": "priya",
+   "text": "The signal outside has gone mad without him. Nobody's ever been so happy to see a constable.",
+   "mood": "happy",
+   "gesture": "shrug"
+  }
+ ],
+ "crisis_quick_asthma_arrive": [
+  {
+   "say": "priya",
+   "text": "Before your interview, Doctor, sorry. Admissions. Wheezing like a pressure cooker, says his inhaler's 'finished'.",
+   "mood": "worried",
+   "gesture": "open_hands"
+  },
+  {
+   "say": "iyer",
+   "text": "The interview can wait ten minutes. His lungs can't. How bad is it? And don't say 'quite'.",
+   "mood": "focused",
+   "to": "you"
+  }
+ ],
+ "crisis_quick_asthma_after": [
+  {
+   "if": "crisis_quick_asthma_right",
+   "then": [
+    {
+     "say": "iyer",
+     "text": "Well read. He's talking in sentences again. Long ones, about the Diwali smoke. Go, your panel's waiting.",
+     "mood": "happy",
+     "head": "nod",
+     "to": "you"
+    }
+   ],
+   "else": [
+    {
+     "say": "iyer",
+     "text": "A quiet chest is the frightening one, {called}. Remember that in there. Now go, they're waiting.",
+     "mood": "worried",
+     "gesture": "wag",
+     "to": "you"
+    }
+   ]
+  }
+ ],
+ "crisis_quick_sepsis_arrive": [
+  {
+   "say": "priya",
+   "text": "Bed six, Doctor. Burning urine since Sunday, now shivering under three blankets and calling her son by her husband's name.",
+   "mood": "worried",
+   "gesture": "point"
+  },
+  {
+   "say": "iyer",
+   "text": "The board can vote without you for half an hour. Score her, fluid her, and tell me what the pressure does.",
+   "mood": "focused",
+   "to": "you"
+  }
+ ],
+ "crisis_quick_sepsis_after": [
+  {
+   "if": "crisis_quick_sepsis_right",
+   "then": [
+    {
+     "say": "iyer",
+     "text": "Antibiotics in, fluids right, pressure watched. That's what a Chief does on board day. Achha, go and get voted.",
+     "mood": "happy",
+     "head": "nod",
+     "to": "you"
+    }
+   ],
+   "else": [
+    {
+     "say": "iyer",
+     "text": "The hour matters more than the board does, {called}. Look at her numbers again after the vote.",
+     "mood": "worried",
+     "gesture": "wag",
+     "to": "you"
+    }
+   ]
+  }
  ]
 }

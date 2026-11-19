@@ -51,25 +51,6 @@
 			]
 		},
 		{
-			"if": "beds_saved",
-			"then": [
-				{
-					"say": "grace",
-					"text": "Ward 4 still has six beds. Mr. Malhotra still counts them every morning, like a man checking his pockets.",
-					"mood": "happy",
-					"gesture": "shrug"
-				}
-			],
-			"else": [
-				{
-					"say": "grace",
-					"text": "And we're down to four real beds and two 'day-care chairs'. Mr. Malhotra calls that efficiency.",
-					"mood": "tired",
-					"gesture": "fold_arms"
-				}
-			]
-		},
-		{
 			"say": "iyer",
 			"text": "News of my own. From today, the minor cases are yours, {called}. You operate. I watch and keep my hands in my pockets.",
 			"mood": "focused",
@@ -2052,12 +2033,6 @@
 					"text": "You asked one question and let the notes speak. Dr. Sethi has apologised to me. He'll apologise to you.",
 					"mood": "calm",
 					"gesture": "explain"
-				},
-				{
-					"say": "rao",
-					"text": "That's how you win a fight in a hospital, {called}. Quietly, with the facts, and nobody humiliated.",
-					"mood": "happy",
-					"gesture": "wag"
 				}
 			],
 			"else": [
@@ -2069,12 +2044,6 @@
 							"text": "You challenged a senior in front of the department. You were right. You were also loud.",
 							"mood": "focused",
 							"gesture": "fold_arms"
-						},
-						{
-							"say": "rao",
-							"text": "Next time, come to my office first. Being right is half of it. The other half is how.",
-							"mood": "calm",
-							"gesture": "explain"
 						}
 					],
 					"else": [
@@ -2083,12 +2052,6 @@
 							"text": "You let a colleague take your work, or your blame, and said nothing.",
 							"mood": "focused",
 							"gesture": "fold_arms"
-						},
-						{
-							"say": "rao",
-							"text": "Generous. And dangerous. Credit is how a hospital decides whom to trust with the next patient.",
-							"mood": "calm",
-							"gesture": "wag"
 						}
 					]
 				}

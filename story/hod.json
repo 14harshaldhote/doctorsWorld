@@ -7,25 +7,6 @@
 			"gesture": "point"
 		},
 		{
-			"if": "count_rule",
-			"then": [
-				{
-					"say": "grace",
-					"text": "The count rule's on every theatre wall. Not one swab left behind since. Neha laminated it, then laminated a spare.",
-					"mood": "happy",
-					"gesture": "shrug"
-				}
-			],
-			"else": [
-				{
-					"say": "grace",
-					"text": "Mr. Malhotra framed your photo for the corridor. It's next to the fire exit. Make of that what you will.",
-					"mood": "calm",
-					"gesture": "shrug"
-				}
-			]
-		},
-		{
 			"say": "iyer",
 			"text": "News from the top floor. Dean Menon retires at the end of the month. He's been Chief of Medicine since before the lifts worked.",
 			"mood": "calm",
@@ -44,6 +25,36 @@
 			"text": "The other name is Dr. Sameer Kapoor. Medical Director of CarePlus Hospitals. Mr. Malhotra found him. He's touring the wards today.",
 			"mood": "focused",
 			"gesture": "wag"
+		},
+		{
+			"choose": [
+				{
+					"tone": "CarePlus?",
+					"text": "CarePlus. That's Varun's hospital.",
+					"then": [
+						{
+							"say": "iyer",
+							"text": "Varun's boss, yes. Varun has already posted about it. Twice. With a sunglasses emoji.",
+							"mood": "tired",
+							"gesture": "shrug",
+							"to": "you"
+						}
+					]
+				},
+				{
+					"tone": "Bring it",
+					"text": "Then I'll beat him.",
+					"then": [
+						{
+							"say": "grace",
+							"text": "Beat him politely, {called}. The board likes polite. I like the other thing.",
+							"mood": "happy",
+							"head": "tilt",
+							"to": "you"
+						}
+					]
+				}
+			]
 		},
 		{
 			"say": "grace",
@@ -556,12 +567,6 @@
 					"text": "A burn on the side of her main duct. The hook, too close, too fast. The liver team stents it in the morning; she should heal without another operation.",
 					"mood": "focused",
 					"gesture": "explain"
-				},
-				{
-					"say": "iyer",
-					"text": "It happens to good surgeons. It happens more to good surgeons in a hurry.",
-					"mood": "calm",
-					"head": "down"
 				}
 			]
 		},
@@ -779,13 +784,6 @@
 							"to": "sinha"
 						}
 					]
-				},
-				{
-					"say": "sinha",
-					"text": "And you stood there the whole time. Like a bookend.",
-					"mood": "calm",
-					"head": "tilt",
-					"to": "you"
 				},
 				{
 					"say": "sinha",

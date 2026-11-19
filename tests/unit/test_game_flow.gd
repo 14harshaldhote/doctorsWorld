@@ -280,7 +280,15 @@ func test_a_whole_career_from_new_game_to_junior_resident() -> void:
 		return
 	days_seen.append(main.profile.day)
 	lab.talk_through()
+	# The four theatre needs, Dr. Iyer's news, then the two extras.
 	for id: String in TrainingTask.IDS:
+		if id == "iv":
+			for frame in 150:
+				lab.update(1.0 / 30.0)
+			lab.talk_through()
+			expect(lab.can_go_home(), "training is done after the four")
+			for frame in 60:
+				lab.update(1.0 / 30.0)
 		expect(lab.go_to_task(id), "%s opens" % id)
 		expect(lab.play_task(), "%s is played" % id)
 		lab.view.done_pressed.emit()

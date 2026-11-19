@@ -141,12 +141,6 @@
 			]
 		},
 		{
-			"say": "grace",
-			"text": "Your name's on the board outside Theatre 2. In capitals. Mr. Malhotra had it laminated.",
-			"mood": "happy",
-			"gesture": "point"
-		},
-		{
 			"do": "page",
 			"text": "Priya: Admissions. Sixty-four, vomiting since Saturday, belly like a drum. She wants a doctor with a strong stomach."
 		}
@@ -1232,6 +1226,35 @@
 			"text": "I'm retiring at the end of the month. Early. My wife is delighted. My golf is not.",
 			"mood": "calm",
 			"gesture": "shrug"
+		},
+		{
+			"choose": [
+				{
+					"tone": "Miss you",
+					"text": "We'll miss you, sir.",
+					"then": [
+						{
+							"say": "rao",
+							"text": "You'll miss my handwriting. Nobody else could read the theatre lists.",
+							"mood": "happy",
+							"gesture": "shrug"
+						}
+					]
+				},
+				{
+					"tone": "Golf?",
+					"text": "Golf? You?",
+					"then": [
+						{
+							"say": "rao",
+							"text": "Badly. Which is why I'm going early. I need the practice more than you need me.",
+							"mood": "happy",
+							"head": "tilt",
+							"to": "you"
+						}
+					]
+				}
+			]
 		},
 		{
 			"if": "candour_together|candour_rao|candour_late",

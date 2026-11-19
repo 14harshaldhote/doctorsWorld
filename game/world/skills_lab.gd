@@ -7,7 +7,8 @@ extends Node3D
 ## explains it, then the task opens in close-up with its own screen. When
 ## the task ends, the score card says what went well and what to fix, the
 ## best score is saved, and the first try earns XP (better stars later earn
-## a little more). When all six are done, Dr. Iyer has news about tomorrow.
+## a little more). When the four theatre needs are done (IV lines and
+## stitching are extra), Dr. Iyer has news about tomorrow.
 ##
 ## Floor coordinates as in the lobby: x left to right, z from the back wall
 ## (-5) towards the camera (+5).
@@ -412,6 +413,27 @@ func next_station() -> String:
 	return ""
 
 
+## The stations theatre needs tomorrow; IV lines and stitching are extra
+## on Day 2 (they come back as drills between shifts).
+const NEEDED := ["scrub", "monitor", "history", "instruments"]
+
+
+## True once every needed station has been tried.
+func needed_done() -> bool:
+	for id: String in NEEDED:
+		if not is_trained(id):
+			return false
+	return true
+
+
+## The first needed station not tried yet, then the extras.
+func next_needed() -> String:
+	for id: String in NEEDED:
+		if not is_trained(id):
+			return id
+	return next_station()
+
+
 func _refresh_board() -> void:
 	if not drill.is_empty():
 		var best := profile.best_score(drill)
@@ -422,7 +444,8 @@ func _refresh_board() -> void:
 	var rows := []
 	for id: String in TrainingTask.IDS:
 		var best := profile.best_score(id)
-		rows.append([TrainingTask.title_of(id), is_trained(id), TrainingTask.stars_for(best) if best >= 0 else -1])
+		var title := TrainingTask.title_of(id) + ("" if id in NEEDED else " (extra)")
+		rows.append([title, is_trained(id), TrainingTask.stars_for(best) if best >= 0 else -1])
 	hud.set_tasks(rows, "Skills lab · %d of %d" % [trained_count(), TrainingTask.IDS.size()])
 	hud.set_pager(_pager_text())
 
@@ -432,11 +455,11 @@ func _pager_text() -> String:
 		return _recovery_text()
 	if profile.has_flag("training_done"):
 		return "Dr. Iyer: Theatre tomorrow, 7:00. Rohit, nineteen, appendix. Practise if you like, then go home."
-	var next := next_station()
-	if next.is_empty():
-		return "Dr. Iyer: All six? Come here."
+	var next := next_needed()
+	if needed_done():
+		return "Dr. Iyer: That's the four for theatre. Come here."
 	if trained_count() == 0:
-		return "Sister Grace: Six stations. Start with the sink. Everyone starts with the sink."
+		return "Sister Grace: Four stations before theatre, two extra. Start with the sink. Everyone starts with the sink."
 	return "%s: Next, %s." % [_short_name(str(TrainingTask.TRAINERS[next])), TrainingTask.title_of(next).to_lower()]
 
 
@@ -728,7 +751,7 @@ func _on_done() -> void:
 		_finish_drill()
 		return
 	_back_to_walking()
-	if next_station().is_empty() and not profile.has_flag("training_done"):
+	if needed_done() and not profile.has_flag("training_done"):
 		_gather_for("done")
 
 
@@ -1032,7 +1055,7 @@ func _place_camera(weight: float) -> void:
 
 func _update_tags() -> void:
 	var walking := mode == "walk" or mode == "approach"
-	var next := next_station()
+	var next := "" if can_go_home() else next_needed()
 	for id: String in stations:
 		var station: LabStation = stations[id]
 		var point := station.at(station.tag_point)

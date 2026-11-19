@@ -354,6 +354,10 @@ func test_each_crisis_comes_once_in_the_story_and_never_on_a_review_day() -> voi
 		var crisis := Crises.for_day(doctor, day)
 		if crisis.is_empty():
 			continue
+		if crisis.begins_with("quick_"):
+			# A quick casualty case gives a meeting day something to play.
+			expect(day in [21, 23, 27], "quick cases only on the meeting days (%d)" % day)
+			continue
 		expect(not DayHooks.REVIEW_DAYS.has(day), "no crisis on review day %d" % day)
 		expect(not seen.has(crisis), "%s comes once in the story" % crisis)
 		seen[crisis] = day

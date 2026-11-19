@@ -71,6 +71,8 @@ version has been retired (it's kept safe on the `swift-prototype` branch).
 Here's everything, in order, so you can decide how much of your life to give it:
 
 - The title screen: the hospital at dusk, an ambulance, a doctor wandering about.
+- A cold open: two black cards from your third day, so you know exactly how
+  badly this is going to go before anyone hands you a degree.
 - Name your doctor and choose whether people call you by your first or last name.
 - The avatar creator, with every option above and a doctor you can spin round.
 - The opening, about a minute and a half, starring you. Convocation day: the
@@ -107,8 +109,9 @@ Here's everything, in order, so you can decide how much of your life to give it:
 - Every task is scored out of 100 with up to three stars, and the score card
   tells you exactly what you did wrong and why it would have mattered.
   Try again as often as you like; only your best counts, and only
-  improvements earn more XP. Finish all six and Dr. Iyer has news about
-  tomorrow.
+  improvements earn more XP. Finish the four that theatre needs and Dr. Iyer
+  has news about tomorrow; the IV line and the stitching are there for the
+  keen, and come back later as drills for everyone else.
 - Day 3, your first operation. Rohit, nineteen, has appendicitis and finals on
   Thursday. His mother has diagnosed gas. You get his consent anyway, and how
   you handle her decides whether she trusts you or the internet. Ask the right
@@ -330,10 +333,15 @@ Here's everything, in order, so you can decide how much of your life to give it:
   differently.
 - A 60-second case every day, the same one for every doctor in the
   country, because suffering is better shared. One emergency, three
-  questions, one minute: a sugar that's too low or too high or not the
-  problem at all, a child swelling up after an injection, a stroke on the
-  clock, an ECG, a baby whose grandmother has stopped all milk "to rest the
-  stomach", and a kerosene stove with toothpaste on the burns (of course).
+  questions, one minute, twelve kinds: a sugar that's too low or too high or
+  not the problem at all, a child swelling up after an injection, a stroke on
+  the clock, an ECG, a baby whose grandmother has stopped all milk "to rest
+  the stomach", a kerosene stove with toothpaste on the burns (of course),
+  the Diwali wheeze, a fit that won't stop (sometimes at 34 weeks), a bump on
+  the head you'll have to score out of 15, a bottle from the shed with a
+  beetle on the label, a shivering grandmother and a constable cooked at a
+  signal in May. It opens on your very first day, the moment Dr. Iyer has
+  met you.
   Easy on Monday, hard by Thursday, extreme at the weekend, because that's
   when casualty is. Play every day for a streak. Miss one and it starts
   again from one, and Dr. Iyer will know.
@@ -342,9 +350,12 @@ Here's everything, in order, so you can decide how much of your life to give it:
   risk of looking silly, or wait for Friday and be sure, like a consultant.
   A monsoon fever with very specific calves, a farmer who keeps coming
   back, a man whose stomach cramps two scans and a "gas" couldn't explain,
-  feet that tingle for a reason that isn't "just age". Get it wrong and
+  feet that tingle for a reason that isn't "just age", a buffalo farmer's
+  fever that waves, a Kota student whose hands shake for a reason that isn't
+  exams, and a whole lane in Bengal with the same spots. Sixteen of them, so
+  you'll be wrong in new ways for months. Get it wrong and
   the explanation is waiting for you anyway, smugly.
-- Twenty badges, each with a line that stops it going to your head: five
+- Twenty-four badges, each with a line that stops it going to your head: five
   crises without a slip, a perfect minute, a mystery solved on two clues,
   ten operations in a row, a month ahead of Varun. Earned once, kept for
   good, worth nothing, wanted badly.

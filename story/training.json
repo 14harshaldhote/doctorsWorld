@@ -3,7 +3,7 @@
 		{"say": "iyer", "text": "Morning, {called}. On time today. I'm almost disappointed.", "mood": "calm", "gesture": "fold_arms"},
 		{"say": "grace", "text": "Welcome to the skills lab. Six stations. And everything you break in here is plastic.", "mood": "happy",
 			"gesture": "open_hands", "to": "you"},
-		{"say": "iyer", "text": "Scrubbing, monitors, histories, instruments, IV lines, stitches. You'll need all of them in theatre. Usually all at once.", "gesture": "explain"},
+		{"say": "iyer", "text": "Scrubbing, monitors, histories, instruments: those four before theatre tomorrow. IV lines and stitches too, if you're keen. Theatre usually wants all of them at once.", "gesture": "explain"},
 		{"say": "iyer", "text": "Pick a station. Mistakes are free today. Tomorrow, they aren't.", "gesture": "point", "head": "nod"}
 	],
 	"scrub_intro": [
@@ -39,7 +39,7 @@
 		{"say": "grace", "text": "Again? Good. Habits are built, not born.", "gesture": "open_hands", "mood": "happy"}
 	],
 	"done": [
-		{"say": "iyer", "text": "Six for six. I've seen worse. I've also seen better... but I'm in a good mood.", "mood": "happy", "gesture": "fold_arms"},
+		{"say": "iyer", "text": "That's the four that matter. I've seen worse. I've also seen better... but I'm in a good mood.", "mood": "happy", "gesture": "fold_arms"},
 		{"say": "grace", "text": "She means well done.", "gesture": "shrug", "to": "you"},
 		{"say": "iyer", "text": "Tomorrow you assist me in theatre. An appendix. A student called Rohit, nineteen. Read his notes tonight.",
 			"gesture": "point", "mood": "focused"},

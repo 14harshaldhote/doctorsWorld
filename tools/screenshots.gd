@@ -521,6 +521,10 @@ func _ward_shots() -> void:
 	# Stage 19: the 60-second case, the weekly mystery and the badges.
 	await _daily_shots()
 
+	# Stage 20: the cold open, a new quick case, the lab's extras, Varun's
+	# first message.
+	await _hook_shots()
+
 
 ## The career map over the ward: the road and the race, a Chief's road,
 ## the wall of letters, one letter open, and the end card with the post.
@@ -600,6 +604,49 @@ func _daily_shots() -> void:
 		proud.set_count(str(counter[0]), int(counter[1]))
 	await _shot("162-badges", CareerMap.new(proud, "badges"))
 	DailyReward.today_override = ""
+
+
+## The cold open before convocation, the head-injury case in play, the
+## Day 2 board with two extra stations, and Day 1's card with Varun.
+func _hook_shots() -> void:
+	await _opening_shot("163-cold-open", func(o: Opening) -> bool:
+		return o.overlay._card_title.text.begins_with("\u201cDoctor") and o.overlay._card_t >= 0.9)
+	var date := "2026-11-19"
+	for index in 30:
+		if DailyCase.case_for(date) == "quick_head":
+			break
+		date = Time.get_date_string_from_unix_time(Time.get_unix_time_from_datetime_string(date + "T12:00:00") + 86400)
+	DailyReward.today_override = date
+	var head := CareerMap.new(sample_profile_on_ward(12, ["beds_checked"]), "today")
+	await _shot("164-quick-head", head, func() -> void:
+		var view := head.start_daily_case()
+		await process_frame
+		for frame in 90:
+			view._type_coach(1.0 / 30.0)
+		(view.task as CrisisTask).time_total = 48.0
+		view.tick(0.0)
+		head.set_process(false))
+	DailyReward.today_override = ""
+	var keen := sample_profile_in_lab()
+	for flag: String in ["trained_history", "trained_instruments", "training_done"]:
+		keen.set_flag(flag)
+	keen.record_score("history", 81)
+	keen.record_score("instruments", 88)
+	var lab := SkillsLab.new(keen)
+	await _shot("165-lab-extras", lab, func() -> void:
+		lab.player.position = Vector3(-0.4, 0, 1.6)
+		lab.player.rotation.y = PI * 0.92
+		lab.update(0.1)
+		lab.settle_camera())
+	var first := sample_profile_at_work()
+	first.set_flag("met_iyer")
+	var evening := Lobby.new(first)
+	await _shot("166-day1-card", evening, func() -> void:
+		evening.stage_for_screenshot("walk")
+		evening._end_day()
+		for frame in 60:
+			evening.overlay.tick(1.0 / 30.0)
+		evening.set_process(false))
 
 
 ## The crises on their story days: [shot, day, step on show, answers given].

@@ -1,6 +1,6 @@
 class_name QuickCases
 extends RefCounted
-## The daily 60-second cases: six quick emergencies, each three questions
+## The daily 60-second cases: twelve quick emergencies, each three questions
 ## whose answers come from facts rolled from the day's seed (the sugar
 ## reading, the child's weight, which leads have ST elevation, how many
 ## hours since the stroke began, where the burns are). Played with
@@ -10,11 +10,18 @@ extends RefCounted
 ## The rules are simplified from standard emergency teaching (Indian and
 ## WHO guidance) so the game teaches nothing wrong.
 
-const IDS := ["quick_sugar", "quick_allergy", "quick_stroke", "quick_heart", "quick_diarrhoea", "quick_burns"]
+const IDS := ["quick_sugar", "quick_allergy", "quick_stroke", "quick_heart", "quick_diarrhoea", "quick_burns", "quick_asthma",
+	"quick_seizure", "quick_head", "quick_poison", "quick_sepsis", "quick_heat"]
 const ACTOR := "iyer"
 
 
-static func build(case_id: String, dice: SeededRandom, level: String) -> Dictionary:
+## True while building a case for a story day on the ward, where the talk
+## around it names the patient (the constable, the painter, the grandmother).
+static var _story := false
+
+
+static func build(case_id: String, dice: SeededRandom, level: String, context: Dictionary = {}) -> Dictionary:
+	_story = bool(context.get("story", false))
 	var made: Dictionary
 	match case_id:
 		"quick_sugar":
@@ -29,6 +36,18 @@ static func build(case_id: String, dice: SeededRandom, level: String) -> Diction
 			made = _diarrhoea(dice, level)
 		"quick_burns":
 			made = _burns(dice, level)
+		"quick_asthma":
+			made = _asthma(dice, level)
+		"quick_seizure":
+			made = _seizure(dice, level)
+		"quick_head":
+			made = _head(dice, level)
+		"quick_poison":
+			made = _poison(dice, level)
+		"quick_sepsis":
+			made = _sepsis(dice, level)
+		"quick_heat":
+			made = _heat(dice, level)
 		_:
 			push_error("Unknown quick case: %s" % case_id)
 			return {}
@@ -314,3 +333,257 @@ static func _burns(dice: SeededRandom, level: String) -> Dictionary:
 
 static func _first_up(text: String) -> String:
 	return text.substr(0, 1).to_upper() + text.substr(1)
+
+
+# --- Asthma: how bad, and what first --------------------------------------------------------
+
+static func _asthma(dice: SeededRandom, level: String) -> Dictionary:
+	var kinds := ["moderate", "severe"] if level == "easy" else ["moderate", "severe", "life"]
+	var kind: String = dice.pick(kinds)
+	var predicted: int = dice.pick([400, 450, 500])
+	var share: float = {"moderate": dice.pick([0.6, 0.7]), "severe": dice.pick([0.4, 0.45]), "life": dice.pick([0.25, 0.3])}[kind]
+	var peak := int(roundf(predicted * share / 10.0)) * 10
+	# On extreme, a life-threatening attack can hide behind a decent oxygen level.
+	var sneaky: bool = kind == "life" and level == "extreme" and dice.chance(0.5)
+	var who: String = dice.pick(["Mr. Imran Qureshi, 24, college cricketer", "Ms. Divya Nair, 29, software tester",
+		"Mr. Prakash Jadhav, 37, painter (the house kind)"])
+	if _story:
+		who = "Mr. Prakash Jadhav, 37, painter (the house kind)"
+	var facts: Array[String] = [who + ": wheezy since the Diwali smoke last night, inhaler 'finished'",
+		"Peak flow %d (best is %d)" % [peak, predicted],
+		{"moderate": "Talks in full sentences, a bit breathless", "severe": "Can't finish a sentence in one breath",
+			"life": "Quiet chest: hardly any wheeze to hear" if not sneaky else "Drowsy, and the wheeze has gone quiet"}[kind],
+		{"moderate": "Breathing 22 a minute, pulse 98, oxygen 96%", "severe": "Breathing 28 a minute, pulse 118, oxygen 94%",
+			"life": "Oxygen %d%%, pulse 124" % (94 if sneaky else 89)}[kind]]
+	var steps: Array = []
+	steps.append(_step(dice, "s1", "How bad is it?", [_opt("moderate", "Moderate"), _opt("severe", "Acute severe"),
+		_opt("life", "Life-threatening"), _opt("anxiety", "Anxiety, mostly")], kind,
+		"Peak flow over half of best and full sentences: moderate. A third to a half, can't finish a sentence, breathing 25 or more, pulse 110 or more: severe. Under a third, oxygen under 92%, a quiet chest or drowsy: life-threatening. Any one of those is enough." +
+			(" A quiet chest is not a better chest." if kind == "life" else "")))
+	var first := "spacer" if kind == "moderate" else "neb"
+	steps.append(_step(dice, "s2", "First treatment:", [_opt("spacer", "Salbutamol inhaler through a spacer, up to 10 puffs"),
+		_opt("neb", "Salbutamol 5 mg nebulised, driven by oxygen"), _opt("sedate", "Something to calm them down"),
+		_opt("antibiotic", "IV antibiotics")], first,
+		"Moderate: the inhaler through a spacer works as well as a nebuliser. Severe or worse: nebulised salbutamol on oxygen, back to back if needed. Never sedate an asthmatic."))
+	var next := "icu" if kind == "life" else "steroid"
+	steps.append(_step(dice, "s3", "And next?", [_opt("steroid", "Prednisolone 40 to 50 mg by mouth"),
+		_opt("icu", "Steroids too, but add ipratropium and IV magnesium, and call ICU now"), _opt("xray", "Chest X-ray before anything else"),
+		_opt("home", "Home with a new inhaler")], next,
+		"Every attack bad enough to come in gets steroids. Life-threatening: add ipratropium and IV magnesium, and get ICU down before they tire out." ))
+	return {"title": "The Diwali wheeze", "card": "CASUALTY · RESUS", "facts": facts, "steps": steps}
+
+
+# --- A fit that won't stop ------------------------------------------------------------------
+
+static func _seizure(dice: SeededRandom, level: String) -> Dictionary:
+	var eclampsia: bool = level == "extreme" and dice.chance(0.35)
+	if eclampsia:
+		return _eclampsia(dice)
+	var minutes: int = dice.pick([2, 6, 8]) if level != "easy" else dice.pick([6, 8])
+	var low_sugar: bool = level != "easy" and dice.chance(0.3)
+	var drip: bool = dice.chance(0.5)
+	var facts: Array[String] = [str(dice.pick(["Mr. Ajay Bhosale, 31, known epileptic, 'forgot' his tablets for a week",
+		"Mr. Nitin Rao, 45, diabetic, found fitting at the bus stop", "Ms. Farah Khan, 22, fitting in the college canteen"])),
+		"Fitting for %d minutes, by the watch of the friend who brought them" % minutes,
+		"Bedside sugar: %d mg/dL" % (38 if low_sugar else 112),
+		"IV line: in, and working" if drip else "No IV line yet: the veins have gone into hiding"]
+	var steps: Array = []
+	var first := "dextrose" if low_sugar else ("drug" if minutes >= 5 else "time")
+	steps.append(_step(dice, "s1", "What now?", [_opt("drug", "A benzodiazepine now"), _opt("time", "Keep them safe, time it: drugs at 5 minutes"),
+		_opt("dextrose", "Glucose into the vein (or the gums)"), _opt("spoon", "A spoon between the teeth, hold the arms down")], first,
+		{"dextrose": "A sugar of 38 is the cause: fix it first. No anticonvulsant stops a fit the sugar is causing.",
+			"drug": "Five minutes or more is status epilepticus: drugs now.",
+			"time": "Most fits stop by themselves. Protect the head, time it, and treat at 5 minutes."}[first] +
+			" Nothing goes in the mouth, ever."))
+	var drug := "lorazepam" if drip else "midazolam"
+	steps.append(_step(dice, "s2", "The sugar is sorted if it was low, and it's still going at 5 minutes. First drug:", [_opt("lorazepam", "IV lorazepam 4 mg"),
+		_opt("midazolam", "Buccal midazolam 10 mg, inside the cheek"), _opt("phenytoin", "Phenytoin first, it lasts longer"),
+		_opt("oral", "Diazepam tablets")], drug,
+		"With a line: IV lorazepam 4 mg. Without one: buccal midazolam 10 mg, no line needed. Phenytoin is second line, not first."))
+	steps.append(_step(dice, "s3", "Two benzodiazepine doses later, still fitting:", [
+		_opt("second", "Levetiracetam IV (60 mg/kg, up to 4.5 g), and call the anaesthetist"), _opt("third", "A third benzodiazepine dose"),
+		_opt("wait", "Wait, it has to stop sometime"), _opt("haloperidol", "Haloperidol")], "second",
+		"Two doses of benzodiazepine at most, then a second-line drug (levetiracetam, phenytoin or valproate), and the anaesthetist on the way. A third dose only stops the breathing."))
+	return {"title": "The fit that won't stop", "card": "CASUALTY · RESUS", "facts": facts, "steps": steps}
+
+
+static func _eclampsia(dice: SeededRandom) -> Dictionary:
+	var facts: Array[String] = [str(dice.pick(["Mrs. Pinky Yadav, 23", "Mrs. Shabana Ansari, 27"])) + ", 34 weeks pregnant: fitting in the waiting room",
+		"Fitting for 3 minutes. Her mother-in-law says it's 'the evil eye'.",
+		"BP 172/112 · urine protein +++",
+		"Swollen face and hands since last week, 'normal in pregnancy' said the neighbour"]
+	var steps: Array = []
+	steps.append(_step(dice, "s1", "What stops this fit?", [_opt("magnesium", "Magnesium sulphate: 4 g IV slowly, then a drip"),
+		_opt("lorazepam", "IV lorazepam, like any fit"), _opt("phenytoin", "Phenytoin"), _opt("deliver", "Straight to theatre, mid-fit")],
+		"magnesium", "Pregnant, high BP, protein in the urine and a fit: eclampsia. Magnesium sulphate stops it and stops the next one, better than any other drug."))
+	steps.append(_step(dice, "s2", "The fit stops. BP still 170/110:", [_opt("labetalol", "IV labetalol, bring it down"),
+		_opt("leave", "Leave it, she needs the pressure for the baby"), _opt("diuretic", "Furosemide"),
+		_opt("fluids", "A litre of fluid, quickly")], "labetalol",
+		"A top pressure of 160 or more risks a stroke: IV labetalol (or hydralazine). Fluids drown her lungs; she's already leaky."))
+	steps.append(_step(dice, "s3", "The cure is:", [_opt("deliver", "Delivering the baby, once she's stable"),
+		_opt("bedrest", "Bed rest till 40 weeks"), _opt("tablets", "BP tablets and home"), _opt("wait", "Wait for the next fit")], "deliver",
+		"Eclampsia ends when the placenta comes out. Stabilise first, then deliver. Keep the magnesium going for 24 hours after."))
+	return {"title": "The fit at 34 weeks", "card": "CASUALTY · LABOUR WARD CALLED", "facts": facts, "steps": steps}
+
+
+# --- A head injury: the Glasgow coma scale, and who needs a CT ----------------------------------
+
+const EYES := [[4, "open by themselves"], [3, "open when you speak"], [2, "open only to pain"], [1, "don't open"]]
+const WORDS := [[5, "knows where they are and what day it is"], [4, "talking, but confused"],
+	[3, "random words"], [2, "groans, no words"], [1, "no sound"]]
+const MOVES := [[6, "obeys 'squeeze my hand'"], [5, "reaches for the pain"], [4, "pulls away from pain"],
+	[3, "bends the arms to pain"], [2, "straightens the arms to pain"], [1, "no movement"]]
+
+
+static func _head(dice: SeededRandom, level: String) -> Dictionary:
+	var band: Array = {"easy": [0, 1], "hard": [0, 2], "extreme": [1, 3]}[level]
+	var eyes: Array = EYES[dice.next_int_in(band[0], mini(band[1], 3))]
+	var words: Array = WORDS[dice.next_int_in(band[0], mini(band[1] + 1, 4))]
+	var moves: Array = MOVES[dice.next_int_in(band[0], mini(band[1] + 1, 5))]
+	var gcs := int(eyes[0]) + int(words[0]) + int(moves[0])
+	var vomits: int = dice.pick([0, 1, 3])
+	var sign: String = dice.pick(["", "", "bruising round both eyes, like a panda", "clear fluid with blood dripping from one ear"]) \
+		if level != "easy" else ""
+	var warfarin: bool = level != "easy" and dice.chance(0.35)
+	var facts: Array[String] = [str(dice.pick(["Mr. Rohan Shetty, 19: fell off a scooter, no helmet, 'just to the corner shop'",
+		"Mr. Bhaskar Pawar, 66: slipped on the temple steps", "Ms. Tanvi Desai, 25: hit by an auto while looking at her phone"])),
+		"Eyes: %s · Speech: %s" % [eyes[1], words[1]],
+		"Movement: %s" % moves[1],
+		"Vomited %s" % ["not at all", "once", "three times"][[0, 1, 3].find(vomits)]]
+	if not sign.is_empty():
+		facts.append("And: " + sign)
+	facts.append("On warfarin for a heart valve" if warfarin else "No medicines")
+	var steps: Array = []
+	steps.append(_step(dice, "s1", "The Glasgow coma score:", _numbers(dice, gcs, "out of 15",
+		[gcs + 1, gcs - 1, gcs + 2, gcs - 2, gcs - 3].filter(func(n: int) -> bool: return n >= 3 and n <= 15)),
+		"n%d" % gcs, "Eyes %d + speech %d + movement %d = %d. Eyes out of 4, speech out of 5, movement out of 6." %
+			[eyes[0], words[0], moves[0], gcs]))
+	var urgent := gcs < 13 or vomits > 1 or not sign.is_empty()
+	var ct := "hour" if urgent else ("eight" if warfarin else "none")
+	steps.append(_step(dice, "s2", "A CT of the head?", [_opt("hour", "CT within the hour"), _opt("eight", "CT within 8 hours"),
+		_opt("none", "No CT: watch them"), _opt("xray", "A skull X-ray instead")], ct,
+		"CT within the hour for a score under 13, more than one vomit, signs of a skull-base fracture (panda eyes, fluid from the ear or nose), a fit or weakness. On blood thinners with none of those: CT within 8 hours. Skull X-rays miss bleeds. %s" %
+			{"hour": "Here it's the hour.", "eight": "Here it's warfarin: within 8 hours.", "none": "Here: no CT needed."}[ct]))
+	var then := "tube" if gcs <= 8 else ("home" if ct == "none" and gcs == 15 else "obs")
+	steps.append(_step(dice, "s3", "Meanwhile:", [_opt("tube", "Protect the airway: anaesthetist, tube"),
+		_opt("obs", "Neuro checks every half hour"), _opt("home", "Home with head-injury advice and a sensible adult"),
+		_opt("sedate", "Sedate them so they lie still")], then,
+		{"tube": "A score of 8 or less can't protect its own airway: tube it.",
+			"obs": "Score and pupils every half hour; a drop of even one point means the CT, now.",
+			"home": "Score 15, nothing worrying: home with written advice and someone to watch them overnight."}[then]))
+	return {"title": "The bump on the head", "card": "CASUALTY · TRAUMA BAY", "facts": facts, "steps": steps}
+
+
+# --- Poisoning: the pesticide, or the paracetamol ------------------------------------------------
+
+static func _poison(dice: SeededRandom, level: String) -> Dictionary:
+	if level != "easy" and dice.chance(0.45):
+		return _paracetamol(dice, level)
+	var facts: Array[String] = [str(dice.pick(["Mr. Shankar Gaikwad, 42, cotton farmer", "Mr. Lakhan Meena, 35, farm labourer"])) +
+		": drank something from a bottle in the shed two hours ago",
+		"Pupils tiny, like pinheads · drooling, sweating, wet everywhere",
+		"Pulse %d · wheezing, chest full of crackles" % dice.pick([44, 48, 52]),
+		"The family has brought the bottle. It has a picture of a beetle on it."]
+	var steps: Array = []
+	steps.append(_step(dice, "s1", "What has he taken?", [_opt("op", "An organophosphate pesticide"), _opt("alcohol", "Country liquor"),
+		_opt("opioid", "Opium or heroin"), _opt("paraquat", "Paraquat weedkiller")], "op",
+		"Tiny pupils plus drooling, sweating, a slow pulse and wet lungs is the cholinergic flood of an organophosphate. Opioids give tiny pupils but dry skin and slow breathing."))
+	steps.append(_step(dice, "s2", "The antidote:", [_opt("double", "Atropine 1.8 to 3 mg IV, doubled every 5 minutes until he's dry"),
+		_opt("once", "Atropine 0.6 mg once, and watch"), _opt("naloxone", "Naloxone"), _opt("vomit", "Salt water to make him vomit")],
+		"double", "Atropine, lots of it: double the dose every five minutes until the chest is clear. Some patients need hundreds of milligrams. Never make them vomit: it goes into the lungs."))
+	steps.append(_step(dice, "s3", "Enough atropine when:", [_opt("clear", "Chest clear, pulse over 80, top BP over 80, armpits dry"),
+		_opt("pupils", "The pupils are big again"), _opt("three", "After three doses, whatever happens"), _opt("hr120", "The pulse hits 120")],
+		"clear", "The targets are a clear chest, a pulse over 80, a top pressure over 80 and dry armpits. The pupils are the last thing to recover: chasing them overdoses the atropine."))
+	return {"title": "The bottle from the shed", "card": "CASUALTY · RESUS", "facts": facts, "steps": steps}
+
+
+static func _paracetamol(dice: SeededRandom, level: String) -> Dictionary:
+	var kg: int = dice.pick([50, 55, 60, 70])
+	var tablets: int = dice.pick([10, 20, 24, 30])
+	var hours: int = dice.pick([2, 10]) if level == "hard" else dice.pick([2, 10, 10])
+	var per_kg := tablets * 500 / kg
+	var facts: Array[String] = [str(dice.pick(["Ms. Sneha Kulkarni, 19, second-year student", "Mr. Aditya Menon, 22, after a breakup"])) +
+		", %d kg" % kg, "Swallowed %d paracetamol 500 mg tablets, %d hours ago" % [tablets, hours],
+		"Feels fine. A bit sick. 'Can I go now?'", "Nothing else taken, says the friend. The friend is lying about the breakup."]
+	var steps: Array = []
+	steps.append(_step(dice, "s1", "How much, per kg?", _numbers(dice, per_kg, "mg/kg", [per_kg * 2, per_kg / 2, per_kg + 50]),
+		"n%d" % per_kg, "%d × 500 mg = %d mg; ÷ %d kg = %d mg/kg. 150 mg/kg or more can kill the liver." % [tablets, tablets * 500, kg, per_kg]))
+	var plan := "level" if hours < 4 else ("nac" if per_kg >= 150 else "level_now")
+	steps.append(_step(dice, "s2", "What now?", [_opt("level", "A blood level at 4 hours, then decide"),
+		_opt("nac", "Start acetylcysteine now, without waiting for the level"), _opt("level_now", "A level now, start if it's over the line"),
+		_opt("home", "Feels fine: home")], plan,
+		{"level": "Under 4 hours, a level means nothing yet: take it at 4 hours and use the treatment line.",
+			"nac": "Over 8 hours and 150 mg/kg or more: start acetylcysteine now; it works best before 8 hours, and waiting costs liver.",
+			"level_now": "A smaller dose after 8 hours: a level now, and treat if it's over the line."}[plan] + " Feeling fine means nothing: the liver fails on day three."))
+	steps.append(_step(dice, "s3", "Before they go home:", [_opt("psych", "A mental-health review, kindly"),
+		_opt("lecture", "A strong lecture"), _opt("police", "Inform the police"), _opt("nothing", "Nothing: the liver's fine")], "psych",
+		"Every overdose gets a kind mental-health review before going home. A lecture has never stopped anyone."))
+	return {"title": "The strip of tablets", "card": "CASUALTY · BAY 4", "facts": facts, "steps": steps}
+
+
+# --- Sepsis: the score, the fluid, and the pressure ----------------------------------------------
+
+static func _sepsis(dice: SeededRandom, level: String) -> Dictionary:
+	var kg: int = dice.pick([50, 60, 70])
+	var fast: bool = dice.chance(0.7)
+	var low: bool = level != "easy" and dice.chance(0.6) or level == "easy" and dice.chance(0.5)
+	var confused: bool = dice.chance(0.6)
+	var lactate: float = dice.pick([1.6, 2.8, 4.6]) if level != "easy" else (4.6 if low else 1.6)
+	var still_low: bool = level == "extreme" and low and dice.chance(0.6)
+	var who: String = dice.pick(["Mrs. Shanti Kamble, 67", "Mr. Raghunath Joshi, 72", "Mrs. Meher Irani, 60"])
+	if _story:
+		who = "Mrs. Shanti Kamble, 67"
+	var facts: Array[String] = [who +
+		", %d kg: burning urine for three days, now shivering" % kg,
+		"Breathing %d a minute · BP %s · temperature 39.4" % [26 if fast else 18, "86/50" if low else "124/78"],
+		"Talking nonsense since morning, says the family" if confused else "Alert, cross, wants to go home",
+		"Lactate %.1f" % lactate]
+	var score := int(fast) + int(low) + int(confused)
+	var steps: Array = []
+	steps.append(_step(dice, "s1", "The quick sepsis score (qSOFA):", [_opt("n0", "0"), _opt("n1", "1"), _opt("n2", "2"), _opt("n3", "3")],
+		"n%d" % score, "One point each for breathing 22 or faster, a top pressure of 100 or less, and confusion. Here: %d. Two or more: high risk." % score))
+	var shocked := low or lactate >= 4.0
+	var bolus := 30 * kg
+	var fluid := "n%d" % bolus if shocked else "small"
+	steps.append(_step(dice, "s2", "Fluids, after blood cultures and IV antibiotics within the hour:", [
+		_opt("n%d" % bolus, "%s ml in the first 3 hours" % _grouped(bolus)), _opt("n%d" % (10 * kg), "%s ml in the first 3 hours" % _grouped(10 * kg)),
+		_opt("small", "A 500 ml bolus, then reassess"), _opt("none", "No fluids: wait for the culture result")], fluid,
+		("Low pressure or lactate 4 or more: 30 ml/kg, %d kg makes %s ml." % [kg, _grouped(bolus)]) if shocked
+			else "Pressure fine and lactate under 4: a 500 ml bolus, then look again. Antibiotics never wait for the culture."))
+	var after := "norad" if still_low else "watch"
+	steps.append(_step(dice, "s3", "After the fluids, BP is %s:" % ("78/44" if still_low else "112/70"), [
+		_opt("norad", "Noradrenaline, and ICU"), _opt("watch", "Urine output every hour, reassess often"),
+		_opt("more", "Another 5 litres of fluid"), _opt("steroid", "Steroids first")], after,
+		"Still low after the fluids is septic shock: noradrenaline to keep the average pressure over 65, in ICU. Better: measure the urine every hour and keep looking." if still_low
+			else "Pressure back: urine every hour (half a ml per kg per hour at least) and reassess often. Drowning them in fluid helps nobody."))
+	return {"title": "The shivering grandmother", "card": "CASUALTY · BED 6", "facts": facts, "steps": steps}
+
+
+# --- Heat: stroke or exhaustion ----------------------------------------------------------------
+
+static func _heat(dice: SeededRandom, level: String) -> Dictionary:
+	var stroke: bool = dice.chance(0.55)
+	var sweating: bool = not stroke or level == "extreme" and dice.chance(0.5)
+	var temp: float = dice.pick([41.2, 40.8, 41.6]) if stroke else dice.pick([38.6, 39.1])
+	var who: String = dice.pick(["Mr. Raju Pal, 38, construction worker", "Mr. Santosh Kale, 51, traffic constable",
+		"Ms. Anjali Bhide, 27, marathon runner at noon (her idea)"])
+	if _story:
+		who = "Mr. Santosh Kale, 51, traffic constable"
+	var facts: Array[String] = [who + ": collapsed in the May sun, 46 degrees outside",
+		"Core temperature %.1f °C" % temp,
+		("Confused, fighting the stretcher, then very sleepy" if stroke else "Awake, dizzy, headache, cramps in the legs"),
+		("Still sweating" if sweating else "Skin hot and dry") + (" (sweating doesn't rule it out)" if stroke and sweating else "")]
+	var steps: Array = []
+	steps.append(_step(dice, "s1", "What is it?", [_opt("stroke", "Heat stroke"), _opt("exhaustion", "Heat exhaustion"),
+		_opt("malaria", "Malaria"), _opt("drunk", "Drunk")], "stroke" if stroke else "exhaustion",
+		"Heat stroke: core 40 or more AND a brain that isn't working (confused, fitting, unconscious). Heat exhaustion: hot, tired and dizzy, but thinking clearly." +
+			(" Many heat stroke patients still sweat." if stroke and sweating else "")))
+	steps.append(_step(dice, "s2", "Treatment:", [_opt("cool", "Cool hard and now: cold water, fans, ice packs at neck, armpits and groin"),
+		_opt("shade", "Shade, lie down, ORS to drink"), _opt("paracetamol", "Paracetamol for the fever"),
+		_opt("blanket", "A blanket for the shivering")], "cool" if stroke else "shade",
+		"Heat stroke kills by the minute: cool first, transport later. Exhaustion: shade, rest and fluids. Paracetamol does nothing; this isn't a fever." ))
+	steps.append(_step(dice, "s3", "Stop the active cooling at:", [_opt("t39", "39 °C, then keep watching"), _opt("t37", "37 °C"),
+		_opt("t35", "35 °C, to be safe"), _opt("none", "No active cooling needed: shade and fluids")], "t39" if stroke else "none",
+		"Stop at about 39 °C: the temperature keeps falling after you stop, and overshoot gives hypothermia." if stroke
+			else "Exhaustion needs no ice bath. They go home tomorrow, and nowhere near the sun at noon."))
+	return {"title": "Forty-six degrees", "card": "CASUALTY · COOLING BAY", "facts": facts, "steps": steps}

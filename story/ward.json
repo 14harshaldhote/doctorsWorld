@@ -2139,12 +2139,6 @@
 		},
 		{
 			"say": "rao",
-			"text": "You're not finished, {called}. Nobody is, after one week. But you listen, and you learn faster than you fall.",
-			"mood": "calm",
-			"gesture": "explain"
-		},
-		{
-			"say": "rao",
 			"text": "From Monday, Junior Resident. Congratulations, Doctor.",
 			"mood": "happy",
 			"gesture": "offer"

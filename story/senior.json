@@ -32,38 +32,6 @@
 			"gesture": "wag"
 		},
 		{
-			"if": "credit_proof|sethi_apology",
-			"then": [
-				{
-					"say": "grace",
-					"text": "He's been polite to you since the apology. Polite Sethi is unsettling. Like a cat that brings you tea.",
-					"mood": "happy",
-					"head": "tilt"
-				}
-			],
-			"else": [
-				{
-					"if": "credit_called_out",
-					"then": [
-						{
-							"say": "grace",
-							"text": "He still says good morning to everyone except you. It's very precise.",
-							"mood": "calm",
-							"gesture": "fold_arms"
-						}
-					],
-					"else": [
-						{
-							"say": "grace",
-							"text": "He calls you 'a resident who doesn't make trouble'. He thinks it's a compliment.",
-							"mood": "calm",
-							"gesture": "shrug"
-						}
-					]
-				}
-			]
-		},
-		{
 			"say": "iyer",
 			"text": "And this is Dr. Zoya Qureshi. Intern. First week. Yours.",
 			"mood": "calm",
@@ -1333,12 +1301,6 @@
 					]
 				}
 			]
-		},
-		{
-			"say": "priya",
-			"text": "Coffee's in the cupboard. Don't drink the one marked 'Sister Grace'. Nobody survives that.",
-			"mood": "happy",
-			"gesture": "point"
 		}
 	],
 	"nanda_round": [
@@ -2742,18 +2704,6 @@
 			]
 		},
 		{
-			"if": "chart_reported",
-			"then": [
-				{
-					"say": "iyer",
-					"text": "The incident form about the three a.m. charts: pharmacy has changed the night drug round because of it.",
-					"mood": "calm",
-					"gesture": "explain",
-					"to": "rao"
-				}
-			]
-		},
-		{
 			"if": "mm_credit_zoya",
 			"then": [
 				{
@@ -2836,17 +2786,6 @@
 							"head": "down"
 						}
 					]
-				}
-			]
-		},
-		{
-			"if": "op_imran_won",
-			"then": [
-				{
-					"say": "rao",
-					"text": "And a burst spleen at three in the morning, done properly.",
-					"mood": "happy",
-					"head": "nod"
 				}
 			]
 		},

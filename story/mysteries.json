@@ -320,6 +320,326 @@
    ],
    "answer": "thal",
    "explain": "Very small cells with a high red cell count, normal iron and a raised HbA2: beta thalassaemia trait. Stop the iron. And test the partner before marriage, because two traits can make a child with thalassaemia major."
+  },
+  {
+   "id": "brucella",
+   "title": "The fever that comes and goes",
+   "patient": "Mr. Ramesh Gowda, 44, dairy farmer, Mandya",
+   "clues": [
+    "Fever for six weeks. Not every day: it comes for a week, goes for a few days, comes back. Like a relative.",
+    "Drenching sweats at night, with a smell he describes as 'wet hay'. His wife describes it differently.",
+    "Aching knees and lower back. Malaria tests negative three times, typhoid test negative, and two courses of antibiotics from the chemist did nothing.",
+    "His liver and spleen are a little big. He drinks milk warm from his own buffaloes, never boiled. 'Boiling kills the taste, Doctor.'",
+    "Two of his buffaloes lost their calves early this year. The vet said something long in English."
+   ],
+   "options": [
+    {
+     "id": "brucella",
+     "text": "Brucellosis"
+    },
+    {
+     "id": "tb",
+     "text": "Tuberculosis"
+    },
+    {
+     "id": "typhoid",
+     "text": "Typhoid"
+    },
+    {
+     "id": "malaria",
+     "text": "Malaria"
+    },
+    {
+     "id": "lymphoma",
+     "text": "Lymphoma"
+    },
+    {
+     "id": "ra",
+     "text": "Rheumatoid arthritis"
+    }
+   ],
+   "answer": "brucella",
+   "explain": "A fever that waves for weeks, smelly sweats, joint pains, a big liver and spleen, raw milk and buffaloes losing calves: brucellosis. Doxycycline with rifampicin for six weeks. And boil the milk; the taste will survive."
+  },
+  {
+   "id": "abscess",
+   "title": "The pain under the right ribs",
+   "patient": "Mr. Joseph D'Souza, 39, bus driver, Goa",
+   "clues": [
+    "High fever with shivering for ten days, and a dull pain under his right ribs that he blamed on the bus seat.",
+    "The pain goes up into his right shoulder, and it hurts to take a deep breath. He drinks most evenings: 'Only feni, Doctor, it's local.'",
+    "Pressing between his right lower ribs makes him jump off the bed. His liver edge is tender and big.",
+    "He had loose motions with blood and mucus about a month ago, after a wedding lunch. It settled by itself.",
+    "Chest X-ray: the right side of his diaphragm is pushed up. The ultrasound shows one big round hole in the liver, full of something brownish."
+   ],
+   "options": [
+    {
+     "id": "abscess",
+     "text": "Amoebic liver abscess"
+    },
+    {
+     "id": "hepatitis",
+     "text": "Viral hepatitis"
+    },
+    {
+     "id": "stones",
+     "text": "Gallstones"
+    },
+    {
+     "id": "cancer",
+     "text": "Liver cancer"
+    },
+    {
+     "id": "pneumonia",
+     "text": "Right lower pneumonia"
+    },
+    {
+     "id": "cirrhosis",
+     "text": "Cirrhosis"
+    }
+   ],
+   "answer": "abscess",
+   "explain": "Fever, a tender big liver, pain into the shoulder, a raised right diaphragm, dysentery a month ago and one cavity full of 'anchovy sauce': an amoebic liver abscess. Metronidazole cures most; a big one gets a needle to drain it."
+  },
+  {
+   "id": "wilson",
+   "title": "The shaky student",
+   "patient": "Mr. Aman Gupta, 17, Class 12, Kota",
+   "clues": [
+    "His handwriting has gone shaky over six months. His coaching teacher thinks it's exam stress. Everyone in Kota is stressed.",
+    "His hands tremble more when he holds them out, like a bird flapping. His speech has gone slurred and slow.",
+    "He's become moody and cries easily. His parents think it's a girl. There is no girl. There's barely time to eat.",
+    "His liver tests are abnormal. His elder cousin died of 'liver failure' at nineteen. Nobody found out why.",
+    "Looking closely at his eyes with a torch: a thin golden-brown ring round the edge of each iris."
+   ],
+   "options": [
+    {
+     "id": "wilson",
+     "text": "Wilson's disease"
+    },
+    {
+     "id": "stress",
+     "text": "Exam stress"
+    },
+    {
+     "id": "parkinson",
+     "text": "Early Parkinson's"
+    },
+    {
+     "id": "thyroid",
+     "text": "Overactive thyroid"
+    },
+    {
+     "id": "drugs",
+     "text": "Drug use"
+    },
+    {
+     "id": "hepb",
+     "text": "Hepatitis B"
+    }
+   ],
+   "answer": "wilson",
+   "explain": "A teenager with a tremor, slurred speech, mood change, liver trouble, a cousin who died young and copper rings in the eyes (Kayser-Fleischer rings): Wilson's disease. Copper builds up in the liver and brain. Treatable for life, and the family must be screened."
+  },
+  {
+   "id": "addison",
+   "title": "The tan that wasn't the sun",
+   "patient": "Mrs. Kavita Rane, 36, school teacher, Nashik",
+   "clues": [
+    "Tired for months, losing weight without trying, and dizzy every time she stands up. Her BP lying down is 100/64; standing, 78/50.",
+    "She craves salt. She eats it straight from the packet. Her husband has stopped buying chips because nothing was left for him.",
+    "Her skin has gone darker, most of all in the creases of her palms, her knuckles and old scars. And inside her cheeks.",
+    "Sodium 126, potassium 5.9, and a fasting sugar that's low.",
+    "She had TB two years ago and stopped the tablets after three months, because she felt better."
+   ],
+   "options": [
+    {
+     "id": "addison",
+     "text": "Addison's disease"
+    },
+    {
+     "id": "thyroid",
+     "text": "Underactive thyroid"
+    },
+    {
+     "id": "anaemia",
+     "text": "Anaemia"
+    },
+    {
+     "id": "depression",
+     "text": "Depression"
+    },
+    {
+     "id": "diabetes",
+     "text": "Diabetes"
+    },
+    {
+     "id": "pregnant",
+     "text": "Pregnancy"
+    }
+   ],
+   "answer": "addison",
+   "explain": "Tired, thin, low pressure on standing, craving salt, dark creases and gums, low sodium with high potassium, and old half-treated TB in the adrenals: Addison's disease. Steroid replacement for life, and she must never stop it suddenly."
+  },
+  {
+   "id": "kala_azar",
+   "title": "The spleen from Bihar",
+   "patient": "Mr. Sunil Mahto, 28, mason from Muzaffarpur, working in Pune",
+   "clues": [
+    "Fever on and off for three months, not very high. He kept working because the site pays by the day.",
+    "He's lost eight kilos and his belly keeps getting bigger. His friends joke he's pregnant. He's not laughing.",
+    "His spleen is huge: it reaches past his belly button. His haemoglobin is 7, and his white cells and platelets are low too.",
+    "His skin has gone greyish-dark, especially on his face and hands. In his village, they call it 'the black fever'.",
+    "He slept outside on a mud floor at home every summer. Sandflies, he says, are 'just part of the house'."
+   ],
+   "options": [
+    {
+     "id": "kala_azar",
+     "text": "Kala-azar (visceral leishmaniasis)"
+    },
+    {
+     "id": "malaria",
+     "text": "Chronic malaria"
+    },
+    {
+     "id": "leukaemia",
+     "text": "Leukaemia"
+    },
+    {
+     "id": "tb",
+     "text": "Abdominal TB"
+    },
+    {
+     "id": "thal",
+     "text": "Thalassaemia"
+    },
+    {
+     "id": "cirrhosis",
+     "text": "Cirrhosis"
+    }
+   ],
+   "answer": "kala_azar",
+   "explain": "Months of fever, weight loss, a giant spleen, all three blood counts low, darkening skin, Bihar and sandflies: kala-azar. A single dose of liposomal amphotericin B cures most; India has nearly eliminated it, which is exactly why nobody thinks of it in Pune."
+  },
+  {
+   "id": "phaeo",
+   "title": "The BP that comes in attacks",
+   "patient": "Mr. Vikram Sethna, 42, chartered accountant, Mumbai",
+   "clues": [
+    "Attacks of pounding headache, sweating and a racing heart, ten to twenty minutes each, a few times a week.",
+    "During one attack in the clinic his BP was 220/124. Ten minutes later, 132/84. The panic-attack tablets have done nothing.",
+    "The attacks come when he bends to tie his shoes or strains on the toilet. He has lost weight and his fasting sugar is creeping up.",
+    "His father had 'BP trouble' young and a 'growth on the neck gland'. His sister had a thyroid operation.",
+    "His urine metanephrines are four times the upper limit."
+   ],
+   "options": [
+    {
+     "id": "phaeo",
+     "text": "Phaeochromocytoma"
+    },
+    {
+     "id": "panic",
+     "text": "Panic attacks"
+    },
+    {
+     "id": "thyroid",
+     "text": "Overactive thyroid"
+    },
+    {
+     "id": "essential",
+     "text": "Ordinary high BP"
+    },
+    {
+     "id": "cushing",
+     "text": "Cushing's syndrome"
+    },
+    {
+     "id": "migraine",
+     "text": "Migraine"
+    }
+   ],
+   "answer": "phaeo",
+   "explain": "Attacks of headache, sweating and palpitations with huge BP spikes that settle in between, set off by pressing on the belly, and a family history of thyroid and neck growths: a phaeochromocytoma, an adrenaline-making tumour (and maybe an inherited syndrome). Alpha-blockers first, then the surgeon. Never a beta-blocker alone."
+  },
+  {
+   "id": "arsenic",
+   "title": "The spots on the palms",
+   "patient": "Mrs. Rehana Bibi, 50, from a village in Nadia, West Bengal",
+   "clues": [
+    "Her palms and soles have gone thick, rough and cracked, with hard little corn-like bumps. Creams from the chemist: nothing.",
+    "Her chest and back have rain-drop spots: small dark and pale patches all mixed together.",
+    "Her feet tingle and burn. She's had a cough for a year, and a sore on her foot that won't heal.",
+    "Her neighbours have the same spots. 'The whole lane has it, Doctor. It's the lane.'",
+    "The family drinks from the hand pump in the courtyard, sunk into the ground thirty years ago. Their water is clear and tastes fine."
+   ],
+   "options": [
+    {
+     "id": "arsenic",
+     "text": "Arsenic poisoning from groundwater"
+    },
+    {
+     "id": "psoriasis",
+     "text": "Psoriasis"
+    },
+    {
+     "id": "leprosy",
+     "text": "Leprosy"
+    },
+    {
+     "id": "fungus",
+     "text": "Fungal infection"
+    },
+    {
+     "id": "eczema",
+     "text": "Eczema"
+    },
+    {
+     "id": "vitamin",
+     "text": "Vitamin deficiency"
+    }
+   ],
+   "answer": "arsenic",
+   "explain": "Thick rough palms and soles, rain-drop spots, numb feet, a whole lane affected and an old tube well: chronic arsenic poisoning. Clear water can be poisoned water. Safe drinking water is the cure, and watching her skin for cancer."
+  },
+  {
+   "id": "myasthenia",
+   "title": "The eyelids that give up by evening",
+   "patient": "Ms. Pooja Thakur, 31, call-centre worker, Gurgaon",
+   "clues": [
+    "Her eyelids droop by evening. In the morning she looks fine. Her manager thinks she's sleeping on calls.",
+    "She sees double after reading for a while, and it goes away when she rests her eyes.",
+    "Her voice goes nasal and weak towards the end of a long shift. Chewing a tough roti tires her jaw halfway through.",
+    "An ice pack held on her droopy eyelid for two minutes lifts it noticeably. Her reflexes and sensation are normal.",
+    "Her CT chest shows a lump in front of the heart, in the thymus."
+   ],
+   "options": [
+    {
+     "id": "myasthenia",
+     "text": "Myasthenia gravis"
+    },
+    {
+     "id": "stroke",
+     "text": "A small stroke"
+    },
+    {
+     "id": "ms",
+     "text": "Multiple sclerosis"
+    },
+    {
+     "id": "thyroid",
+     "text": "Thyroid eye disease"
+    },
+    {
+     "id": "fatigue",
+     "text": "Plain tiredness"
+    },
+    {
+     "id": "botulism",
+     "text": "Botulism"
+    }
+   ],
+   "answer": "myasthenia",
+   "explain": "Weakness that gets worse with use and better with rest, drooping lids and double vision by evening, a tired jaw and voice, a positive ice-pack test and a thymus lump: myasthenia gravis. Pyridostigmine, steroids, and the thymus comes out. Beware: a 'crisis' can stop the breathing."
   }
  ]
 }

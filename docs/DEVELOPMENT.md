@@ -31,6 +31,7 @@ plan"). This file covers how to build, run and test the game.
 | 17. The career map, a rival and letters | The Career button (it replaced the Casebook corner button) opens `CareerMap` over the paused game: every rank as a stop (`Career.STOPS`: done, here with the goals for the next stop, or locked with a teaser), the roads a Senior Resident will choose between (only Surgery open), the never-ending days, and the race with Dr. Varun Khanna (`Rival`). Letters from patients (`Letters`, `story/letters.json`) arrive as their day ends, the first letter in a slot whose condition holds; the Letters page is a wall of every slot, sealed, empty or arrived, and reading one marks it read. The end-of-day card adds a line about the race and one about the post. The ward, theatre, skills lab and lobby now stop their clocks while any menu is open | Done |
 | 18. Crises | Eight hospital crises played as puzzles (`CrisisTask`, `CrisisView`, built by `Crises` in game/training/crises.gd): a power cut in theatre, two patients with the same name, an angry family after a death, the family's blood donors, an insurance form, a snakebite, dengue triage with two units of platelets, and an inspection in thirty minutes. Each is rolled from a seed at easy, hard or extreme. They come on Days 10, 14, 15, 16, 17, 20, 24 and 26 (the beat before each day's last), then every third Chief's day from Day 36 in a seeded order. The coach's lines are in `story/crisis_lines.json`, the talks before and after in `story/crises.json` | Done |
 | 19. Daily hooks | On the career map's Today page: the 60-second case (`DailyCase`, six quick emergencies in `QuickCases`, one a day, the same for everyone, played with `CrisisTask` against one minute), the weekly mystery (`WeeklyMystery`, `story/mysteries.json`, one clue a weekday and one guess a week), and 20 badges on the Badges page (`Badges`) | Done |
+| 20. Tighter start | Six more quick cases (asthma, fits and eclampsia, head injury, poisoning, sepsis, heat), eight more mysteries, four more badges; Day 2 needs four stations (`SkillsLab.NEEDED`), not six; filler trimmed from the longest speeches; quick cases as story beats on Days 21, 23 and 27; a two-card cold open; the Today page from meeting Dr. Iyer on Day 1; Varun's first message on Day 1's card | Done |
 
 The earlier SwiftUI and SpriteKit prototype is kept on the git branch
 `swift-prototype`.
@@ -478,8 +479,9 @@ Badges page. The Career button carries a mint dot (`LobbyHud.today_dot`)
 while `CareerMap.today_waiting` (from `Ward.FIRST_DAY`, the day's case or
 the week's guess is still to do).
 
-- `QuickCases` (game/training/quick_cases.gd) builds six quick emergencies
-  (sugar, allergy, stroke, chest pain, a baby with diarrhoea, burns), each
+- `QuickCases` (game/training/quick_cases.gd) builds twelve quick emergencies
+  (sugar, allergy, stroke, chest pain, a baby with diarrhoea, burns, asthma,
+  fits, head injury, poisoning, sepsis, heat), each
   three `one` steps whose answers come from rolled facts. `Crises.build`
   hands any id starting `quick_` to it; the lines are the `quick` group in
   `story/crisis_lines.json`, spoken by Dr. Iyer.
@@ -499,6 +501,14 @@ the week's guess is still to do).
 - `Badges.ALL` is [id, name, line once earned, how to earn, rule]; a badge
   is the flag `badge_<id>` and is kept for good. `Badges.check` runs as a
   day ends, after the case, after the guess and when the page opens.
+
+Stage 20: `Crises.STORY_DAYS` also puts three quick cases on the meeting
+days (21 heat, 23 asthma, 27 sepsis) as ordinary crisis beats, with no
+minute on the clock; the ward passes `{"story": true}` so the patient is the
+one the talk around it names. The Today page opens with the flag
+`met_iyer` (`CareerMap.today_open`). Badges keep their flags in the morning
+snapshot (`Badges.keep_flag`), and `all_quick` needs the flag
+`ever_right_<case>` for all twelve (set by a perfect daily case).
 
 `test_daily.gd` plays every quick case at every level over forty seeds,
 checks the medicine, the dates on real weeks, the streak, the one guess,

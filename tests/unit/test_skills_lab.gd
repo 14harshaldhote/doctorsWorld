@@ -84,7 +84,7 @@ func test_tapping_a_station_walks_there_and_the_trainer_explains_it() -> void:
 func test_every_station_can_be_played_well_to_at_least_two_stars() -> void:
 	var lab := _lab()
 	var xp := lab.profile.total_xp
-	for id: String in TrainingTask.IDS:
+	for id: String in SkillsLab.NEEDED:
 		expect(lab.go_to_task(id), "%s opens" % id)
 		if not lab.in_task():
 			continue
@@ -100,13 +100,23 @@ func test_every_station_can_be_played_well_to_at_least_two_stars() -> void:
 		lab.view.done_pressed.emit()
 		expect(not lab.in_task() and lab.player.visible, "%s: back in the lab" % id)
 		_run(lab, 0.5)
-	expect_equal(lab.trained_count(), 6)
-	expect(lab.mode == "story", "all six done: Dr. Iyer has news")
+	expect_equal(lab.trained_count(), 4)
+	expect(not lab.can_go_home(), "not home yet")
+	expect(lab.mode == "story", "the four theatre needs done: Dr. Iyer has news")
 	_run(lab, 5.0)
 	expect_equal(lab.conversation, "done")
 	lab.talk_through(1)
 	expect(lab.profile.has_flag("training_done"), "training is over")
 	expect(lab.profile.has_flag("nervous_before_theatre"), "the honest reply is remembered")
+	expect(lab.can_go_home(), "IV lines and stitching are extra: home is open")
+	_run(lab, 3.0)
+	for id: String in ["iv", "stitch"]:
+		expect(lab.go_to_task(id), "the extra %s still opens" % id)
+		if lab.in_task():
+			expect(lab.play_task(), "%s finishes" % id)
+			lab.view.done_pressed.emit()
+			_run(lab, 0.5)
+	expect_equal(lab.trained_count(), 6, "all six, for the keen")
 	expect(lab.hud.pager_text().contains("Theatre tomorrow"), "the pager says what's next")
 
 

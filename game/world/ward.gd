@@ -1467,7 +1467,8 @@ func open_task(task_id: String, which_case: String) -> void:
 	elif task_id == "rota":
 		task = RotaTask.new(which_case, _case_seed("rota"), _case_level(beat()))
 	elif task_id == "crisis":
-		task = CrisisTask.new(which_case, _case_seed("crisis_" + which_case), _case_level(beat()))
+		task = CrisisTask.new(which_case, _case_seed("crisis_" + which_case), _case_level(beat()),
+			{"story": Crises.STORY_DAYS.get(profile.day, "") == which_case})
 	else:
 		task = TrainingTask.make(task_id, 7 + profile.day * 3, which_case)
 	if task_id == "scan":

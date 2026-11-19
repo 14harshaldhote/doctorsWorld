@@ -230,6 +230,9 @@ func test_the_first_day_every_frame() -> void:
 			_talk(lab.talk_ui, lab.story)
 			lab.update(STEP)
 			_check(lab)
+			# After the four theatre needs Dr. Iyer has news first; then the extras.
+			if lab.view == null and not lab.story.is_playing() and lab.mode == "walk" and frame % 30 == 29:
+				lab.start_station(id)
 		lab.play_task(func() -> bool:
 			_check(lab)
 			return lab.view == null or lab.view.result_open())

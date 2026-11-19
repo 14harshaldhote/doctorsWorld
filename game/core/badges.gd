@@ -8,7 +8,7 @@ extends RefCounted
 
 ## [id, name, the line once earned, how to earn it, rule]. A rule is
 ## ["count", counter, at least], ["flag", flag], ["day", day], ["rank", rank],
-## ["letters", how many], ["all_crises"] or ["sharp", most clues].
+## ["letters", how many], ["all_crises"], ["all_quick"] or ["sharp", most clues].
 const ALL := [
 	["promoted", "Promoted", "Dr. Rao signed it. Nobody knows why. Don't ask.", "Pass your first review.", ["flag", "promoted"]],
 	["first_crisis", "Baptism by chaos", "One crisis down. The hospital has several thousand more.", "Get through your first crisis.", ["count", "crises", 1]],
@@ -17,9 +17,13 @@ const ALL := [
 	["minute_one", "Sixty seconds", "Your first 60-second case. Most of your patients take longer to find their Aadhaar card.", "Play a 60-second case.", ["count", "daily_cases", 1]],
 	["minute_three", "Habit forming", "Three days of 60-second cases in a row. Your chai is getting cold for medicine.", "Play the 60-second case three days running.", ["count", "daily_case_best", 3]],
 	["minute_seven", "A full week", "Seven days running. Your family has filed a missing person report.", "Play the 60-second case seven days running.", ["count", "daily_case_best", 7]],
+	["minute_thirty", "Casualty regular", "Thirty 60-second cases. The casualty chai-wala now saves you a cup.", "Play thirty 60-second cases.", ["count", "daily_cases", 30]],
+	["perfect_ten", "Ten clean minutes", "Ten perfect 60-second cases. Dr. Iyer said 'acceptable' out loud. Twice.", "Get ten 60-second cases completely right.", ["count", "daily_cases_perfect", 10]],
+	["all_quick", "Every door of casualty", "Sugar, allergy, stroke, heart, babies, burns, lungs, fits, heads, poisons, sepsis and heat. All twelve, all right. Show-off.", "Get every kind of 60-second case completely right.", ["all_quick"]],
 	["minute_perfect", "Not a second wasted", "A perfect 60-second case. Frame it. Nobody will look at it.", "Get a 60-second case completely right.", ["count", "daily_cases_perfect", 1]],
 	["mystery_one", "Case closed", "You solved the weekly mystery. Somewhere, a TV detective feels threatened.", "Solve a weekly mystery.", ["count", "mysteries_solved", 1]],
 	["mystery_sharp", "Monday diagnosis", "Solved on two clues or fewer. Either brilliant or lucky. We'll go with brilliant.", "Solve a weekly mystery on two clues or fewer.", ["sharp", 2]],
+	["mystery_ten", "Consulting detective", "Ten mysteries solved. The patients have started bringing you clues on purpose.", "Solve ten weekly mysteries.", ["count", "mysteries_solved", 10]],
 	["mystery_five", "The regular", "Five mysteries solved. The patients would like you to stop enjoying their illnesses so much.", "Solve five weekly mysteries.", ["count", "mysteries_solved", 5]],
 	["steady_five", "Steady hands", "Five operations in a row without a loss. The anaesthetist has stopped praying out loud.", "Win five operations in a row.", ["count", "op_streak_best", 5]],
 	["steady_ten", "Golden hands", "Ten in a row. The theatre staff now touch your gloves for luck. Please stop them.", "Win ten operations in a row.", ["count", "op_streak_best", 10]],
@@ -68,6 +72,11 @@ static func holds(profile: PlayerProfile, badge: Array) -> bool:
 			return Letters.arrived(profile).size() >= int(rule[1])
 		"sharp":
 			return profile.count("mysteries_solved") > 0 and profile.count("mystery_best", 99) <= int(rule[1])
+		"all_quick":
+			for case_id: String in QuickCases.IDS:
+				if not profile.has_flag("ever_right_" + case_id):
+					return false
+			return true
 		"all_crises":
 			for crisis: String in Crises.IDS:
 				# The story's own flag counts too, for careers from before badges.
@@ -83,9 +92,17 @@ static func check(profile: PlayerProfile) -> Array:
 	for badge: Array in ALL:
 		var badge_id := str(badge[0])
 		if not has(profile, badge_id) and holds(profile, badge):
-			profile.set_flag("badge_" + badge_id)
+			Badges.keep_flag(profile, "badge_" + badge_id)
 			new.append(badge_id)
 	return new
+
+
+## Sets a flag that survives the day being started again (it goes into the
+## morning snapshot too), like the daily XP.
+static func keep_flag(profile: PlayerProfile, flag: String) -> void:
+	profile.set_flag(flag)
+	if int(profile.morning.get("day", -1)) == profile.day and profile.morning.get("flags") is Dictionary:
+		(profile.morning["flags"] as Dictionary)[flag] = true
 
 
 ## A toast for new badges: "Badge: Cool head" or "3 new badges".

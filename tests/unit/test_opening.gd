@@ -26,8 +26,14 @@ func test_it_starts_at_convocation_with_a_title_card() -> void:
 	expect_equal(opening.set_name, "graduation")
 	expect(opening.current_set is GraduationHall)
 	opening.update(0.6)
+	expect(opening.overlay._card.modulate.a > 0.5, "the cold open shows")
+	expect_equal(opening.overlay._card_title.text, "Theatre 2", "a glimpse of Day 3 first")
+	opening.update(2.4)
+	expect(opening.overlay._card_title.text.begins_with("\u201cDoctor"), "then Dr. Khan's call")
+	for step in 20:
+		opening.update(0.2)
+	expect_equal(opening.overlay._card_title.text, "Convocation day", "then convocation")
 	expect(opening.overlay._card.modulate.a > 0.5, "the title card shows")
-	expect_equal(opening.overlay._card_title.text, "Convocation day")
 	var player: AvatarRig = opening.current_set.actors["you"]
 	expect_equal(player.outfit, "gown", "the player graduates in a gown")
 	expect(player.joint("Mortarboard") != null, "and the cap")

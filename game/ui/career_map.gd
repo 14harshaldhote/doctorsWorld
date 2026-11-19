@@ -128,11 +128,16 @@ func _today_chip_text() -> String:
 
 
 ## True while today's 60-second case or this week's mystery guess is waiting
-## (from the ward on: there is no casualty to play in before that).
+## (from meeting Dr. Iyer on Day 1: she runs the case).
 static func today_waiting(profile: PlayerProfile) -> bool:
-	if profile.day < Ward.FIRST_DAY:
+	if not CareerMap.today_open(profile):
 		return false
 	return not DailyCase.played_today(profile) or not WeeklyMystery.guessed(profile)
+
+
+## The Today page opens once Dr. Iyer has met the doctor (Day 1).
+static func today_open(profile: PlayerProfile) -> bool:
+	return profile.has_flag("met_iyer") or profile.day >= Ward.FIRST_DAY
 
 
 ## "map", "letters", "today" or "badges", as a tap on its chip does.
@@ -336,8 +341,8 @@ func _daily_card() -> Control:
 	var today := DailyReward.today()
 	column.add_child(UiKit.kicker("The 60-second case · %s · %s" % [_day_name(today), DailyCase.level_for(today)]))
 	var run := DailyCase.streak(profile)
-	if profile.day < Ward.FIRST_DAY:
-		column.add_child(_wrapped("Casualty opens to you once you're on the ward. Until then, Dr. Iyer says, " +
+	if not CareerMap.today_open(profile):
+		column.add_child(_wrapped("Casualty opens to you once you've met Dr. Iyer. She'll say, " +
 			"\"Sixty seconds is how long you take to find the stethoscope.\"", 14, UiKit.TEXT_SOFT, "DailyLine"))
 		return card
 	if DailyCase.played_today(profile):
@@ -366,7 +371,7 @@ static func _day_name(date: String) -> String:
 
 ## Plays today's 60-second case over the career map.
 func start_daily_case() -> CrisisView:
-	if case_view != null or DailyCase.played_today(profile) or profile.day < Ward.FIRST_DAY:
+	if case_view != null or DailyCase.played_today(profile) or not CareerMap.today_open(profile):
 		return case_view
 	var task := DailyCase.make()
 	case_view = CrisisView.new(task)

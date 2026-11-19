@@ -14,9 +14,10 @@ const LINES_PATH := "res://story/crisis_lines.json"
 const IDS := ["power_cut", "ramesh", "crowd", "donors", "insurance", "snakebite", "dengue", "inspection"]
 ## The written story's crises: one a day, never on a review day.
 const STORY_DAYS := {10: "ramesh", 14: "insurance", 15: "dengue", 16: "snakebite", 17: "donors", 20: "power_cut",
-	24: "crowd", 26: "inspection"}
+	24: "crowd", 26: "inspection", 21: "quick_heat", 23: "quick_asthma", 27: "quick_sepsis"}
 const STORY_LEVELS := {10: ["easy", "hard"], 14: ["easy", "hard"], 15: ["easy", "hard"], 16: ["easy", "hard"],
-	17: ["easy", "hard"], 20: ["hard", "extreme"], 24: ["hard", "extreme"], 26: ["hard", "extreme"]}
+	17: ["easy", "hard"], 20: ["hard", "extreme"], 24: ["hard", "extreme"], 26: ["hard", "extreme"],
+	21: ["hard"], 23: ["hard", "extreme"], 27: ["hard", "extreme"]}
 ## From this Chief's day, one crisis every CHIEF_EVERY days.
 const CHIEF_FROM := 36
 const CHIEF_EVERY := 3
@@ -42,9 +43,20 @@ const BEATS := {
 		"page": "Dr. Iyer: Desk. It's dengue season, and every family wants platelets.", "put": [["iyer", "desk:left"]]},
 	"inspection": {"row": "Inspection in thirty minutes", "go": "desk", "at": 15 * 60,
 		"page": "Grace: The inspectors are in the car park. Thirty minutes, Doctor. Desk.", "put": [["grace", "desk:left"]]},
+	# The quick casualty cases that give the meeting days something to play.
+	"quick_heat": {"row": "Admissions: the constable from the signal", "go": "trolley", "at": 14 * 60, "music": "emergency",
+		"page": "Priya: ADMISSIONS. The traffic constable from outside. Collapsed in the sun.",
+		"put": [["priya", "trolley:other"], ["iyer", "trolley:foot"]]},
+	"quick_asthma": {"row": "Admissions: a wheeze before the interview", "go": "trolley", "at": 9 * 60 + 30,
+		"page": "Priya: Admissions, sorry, before your interview. He can't finish a sentence.",
+		"put": [["priya", "trolley:other"], ["iyer", "trolley:foot"]]},
+	"quick_sepsis": {"row": "Bed six: the shivering grandmother", "go": "trolley", "at": 13 * 60,
+		"page": "Priya: Bed six is shivering and confused, Doctor. Before the board, please.",
+		"put": [["priya", "trolley:other"], ["iyer", "trolley:foot"]]},
 }
 const ACTORS := {"power_cut": "tom", "ramesh": "grace", "crowd": "grace", "donors": "priya", "insurance": "malhotra",
-	"snakebite": "priya", "dengue": "iyer", "inspection": "grace"}
+	"snakebite": "priya", "dengue": "iyer", "inspection": "grace", "quick_heat": "iyer", "quick_asthma": "iyer",
+	"quick_sepsis": "iyer"}
 
 static var _lines: Dictionary = {}
 
@@ -120,7 +132,7 @@ static func line(crisis: String, key: String) -> String:
 
 static func build(crisis: String, dice: SeededRandom, level: String, context: Dictionary = {}) -> Dictionary:
 	if crisis.begins_with("quick_"):
-		return QuickCases.build(crisis, dice, level)
+		return QuickCases.build(crisis, dice, level, context)
 	var made: Dictionary
 	match crisis:
 		"power_cut":
