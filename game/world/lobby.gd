@@ -592,7 +592,7 @@ func _on_talk_finished(_skipped: bool) -> void:
 ## The first day's card, and what tomorrow brings.
 func _end_day() -> void:
 	hud.set_talking(true)
-	_end_in = overlay.end_card("Day %d · %s" % [profile.day, profile.clock_text()], "Riverside General · Your first day",
+	_end_in = overlay.end_card("Day %d · %s" % [profile.day, profile.clock_text()], "Riverside City Hospital · Your first day",
 		DayHooks.end_card(profile, profile.day))
 
 

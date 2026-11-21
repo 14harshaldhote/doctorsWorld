@@ -290,6 +290,8 @@ func _ready() -> void:
 	hud.name = "Hud"
 	_layer.add_child(hud)
 	hud.menu_choice.connect(_on_menu_choice)
+	# Casualty's results show up in the phone's Lab app as they come back.
+	hud.live_lab = func() -> Array: return PhoneBook.casualty_lab(profile, shift)
 	talk_ui = ConversationUi.new()
 	talk_ui.name = "Conversation"
 	talk_ui.mode = ConversationUi.Mode.TALK
@@ -1321,6 +1323,9 @@ func _end_day() -> void:
 		line += "\n" + below
 	if late_beats > 0:
 		line += "\nLate %s today. People noticed." % ("once" if late_beats == 1 else "%d times" % late_beats)
+	# The phone remembers the day (tonight's messages read it) before the card
+	# says who is about to text.
+	PhoneBook.note_day(profile, profile.day, shift)
 	_end_in = overlay.end_card(title, line, DayHooks.end_card(profile, profile.day))
 	var badges := Badges.check(profile)
 	if not badges.is_empty():

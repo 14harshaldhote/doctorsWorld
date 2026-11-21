@@ -460,6 +460,16 @@ Here's everything, in order, so you can decide how much of your life to give it:
   in front the game drops to a crawl and the hospital waits for you. Nobody
   dies while you answer your mother.
 - A Mac version. Same game, a bigger window, a mouse instead of a thumb.
+- A phone. Swipe up from the bottom of the screen (or press P on a Mac) and
+  there it is: Chats, Calls, Lab results, the Pager, a Feed and Photos. Mum
+  wants to know if you ate the poha. Dad forwards a good-morning flower with
+  a quote about the present. Your sister wants your room. Varun posts reels
+  about his parking spot. Rohit's mother asks if he can have ice cream, a
+  retired postmaster sends you a photo of a blue tin that is not biscuits
+  (it is never biscuits), and someone types a message at 23:10 and deletes
+  it. Lab reports land on it. People casualty sent home text to say thank
+  you. Your mother calls at exactly the wrong moment, because that is her
+  gift. The hospital doesn't stop while you scroll. Neither does your mother.
 
 Screenshots of every screen are rebuilt automatically after each change, on
 the [`screenshots` branch](../../tree/screenshots).

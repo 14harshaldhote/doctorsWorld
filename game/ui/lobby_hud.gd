@@ -4,6 +4,12 @@ extends Control
 ## badge and XP, the clock, the pager, today's tasks, name tags and speech
 ## bubbles over people, and the Phone / Career / Team / Menu buttons.
 ## Conversations themselves are drawn by ConversationUi on top.
+##
+## The doctor's phone (PhonePanel) comes up from here: the Phone button, a
+## swipe up from the bottom of the screen, or P on a Mac. New messages show
+## as a banner above the buttons and a number on the Phone button, and calls
+## ring here, but only while the doctor is walking about, never in the
+## middle of a conversation or an operation.
 
 signal menu_choice(choice: String)
 
@@ -37,6 +43,38 @@ var _portrait_rig: AvatarRig
 var _shown_level := -1
 var _xp_tween: Tween
 
+## Today's casualty results for the phone's Lab app (the ward sets it).
+var live_lab: Callable = Callable()
+## Today's pages, oldest first: [{"stamp", "text"}].
+var pager_log: Array = []
+var _phone: PhonePanel
+var _phone_badge: Label
+var _banner: PanelContainer
+var _banner_name: Label
+var _banner_text: Label
+var _banner_answer: Control
+var _banner_time := 0.0
+var _banner_chat := ""
+## Messages up to here have been announced.
+var _announced := -1
+var _summary_due := true
+## How long the doctor has been free to look at a phone, in seconds.
+var _free_for := 0.0
+var _phone_check := 0.0
+## The call ringing now ({} when none) and how long it has rung.
+var ringing := {}
+var _ring_time := 0.0
+var _ring_next := 0.0
+## Where a swipe up from the bottom began (or -1).
+var _swipe_from := Vector2(-1, -1)
+
+## Seconds the doctor must have been free before a call rings.
+const CALL_AFTER_FREE := 6.0
+## How long a call rings before it counts as missed, and how often it rings.
+const RING_FOR := 16.0
+const RING_EVERY := 2.2
+const BANNER_TIME := 4.5
+
 
 func _init(for_profile: PlayerProfile = null) -> void:
 	profile = for_profile if for_profile != null else PlayerProfile.new()
@@ -54,8 +92,10 @@ func _ready() -> void:
 	_build_buttons()
 	_build_menu()
 	_build_toast()
+	_build_banner()
 	UiKit.keep_children_off_edges(self)
 	refresh_profile()
+	_announced = PhoneBook.now(profile)
 
 
 func _corner(control: Control, left: bool, top: bool, x: float, y: float) -> void:
@@ -235,24 +275,15 @@ func _build_buttons() -> void:
 		inside.add_child(caption)
 		button.pressed.connect(_on_corner_button.bind(entry[0]))
 		row.add_child(button)
+		if entry[0] == "Phone":
+			# Messages not yet read and calls missed.
+			_phone_badge = _corner_badge(UiKit.AMBER)
+			_phone_badge.name = "Badge"
+			button.add_child(_phone_badge)
 		if entry[0] == "Career":
 			# How many letters are waiting to be read.
-			_career_badge = UiKit.label("", 11, UiKit.INK, UiKit.heavy_font())
+			_career_badge = _corner_badge(UiKit.AMBER)
 			_career_badge.name = "Badge"
-			_career_badge.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-			_career_badge.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-			_career_badge.mouse_filter = Control.MOUSE_FILTER_IGNORE
-			var dot := StyleBoxFlat.new()
-			dot.bg_color = UiKit.AMBER
-			dot.set_corner_radius_all(int(UiKit.px(10)))
-			_career_badge.add_theme_stylebox_override("normal", dot)
-			_career_badge.custom_minimum_size = Vector2(UiKit.px(20), UiKit.px(20))
-			_career_badge.anchor_left = 1.0
-			_career_badge.anchor_right = 1.0
-			_career_badge.offset_left = -UiKit.px(16)
-			_career_badge.offset_right = UiKit.px(4)
-			_career_badge.offset_top = -UiKit.px(4)
-			_career_badge.offset_bottom = UiKit.px(16)
 			button.add_child(_career_badge)
 			# A small mint dot while today's 60-second case or the week's
 			# mystery guess is waiting.
@@ -269,6 +300,27 @@ func _build_buttons() -> void:
 			_today_dot.offset_bottom = UiKit.px(9)
 			button.add_child(_today_dot)
 	refresh_letters()
+
+
+## A small round count in a button's corner.
+func _corner_badge(colour: Color) -> Label:
+	var badge := UiKit.label("", 11, UiKit.INK, UiKit.heavy_font())
+	badge.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	badge.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	badge.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var dot := StyleBoxFlat.new()
+	dot.bg_color = colour
+	dot.set_corner_radius_all(int(UiKit.px(10)))
+	badge.add_theme_stylebox_override("normal", dot)
+	badge.custom_minimum_size = Vector2(UiKit.px(20), UiKit.px(20))
+	badge.anchor_left = 1.0
+	badge.anchor_right = 1.0
+	badge.offset_left = -UiKit.px(16)
+	badge.offset_right = UiKit.px(4)
+	badge.offset_top = -UiKit.px(4)
+	badge.offset_bottom = UiKit.px(16)
+	badge.visible = false
+	return badge
 
 
 func _build_menu() -> void:
@@ -309,13 +361,17 @@ func _build_toast() -> void:
 
 
 func _on_corner_button(which: String) -> void:
+	if which == "Phone":
+		toggle_phone()
+		return
+	close_phone()
 	if which == "Menu":
 		_menu.visible = true
 		return
 	if which == "Career":
 		open_career()
 		return
-	var unlocks := {"Phone": "Your phone rings from Day 2.", "Team": "You'll meet the whole team on your first ward round."}
+	var unlocks := {"Team": "You'll meet the whole team on your first ward round."}
 	toast(unlocks.get(which, ""))
 
 
@@ -397,6 +453,7 @@ func toast(text: String) -> void:
 
 func refresh_profile() -> void:
 	refresh_letters()
+	refresh_phone_badge()
 	var progress := LevelCurve.progress(profile.total_xp)
 	var level := int(progress["level"])
 	_level_label.text = "%s · Level %d" % [Rank.title(profile.rank()), level]
@@ -428,12 +485,20 @@ func set_clock(text: String) -> void:
 
 
 func set_pager(text: String) -> void:
-	_pager.visible = not text.is_empty() and not _talking
 	_pager_text.text = text
+	_pager.visible = _pager_shown()
+	if not text.is_empty() and (pager_log.is_empty() or str(pager_log[pager_log.size() - 1]["text"]) != text):
+		pager_log.append({"stamp": PhoneBook.now(profile), "text": text})
 
 
 func pager_text() -> String:
 	return _pager_text.text
+
+
+## The pager shows while there's a page, except in a conversation or while
+## the phone is up (its Pager app has every page of the day).
+func _pager_shown() -> bool:
+	return not _pager_text.text.is_empty() and not _talking and not phone_open()
 
 
 ## The line at the bottom left that says how to move around.
@@ -638,6 +703,8 @@ func _covered(box: Rect2) -> bool:
 	var panels: Array[Control] = [_today, _pager, _buttons, get_node("Badge") as Control, get_node("Clock") as Control]
 	if not hint_text().is_empty():
 		panels.append(_hint)
+	if _banner != null:
+		panels.append(_banner)
 	for panel in panels:
 		if panel.visible and panel.get_global_rect().grow(UiKit.px(4)).intersects(box):
 			return true
@@ -647,9 +714,15 @@ func _covered(box: Rect2) -> bool:
 ## While a conversation is on screen the walking HUD steps aside.
 func set_talking(talking: bool) -> void:
 	_talking = talking
+	if talking:
+		# Phones go away for conversations; a call ringing now goes unanswered.
+		close_phone()
+		_hide_banner()
+		if not ringing.is_empty():
+			_miss_call()
 	for quiet: Control in [_hint, _buttons, get_node("Badge") as Control, get_node("Clock") as Control]:
 		quiet.visible = not talking
-	_pager.visible = not talking and not _pager_text.text.is_empty()
+	_pager.visible = _pager_shown()
 	_today.visible = not talking and _tasks.get_child_count() > 1
 	if talking:
 		for tag: Control in _tags.values():
@@ -663,8 +736,343 @@ func is_talking() -> bool:
 
 
 func _process(delta: float) -> void:
+	_tick_phone(delta)
 	if _toast_time > 0.0:
 		_toast_time -= delta
 		_toast.modulate.a = clampf(_toast_time / 0.4, 0.0, 1.0)
 		if _toast_time <= 0.0:
 			_toast.visible = false
+
+
+# --- The phone -----------------------------------------------------------------------
+
+func _build_banner() -> void:
+	_banner = UiKit.panel(Color(7 / 255.0, 32 / 255.0, 37 / 255.0, 0.96), 16, Vector2(10, 8))
+	_banner.name = "PhoneBanner"
+	var style := _banner.get_theme_stylebox("panel") as StyleBoxFlat
+	style.border_color = Color(UiKit.MINT, 0.5)
+	style.set_border_width_all(int(UiKit.px(1.5)))
+	_banner.custom_minimum_size = Vector2(UiKit.px(250), 0)
+	_corner(_banner, false, false, 12, 84)
+	_banner.visible = false
+	_banner.gui_input.connect(_on_banner_input)
+	add_child(_banner)
+	var row := UiKit.hbox(8)
+	row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_banner.add_child(row)
+	var icon := UiIcon.make("chat", 18, UiKit.MINT)
+	icon.name = "Icon"
+	icon.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	row.add_child(icon)
+	var words := UiKit.vbox(1)
+	words.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	words.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	row.add_child(words)
+	_banner_name = UiKit.label("", 11, UiKit.MINT, UiKit.heavy_font())
+	words.add_child(_banner_name)
+	_banner_text = UiKit.label("", 13, UiKit.TEXT)
+	_banner_text.custom_minimum_size = Vector2(UiKit.px(190), 0)
+	_banner_text.clip_text = true
+	_banner_text.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	words.add_child(_banner_text)
+	var buttons := UiKit.hbox(6)
+	buttons.name = "CallButtons"
+	buttons.visible = false
+	row.add_child(buttons)
+	for entry: Array in [["Decline", "hangup", UiKit.CORAL], ["Answer", "call", Color("#3BB273")]]:
+		var button := Button.new()
+		button.name = entry[0]
+		button.focus_mode = Control.FOCUS_NONE
+		button.custom_minimum_size = Vector2(UiKit.px(40), UiKit.px(40))
+		button.add_theme_stylebox_override("normal", UiKit.box(entry[2], 20))
+		button.add_theme_stylebox_override("hover", UiKit.box(entry[2], 20))
+		button.add_theme_stylebox_override("pressed", UiKit.box((entry[2] as Color).darkened(0.2), 20))
+		var glyph := UiIcon.make(entry[1], 18, Color.WHITE)
+		UiKit.fill(glyph)
+		glyph.offset_left = UiKit.px(11)
+		glyph.offset_top = UiKit.px(11)
+		glyph.offset_right = -UiKit.px(11)
+		glyph.offset_bottom = -UiKit.px(11)
+		button.add_child(glyph)
+		button.pressed.connect(answer_ringing if entry[0] == "Answer" else decline_ringing)
+		UiKit.respond_to_press(button)
+		buttons.add_child(button)
+	_banner_answer = buttons
+
+
+## True when the doctor could look at a phone: walking, nothing else open.
+func phone_allowed() -> bool:
+	return not _talking and not menu_open() and is_visible_in_tree()
+
+
+func phone_open() -> bool:
+	return _phone != null and is_instance_valid(_phone)
+
+
+func phone_panel() -> PhonePanel:
+	return _phone if phone_open() else null
+
+
+## Brings the phone up (at an app, or a chat), if the doctor is free.
+func open_phone(app: String = "", chat: String = "") -> PhonePanel:
+	if phone_open():
+		return _phone
+	if not phone_allowed():
+		return null
+	_hide_banner()
+	_phone = PhonePanel.new(profile)
+	_pager.visible = false
+	_phone.pager_log = pager_log
+	_phone.live_lab = live_lab
+	_phone.closed.connect(func() -> void:
+		_phone = null
+		_pager.visible = _pager_shown()
+		refresh_phone_badge()
+		# What was read and answered is worth keeping.
+		menu_choice.emit("save"))
+	_phone.call_ended.connect(_on_call_ended)
+	add_child(_phone)
+	if not ringing.is_empty():
+		# Picked up while it rings: the call is what the phone shows.
+		_phone.ring(ringing)
+	elif not chat.is_empty():
+		_phone.open_chat(chat)
+	elif not app.is_empty():
+		_phone.open_app(app)
+	return _phone
+
+
+func close_phone() -> void:
+	if phone_open():
+		_phone.close()
+	_phone = null
+
+
+func toggle_phone() -> void:
+	if phone_open():
+		if ringing.is_empty():
+			close_phone()
+		return
+	if open_phone() == null and _talking:
+		toast("Not now. Hands busy.")
+
+
+## The number on the Phone button.
+func refresh_phone_badge() -> void:
+	if _phone_badge == null:
+		return
+	var count := PhoneBook.badge(profile)
+	_phone_badge.text = str(count) if count < 100 else "99+"
+	_phone_badge.visible = count > 0
+
+
+func phone_badge() -> String:
+	return _phone_badge.text if _phone_badge != null and _phone_badge.visible else ""
+
+
+func _tick_phone(delta: float) -> void:
+	if phone_allowed() and not phone_open():
+		_free_for += delta
+	else:
+		_free_for = 0.0 if not phone_allowed() else _free_for
+	if _banner_time > 0.0 and ringing.is_empty():
+		_banner_time -= delta
+		_banner.modulate.a = clampf(_banner_time / 0.4, 0.0, 1.0)
+		if _banner_time <= 0.0:
+			_hide_banner()
+	if not ringing.is_empty():
+		_ring_time += delta
+		_ring_next -= delta
+		if _ring_next <= 0.0:
+			_ring_next = RING_EVERY
+			Sfx.play(self, "ring", -6.0)
+		if _ring_time >= RING_FOR:
+			_miss_call()
+	_phone_check -= delta
+	if _phone_check > 0.0:
+		return
+	_phone_check = 1.0
+	refresh_phone_badge()
+	if not phone_allowed():
+		return
+	_announce()
+	if ringing.is_empty() and _free_for >= CALL_AFTER_FREE and not (phone_open() and _phone.page == "call"):
+		var due := PhoneBook.call_due(profile)
+		if not due.is_empty():
+			ring(due)
+
+
+## A banner for what arrived since the last look (or, once, for what came
+## overnight), unless the phone is already open.
+func _announce() -> void:
+	var latest := {}
+	var count := 0
+	var waiting := 0
+	var since := _announced
+	_announced = PhoneBook.now(profile)
+	for item: Dictionary in PhoneBook.arrived(profile, "chat"):
+		if item["from"] == "you":
+			continue
+		if int(item["stamp"]) > since:
+			latest = item
+			count += 1
+	if phone_open() or not ringing.is_empty():
+		return
+	if count > 0:
+		_summary_due = false
+		var more := " (+%d more)" % (count - 1) if count > 1 else ""
+		_show_banner(PhoneBook.contact_name(str(latest["chat"]), latest) + more, _banner_line(latest), str(latest["chat"]))
+		Sfx.play(self, "message", -10.0)
+		return
+	if _summary_due and _free_for >= 2.0:
+		_summary_due = false
+		waiting = PhoneBook.app_unread(profile, "chats")
+		if waiting > 0:
+			var names: Array[String] = []
+			for entry: Dictionary in PhoneBook.chats(profile):
+				if int(entry["unread"]) > 0 and names.size() < 2:
+					names.append(PhoneBook.short_name(str(entry["chat"]), entry["last"]))
+			_show_banner("%d new message%s" % [waiting, "" if waiting == 1 else "s"], ", ".join(names), "")
+
+
+func _banner_line(item: Dictionary) -> String:
+	var text := str(item["text"])
+	if item["deleted"]:
+		text = "This message was deleted"
+	elif text.is_empty():
+		text = "Photo"
+	if PhoneBook.is_group(str(item["chat"])):
+		text = PhoneBook.short_name(str(item["from"])) + ": " + text
+	return text
+
+
+func _show_banner(title: String, text: String, chat: String, call: bool = false) -> void:
+	_banner_name.text = title
+	_banner_text.text = text
+	_banner_chat = chat
+	_banner_answer.visible = call
+	var icon := _banner.find_child("Icon", true, false) as UiIcon
+	if icon != null:
+		icon.kind = "call" if call else "chat"
+		icon.queue_redraw()
+	_banner.modulate.a = 1.0
+	if not _banner.visible:
+		_banner.visible = true
+		UiKit.pop_in(_banner, 0.2)
+	_banner_time = BANNER_TIME
+
+
+func _hide_banner() -> void:
+	if _banner != null:
+		_banner.visible = false
+	_banner_time = 0.0
+
+
+func banner_text() -> String:
+	return "%s · %s" % [_banner_name.text, _banner_text.text] if _banner != null and _banner.visible else ""
+
+
+func _on_banner_input(event: InputEvent) -> void:
+	var button := event as InputEventMouseButton
+	if button == null or button.button_index != MOUSE_BUTTON_LEFT or button.pressed or not ringing.is_empty():
+		return
+	var chat := _banner_chat
+	_hide_banner()
+	open_phone("chats" if chat.is_empty() else "", chat)
+
+
+## A call rings: on the open phone, or as a banner with Answer and Decline.
+func ring(item: Dictionary) -> void:
+	ringing = item
+	_ring_time = 0.0
+	_ring_next = 0.0
+	if phone_open():
+		_phone.ring(item)
+		_hide_banner()
+	else:
+		_show_banner(PhoneBook.contact_name(str(item["from"]), item), "Calling...", "", true)
+
+
+func answer_ringing() -> void:
+	if ringing.is_empty():
+		return
+	var item := ringing
+	_hide_banner()
+	var phone := open_phone()
+	if phone == null:
+		return
+	if phone.call_phase != "ringing":
+		phone.ring(item)
+	phone.answer_call()
+	ringing = {}
+
+
+func decline_ringing() -> void:
+	if ringing.is_empty():
+		return
+	if phone_open() and _phone.call_phase == "ringing":
+		_phone.decline_call()
+	else:
+		PhoneBook.record_call(profile, str(ringing["id"]), "d")
+	ringing = {}
+	_hide_banner()
+	refresh_phone_badge()
+
+
+## Nobody picked up: it goes in the log as missed, with any message left.
+func _miss_call() -> void:
+	if ringing.is_empty():
+		return
+	PhoneBook.record_call(profile, str(ringing["id"]), "m")
+	ringing = {}
+	if phone_open():
+		_phone.stop_ringing()
+	_hide_banner()
+	refresh_phone_badge()
+
+
+func _on_call_ended(_call_id: String) -> void:
+	ringing = {}
+	_free_for = 0.0
+	refresh_phone_badge()
+
+
+## P brings the phone up or puts it away; Esc puts it away, or pauses.
+func _unhandled_input(event: InputEvent) -> void:
+	if event.is_echo():
+		return
+	if event.is_action_pressed(&"phone"):
+		toggle_phone()
+		get_viewport().set_input_as_handled()
+	elif event.is_action_pressed(&"ui_cancel"):
+		if phone_open():
+			if ringing.is_empty():
+				close_phone()
+		elif _menu.visible:
+			_on_menu_choice("resume")
+		elif _settings == null and _career == null and not _talking:
+			_menu.visible = true
+		else:
+			return
+		get_viewport().set_input_as_handled()
+
+
+## A swipe up from the bottom of the screen brings the phone up.
+func _input(event: InputEvent) -> void:
+	var button := event as InputEventMouseButton
+	if button != null and button.button_index == MOUSE_BUTTON_LEFT:
+		var band := size.y - UiKit.px(70)
+		var on_buttons := _buttons.get_global_rect().grow(UiKit.px(6)).has_point(button.position)
+		if button.pressed and button.position.y >= band and not on_buttons and phone_allowed() and not phone_open():
+			_swipe_from = button.position
+		else:
+			_swipe_from = Vector2(-1, -1)
+		return
+	var motion := event as InputEventMouseMotion
+	if motion == null or _swipe_from.x < 0.0:
+		return
+	var moved := motion.position - _swipe_from
+	if moved.y <= -UiKit.px(40) and absf(moved.x) < absf(moved.y):
+		_swipe_from = Vector2(-1, -1)
+		if open_phone() != null:
+			get_viewport().set_input_as_handled()

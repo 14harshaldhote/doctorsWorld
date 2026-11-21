@@ -42,6 +42,9 @@ var morning := {}
 ## The local date the game was last opened ("2026-11-16"), for the XP on a
 ## new day (DailyReward); the days in a row are the counter "day_streak".
 var last_played := ""
+## The doctor's phone: what has been read, answered and picked up (see
+## PhoneBook). Not part of a day's snapshot: a message read stays read.
+var phone := {}
 
 const DAY_START := 7 * 60
 ## What a day keeps in the morning snapshot.
@@ -179,6 +182,7 @@ func to_dict() -> Dictionary:
 		"counters": counters.duplicate(),
 		"morning": morning.duplicate(true),
 		"last_played": last_played,
+		"phone": phone.duplicate(true),
 	}
 
 
@@ -237,6 +241,8 @@ static func from_dict(data: Variant) -> PlayerProfile:
 	var played: Variant = data.get("last_played")
 	if typeof(played) == TYPE_STRING and played.length() == 10:
 		profile.last_played = played
+	if data.has("phone"):
+		profile.phone = PhoneBook.clean(data["phone"])
 	return profile
 
 

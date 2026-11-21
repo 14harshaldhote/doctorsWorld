@@ -1,0 +1,1764 @@
+{
+	"_about": "The doctor's phone (stage 23). Chats, calls, feed posts, the camera roll and lab reports, each arriving on 'day' at 'at' (hours past that day's midnight, '25:30' is 1:30 at night), or as the day ends if the clock never got there. 'when' is a condition (flags as in the story, plus rank>=N and r:<id>=<pick> for a reply). An entry with 'answer_to' arrives 'delay' minutes after the doctor picks that reply ('pick' limits it to one of them). Messages written by the game itself, from what happened, are in game/core/phone_writer.gd.",
+	"contacts": {
+		"mum": {
+			"name": "Mum",
+			"colour": "#F5B841"
+		},
+		"dad": {
+			"name": "Dad",
+			"colour": "#7FB3E8"
+		},
+		"anu": {
+			"name": "Anu",
+			"colour": "#E89BC4"
+		},
+		"family": {
+			"name": "Family",
+			"group": [
+				"mum",
+				"dad",
+				"anu"
+			],
+			"about": "Mum, Dad, Anu. No forwards please (Mum)",
+			"colour": "#F5B841"
+		},
+		"batch": {
+			"name": "City Med '20 (Survivors)",
+			"group": [
+				"varun",
+				"sana",
+				"rocky",
+				"neel"
+			],
+			"about": "Varun, Sana, Rocky, Neel and you",
+			"colour": "#8FE3D2"
+		},
+		"varun": {
+			"name": "Varun Khanna",
+			"short": "Varun",
+			"colour": "#F07C5A",
+			"handle": "dr.varun.khanna"
+		},
+		"sana": {
+			"name": "Sana Kapadia",
+			"short": "Sana",
+			"colour": "#C9A0F0"
+		},
+		"rocky": {
+			"name": "Rocky Gowda",
+			"short": "Rocky",
+			"colour": "#9FD36B"
+		},
+		"neel": {
+			"name": "Neel Dutta",
+			"short": "Neel",
+			"colour": "#7FD8E8"
+		},
+		"priya": {
+			"name": "Priya (Ward 4)",
+			"short": "Priya",
+			"colour": "#F7A8A0"
+		},
+		"grace": {
+			"name": "Sister Grace",
+			"colour": "#B8D6D2"
+		},
+		"iyer": {
+			"name": "Dr. Iyer",
+			"colour": "#8FE3D2"
+		},
+		"zoya": {
+			"name": "Zoya Qureshi",
+			"short": "Zoya",
+			"colour": "#F2C46B"
+		},
+		"saxena": {
+			"name": "Ira Saxena",
+			"short": "Ira",
+			"colour": "#A8E6A0"
+		},
+		"sethi": {
+			"name": "Dr. Sethi",
+			"colour": "#9DB4FF"
+		},
+		"rao": {
+			"name": "Dr. Rao",
+			"colour": "#D9C8A0"
+		},
+		"malhotra": {
+			"name": "V. Malhotra (Admin)",
+			"short": "Mr. Malhotra",
+			"colour": "#C8C8C8"
+		},
+		"kapoor": {
+			"name": "Dr. Sameer Kapoor",
+			"short": "Dr. Kapoor",
+			"colour": "#FFB27A"
+		},
+		"sunita": {
+			"name": "Rohit's mother",
+			"colour": "#F0A0C8"
+		},
+		"arjun": {
+			"name": "Arjun Pillai (Dubai)",
+			"short": "Arjun",
+			"colour": "#7FB3E8"
+		},
+		"leela": {
+			"name": "Leela Thomas",
+			"short": "Leela",
+			"colour": "#E8C07F"
+		},
+		"pooja": {
+			"name": "Mrs. Sheikh",
+			"short": "Pooja",
+			"colour": "#F7A8A0"
+		},
+		"rubina": {
+			"name": "Rubina Ali",
+			"short": "Rubina",
+			"colour": "#C9A0F0"
+		},
+		"venu": {
+			"name": "Venu Kurup",
+			"colour": "#9FD36B"
+		},
+		"hospital": {
+			"name": "Riverside City Hospital",
+			"handle": "riversidecityhospital",
+			"page": true,
+			"colour": "#127C80"
+		},
+		"news": {
+			"name": "City Times",
+			"handle": "citytimes.local",
+			"page": true,
+			"colour": "#F4FBFA"
+		},
+		"kunal": {
+			"name": "Kunal Bhatia",
+			"short": "Kunal",
+			"handle": "kunal.unplugged",
+			"colour": "#F07C5A"
+		}
+	},
+	"chats": [
+		{
+			"id": "d1_mum",
+			"chat": "family",
+			"from": "mum",
+			"day": 1,
+			"at": "06:30",
+			"text": "Reached? Did you eat the poha I packed, or is it still in your bag? Be honest.",
+			"reply": [
+				"Ate it, Ma. Every flake.",
+				"It's in the bag. I'll eat at lunch."
+			]
+		},
+		{
+			"id": "d1_mum_a",
+			"chat": "family",
+			"from": "mum",
+			"answer_to": "d1_mum",
+			"text": "Liar. I can hear it in your typing. Eat at lunch then.",
+			"pick": 0
+		},
+		{
+			"id": "d1_mum_b",
+			"chat": "family",
+			"from": "mum",
+			"answer_to": "d1_mum",
+			"text": "Lunch is five hours away. Eat now. Doctors also faint.",
+			"pick": 1
+		},
+		{
+			"id": "d1_dad",
+			"chat": "family",
+			"from": "dad",
+			"day": 1,
+			"at": "06:34",
+			"text": "",
+			"photo": "goodmorning",
+			"caption": "Good Morning. Today is a gift. That is why it is called the Present."
+		},
+		{
+			"id": "d1_dad2",
+			"chat": "family",
+			"from": "dad",
+			"day": 1,
+			"at": "06:35",
+			"text": "First day of real work. Proud. Also, the school fees chapter is officially closed. Officially."
+		},
+		{
+			"id": "d1_anu",
+			"chat": "family",
+			"from": "anu",
+			"day": 1,
+			"at": "06:41",
+			"text": "can i move into ur room now or do i wait for ur first salary. asking for me"
+		},
+		{
+			"id": "d1_varun",
+			"chat": "batch",
+			"from": "varun",
+			"day": 1,
+			"at": "08:15",
+			"text": "Day 1 at CarePlus. They gave me a locker with my NAME on it. Printed. Not handwritten. Anyway how's Riverside, do they give you a stool or"
+		},
+		{
+			"id": "d1_varun_dm",
+			"chat": "varun",
+			"from": "varun",
+			"day": 1,
+			"at": "17:30",
+			"text": "Day one at CarePlus: a car, a parking spot, a nameplate. Day one at Riverside? Let me guess. A pager.",
+			"reply": [
+				"A pager. And patients.",
+				"Enjoy the parking spot."
+			]
+		},
+		{
+			"id": "d1_varun_dm_a",
+			"chat": "varun",
+			"from": "varun",
+			"answer_to": "d1_varun_dm",
+			"text": "Patients? We have those too. Ours have insurance.",
+			"pick": 0
+		},
+		{
+			"id": "d1_varun_dm_b",
+			"chat": "varun",
+			"from": "varun",
+			"answer_to": "d1_varun_dm",
+			"text": "I will. It has a SHADE. You wouldn't understand.",
+			"pick": 1
+		},
+		{
+			"id": "d1_sana",
+			"chat": "batch",
+			"from": "sana",
+			"day": 1,
+			"at": "08:17",
+			"text": "It's 10:45 pm in Ohio and I'm still studying. Varun, nobody asked."
+		},
+		{
+			"id": "d1_rocky",
+			"chat": "batch",
+			"from": "rocky",
+			"day": 1,
+			"at": "08:19",
+			"text": "pg entrance in 214 days. also nobody asked. just saying it out loud so it's real"
+		},
+		{
+			"id": "d2_mum",
+			"chat": "family",
+			"from": "mum",
+			"day": 2,
+			"at": "06:50",
+			"text": "Skills lab today? Your father says you can practise on him. He has nothing else to do."
+		},
+		{
+			"id": "d2_dad",
+			"chat": "family",
+			"from": "dad",
+			"day": 2,
+			"at": "06:52",
+			"text": "I volunteer. Please use the small needle."
+		},
+		{
+			"id": "d2_priya",
+			"chat": "priya",
+			"from": "priya",
+			"day": 2,
+			"at": "18:40",
+			"text": "Hi Doctor, Priya here, staff nurse on the surgical ward. Grace gave me your number for 'emergencies'. This isn't one. Just saying the canteen samosas are fresh only before 11. You're welcome.",
+			"reply": [
+				"Noted. Life-saving information.",
+				"Who gave Grace my number?"
+			]
+		},
+		{
+			"id": "d2_priya_a",
+			"chat": "priya",
+			"from": "priya",
+			"answer_to": "d2_priya",
+			"text": "Second most important thing you'll learn here. The first is: never sit in Grace's chair.",
+			"pick": 0
+		},
+		{
+			"id": "d2_priya_b",
+			"chat": "priya",
+			"from": "priya",
+			"answer_to": "d2_priya",
+			"text": "HR. Grace has everyone's number. Grace has numbers that aren't even connected anymore.",
+			"pick": 1
+		},
+		{
+			"id": "d2_neel",
+			"chat": "batch",
+			"from": "neel",
+			"day": 2,
+			"at": "21:30",
+			"text": "is it normal that my hands smell of sanitiser even in my dreams"
+		},
+		{
+			"id": "d2_varun",
+			"chat": "batch",
+			"from": "varun",
+			"day": 2,
+			"at": "21:31",
+			"text": "CarePlus uses foam sanitiser. Imported. Smells like vanilla."
+		},
+		{
+			"id": "d2_sana",
+			"chat": "batch",
+			"from": "sana",
+			"day": 2,
+			"at": "21:33",
+			"text": "Varun I will fly back from Ohio just to block you in person."
+		},
+		{
+			"id": "d2_anu",
+			"chat": "anu",
+			"from": "anu",
+			"day": 2,
+			"at": "21:45",
+			"text": "mum made u a 'lucky' tiffin for tomorrow. its lemon rice. its always lemon rice. ur welcome for the warning"
+		},
+		{
+			"id": "d3_mum",
+			"chat": "family",
+			"from": "mum",
+			"day": 3,
+			"at": "06:45",
+			"text": "Operation today? Don't be nervous. Your hands were always steady. Except that one time with the egg. That doesn't count.",
+			"photo": "tiffin",
+			"caption": "Lemon rice. For luck. Don't share it with the surgeons, they earn enough."
+		},
+		{
+			"id": "d3_sunita",
+			"chat": "sunita",
+			"from": "sunita",
+			"day": 3,
+			"at": "19:30",
+			"text": "Doctor, this is Rohit's mother. Sister gave me your number, don't be angry with her, I cried at her. Rohit is asking for ice cream. Can he have it? I said no. He says you'll say yes.",
+			"when": "!op_rohit_failed",
+			"reply": [
+				"Not yet. Maybe tomorrow.",
+				"Ask the nurses. They decide."
+			]
+		},
+		{
+			"id": "d3_sunita_a",
+			"chat": "sunita",
+			"from": "sunita",
+			"answer_to": "d3_sunita",
+			"text": "See? I told him. He says you're 'very strict for a new doctor'. I said good.",
+			"pick": 0
+		},
+		{
+			"id": "d3_sunita_b",
+			"chat": "sunita",
+			"from": "sunita",
+			"answer_to": "d3_sunita",
+			"text": "The nurse said ask the doctor. You people are passing this ice cream between you like a government file.",
+			"pick": 1
+		},
+		{
+			"id": "d3_sunita_icu",
+			"chat": "sunita",
+			"from": "sunita",
+			"day": 3,
+			"at": "21:10",
+			"text": "Doctor, this is Rohit's mother. They say he is stable in the ICU. Dr. Iyer explained everything. I only wanted to say, you came out and told me yourself. Not everybody does. Thank you for that.",
+			"when": "op_rohit_failed"
+		},
+		{
+			"id": "d3_varun",
+			"chat": "batch",
+			"from": "varun",
+			"day": 3,
+			"at": "22:00",
+			"text": "First solo case today. Assisted, technically. But spiritually solo."
+		},
+		{
+			"id": "d3_rocky",
+			"chat": "batch",
+			"from": "rocky",
+			"day": 3,
+			"at": "22:02",
+			"text": "varun you held a retractor"
+		},
+		{
+			"id": "d3_varun2",
+			"chat": "batch",
+			"from": "varun",
+			"day": 3,
+			"at": "22:02",
+			"text": "With CONVICTION, Rocky."
+		},
+		{
+			"id": "d4_arjun",
+			"chat": "arjun",
+			"from": "arjun",
+			"day": 4,
+			"at": "13:30",
+			"text": "Doctor this is Arjun, Lakshmi Pillai's son, Dubai. Sorry about the shouting, the network here is bad so I shout to help it. How is Amma? Pls send update. Also a photo of her eating.",
+			"reply": [
+				"She's comfortable. Surgery is planned.",
+				"No photos. She said no."
+			]
+		},
+		{
+			"id": "d4_arjun_a",
+			"chat": "arjun",
+			"from": "arjun",
+			"answer_to": "d4_arjun",
+			"text": "OK OK. Comfortable is good. Is that a medical word or a nice word",
+			"pick": 0
+		},
+		{
+			"id": "d4_arjun_b",
+			"chat": "arjun",
+			"from": "arjun",
+			"answer_to": "d4_arjun",
+			"text": "She said no to me also. Since 1994.",
+			"pick": 1
+		},
+		{
+			"id": "d4_priya_yes",
+			"chat": "priya",
+			"from": "priya",
+			"day": 4,
+			"at": "19:30",
+			"text": "Malhotra asked me which doctor 'gave him the beds'. I said I don't know. I know.",
+			"when": "beds_agreed"
+		},
+		{
+			"id": "d4_priya_no",
+			"chat": "priya",
+			"from": "priya",
+			"day": 4,
+			"at": "19:30",
+			"text": "Malhotra asked me which intern said no to him. I said I don't know. Grace said 'good intern'. Grace has never said 'good' anything.",
+			"when": "beds_refused"
+		},
+		{
+			"id": "d4_varun",
+			"chat": "varun",
+			"from": "varun",
+			"day": 4,
+			"at": "21:00",
+			"text": "So apparently we're RACING now. Riverside vs CarePlus. XP or whatever. No pressure. I've already won, but no pressure.",
+			"reply": [
+				"Who says we're racing?",
+				"Bring it."
+			]
+		},
+		{
+			"id": "d4_varun_a",
+			"chat": "varun",
+			"from": "varun",
+			"answer_to": "d4_varun",
+			"text": "Everyone. The batch group. My mother. Your mother, probably.",
+			"pick": 0
+		},
+		{
+			"id": "d4_varun_b",
+			"chat": "varun",
+			"from": "varun",
+			"answer_to": "d4_varun",
+			"text": "Lol okay. I'll send you my reels for inspiration. Daily. You're welcome.",
+			"pick": 1
+		},
+		{
+			"id": "d4_mum",
+			"chat": "family",
+			"from": "mum",
+			"day": 4,
+			"at": "21:30",
+			"text": "Your father wants to know if you've saved a life yet. I told him it's a hospital, not a film."
+		},
+		{
+			"id": "d4_dad",
+			"chat": "family",
+			"from": "dad",
+			"day": 4,
+			"at": "21:32",
+			"text": "In films they save one every ten minutes. Just saying. Standards."
+		},
+		{
+			"id": "d5_anu",
+			"chat": "family",
+			"from": "anu",
+			"day": 5,
+			"at": "07:05",
+			"text": "random q. how much does a doctor earn. not for me. for a school project. the project is me asking for money",
+			"reply": [
+				"Less than you think.",
+				"Send me your UPI."
+			]
+		},
+		{
+			"id": "d5_anu_a",
+			"chat": "family",
+			"from": "anu",
+			"answer_to": "d5_anu",
+			"text": "so like. negative?",
+			"pick": 0
+		},
+		{
+			"id": "d5_anu_b",
+			"chat": "family",
+			"from": "anu",
+			"answer_to": "d5_anu",
+			"text": "omg ur actually the best sibling. lowkey was going to ask for 500. now i'll ask for 1000",
+			"pick": 1
+		},
+		{
+			"id": "d5_leela",
+			"chat": "leela",
+			"from": "leela",
+			"day": 5,
+			"at": "20:30",
+			"text": "Doctor, it's Leela, Aarav's mother. He's home. The battery is in a jar on the shelf and he has named it Sparky. Thank you for looking twice.",
+			"when": "aarav_battery_found"
+		},
+		{
+			"id": "d5_mum",
+			"chat": "family",
+			"from": "mum",
+			"day": 5,
+			"at": "21:00",
+			"text": "Night duty tomorrow? I'll pack the steel tiffin. Don't eat canteen biryani at 3 am. Nobody knows what's in it after midnight."
+		},
+		{
+			"id": "d6_mum",
+			"chat": "family",
+			"from": "mum",
+			"day": 6,
+			"at": "20:15",
+			"text": "Night duty starting? Keep your phone charged. And don't drink six coffees, your hands will shake.",
+			"reply": [
+				"Two coffees. Maximum.",
+				"Already on coffee number three."
+			]
+		},
+		{
+			"id": "d6_mum_a",
+			"chat": "family",
+			"from": "mum",
+			"answer_to": "d6_mum",
+			"text": "Two. I'm counting. God is also counting.",
+			"pick": 0
+		},
+		{
+			"id": "d6_mum_b",
+			"chat": "family",
+			"from": "mum",
+			"answer_to": "d6_mum",
+			"text": "Three?! It's 8 pm. Drink water. Water is also a drink.",
+			"pick": 1
+		},
+		{
+			"id": "d6_neel",
+			"chat": "batch",
+			"from": "neel",
+			"day": 6,
+			"at": "26:10",
+			"text": "anyone else on nights or is it just me and a patient who keeps asking if it's morning yet"
+		},
+		{
+			"id": "d6_rocky",
+			"chat": "batch",
+			"from": "rocky",
+			"day": 6,
+			"at": "26:12",
+			"text": "awake. studying. it is never morning"
+		},
+		{
+			"id": "d6_sana",
+			"chat": "batch",
+			"from": "sana",
+			"day": 6,
+			"at": "26:15",
+			"text": "It's 3:45 pm in Ohio. I'm thriving. Kidding. I'm in a library with a vending machine that hates me."
+		},
+		{
+			"id": "d7_pooja",
+			"chat": "pooja",
+			"from": "pooja",
+			"day": 7,
+			"at": "17:00",
+			"text": "hello doctor this is pooja. mummy gave me her phone. papa is ok. he says the night doctor had cold hands. i drew u",
+			"when": "pooja_answered&rider_treated",
+			"photo": "drawing",
+			"caption": "Papa, the hospital, and you. The hospital is the big box. You are the small box with the stethoscope."
+		},
+		{
+			"id": "d7_pooja_mum",
+			"chat": "pooja",
+			"from": "pooja",
+			"day": 7,
+			"at": "17:04",
+			"text": "Doctor, this is Pooja's mother. Sorry, she took my phone. Thank you for answering it that night. She keeps saying 'the doctor asked me Papa's name'.",
+			"when": "pooja_answered&rider_treated"
+		},
+		{
+			"id": "d7_dad",
+			"chat": "family",
+			"from": "dad",
+			"day": 7,
+			"at": "21:00",
+			"text": "Your mother says you sounded tired. I said doctors are supposed to sound tired. That's how you know they're real ones."
+		},
+		{
+			"id": "d8_mum",
+			"chat": "family",
+			"from": "mum",
+			"day": 8,
+			"at": "06:55",
+			"text": "Review today? I've kept a coconut for the temple. If they say no, they're fools. If they say yes, also come home, I'm making kheer."
+		},
+		{
+			"id": "d8_dad",
+			"chat": "family",
+			"from": "dad",
+			"day": 8,
+			"at": "18:30",
+			"text": "JUNIOR RESIDENT! I have informed Sharma uncle. His son is still 'finding himself'. In Goa.",
+			"when": "promoted"
+		},
+		{
+			"id": "d8_anu",
+			"chat": "family",
+			"from": "anu",
+			"day": 8,
+			"at": "18:31",
+			"text": "congrats i guess. does this mean the room is officially mine",
+			"when": "promoted"
+		},
+		{
+			"id": "d8_mum2",
+			"chat": "family",
+			"from": "mum",
+			"day": 8,
+			"at": "18:33",
+			"text": "",
+			"when": "promoted",
+			"photo": "kheer",
+			"caption": "Kheer is ready. Your father has eaten half. Come Sunday.",
+			"reply": [
+				"Coming Sunday.",
+				"Can't, Ma. Duty."
+			]
+		},
+		{
+			"id": "d8_mum2_a",
+			"chat": "family",
+			"from": "mum",
+			"answer_to": "d8_mum2",
+			"text": "Sunday. I'm writing it on the calendar. In pen.",
+			"pick": 0
+		},
+		{
+			"id": "d8_mum2_b",
+			"chat": "family",
+			"from": "mum",
+			"answer_to": "d8_mum2",
+			"text": "Duty duty duty. Fine. I'll send kheer with Anu. She'll eat half on the bus.",
+			"pick": 1
+		},
+		{
+			"id": "d8_mum_not",
+			"chat": "family",
+			"from": "mum",
+			"day": 8,
+			"at": "18:33",
+			"text": "They'll see it next time. Come home Sunday anyway. Kheer doesn't care about reviews.",
+			"when": "!promoted"
+		},
+		{
+			"id": "d8_iyer",
+			"chat": "iyer",
+			"from": "iyer",
+			"day": 8,
+			"at": "19:00",
+			"text": "Well done today. Rest this weekend. That is not a suggestion. M. Iyer",
+			"when": "promoted"
+		},
+		{
+			"id": "d8_varun",
+			"chat": "varun",
+			"from": "varun",
+			"day": 8,
+			"at": "19:20",
+			"text": "Junior Resident? Same. CarePlus gave me a lanyard. With my FACE on it. Just putting that out there.",
+			"when": "promoted"
+		},
+		{
+			"id": "d9_mum",
+			"chat": "family",
+			"from": "mum",
+			"day": 9,
+			"at": "06:40",
+			"text": "Eight months and you still don't call on Sundays. I've started talking to your photo. It listens better."
+		},
+		{
+			"id": "d9_sunita",
+			"chat": "sunita",
+			"from": "sunita",
+			"day": 9,
+			"at": "10:30",
+			"text": "Doctor, Rohit's mother again. He passed. All his exams. He made me promise to tell you before the aunties. I'm sending sweets with him on Saturday.",
+			"when": "!op_rohit_failed",
+			"reply": [
+				"Tell him well done from me.",
+				"No pani puri to celebrate. Tell him."
+			]
+		},
+		{
+			"id": "d9_sunita_a",
+			"chat": "sunita",
+			"from": "sunita",
+			"answer_to": "d9_sunita",
+			"text": "He's pretending he isn't happy. He's very happy.",
+			"pick": 0
+		},
+		{
+			"id": "d9_sunita_b",
+			"chat": "sunita",
+			"from": "sunita",
+			"answer_to": "d9_sunita",
+			"text": "Too late. He celebrated with pani puri. He says it was worth it. I say he is an idiot. A passed idiot.",
+			"pick": 1
+		},
+		{
+			"id": "d9_sunita_f",
+			"chat": "sunita",
+			"from": "sunita",
+			"day": 9,
+			"at": "10:30",
+			"text": "Doctor, Rohit's mother again. He sat the supplementary. He passed. He said tell the doctor who came out to talk to me in the corridor. So I'm telling you.",
+			"when": "op_rohit_failed"
+		},
+		{
+			"id": "d9_varun",
+			"chat": "batch",
+			"from": "varun",
+			"day": 9,
+			"at": "21:00",
+			"text": "Junior Resident life is wild. I did TWO lap choles today. Before lunch. Anyway how is everyone's paperwork"
+		},
+		{
+			"id": "d9_neel",
+			"chat": "batch",
+			"from": "neel",
+			"day": 9,
+			"at": "21:02",
+			"text": "varun do u ever sleep"
+		},
+		{
+			"id": "d9_varun2",
+			"chat": "batch",
+			"from": "varun",
+			"day": 9,
+			"at": "21:02",
+			"text": "Sleep is a mindset."
+		},
+		{
+			"id": "d9_sana",
+			"chat": "batch",
+			"from": "sana",
+			"day": 9,
+			"at": "21:05",
+			"text": "Sleep is a biological requirement, you absolute refrigerator."
+		},
+		{
+			"id": "d10_priya",
+			"chat": "priya",
+			"from": "priya",
+			"day": 10,
+			"at": "17:00",
+			"text": "Sethi has been very nice to everyone today. Suspiciously nice. He brought samosas. The fresh ones. Before 11.",
+			"when": "bansal_exam_right"
+		},
+		{
+			"id": "d10_mum",
+			"chat": "family",
+			"from": "mum",
+			"day": 10,
+			"at": "21:15",
+			"text": "Your father has joined a laughter yoga group. He laughs at 6 am in the park now. The neighbours have complained. To me."
+		},
+		{
+			"id": "d11_dad",
+			"chat": "family",
+			"from": "dad",
+			"day": 11,
+			"at": "06:50",
+			"text": "Keyhole operation today? Do they let you look through the keyhole? Your mother says it's a camera. I'm disappointed."
+		},
+		{
+			"id": "d11_anu",
+			"chat": "anu",
+			"from": "anu",
+			"day": 11,
+			"at": "20:40",
+			"text": "ur sibling energy today: operating on ppl. my sibling energy today: failed a chem test. we r not the same"
+		},
+		{
+			"id": "d12_priya_said",
+			"chat": "priya",
+			"from": "priya",
+			"day": 12,
+			"at": "09:10",
+			"text": "You said it. In the meeting. In front of Rao. The whole nursing station knows already. Grace pretended not to smile. I saw it.",
+			"when": "credit_called_out"
+		},
+		{
+			"id": "d12_priya_quiet",
+			"chat": "priya",
+			"from": "priya",
+			"day": 12,
+			"at": "09:10",
+			"text": "Sethi presented 'his' catch and you just sat there. Very calm. Very enlightened. Very annoying to watch.",
+			"when": "credit_let_go"
+		},
+		{
+			"id": "d12_malhotra",
+			"chat": "malhotra",
+			"from": "malhotra",
+			"day": 12,
+			"at": "15:30",
+			"text": "Dear Doctor, Gentle reminder that Mrs. Mehra is the mother of a board member. Kindly be guided accordingly. Regards, V. Malhotra, Administrator",
+			"when": "mehra_complaint",
+			"reply": [
+				"Raju was dying, sir.",
+				"Noted, sir."
+			]
+		},
+		{
+			"id": "d12_malhotra_a",
+			"chat": "malhotra",
+			"from": "malhotra",
+			"answer_to": "d12_malhotra",
+			"text": "Noted. Regards.",
+			"pick": 0
+		},
+		{
+			"id": "d12_malhotra_b",
+			"chat": "malhotra",
+			"from": "malhotra",
+			"answer_to": "d12_malhotra",
+			"text": "Thank you for your cooperation. Regards.",
+			"pick": 1
+		},
+		{
+			"id": "d12_rocky",
+			"chat": "batch",
+			"from": "rocky",
+			"day": 12,
+			"at": "22:00",
+			"text": "pg mock result: top 40 percent. of people who took it. out of two lakh. i'm choosing to be happy"
+		},
+		{
+			"id": "d12_varun",
+			"chat": "batch",
+			"from": "varun",
+			"day": 12,
+			"at": "22:01",
+			"text": "CarePlus is sponsoring my PG prep. There's a lounge."
+		},
+		{
+			"id": "d12_sana",
+			"chat": "batch",
+			"from": "sana",
+			"day": 12,
+			"at": "22:03",
+			"text": "Rocky that's amazing. Varun that's a lounge."
+		},
+		{
+			"id": "d13_mum",
+			"chat": "family",
+			"from": "mum",
+			"day": 13,
+			"at": "06:50",
+			"text": "Review again? Same kheer as last time. For luck. And because your father finished the last one in one night."
+		},
+		{
+			"id": "d13_iyer",
+			"chat": "iyer",
+			"from": "iyer",
+			"day": 13,
+			"at": "18:10",
+			"text": "Senior Resident. You'll have an intern soon. Be the senior you needed. M. Iyer",
+			"when": "rank>=2"
+		},
+		{
+			"id": "d13_anu",
+			"chat": "family",
+			"from": "anu",
+			"day": 13,
+			"at": "18:20",
+			"text": "senior resident?? ur getting so old. like a cheese",
+			"when": "rank>=2"
+		},
+		{
+			"id": "d14_zoya",
+			"chat": "zoya",
+			"from": "zoya",
+			"day": 14,
+			"at": "06:30",
+			"text": "Good morning Doctor?? Sorry I don't know what to call you yet. I'm Zoya, your intern from today. I've read the whole ward handbook. Twice. Is that normal. Should I bring anything",
+			"reply": [
+				"Bring a pen. Two pens.",
+				"Call me {called}. And breathe."
+			]
+		},
+		{
+			"id": "d14_zoya_a",
+			"chat": "zoya",
+			"from": "zoya",
+			"answer_to": "d14_zoya",
+			"text": "Two pens. Got it. Bringing four.",
+			"pick": 0
+		},
+		{
+			"id": "d14_zoya_b",
+			"chat": "zoya",
+			"from": "zoya",
+			"answer_to": "d14_zoya",
+			"text": "Okay. Breathing. Inhale, exhale. Is it normal that my hands are sweating at 6:30 am",
+			"pick": 1
+		},
+		{
+			"id": "d14_anu",
+			"chat": "anu",
+			"from": "anu",
+			"day": 14,
+			"at": "20:00",
+			"text": "omg ok so i'm in 12th now and i have a bio project on 'the human heart'. u have to help. its due tomorrow. no i will not elaborate",
+			"reply": [
+				"Tomorrow?! Send it.",
+				"Ask the internet."
+			]
+		},
+		{
+			"id": "d14_anu_a",
+			"chat": "anu",
+			"from": "anu",
+			"answer_to": "d14_anu",
+			"text": "ur a lifesaver. literally ur job",
+			"pick": 0
+		},
+		{
+			"id": "d14_anu_a2",
+			"chat": "anu",
+			"from": "anu",
+			"answer_to": "d14_anu",
+			"text": "",
+			"photo": "heart",
+			"caption": "14 pages. Page 9 is the heart. It looks like a mango. be honest",
+			"pick": 0,
+			"delay": 2
+		},
+		{
+			"id": "d14_anu_b",
+			"chat": "anu",
+			"from": "anu",
+			"answer_to": "d14_anu",
+			"text": "the internet said 'consult a doctor'. so. hi doctor",
+			"pick": 1
+		},
+		{
+			"id": "d15_zoya",
+			"chat": "zoya",
+			"from": "zoya",
+			"day": 15,
+			"at": "06:55",
+			"text": "Is it okay if I triple check the drug chart. Or is triple too much. Double feels too little. Asking for me"
+		},
+		{
+			"id": "d15_malhotra",
+			"chat": "malhotra",
+			"from": "malhotra",
+			"day": 15,
+			"at": "16:00",
+			"text": "Dear Doctors, PFA the budget proposal: a surgical robot OR a second night doctor. Kindly vote on Thursday. The robot comes with a free cover. Regards"
+		},
+		{
+			"id": "d15_varun",
+			"chat": "batch",
+			"from": "varun",
+			"day": 15,
+			"at": "21:00",
+			"text": "CarePlus got a ROBOT. I'm the face of the launch. Literally, my face is the robot's screensaver."
+		},
+		{
+			"id": "d15_sana",
+			"chat": "batch",
+			"from": "sana",
+			"day": 15,
+			"at": "21:04",
+			"text": "a robot with your face is a war crime"
+		},
+		{
+			"id": "d16_mum",
+			"chat": "family",
+			"from": "mum",
+			"day": 16,
+			"at": "20:10",
+			"text": "In charge tonight? Your father says 'in charge' means you get blamed for everything. He would know. He was in charge of the TV remote for thirty years."
+		},
+		{
+			"id": "d16_sethi",
+			"chat": "sethi",
+			"from": "sethi",
+			"day": 16,
+			"at": "22:10",
+			"text": "I'm on call from home. Call only if necessary. Define necessary carefully. K. Sethi",
+			"reply": [
+				"I'll call if I need you.",
+				"Define it for me."
+			]
+		},
+		{
+			"id": "d16_sethi_a",
+			"chat": "sethi",
+			"from": "sethi",
+			"answer_to": "d16_sethi",
+			"text": "Good.",
+			"pick": 0
+		},
+		{
+			"id": "d16_sethi_b",
+			"chat": "sethi",
+			"from": "sethi",
+			"answer_to": "d16_sethi",
+			"text": "Necessary is when you've tried everything and I'm the last option. Goodnight.",
+			"pick": 1
+		},
+		{
+			"id": "d16_neel",
+			"chat": "batch",
+			"from": "neel",
+			"day": 16,
+			"at": "27:30",
+			"text": "night shift check in: i just told a man his 'heart attack' is gas. he's offended. he wanted it to be a heart attack"
+		},
+		{
+			"id": "d17_rubina",
+			"chat": "rubina",
+			"from": "rubina",
+			"day": 17,
+			"at": "19:00",
+			"text": "Doctor, it's Rubina, Imran's wife. The contractor's man came to the ward again. Imran showed him your notes. He left very quickly. Thank you.",
+			"when": "imran_truth"
+		},
+		{
+			"id": "d17_zoya_good",
+			"chat": "zoya",
+			"from": "zoya",
+			"day": 17,
+			"at": "21:30",
+			"text": "You said my name in the M&M. As the one who made the call. I went to the washroom and cried. Good crying. Okay goodnight",
+			"when": "mm_credit_zoya"
+		},
+		{
+			"id": "d17_zoya_bad",
+			"chat": "zoya",
+			"from": "zoya",
+			"day": 17,
+			"at": "21:30",
+			"text": "I know it was my fault. I'll do better. Sorry for messaging this late.",
+			"when": "mm_blame_zoya",
+			"reply": [
+				"It wasn't only yours, Zoya.",
+				"Get some sleep. We'll talk tomorrow."
+			]
+		},
+		{
+			"id": "d17_zoya_bad_a",
+			"chat": "zoya",
+			"from": "zoya",
+			"answer_to": "d17_zoya_bad",
+			"text": "Okay. Thank you. I'm still going to read the whole sepsis chapter tonight.",
+			"pick": 0
+		},
+		{
+			"id": "d17_zoya_bad_b",
+			"chat": "zoya",
+			"from": "zoya",
+			"answer_to": "d17_zoya_bad",
+			"text": "Okay.",
+			"pick": 1
+		},
+		{
+			"id": "d18_mum",
+			"chat": "family",
+			"from": "mum",
+			"day": 18,
+			"at": "06:50",
+			"text": "Third review? Even the kheer is getting tired of being lucky."
+		},
+		{
+			"id": "d18_dad",
+			"chat": "family",
+			"from": "dad",
+			"day": 18,
+			"at": "18:30",
+			"text": "SURGEON! I've changed my WhatsApp status. Sharma uncle has left the building group.",
+			"when": "rank>=3"
+		},
+		{
+			"id": "d18_anu",
+			"chat": "family",
+			"from": "anu",
+			"day": 18,
+			"at": "18:31",
+			"text": "my sibling the surgeon. ok i'll say it once. proud. deleting this in 5 min",
+			"when": "rank>=3"
+		},
+		{
+			"id": "d18_anu2",
+			"chat": "family",
+			"from": "anu",
+			"day": 18,
+			"at": "18:40",
+			"text": "ok i didn't delete it. i'm being mature about it. dont make it weird",
+			"when": "rank>=3"
+		},
+		{
+			"id": "d19_dad",
+			"chat": "family",
+			"from": "dad",
+			"day": 19,
+			"at": "06:30",
+			"text": "First list as a surgeon. Measure twice, cut once. That's for carpentry but I think it applies."
+		},
+		{
+			"id": "d20_rao",
+			"chat": "rao",
+			"from": "rao",
+			"day": 20,
+			"at": "07:10",
+			"text": "Come and see me before the round. Bring the 2004 notes. A. Rao"
+		},
+		{
+			"id": "d20_priya",
+			"chat": "priya",
+			"from": "priya",
+			"day": 20,
+			"at": "20:00",
+			"text": "Grace says Dr. Rao went into bed two and said sorry. Thirty-one years and nobody has ever seen him say sorry to a patient. Grace cried in the linen store. Don't tell her I told you.",
+			"when": "candour_together|candour_rao"
+		},
+		{
+			"id": "d21_venu",
+			"chat": "venu",
+			"from": "venu",
+			"day": 21,
+			"at": "15:30",
+			"text": "Doctor, Venu Kurup. Shanta has passed wind. She says I must tell you, it is good news. She has also made chakli for the ward. It is in the blue tin.",
+			"photo": "tin",
+			"caption": "For the ward. It is not biscuits. It is never biscuits.",
+			"reply": [
+				"Best news all week. Tell her.",
+				"The blue tin? It's sewing things, isn't it."
+			]
+		},
+		{
+			"id": "d21_venu_a",
+			"chat": "venu",
+			"from": "venu",
+			"answer_to": "d21_venu",
+			"text": "She says it is the best news all year. She was a postmistress. She does not exaggerate.",
+			"pick": 0
+		},
+		{
+			"id": "d21_venu_b",
+			"chat": "venu",
+			"from": "venu",
+			"answer_to": "d21_venu",
+			"text": "No. This time it is really chakli. The sewing things are in the other blue tin.",
+			"pick": 1
+		},
+		{
+			"id": "d21_malhotra",
+			"chat": "malhotra",
+			"from": "malhotra",
+			"day": 21,
+			"at": "18:00",
+			"text": "Dear Doctors, Interviews for Head of Surgery on Friday. Formal attire. Kindly do not wear Crocs. Regards"
+		},
+		{
+			"id": "d22_priya",
+			"chat": "priya",
+			"from": "priya",
+			"day": 22,
+			"at": "21:00",
+			"text": "You told the reporter it was me who sorted the triage. My mother has called eleven people. Twelve now.",
+			"when": "crash_credit_priya"
+		},
+		{
+			"id": "d22_varun",
+			"chat": "batch",
+			"from": "varun",
+			"day": 22,
+			"at": "22:30",
+			"text": "Saw the news. That was you lot? Respect. Genuinely."
+		},
+		{
+			"id": "d22_varun2",
+			"chat": "batch",
+			"from": "varun",
+			"day": 22,
+			"at": "22:31",
+			"text": "This message will self destruct."
+		},
+		{
+			"id": "d22_sana",
+			"chat": "batch",
+			"from": "sana",
+			"day": 22,
+			"at": "22:33",
+			"text": "Varun has feelings. Screenshot taken. Framed."
+		},
+		{
+			"id": "d23_mum",
+			"chat": "family",
+			"from": "mum",
+			"day": 23,
+			"at": "06:45",
+			"text": "Interview today? Wear the blue shirt. Not the other blue shirt. The good one. You know which one."
+		},
+		{
+			"id": "d23_sethi",
+			"chat": "sethi",
+			"from": "sethi",
+			"day": 23,
+			"at": "08:20",
+			"text": "Good luck today. I mean it. Mostly. K. Sethi"
+		},
+		{
+			"id": "d23_dad",
+			"chat": "family",
+			"from": "dad",
+			"day": 23,
+			"at": "18:30",
+			"text": "Head of Department! I don't know what it means but I have told everyone it means 'boss'.",
+			"when": "rank>=4"
+		},
+		{
+			"id": "d23_mum2",
+			"chat": "family",
+			"from": "mum",
+			"day": 23,
+			"at": "18:32",
+			"text": "Come home this Sunday. I don't care if you're head of the universe. Sunday is Sunday.",
+			"when": "rank>=4"
+		},
+		{
+			"id": "d24_kapoor",
+			"chat": "kapoor",
+			"from": "kapoor",
+			"day": 24,
+			"at": "12:40",
+			"text": "Great connecting today! Let's sync on synergies. Coffee? My treat. CarePlus has an espresso bar. Just saying. - Sameer Kapoor, MD, MBA, Thought Leader",
+			"reply": [
+				"Busy, thanks.",
+				"Is the espresso bar free?"
+			]
+		},
+		{
+			"id": "d24_kapoor_a",
+			"chat": "kapoor",
+			"from": "kapoor",
+			"answer_to": "d24_kapoor",
+			"text": "Totally understand! Busy is the new successful. Let's circle back.",
+			"pick": 0
+		},
+		{
+			"id": "d24_kapoor_b",
+			"chat": "kapoor",
+			"from": "kapoor",
+			"answer_to": "d24_kapoor",
+			"text": "For you? Always. For our patients it's 180 rupees.",
+			"pick": 1
+		},
+		{
+			"id": "d24_grace_yes",
+			"chat": "grace",
+			"from": "grace",
+			"day": 24,
+			"at": "20:00",
+			"text": "Thank you. Don't make me say it twice.",
+			"when": "strike_backed"
+		},
+		{
+			"id": "d24_grace_no",
+			"chat": "grace",
+			"from": "grace",
+			"day": 24,
+			"at": "20:00",
+			"text": "Noted.",
+			"when": "strike_opposed"
+		},
+		{
+			"id": "d25_grace_gone",
+			"chat": "grace",
+			"from": "grace",
+			"day": 25,
+			"at": "23:10",
+			"text": "",
+			"deleted": true
+		},
+		{
+			"id": "d26_grace",
+			"chat": "grace",
+			"from": "grace",
+			"day": 26,
+			"at": "06:15",
+			"text": "Ignore that. Wrong chat. Indigestion. It's nothing. See you at seven.",
+			"reply": [
+				"Grace, are you okay?",
+				"See you at seven."
+			]
+		},
+		{
+			"id": "d26_grace_a",
+			"chat": "grace",
+			"from": "grace",
+			"answer_to": "d26_grace",
+			"text": "I said it's nothing. Don't fuss. You're worse than my sister.",
+			"pick": 0
+		},
+		{
+			"id": "d26_grace_b",
+			"chat": "grace",
+			"from": "grace",
+			"answer_to": "d26_grace",
+			"text": "Good.",
+			"pick": 1
+		},
+		{
+			"id": "d26_priya",
+			"chat": "priya",
+			"from": "priya",
+			"day": 26,
+			"at": "17:40",
+			"text": "Eleven cups. You counted the placards. Grace said it was too sweet. She drank two.",
+			"when": "picket_tea"
+		},
+		{
+			"id": "d27_mum",
+			"chat": "family",
+			"from": "mum",
+			"day": 27,
+			"at": "06:45",
+			"text": "Board vote today? I've told the temple. And the mosque near Anu's college. And the church, your father insisted. All bases covered."
+		},
+		{
+			"id": "d27_anu",
+			"chat": "family",
+			"from": "anu",
+			"day": 27,
+			"at": "19:00",
+			"text": "CHIEF?? like the boss of the boss?? i'm telling everyone at college. ur famous now. i'm famous by association",
+			"when": "rank>=5"
+		},
+		{
+			"id": "d27_varun",
+			"chat": "varun",
+			"from": "varun",
+			"day": 27,
+			"at": "20:00",
+			"text": "Chief?? At Riverside?? ...Congrats. Seriously. CarePlus made me 'Associate Vice Lead of Surgical Excellence'. Basically the same thing.",
+			"when": "rank>=5",
+			"reply": [
+				"Congrats to you too, Varun.",
+				"Basically."
+			]
+		},
+		{
+			"id": "d27_varun_a",
+			"chat": "varun",
+			"from": "varun",
+			"answer_to": "d27_varun",
+			"text": "...Thanks. Don't tell the group I said thanks.",
+			"pick": 0
+		},
+		{
+			"id": "d27_varun_b",
+			"chat": "varun",
+			"from": "varun",
+			"answer_to": "d27_varun",
+			"text": "Exactly. Basically. Glad we agree. (We don't.)",
+			"pick": 1
+		},
+		{
+			"id": "d28_saxena",
+			"chat": "saxena",
+			"from": "saxena",
+			"day": 28,
+			"at": "06:05",
+			"text": "Good morning Doctor!! I'm Ira, your new intern. I've been here since 5:40. The fire notices are very thorough. Is there a dress code for the corridor"
+		},
+		{
+			"id": "d28_zoya",
+			"chat": "zoya",
+			"from": "zoya",
+			"day": 28,
+			"at": "07:30",
+			"text": "Heard you got a new intern. Be nice. Remember the drug chart. Remember me crying in the washroom. Good times"
+		},
+		{
+			"id": "d28_iyer",
+			"chat": "iyer",
+			"from": "iyer",
+			"day": 28,
+			"at": "20:00",
+			"text": "Good first day, Chief. Go home. M. Iyer"
+		}
+	],
+	"calls": [
+		{
+			"id": "d1_mum_call",
+			"from": "mum",
+			"day": 1,
+			"at": "07:15",
+			"lines": [
+				{
+					"say": "mum",
+					"text": "Hello? Beta? Can you hear me? I'm on speaker. Your father is also here, pretending he's not listening."
+				},
+				{
+					"say": "mum",
+					"text": "So? Did you find the place? Is it big? Did anybody shout at you yet?"
+				}
+			],
+			"reply": [
+				"Not yet, Ma. It's only seven.",
+				"I can't talk now, Ma. Tonight?"
+			],
+			"after": [
+				[
+					{
+						"say": "mum",
+						"text": "Not yet means soon. Smile at the nurses. Nurses run hospitals. Doctors only think they do."
+					},
+					{
+						"say": "mum",
+						"text": "Okay, go, go. Eat a banana at least. Bananas are fast."
+					}
+				],
+				[
+					{
+						"say": "mum",
+						"text": "Okay okay. Go. Save lives. Wear your sweater, the AC in hospitals is criminal."
+					}
+				]
+			],
+			"missed": "Called you. You didn't pick up. I'm assuming you're saving a life and not ignoring your mother."
+		},
+		{
+			"id": "d3_mum_busy",
+			"from": "mum",
+			"day": 3,
+			"at": "10:40",
+			"lines": [],
+			"busy": true,
+			"missed": "Called. Your phone was off? Oh, the operation. Sorry sorry. Call after. EAT FIRST."
+		},
+		{
+			"id": "d19_dad_call",
+			"from": "dad",
+			"day": 19,
+			"at": "18:15",
+			"lines": [
+				{
+					"say": "dad",
+					"text": "Hello? Surgeon? It's your father. I'm just checking how the word sounds out loud."
+				},
+				{
+					"say": "dad",
+					"text": "...It sounds good. Okay. That's all. Your mother is saying eat. Eat. Bye."
+				}
+			],
+			"missed": "Called to say 'surgeon' out loud. Will try again. Your mother says eat."
+		},
+		{
+			"id": "d22_mum_call",
+			"from": "mum",
+			"day": 22,
+			"at": "12:30",
+			"lines": [
+				{
+					"say": "mum",
+					"text": "Beta? Beta, it's on the news, the flyover, the bus! Are you there? Are you safe?"
+				}
+			],
+			"reply": [
+				"I'm fine, Ma. Can't talk.",
+				"We're all right. I'll call tonight."
+			],
+			"after": [
+				[
+					{
+						"say": "mum",
+						"text": "Okay. Okay. Go. I'm not crying. It's the dust from the TV."
+					}
+				],
+				[
+					{
+						"say": "mum",
+						"text": "Go, go. Don't think about me. I'll think about you enough for both of us."
+					}
+				]
+			],
+			"missed": "Saw the news. Just reply 'ok'. One word. That's all I need."
+		},
+		{
+			"id": "d27_family_call",
+			"from": "family",
+			"day": 27,
+			"at": "18:45",
+			"lines": [
+				{
+					"say": "dad",
+					"text": "Chief! Chief of what? ...Medicine! Of course medicine. I knew that."
+				},
+				{
+					"say": "anu",
+					"text": "put it on speaker mum. wait. it IS on speaker?"
+				},
+				{
+					"say": "mum",
+					"text": "Come home on Sunday. Chief also eats."
+				}
+			],
+			"when": "rank>=5",
+			"missed": "CHIEF. Call back. Your father is telling the watchman."
+		}
+	],
+	"feed": [
+		{
+			"id": "d1_welcome",
+			"from": "hospital",
+			"day": 1,
+			"at": "09:00",
+			"text": "A warm Riverside welcome to this year's interns! Reminder to all staff: the lift on the left has been 'under repair' since 2019. Take the stairs. Good for the heart.",
+			"photo": "hospital",
+			"likes": 41
+		},
+		{
+			"id": "d4_beds",
+			"from": "news",
+			"day": 4,
+			"at": "20:00",
+			"text": "Riverside City Hospital to 'free up beds faster', says administrator Vikram Malhotra. Patients say they would like to be asked.",
+			"when": "beds_agreed",
+			"photo": "news",
+			"likes": 88
+		},
+		{
+			"id": "d5_kunal_room",
+			"from": "kunal",
+			"day": 5,
+			"at": "16:00",
+			"text": "Shoutout to Riverside City Hospital for the VIP room. Wrist is healing. Five stars. Uncle says hi. #blessed",
+			"when": "kunal_room",
+			"photo": "splint",
+			"likes": 40211
+		},
+		{
+			"id": "d5_kunal_home",
+			"from": "kunal",
+			"day": 5,
+			"at": "16:00",
+			"text": "Riverside sent me home with a SPLINT. Like a commoner. Two stars. The doctor was right though, it's a sprain. Don't tell my uncle.",
+			"when": "kunal_home",
+			"photo": "splint",
+			"likes": 38904
+		},
+		{
+			"id": "d7_rider",
+			"from": "news",
+			"day": 7,
+			"at": "07:30",
+			"text": "Delivery rider survives late-night crash on Riverside Road. 'The night doctor didn't wait,' says his family.",
+			"when": "rider_treated",
+			"photo": "news",
+			"likes": 230
+		},
+		{
+			"id": "d11_keyhole",
+			"from": "hospital",
+			"day": 11,
+			"at": "12:00",
+			"text": "Riverside now offers keyhole gallbladder surgery five days a week! Ask your doctor if it's right for you. (They will tell you. That is literally their job.)",
+			"photo": "theatre",
+			"likes": 63
+		},
+		{
+			"id": "d17_vote_doc",
+			"from": "hospital",
+			"day": 17,
+			"at": "18:30",
+			"text": "From April, Riverside will have a second doctor on nights. Thank you to everyone who voted. The robot brochure has been recycled.",
+			"when": "vote_night_doctor",
+			"photo": "hospital",
+			"likes": 318
+		},
+		{
+			"id": "d17_vote_robot",
+			"from": "hospital",
+			"day": 17,
+			"at": "18:30",
+			"text": "Exciting news: Riverside is getting a surgical robot! Please stop asking whether it can do night shifts.",
+			"when": "vote_robot",
+			"photo": "robot",
+			"likes": 97
+		},
+		{
+			"id": "d21_rao",
+			"from": "hospital",
+			"day": 21,
+			"at": "17:30",
+			"text": "After 31 years, Dr. Anand Rao, Head of Surgery, retires next month. Riverside thanks him for his service. Cake in the staff room at 4. The cake is for staff. Not relatives of staff.",
+			"photo": "cake",
+			"likes": 512
+		},
+		{
+			"id": "d22_photo",
+			"from": "news",
+			"day": 22,
+			"at": "19:00",
+			"text": "Flyover bus crash: 23 injured, all treated at Riverside City Hospital. Pictured: the hospital's staff after the rescue.",
+			"when": "crash_photo",
+			"photo": "group",
+			"likes": 4120
+		},
+		{
+			"id": "d22_nophoto",
+			"from": "news",
+			"day": 22,
+			"at": "19:00",
+			"text": "Flyover bus crash: 23 injured, all treated at Riverside City Hospital. The hospital declined to pose for photographs.",
+			"when": "crash_no_photo",
+			"photo": "news",
+			"likes": 2890
+		},
+		{
+			"id": "d26_strike_news",
+			"from": "news",
+			"day": 26,
+			"at": "08:00",
+			"text": "Nurses at Riverside City Hospital walk out over night staffing. The hospital says it is 'fully operational'.",
+			"photo": "news",
+			"likes": 1544
+		},
+		{
+			"id": "d26_strike_page",
+			"from": "hospital",
+			"day": 26,
+			"at": "09:00",
+			"text": "Riverside City Hospital remains fully operational. Patient safety is our priority. Please be patient. Literally.",
+			"photo": "hospital",
+			"likes": 12
+		},
+		{
+			"id": "d27_chief",
+			"from": "hospital",
+			"day": 27,
+			"at": "19:00",
+			"text": "Riverside City Hospital welcomes its new Chief of Medicine, Dr. {name}. Please direct all complaints to the new office. The door sticks.",
+			"when": "rank>=5",
+			"photo": "certificate",
+			"likes": 1203
+		}
+	],
+	"photos": [
+		{
+			"id": "d1_gate",
+			"day": 1,
+			"at": "06:52",
+			"photo": "gate",
+			"caption": "Riverside City Hospital. Day one. You look braver than you feel."
+		},
+		{
+			"id": "d8_letter",
+			"day": 8,
+			"at": "18:20",
+			"photo": "certificate",
+			"caption": "Junior Resident. Dr. Rao's signature looks like a heartbeat monitor.",
+			"when": "promoted"
+		},
+		{
+			"id": "d22_shoes",
+			"day": 22,
+			"at": "20:30",
+			"photo": "shoes",
+			"caption": "Your shoes, after the flyover. Not mud. Don't think about it."
+		}
+	],
+	"lab": [
+		{
+			"id": "d3_rohit",
+			"day": 3,
+			"at": "07:40",
+			"patient": "Rohit Kulkarni, 19",
+			"test": "Blood count and CRP",
+			"result": "White count 16,200, raised. CRP 96, raised. The rest is normal.",
+			"high": true
+		},
+		{
+			"id": "d4_lakshmi",
+			"day": 4,
+			"at": "10:50",
+			"patient": "Lakshmi Pillai, 58",
+			"test": "Ultrasound, upper abdomen",
+			"result": "Gallbladder full of stones, wall thickened. Bile ducts normal width.",
+			"high": true
+		},
+		{
+			"id": "d10_bansal",
+			"day": 10,
+			"at": "10:25",
+			"patient": "Ramesh Bansal, 67 (bed 3)",
+			"test": "Bedside ultrasound, aorta",
+			"result": "Aorta 6.8 cm wide, with blood around it. Vascular surgeons called.",
+			"high": true,
+			"when": "bansal_exam_right"
+		},
+		{
+			"id": "d15_gomes",
+			"day": 15,
+			"at": "07:20",
+			"patient": "Philomena Gomes, 81 (bed 2)",
+			"test": "Clotting (INR)",
+			"result": "INR 2.8. High.",
+			"high": true
+		},
+		{
+			"id": "d19_kurup",
+			"day": 19,
+			"at": "09:20",
+			"patient": "Shanta Kurup, 64",
+			"test": "X-ray, abdomen",
+			"result": "Swollen loops of small bowel with fluid levels. A blockage.",
+			"high": true
+		},
+		{
+			"id": "d25_sinha",
+			"day": 25,
+			"at": "08:30",
+			"patient": "Rekha Sinha, 52",
+			"test": "Liver tests",
+			"result": "Bilirubin 4.1, raised. Liver enzymes up. She's yellow.",
+			"high": true
+		}
+	]
+}

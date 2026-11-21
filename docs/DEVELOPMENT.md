@@ -34,6 +34,7 @@ plan"). This file covers how to build, run and test the game.
 | 20. Tighter start | Six more quick cases (asthma, fits and eclampsia, head injury, poisoning, sepsis, heat), eight more mysteries, four more badges; Day 2 needs four stations (`SkillsLab.NEEDED`), not six; filler trimmed from the longest speeches; quick cases as story beats on Days 21, 23 and 27; a two-card cold open; the Today page from meeting Dr. Iyer on Day 1; Varun's first message on Day 1's card | Done |
 | 21. Lines that sound like people, and a share card | junior, senior, surgeon, hod and the Chief's days (`tools/chief_story.py`, which writes `story/chief.json`: edit the script, never the JSON) rewritten in a spoken voice, about 1,300 lines; the young characters (Zoya, Ira Saxena, Dev, Arif, Ananya) talk Gen Z and the seniors get more sarcastic; the 60-second case can be shared (`Share`: a wa.me link plus the clipboard, swappable `Share.opener` / `Share.copier` for tests; `DailyCase.share_text` from the counters `daily_case_marks`, `daily_case_seconds`, `daily_case_slow`; case numbers from `DailyCase.FIRST_DATE`); screenshots 167-169. 1.11.1: no emoji anywhere in the game (the share card's marks are words, `DailyCase.MARK_WORDS`), checked by `test_nothing_in_the_game_uses_emoji` | Done |
 | 22. Casualty and the clock | `game/shift/`: `ShiftSim` (arrivals by the hour, four cubicles, six seats, worse/crash/leave, tests coming back), `ShiftDay` (load by day and tier, the career's `hospital_seed`), `ShiftPatient`, `Conditions` (`story/conditions.json`), `NameMaker`, `PatientLook`, `ShiftBot`; `CasualtyRoom` behind the ward's door, `PatientPanel` (the card); the free clock (`Ward.CLOCK_RATE`), late beats, the `sign_off` beat; sealed saves (`SaveStore` v3: HMAC over the body, `.install` secret, three backups, `save.tampered.json`), `ClockGuard` on the daily XP, case and mystery, check codes on shared results (`DailyCase.check_code`, `check_shared`), `FrameBudget`; the macOS preset and CI job; screenshots 170-174 | Done |
+| 23. The doctor's phone | `PhonePanel` over the game (Phone button, a swipe up from the bottom, P on a Mac; the clock keeps running, 30 fps while it's up): Chats with two-reply answers, Calls (`ring`, answer, decline, rang out; lines spoken in the caller's voice, the doctor's replies only shown), Lab results (the story's reports and casualty's live ones), the Pager (today's pages), the Feed and Photos (`PhotoCard`, pictures drawn in code). `PhoneBook` reads `story/phone.json` (contacts, 144 messages, calls, posts, photos, reports, each on a day and time with a story condition) and keeps what was read, answered and picked up in `profile.phone`, checked on load (`PhoneBook.clean`). `PhoneWriter` writes the game's own: Varun's reels, the family's evenings (gentler after a death), the batch group on the race, the hospital page and the paper after Day 28, and a thank-you from someone casualty sent home. New messages show as a banner and a number on the Phone button; the end-of-day card says who is about to text. Screenshots 175-182 | Done |
 
 The earlier SwiftUI and SpriteKit prototype is kept on the git branch
 `swift-prototype`.
@@ -45,8 +46,10 @@ The earlier SwiftUI and SpriteKit prototype is kept on the git branch
 2. Open Godot, choose **Import**, and pick `project.godot` in this folder.
 3. Press **Play** (F5, or Cmd+B on a Mac).
 
-Controls on a computer: click the floor to walk, click a person to talk, or
-use WASD / arrow keys. On a phone or tablet: tap.
+Controls on a computer: click the floor to walk and click a person to talk
+(in the lobby and the skills lab WASD and the arrow keys walk too). P brings
+the phone up and puts it away; Esc puts it away, or pauses. On a phone or
+tablet: tap, and swipe up from the bottom of the screen for the phone.
 
 ## Run it on a Mac
 
@@ -712,6 +715,42 @@ costs `Ward.LATE_XP`. `CasualtyRoom.sync()` builds at most one body a frame;
 people already waiting sit down, newcomers walk in from the door. The HUD's
 crowded tags (`LobbyHud.start_crowd`, `set_tag(..., crowded)`) make way for
 each other, sickest first, and keep off the doctor.
+
+## The phone
+
+`story/phone.json` holds the phone's people (`contacts`: a name, a colour, a
+`group` of members, a `page` or `handle` for the feed) and everything that
+arrives: `chats` (`id`, `chat`, `from`, `day`, `at` as "HH:MM", up to "32:00"
+for a night, `text`, `photo` with `caption`, `reply` with two options,
+`deleted`, `when`), answers (`answer_to` a message, `pick` one of its
+replies, `delay` in minutes after the doctor answers), `calls` (`lines` and
+`after` per reply, each `{"say", "text"}` with a cast id so the caller speaks
+in their own voice; `busy` for a call nobody can pick up; `missed`, the
+message left when nobody does), `feed`, `photos` and `lab`. A `when` is a
+story condition (`flag`, `!flag`, `&`, `|`) plus `rank>=N`, `r:<id>=<pick>`
+(that message was answered with that reply) and `c:<id>=a` or `=d` (that
+call was answered, or wasn't). `test_phone.gd` checks every flag named is
+one the game sets, every photo is one `PhotoCard.KINDS` draws and every
+speaker is in the cast.
+
+Something arrives when its day has passed or its time has come today, so a
+day that ends early hands the rest over the next morning. A call rings on
+its day once the doctor has been free for `LobbyHud.CALL_AFTER_FREE`
+seconds, never in a conversation, task or menu, and counts as missed after
+`LobbyHud.RING_FOR` or when its day goes. Text can use `{name}`, `{first}`,
+`{last}`, `{called}` and `{title}`.
+
+`profile.phone` keeps read marks (`seen`, a stamp per chat or app; `*` is a
+floor set the first time a career meets the phone, so an old save starts
+with only today unread), `replies`, `calls`, the day notes (`days`, written
+by `PhoneBook.note_day` as a day ends) and `kept` (thank-you messages, which
+depend on a live casualty). It is outside the morning snapshot, so a
+restarted day keeps what was read and said. `PhoneBook.clean` checks every
+field on load: shapes, ids, numbers and caps. `PhoneWriter` makes its
+messages from `hash("what|name|day")`, so a career always sees the same ones,
+for the last `PhoneBook.WINDOW` days only. `PhoneBook.items()` works
+everything out at most once a frame (about 1.5 ms on a desktop for a Day 20
+career) and the HUD looks again once a second.
 
 ## Honest saves
 

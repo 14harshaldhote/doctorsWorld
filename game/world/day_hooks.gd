@@ -198,5 +198,9 @@ static func tomorrow(profile: PlayerProfile, day: int) -> String:
 ## {"streak", "goal", "rival", "post", "tomorrow"}, each "" when there is
 ## nothing to say.
 static func end_card(profile: PlayerProfile, day: int) -> Dictionary:
+	# A letter waiting matters more than who texted (the phone has it anyway).
+	var post := Letters.post_line(profile, day)
+	if post.is_empty():
+		post = PhoneBook.evening_line(profile, day)
 	return {"streak": streak_line(profile), "goal": goal_line(profile), "rival": Rival.line(profile, day),
-		"post": Letters.post_line(profile, day), "tomorrow": tomorrow(profile, day)}
+		"post": post, "tomorrow": tomorrow(profile, day)}

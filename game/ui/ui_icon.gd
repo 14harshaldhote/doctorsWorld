@@ -116,5 +116,44 @@ func _draw() -> void:
 			draw_rect(Rect2(p.call(5, 3), p.call(19, 21) - p.call(5, 3)), colour, false, width)
 			draw_line(p.call(9, 15), p.call(15, 15), colour, width)
 			draw_circle(p.call(12, 9.5), s * 2.4 / 24.0, colour)
+		"chat":
+			draw_polyline(PackedVector2Array([p.call(4, 5), p.call(20, 5), p.call(20, 16), p.call(11, 16), p.call(6, 20),
+				p.call(7, 16), p.call(4, 16), p.call(4, 5)]), colour, width)
+			for x in [8.5, 12, 15.5]:
+				draw_circle(p.call(x, 10.5), s * 1.2 / 24.0, colour)
+		"call", "missed":
+			draw_polyline(PackedVector2Array([p.call(6, 3), p.call(10, 3), p.call(11, 8), p.call(8.5, 10), p.call(14, 15.5),
+				p.call(16, 13), p.call(21, 14), p.call(21, 18), p.call(18, 21), p.call(3, 6), p.call(6, 3)]), colour, width)
+			if kind == "missed":
+				draw_line(p.call(14, 3), p.call(20, 9), colour, width)
+				draw_line(p.call(20, 3), p.call(14, 9), colour, width)
+		"hangup":
+			draw_polyline(PackedVector2Array([p.call(3, 14), p.call(6, 10), p.call(12, 9), p.call(18, 10), p.call(21, 14),
+				p.call(18, 16), p.call(16, 13), p.call(8, 13), p.call(6, 16), p.call(3, 14)]), colour, width)
+		"flask":
+			draw_polyline(PackedVector2Array([p.call(9, 3), p.call(9, 10), p.call(4, 20), p.call(20, 20), p.call(15, 10),
+				p.call(15, 3)]), colour, width)
+			draw_line(p.call(8, 3), p.call(16, 3), colour, width)
+			draw_line(p.call(6.5, 15), p.call(17.5, 15), colour, width)
+		"feed":
+			draw_rect(Rect2(p.call(4, 4), p.call(20, 20) - p.call(4, 4)), colour, false, width)
+			draw_circle(p.call(9, 9), s * 2.0 / 24.0, colour)
+			draw_line(p.call(13, 8), p.call(17, 8), colour, width)
+			draw_line(p.call(7, 14), p.call(17, 14), colour, width)
+			draw_line(p.call(7, 17), p.call(14, 17), colour, width)
+		"photo":
+			draw_rect(Rect2(p.call(3, 5), p.call(21, 19) - p.call(3, 5)), colour, false, width)
+			draw_polyline(PackedVector2Array([p.call(5, 17), p.call(10, 11), p.call(13, 14), p.call(15, 12), p.call(19, 17)]),
+				colour, width)
+			draw_circle(p.call(16, 9), s * 1.6 / 24.0, colour)
+		"back":
+			draw_polyline(PackedVector2Array([p.call(15, 4), p.call(7, 12), p.call(15, 20)]), colour, width * 1.3)
+		"heart":
+			var heart := PackedVector2Array()
+			for index in 24:
+				var t := TAU * index / 24.0
+				heart.append(p.call(12 + 8.5 * pow(sin(t), 3) * 1.0,
+					11 - (6.5 * cos(t) - 2.5 * cos(2 * t) - 1.0 * cos(3 * t) - 0.5 * cos(4 * t))))
+			draw_colored_polygon(heart, colour)
 		_:
 			draw_arc(p.call(12, 12), s * 8.5 / 24.0, 0, TAU, 24, colour, width)

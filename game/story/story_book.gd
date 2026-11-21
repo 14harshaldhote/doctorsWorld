@@ -29,13 +29,14 @@ static func conversation(chapter_name: String, id: String) -> Array:
 	return found if typeof(found) == TYPE_ARRAY else []
 
 
-## Every chapter file in the story folder except the cast.
+## Every chapter file in the story folder except the cast and the phone
+## (phone.json is messages and calls, read by PhoneBook, not conversations).
 static func chapter_names() -> PackedStringArray:
 	var names := PackedStringArray()
 	for file in DirAccess.get_files_at(FOLDER):
 		# Exported games list "file.json.remap" style names for some files.
 		var plain := file.trim_suffix(".remap")
-		if plain.ends_with(".json") and plain != "cast.json":
+		if plain.ends_with(".json") and plain not in ["cast.json", "phone.json"]:
 			names.append(plain.get_basename())
 	names.sort()
 	return names

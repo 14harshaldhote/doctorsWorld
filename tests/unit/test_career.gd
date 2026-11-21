@@ -419,7 +419,8 @@ func test_the_end_card_shows_the_race_and_the_post() -> void:
 	expect_equal(lines[lines.size() - 1], str(hooks["tomorrow"]), "and tomorrow last")
 	var early := DayHooks.end_card(_doctor(2), 2)
 	expect_equal(str(early["rival"]), "", "no race on Day 2")
-	expect_equal(str(early["post"]), "", "and no post")
+	expect(not str(early["post"]).begins_with("Post:"), "and no letters yet")
+	expect_equal(str(early["post"]), PhoneBook.evening_line(_doctor(2), 2), "only who is about to text (stage 23)")
 
 
 func test_review_day_promotion_is_left_out_of_the_race() -> void:

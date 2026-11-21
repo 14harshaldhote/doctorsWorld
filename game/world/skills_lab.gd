@@ -479,6 +479,7 @@ func _end_day() -> void:
 	for id: String in TrainingTask.IDS:
 		stars += maxi(0, TrainingTask.stars_for(profile.best_score(id)))
 	var line := "Skills lab · %d of %d stations · %d stars" % [trained_count(), TrainingTask.IDS.size(), stars]
+	PhoneBook.note_day(profile, profile.day)
 	_end_in = overlay.end_card("Day %d · %s" % [profile.day, profile.clock_text()], line, DayHooks.end_card(profile, profile.day))
 
 

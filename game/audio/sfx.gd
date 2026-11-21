@@ -3,11 +3,11 @@ extends RefCounted
 ## Sound effects made in code: applause, a knock at the door, an ambulance
 ## siren, the pager, button taps, a chime for a job well done, a buzz for a
 ## mistake, the monitor's beep, gas hissing into a keyhole port and a
-## level-up flourish. No sound files to
+## level-up flourish, and the phone ringing and pinging. No sound files to
 ## ship or license. Effects play on the Effects bus, so the Sound effects
 ## setting controls them.
 
-const NAMES := ["applause", "knock", "siren", "pager", "tap", "chime", "buzz", "beep", "hiss", "levelup"]
+const NAMES := ["applause", "knock", "siren", "pager", "tap", "chime", "buzz", "beep", "hiss", "levelup", "ring", "message"]
 
 ## A node that outlives screen changes (Main), for sounds like button taps
 ## that should keep playing when the screen that made them goes away.
@@ -129,6 +129,17 @@ static func _samples(sound: String) -> PackedFloat32Array:
 			out.resize(int(rate * 1.3))
 			for step in 4:
 				_tone(out, int(rate * step * 0.09), [1046.5, 1318.5, 1568.0, 2093.0][step], 1.0, 0.6, 4.0)
+		"ring":
+			# A soft marimba ring: two runs of notes, then a rest before the
+			# next ring.
+			out.resize(int(rate * 1.6))
+			for run in 2:
+				for note in 4:
+					_tone(out, int(rate * (run * 0.6 + note * 0.11)), [1174.7, 1480.0, 1174.7, 1760.0][note], 0.45, 0.45, 9.0, 2)
+		"message":
+			out.resize(int(rate * 0.5))
+			_tone(out, 0, 1568.0, 0.4, 0.45, 10.0, 2)
+			_tone(out, int(rate * 0.09), 2349.3, 0.4, 0.4, 9.0, 2)
 		_:
 			push_error("Unknown sound: %s" % sound)
 			out.resize(1)

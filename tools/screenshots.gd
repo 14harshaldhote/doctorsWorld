@@ -531,6 +531,9 @@ func _ward_shots() -> void:
 	# Stage 22: casualty through the ward's door.
 	await _casualty_shots()
 
+	# Stage 23: the doctor's phone.
+	await _phone_shots()
+
 
 ## The career map over the ward: the road and the race, a Chief's road,
 ## the wall of letters, one letter open, and the end card with the post.
@@ -733,8 +736,12 @@ static func _see_one(ward: Ward, condition: String, decide: bool) -> void:
 
 
 ## Fails loudly if the patient card spills off the screen.
-func _check_card(ward: Ward, shot_name: String) -> void:
-	if ward.panel == null:
+func _check_card(found: Variant, shot_name: String) -> void:
+	# A shot left out by the filter has already freed its ward.
+	if not is_instance_valid(found):
+		return
+	var ward := found as Ward
+	if ward == null or ward.panel == null:
 		return
 	var screen := root.get_viewport().get_visible_rect()
 	var sheet := ward.panel.sheet.get_global_rect()
@@ -784,6 +791,79 @@ func _casualty_shots() -> void:
 			push_error("The day never ended")
 		ending.overlay.tick(1.0)
 		ending.set_process(false))
+
+
+## A ward day at its first walk, the clock moved on to a time, with the
+## phone up (show gets the ward and the phone).
+func _phone_shot(shot_name: String, day: int, minutes: int, flags: Array, show: Callable) -> void:
+	var ward := Ward.new(sample_profile_on_ward(day, ["beds_checked", "casualty_intro"] + flags))
+	ward.profile.set_count("hospital_seed", 2026)
+	await _shot(shot_name, ward, func() -> void:
+		ward.play_until(func() -> bool: return ward.mode == "walk", Ward.pick_tones(["Patient first", "Honest", "Calm"]))
+		ward.profile.minutes = maxi(ward.profile.minutes, minutes)
+		ward._catch_up()
+		ward._toasts.clear()
+		ward._refresh_hud()
+		PhoneBook.forget()
+		var phone := ward.hud.open_phone()
+		if phone == null:
+			push_error("%s: the phone didn't come up" % shot_name)
+			return
+		show.call(ward, phone)
+		ward.settle_camera()
+		ward.set_process(false))
+
+
+func _phone_shots() -> void:
+	# The evening of the review: home screen, then the family going wild.
+	await _phone_shot("175-phone-home", 8, 19 * 60 + 35, ["promoted"], func(_w: Ward, _p: PhonePanel) -> void: pass)
+	await _phone_shot("176-phone-family", 8, 19 * 60 + 35, ["promoted"], func(_w: Ward, p: PhonePanel) -> void:
+		p.open_chat("family"))
+	# Venu Kurup's blue tin.
+	await _phone_shot("177-phone-tin", 21, 15 * 60 + 40, [], func(_w: Ward, p: PhonePanel) -> void:
+		p.open_chat("venu"))
+	# Dad rings to say "surgeon" out loud.
+	await _phone_shot("178-phone-call", 19, 18 * 60 + 15, [], func(w: Ward, p: PhonePanel) -> void:
+		var due := PhoneBook.call_due(w.profile)
+		if due.is_empty():
+			push_error("178-phone-call: no call due")
+			return
+		w.hud.ring(due)
+		w.hud.answer_ringing()
+		p._call_seconds = 6.0
+		p._process(0.4))
+	await _phone_shot("179-phone-feed", 12, 17 * 60 + 40, [], func(_w: Ward, p: PhonePanel) -> void:
+		p.open_app("feed"))
+	await _phone_shot("180-phone-photos", 22, 21 * 60 + 10, ["crash_photo"], func(_w: Ward, p: PhonePanel) -> void:
+		p.open_app("photos"))
+	# Casualty's results coming back to the Lab app.
+	var lab := _casualty_ward(12)
+	await _shot("181-phone-lab", lab, func() -> void:
+		_into_casualty(lab)
+		_see_one(lab, "renal_colic", false)
+		lab._close_panel()
+		lab.mode = "walk"
+		lab.hud.set_talking(false)
+		lab.profile.minutes += 45
+		lab._catch_up()
+		lab._toasts.clear()
+		lab._refresh_hud()
+		var phone := lab.hud.open_phone()
+		if phone != null:
+			phone.open_app("lab")
+		lab.settle_camera()
+		lab.set_process(false))
+	# A message arriving while the doctor walks: the banner and the badge.
+	var banner := Ward.new(sample_profile_on_ward(12, ["beds_checked", "casualty_intro", "mehra_complaint"]))
+	await _shot("182-phone-banner", banner, func() -> void:
+		banner.play_until(func() -> bool: return banner.mode == "walk", Ward.pick_tones(["Patient first", "Honest", "Calm"]))
+		banner._toasts.clear()
+		banner.hud._process(1.0)
+		banner.profile.minutes = maxi(banner.profile.minutes, 9 * 60 + 12)
+		banner._refresh_hud()
+		banner.hud._process(1.0)
+		banner.settle_camera()
+		banner.set_process(false))
 
 
 ## The crises on their story days: [shot, day, step on show, answers given].

@@ -798,6 +798,7 @@ func _end_day() -> void:
 	var where := {"won": "Rohit is asleep on the ward, minus one appendix.",
 		"struggled": "Rohit is in recovery, stable.",
 		"failed": "Rohit is in intensive care for the night."}
+	PhoneBook.note_day(profile, profile.day)
 	_end_in = overlay.end_card("Day %d · %s" % [profile.day, profile.clock_text()], str(where.get(operation.outcome, "")),
 		DayHooks.end_card(profile, profile.day))
 	_refresh_hud()
