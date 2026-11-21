@@ -345,9 +345,9 @@ Here's everything, in order, so you can decide how much of your life to give it:
   Easy on Monday, hard by Thursday, extreme at the weekend, because that's
   when casualty is. Play every day for a streak. Miss one and it starts
   again from one, and Dr. Iyer will know. Then share it on WhatsApp: the
-  case number, a row of ticks and crosses, your time and one line of
-  self-roast, and never what the case was, so your batchmates can't cheat.
-  They will try.
+  case number, which steps you got right in plain words (no emoji, we're
+  doctors, not influencers), your time and one line of self-roast, and
+  never what the case was, so your batchmates can't cheat. They will try.
 - A weekly mystery: one patient nobody can diagnose, a new clue every
   weekday, and one guess all week. Guess on Monday for a lot of XP and the
   risk of looking silly, or wait for Friday and be sure, like a consultant.

@@ -19,8 +19,9 @@ const LEVELS_BY_WEEKDAY := ["extreme", "easy", "easy", "easy", "hard", "hard", "
 ## The first 60-second case, case #1. The share card numbers the rest from
 ## it, so friends playing the same day share a number.
 const FIRST_DATE := "2026-11-19"
-## Each step's mark on the share card: wrong, half right, right.
-const MARK_EMOJI := ["❌", "🟨", "✅"]
+## Each step's word on the share card: wrong, half right, right. Plain
+## words, no emoji.
+const MARK_WORDS := ["wrong", "half right", "right"]
 ## The share card's last word, by how it went. Picked by the date, so the
 ## same result on the same day says the same thing.
 const BRAG := {
@@ -168,9 +169,10 @@ static func seconds_used(task: CrisisTask) -> int:
 ## Today's result as a message for friends, or "" if today's case isn't
 ## played yet. It says how it went, never what the case was, so nobody's
 ## case is spoilt:
-##   Doctors World · 60-second case #3 🩺
-##   Hard · ✅✅❌ 2/3 in 38s
-##   🔥 5 days running
+##   Doctors World · 60-second case #3
+##   Hard · 2 of 3 right in 38s
+##   Right, right, wrong
+##   5 days running
 ##   The patient lived. My ego, less so.
 ##   Same case for every doctor today. Your move.
 static func share_text(profile: PlayerProfile, date: String = "") -> String:
@@ -178,20 +180,22 @@ static func share_text(profile: PlayerProfile, date: String = "") -> String:
 	if not played_today(profile, when):
 		return ""
 	var digits := str(profile.count("daily_case_marks"))
-	var row := ""
+	var words: Array[String] = []
 	var right := 0
 	for digit in digits:
 		var mark := clampi(int(digit), 1, 3)
-		row += str(MARK_EMOJI[mark - 1])
+		words.append(str(MARK_WORDS[mark - 1]))
 		if mark == 3:
 			right += 1
 	var lines: Array[String] = []
-	lines.append("Doctors World · 60-second case #%d 🩺" % case_number(when))
-	lines.append("%s · %s %d/%d in %ds" % [level_for(when).capitalize(), row, right, digits.length(),
+	lines.append("Doctors World · 60-second case #%d" % case_number(when))
+	lines.append("%s · %d of %d right in %ds" % [level_for(when).capitalize(), right, digits.length(),
 		profile.count("daily_case_seconds", int(SECONDS))])
+	var row := ", ".join(words)
+	lines.append(row.substr(0, 1).to_upper() + row.substr(1))
 	var run := streak(profile, when)
 	if run >= 2:
-		lines.append("🔥 %d days running" % run)
+		lines.append("%d days running" % run)
 	var how := "some"
 	if right == digits.length():
 		how = "perfect"

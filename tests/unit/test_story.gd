@@ -251,3 +251,33 @@ func test_sound_off_plays_nothing() -> void:
 	expect(rig.get_node_or_null("Voice") == null, "no voice either")
 	Voice.enabled = true
 	expect(Sfx.play(holder, "knock") != null, "sound comes back on")
+
+
+## No emoji anywhere a player could read: the story, the letters, the share
+## card, every label in the game's code and the tests' own output. Plain words and the odd
+## typographic mark (an arrow, a bullet, the rupee sign) only.
+func test_nothing_in_the_game_uses_emoji() -> void:
+	var files: Array[String] = []
+	_files_under("res://story", ".json", files)
+	_files_under("res://game", ".gd", files)
+	_files_under("res://game", ".tscn", files)
+	_files_under("res://tests", ".gd", files)
+	expect(files.size() > 50, "the game's files are found: %d" % files.size())
+	for path in files:
+		var text := FileAccess.get_file_as_string(path)
+		for index in text.length():
+			var code := text.unicode_at(index)
+			var emoji := (code >= 0x1F000 and code <= 0x1FAFF) or (code >= 0x2600 and code <= 0x27BF) \
+				or (code >= 0x2B00 and code <= 0x2BFF) or code == 0xFE0F or code == 0x200D
+			if emoji:
+				expect(false, "%s has an emoji: %s" % [path, text.substr(index, 1)])
+				break
+
+
+func _files_under(folder: String, ending: String, into: Array[String]) -> void:
+	for file in DirAccess.get_files_at(folder):
+		var plain := file.trim_suffix(".remap")
+		if plain.ends_with(ending):
+			into.append(folder.path_join(plain))
+	for sub in DirAccess.get_directories_at(folder):
+		_files_under(folder.path_join(sub), ending, into)

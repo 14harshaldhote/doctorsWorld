@@ -67,7 +67,7 @@ func _run_all() -> void:
 			total += 1
 			load_problems.insert(0, "the test file failed to load")
 			failed.append("%s\n      %s" % [file.get_basename(), "\n      ".join(load_problems)])
-			print("✗ %s (did not load)" % file.get_basename())
+			print("FAIL %s (did not load)" % file.get_basename())
 			continue
 		var methods: Array[String] = []
 		for method in script.get_script_method_list():
@@ -88,7 +88,7 @@ func _run_all() -> void:
 			if not problems.is_empty():
 				suite_failures += 1
 				failed.append("%s › %s\n      %s" % [file.get_basename(), method_name, "\n      ".join(problems)])
-		print("%s %s (%d tests)" % ["✗" if suite_failures > 0 else "✓", file.get_basename(), methods.size()])
+		print("%s %s (%d tests)" % ["FAIL" if suite_failures > 0 else "ok  ", file.get_basename(), methods.size()])
 
 	var seconds := (Time.get_ticks_msec() - started) / 1000.0
 	if failed.is_empty():
@@ -97,5 +97,5 @@ func _run_all() -> void:
 	else:
 		print("\n%d of %d tests failed:" % [failed.size(), total])
 		for line in failed:
-			print("  ✗ " + line)
+			print("  FAIL " + line)
 		quit(1)

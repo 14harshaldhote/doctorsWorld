@@ -581,12 +581,16 @@ func test_the_share_card_says_how_it_went_but_not_what_the_case_was() -> void:
 	DailyCase.record(doctor, task)
 	var text := DailyCase.share_text(doctor)
 	var lines := text.split("\n")
-	expect_equal(lines[0], "Doctors World · 60-second case #1 🩺")
-	var marks := "✅".repeat(task.steps.size())
-	expect_equal(lines[1], "Hard · %s %d/%d in 22s" % [marks, task.steps.size(), task.steps.size()])
-	expect(str(lines[2]) in DailyCase.BRAG["perfect"], "a perfect brag: %s" % lines[2])
+	expect_equal(lines[0], "Doctors World · 60-second case #1")
+	expect_equal(lines[1], "Hard · %d of %d right in 22s" % [task.steps.size(), task.steps.size()])
+	var words: Array[String] = []
+	for step in task.steps.size():
+		words.append("right")
+	var row := ", ".join(words)
+	expect_equal(lines[2], row.substr(0, 1).to_upper() + row.substr(1), "each step in words")
+	expect(str(lines[3]) in DailyCase.BRAG["perfect"], "a perfect brag: %s" % lines[3])
 	expect_equal(lines[lines.size() - 1], "Same case for every doctor today. Your move.")
-	expect(not ("🔥" in text), "no streak line on the first day")
+	expect(not ("days running" in text), "no streak line on the first day")
 	for word in [task.title(), task.case_title, task.card_title]:
 		if str(word).length() > 3:
 			expect(not (str(word) in text), "the case isn't spoilt: %s" % word)
@@ -607,10 +611,11 @@ func test_the_share_card_marks_each_step_and_the_streak() -> void:
 	_play(task, false)
 	DailyCase.record(doctor, task)
 	var text := DailyCase.share_text(doctor)
-	var row := "✅" + "❌".repeat(task.steps.size() - 1)
-	expect(row + " 1/%d" % task.steps.size() in text, "each step in order: %s" % text)
-	expect("🔥 2 days running" in text, "the streak")
-	var said := text.split("\n")[3]
+	var row := "Right" + ", wrong".repeat(task.steps.size() - 1)
+	expect(row in text.split("\n"), "each step in order: %s" % text)
+	expect("1 of %d right" % task.steps.size() in text, "the count: %s" % text)
+	expect("2 days running" in text.split("\n"), "the streak")
+	var said := text.split("\n")[4]
 	expect(said in DailyCase.BRAG["some"], "a some-right brag: %s" % said)
 
 
@@ -625,9 +630,28 @@ func test_a_minute_run_out_gets_the_slow_brag() -> void:
 	DailyCase.record(doctor, task)
 	var text := DailyCase.share_text(doctor)
 	expect("in 60s" in text, "the whole minute: %s" % text)
-	expect("❌".repeat(task.steps.size()) + " 0/" in text)
-	var said := text.split("\n")[2]
+	expect(("Wrong" + ", wrong".repeat(task.steps.size() - 1)) in text.split("\n"), "all wrong: %s" % text)
+	expect("0 of %d right" % task.steps.size() in text)
+	var said := text.split("\n")[3]
 	expect(said in DailyCase.BRAG["slow"], "the slow brag: %s" % said)
+
+
+func test_the_share_card_has_no_emoji() -> void:
+	DailyReward.today_override = "2026-11-18"
+	var doctor := _doctor()
+	var first := DailyCase.make()
+	_play(first, true)
+	DailyCase.record(doctor, first)
+	DailyReward.today_override = THURSDAY
+	var task := DailyCase.make()
+	_play(task, false)
+	DailyCase.record(doctor, task)
+	var text := DailyCase.share_text(doctor)
+	for brag: Array in DailyCase.BRAG.values():
+		text += "\n" + "\n".join(brag)
+	for index in text.length():
+		var code := text.unicode_at(index)
+		expect(code < 0x2190 or (code > 0x2BFF and code < 0x1F000), "no emoji: %s" % text.substr(index, 1))
 
 
 func test_every_brag_is_written() -> void:
@@ -643,7 +667,7 @@ func test_whatsapp_opens_with_the_message_typed_and_copied() -> void:
 	var copied: Array = []
 	Share.opener = func(url: String) -> void: opened.append(url)
 	Share.copier = func(text: String) -> void: copied.append(text)
-	var text := "Doctors World · 60-second case #4 🩺\nHard · ✅✅❌ 2/3 in 38s"
+	var text := "Doctors World · 60-second case #4\nHard · 2 of 3 right in 38s\nRight, right, wrong"
 	Share.whatsapp(text)
 	expect_equal(copied, [text], "copied too")
 	expect_equal(opened.size(), 1)
