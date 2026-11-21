@@ -77,11 +77,13 @@ static func xp_for(clues: int) -> int:
 
 
 ## The one guess of the week: {"right", "xp", "clues", "answer", "explain"}.
-## A second guess in the same week changes nothing and returns {}.
+## A second guess in the same week changes nothing and returns {}, as does
+## one while the phone's date has been moved back (ClockGuard).
 static func guess(profile: PlayerProfile, option_id: String, date: String = "") -> Dictionary:
 	var when := _when(date)
-	if guessed(profile, when):
+	if guessed(profile, when) or ClockGuard.rolled_back(profile, when):
 		return {}
+	ClockGuard.note(profile, when)
 	var mystery := current(when)
 	var clues := clues_open(when)
 	var right := option_id == str(mystery.get("answer", ""))

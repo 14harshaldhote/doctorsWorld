@@ -39,9 +39,14 @@ static func xp_for(streak: int, rank: int) -> int:
 
 ## Notes a session on a date. The first session of a new date pays the XP
 ## and returns {"xp", "streak", "next"} (next: tomorrow's XP); any later
-## session that day, and the career's first ever, returns {}.
+## session that day, the career's first ever, and any while the phone's
+## date is earlier than one already seen (ClockGuard), return {}.
 static func claim(profile: PlayerProfile, date: String = "") -> Dictionary:
 	var when := date if not date.is_empty() else today()
+	if ClockGuard.rolled_back(profile, when):
+		# The phone's date was moved back: nothing until it catches up.
+		return {}
+	ClockGuard.note(profile, when)
 	if profile.last_played == when:
 		return {}
 	var first := profile.last_played.is_empty()

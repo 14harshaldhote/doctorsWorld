@@ -20,6 +20,9 @@ var _hint: PanelContainer
 var _buttons: HBoxContainer
 var _today: PanelContainer
 var _tags := {}
+## Where the tags of a crowd went this round (start_crowd), so a crowded
+## tag can make way instead of landing on top of another.
+var _crowd: Array[Rect2] = []
 var _bubbles := {}
 var _talking := false
 var _menu: PanelContainer
@@ -443,8 +446,9 @@ func hint_text() -> String:
 
 
 ## tasks: an array of [text, done], or [text, done, stars] to show a best
-## result as three stars (-1 for none yet). The first unfinished task is
-## highlighted. No tasks hides the card.
+## result as three stars (-1 for none yet), or [text, done, stars, colour]
+## for a dot of that colour (casualty's triage). The first unfinished task
+## is highlighted. No tasks hides the card.
 func set_tasks(tasks: Array, title: String = "Today") -> void:
 	for child in _tasks.get_children():
 		_tasks.remove_child(child)
@@ -460,8 +464,9 @@ func set_tasks(tasks: Array, title: String = "Today") -> void:
 		if current:
 			current_found = true
 		var row := UiKit.hbox(8)
-		var icon := UiIcon.make("check" if done else ("dot" if current else "circle"), 15,
-			UiKit.MINT if done or current else UiKit.TEXT_LABEL)
+		var coloured := task.size() > 3 and task[3] is Color
+		var icon := UiIcon.make("check" if done else ("dot" if current or coloured else "circle"), 15,
+			task[3] if coloured else (UiKit.MINT if done or current else UiKit.TEXT_LABEL))
 		icon.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
 		row.add_child(icon)
 		var text := UiKit.label(task[0], 13, Color("#9FBFBB") if done else (Color.WHITE if current else UiKit.TEXT_LABEL),
@@ -481,8 +486,30 @@ func set_tasks(tasks: Array, title: String = "Today") -> void:
 		_tasks.add_child(row)
 
 
+## Starts a new round of crowded tags (see set_tag's crowded).
+func start_crowd() -> void:
+	_crowd.clear()
+
+
+## Counts a tag that is showing as part of this round's crowd, so crowded
+## tags set after it keep off it.
+func crowd_note(id: String) -> void:
+	var tag: Control = _tags.get(id)
+	if tag != null and tag.visible:
+		_crowd.append(Rect2(tag.position, tag.size))
+
+
+## Keeps this round's crowded tags off a part of the screen (the doctor).
+func crowd_block(box: Rect2) -> void:
+	_crowd.append(box)
+
+
 ## Name tags float over people. tags: name -> [text, screen position, visible].
-func set_tag(id: String, text: String, at: Vector2, shown: bool, highlight: bool = false, pin: bool = false) -> void:
+## A crowded tag (people sitting close together) that would land on one set
+## earlier this round moves up a row, or stays hidden if that is taken too:
+## the first set win, so set the most important first.
+func set_tag(id: String, text: String, at: Vector2, shown: bool, highlight: bool = false, pin: bool = false,
+		crowded: bool = false) -> void:
 	var tag: PanelContainer = _tags.get(id)
 	if tag == null:
 		tag = UiKit.panel(Color.WHITE, 14, Vector2(10, 0))
@@ -523,6 +550,17 @@ func set_tag(id: String, text: String, at: Vector2, shown: bool, highlight: bool
 		tag.visible = true
 		return
 	tag.visible = shown and not _talking and fits
+	if crowded and tag.visible:
+		var lift := tag.size.y + UiKit.px(4)
+		for step in 2:
+			var box := Rect2(tag.position - Vector2(0, lift * step), tag.size)
+			if not _crowd.any(func(taken: Rect2) -> bool: return taken.grow(UiKit.px(3)).intersects(box)):
+				if step > 0 and (_covered(box) or not _on_screen(box.position)):
+					break
+				tag.position = box.position
+				_crowd.append(box)
+				return
+		tag.visible = false
 
 
 ## True when a screen point is on a tag that is showing (a little extra
@@ -598,6 +636,8 @@ func _keep_on_screen(spot: Vector2, box: Vector2) -> Vector2:
 ## True when a floating tag or bubble would slide under one of the HUD panels.
 func _covered(box: Rect2) -> bool:
 	var panels: Array[Control] = [_today, _pager, _buttons, get_node("Badge") as Control, get_node("Clock") as Control]
+	if not hint_text().is_empty():
+		panels.append(_hint)
 	for panel in panels:
 		if panel.visible and panel.get_global_rect().grow(UiKit.px(4)).intersects(box):
 			return true

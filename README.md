@@ -439,6 +439,27 @@ Here's everything, in order, so you can decide how much of your life to give it:
   ones got Gen Z: Zoya is lowkey a fan and highkey terrified, Dev Malhotra
   finds his father's budget voice so cringe, and Dr. Saxena's brain is a
   loading screen. Dr. Iyer had to ask what "it's giving" means. She regrets it.
+- Casualty. There's a red door at the end of Ward 4 now, and behind it four
+  cubicles, six plastic benches and a triage nurse who has seen it all,
+  twice. People walk in off the street all day: a sprained wrist, a tummy
+  bug, a man who is definitely not having a heart attack (he is). Tap
+  someone, they lie on a trolley, and you ask, examine, order tests and
+  decide, while the waiting room gets longer and the sickest get worse.
+  Every career has its own hospital, so your Tuesday is not your friend's.
+- The clock runs now. Half a hospital minute every second you stand about,
+  and the story doesn't wait: leave a page unanswered for an hour and you
+  arrive late, it costs you, and people notice. When the story's done you
+  hand over and go home, or you don't, because casualty is right there.
+- Honesty, enforced. Edit your save and the game notices, puts the edited
+  one aside and takes you back to your last honest save. Move the phone's
+  date back to farm the daily case and nothing pays until the real date
+  catches up. Shared results carry a check code, and "Check a friend's
+  result" tells you whether your cousin really got 3 of 3 in 22 seconds.
+  He didn't.
+- Kinder to your battery. Menus run at half speed, and when another app is
+  in front the game drops to a crawl and the hospital waits for you. Nobody
+  dies while you answer your mother.
+- A Mac version. Same game, a bigger window, a mouse instead of a thumb.
 
 Screenshots of every screen are rebuilt automatically after each change, on
 the [`screenshots` branch](../../tree/screenshots).

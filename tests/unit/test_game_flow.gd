@@ -15,7 +15,7 @@ func _main() -> Main:
 
 
 func _clear() -> void:
-	for file: String in ["save.json", "save.json.tmp", "settings.json", "settings.json.tmp"]:
+	for file: String in ["save.json", "save.json.tmp", "settings.json", "settings.json.tmp", "save.bak1.json", "save.bak2.json", "save.bak3.json", ".install"]:
 		var path := "user://test_flow/" + file
 		if FileAccess.file_exists(path):
 			DirAccess.remove_absolute(path)

@@ -108,7 +108,7 @@ func test_save_text_is_stable_and_versioned() -> void:
 	profile.avatar = AvatarConfig.random(SeededRandom.new(1))
 	var text := SaveStore.encode(profile)
 	expect_equal(text, SaveStore.encode(PlayerProfile.from_dict(profile.to_dict())), "byte-for-byte stable")
-	expect(text.contains("\"version\": 2"))
+	expect(text.contains("\"version\": 3"))
 	var decoded := SaveStore.decode(text)
 	expect(decoded.has("profile"))
 	expect_equal((decoded["profile"] as PlayerProfile).to_dict(), profile.to_dict())
@@ -119,7 +119,7 @@ func test_decode_refuses_damaged_and_newer_saves() -> void:
 	expect_equal(SaveStore.decode("[1, 2]")["error"], "corrupt")
 	expect_equal(SaveStore.decode("{\"profile\": {}}")["error"], "corrupt")
 	expect_equal(SaveStore.decode("{\"version\": 0, \"profile\": {}}")["error"], "corrupt")
-	expect_equal(SaveStore.decode("{\"version\": 3, \"profile\": {}}")["error"], "newer_version")
+	expect_equal(SaveStore.decode("{\"version\": 4, \"profile\": {}}")["error"], "newer_version")
 
 
 func test_story_progress_is_saved_and_repaired() -> void:

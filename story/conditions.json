@@ -1,0 +1,1024 @@
+{
+	"appendicitis": {
+		"name": "Appendicitis",
+		"board": "Belly pain since last night",
+		"sex": "",
+		"age": [
+			12,
+			45
+		],
+		"triage": "yellow",
+		"start": [
+			25,
+			40
+		],
+		"worsens": 7,
+		"vitals": {
+			"pulse": [
+				96,
+				112
+			],
+			"bp": [
+				110,
+				128
+			],
+			"temp": [
+				37.6,
+				38.3
+			],
+			"spo2": [
+				97,
+				99
+			],
+			"breaths": [
+				16,
+				20
+			]
+		},
+		"answers": {
+			"pain": "It started round my belly button. Now it's moved down here, on the right. Walking makes it worse.",
+			"when": "Since last night. I thought it was gas, so I had Eno. Twice.",
+			"other": "I threw up once. Not hungry at all, which is not like me."
+		},
+		"exam": "Tender low on the right. It hurts more when you let go than when you press.",
+		"results": {
+			"bloods": "White count 15,800, raised. The rest is normal.",
+			"usg": "Swollen appendix, 9 mm, with a little fluid around it."
+		},
+		"key": [
+			"bloods",
+			"usg"
+		],
+		"go": "theatre",
+		"plans": [
+			{
+				"text": "Nothing by mouth, a drip, antibiotics and pain relief, and call the surgeons for theatre",
+				"right": true,
+				"why": "Classic appendicitis: pain that moved to the right, a fever, a raised white count and a swollen appendix. It needs an operation before it bursts."
+			},
+			{
+				"text": "Antacid and home, come back if it gets worse",
+				"effect": "back",
+				"why": "Pain that moves to the lower right with a fever isn't acidity. Sent home, an appendix can burst."
+			},
+			{
+				"text": "A laxative to clear the bowel and see if it settles",
+				"effect": "harm",
+				"why": "Never give a laxative for suspected appendicitis. It can make an inflamed appendix burst."
+			},
+			{
+				"text": "Admit and watch till tomorrow, no antibiotics yet",
+				"effect": "worse",
+				"why": "Watching without treatment lets it get worse. Antibiotics and the surgeons, now."
+			}
+		]
+	},
+	"dengue": {
+		"name": "Dengue with warning signs",
+		"board": "Fever for four days, now vomiting",
+		"sex": "",
+		"age": [
+			10,
+			60
+		],
+		"triage": "yellow",
+		"start": [
+			30,
+			45
+		],
+		"worsens": 6,
+		"vitals": {
+			"pulse": [
+				100,
+				116
+			],
+			"bp": [
+				100,
+				112
+			],
+			"temp": [
+				37.2,
+				38.0
+			],
+			"spo2": [
+				97,
+				99
+			],
+			"breaths": [
+				18,
+				22
+			]
+		},
+		"answers": {
+			"pain": "Fever, body ache, pain behind my eyes. Today my stomach hurts and I keep vomiting.",
+			"when": "Four days. The fever's a bit less today, so I thought I was getting better.",
+			"other": "My gums bled when I brushed this morning. Half our building has fever."
+		},
+		"exam": "Tender under the right ribs. Small red spots on the shins. Cool hands.",
+		"results": {
+			"bloods": "Platelets 42,000, low. Haematocrit 48%, up since yesterday.",
+			"rapid": "Dengue NS1 positive. Malaria negative."
+		},
+		"key": [
+			"bloods",
+			"rapid"
+		],
+		"go": "admit",
+		"plans": [
+			{
+				"text": "Admit, careful drip fluids, paracetamol for the fever, and blood counts every few hours",
+				"right": true,
+				"why": "Dengue with warning signs: belly pain, vomiting, bleeding gums, falling platelets and a rising haematocrit. The danger is leaking fluid as the fever settles, so admit and watch closely."
+			},
+			{
+				"text": "Ibuprofen for the fever and the body ache, and home",
+				"effect": "harm",
+				"why": "No ibuprofen, aspirin or diclofenac in dengue. They raise the risk of bleeding. And warning signs mean admission."
+			},
+			{
+				"text": "Platelet transfusion straight away, because 42,000 is low",
+				"effect": "worse",
+				"why": "Platelets aren't given for a number alone without serious bleeding. Fluids and close watching do the work."
+			},
+			{
+				"text": "Paracetamol and home, the fever's already coming down",
+				"effect": "back",
+				"why": "A falling fever on day four is the most dangerous time in dengue, not the end of it."
+			}
+		]
+	},
+	"renal_colic": {
+		"name": "Kidney stone",
+		"board": "Back pain going down to the groin",
+		"sex": "",
+		"age": [
+			25,
+			60
+		],
+		"triage": "yellow",
+		"start": [
+			20,
+			30
+		],
+		"worsens": 2,
+		"vitals": {
+			"pulse": [
+				96,
+				110
+			],
+			"bp": [
+				130,
+				150
+			],
+			"temp": [
+				36.8,
+				37.2
+			],
+			"spo2": [
+				98,
+				99
+			],
+			"breaths": [
+				18,
+				22
+			]
+		},
+		"answers": {
+			"pain": "Here, at the back, on the right. It twists and goes down to the front. I can't sit still.",
+			"when": "It started at four in the morning. It comes in waves.",
+			"other": "My urine looked a bit pink. No fever."
+		},
+		"exam": "Restless, can't lie still. Tender over the right side of the back. Belly soft.",
+		"results": {
+			"urine": "Blood in the urine. No sign of infection.",
+			"usg": "A 5 mm stone in the right ureter. The right kidney a little swollen.",
+			"bloods": "Kidney function normal. White count normal."
+		},
+		"key": [
+			"urine",
+			"usg"
+		],
+		"go": "home",
+		"plans": [
+			{
+				"text": "A pain-relief injection and an anti-sickness one, then home with tablets, plenty of water and a urology check",
+				"right": true,
+				"why": "A small stone, no fever, kidneys working. Most 5 mm stones pass on their own with good pain relief."
+			},
+			{
+				"text": "Book theatre tonight to take the stone out",
+				"effect": "worse",
+				"why": "A 5 mm stone without infection usually passes by itself. Surgery tonight isn't needed."
+			},
+			{
+				"text": "Antibiotics and home, no painkillers needed",
+				"effect": "back",
+				"why": "There's no infection, and this is one of the worst pains there is. Pain relief is the treatment."
+			},
+			{
+				"text": "Admit to the ward for a week of drips",
+				"effect": "worse",
+				"why": "A week in bed for a small stone helps nobody, and blocks a bed someone else needs."
+			}
+		]
+	},
+	"asthma": {
+		"name": "Severe asthma attack",
+		"board": "Can't breathe, wheezing",
+		"sex": "",
+		"age": [
+			12,
+			55
+		],
+		"triage": "red",
+		"start": [
+			45,
+			55
+		],
+		"worsens": 12,
+		"vitals": {
+			"pulse": [
+				112,
+				124
+			],
+			"bp": [
+				120,
+				136
+			],
+			"temp": [
+				36.8,
+				37.2
+			],
+			"spo2": [
+				91,
+				93
+			],
+			"breaths": [
+				26,
+				30
+			]
+		},
+		"answers": {
+			"pain": "I can't... get enough air. My chest is tight.",
+			"when": "Since this evening. They were burning garbage next to our building.",
+			"other": "I have asthma. My inhaler finished last week. I kept meaning to buy one."
+		},
+		"exam": "Wheeze all over the chest. Talking in short bursts. Using the neck muscles to breathe.",
+		"results": {
+			"gas": "Oxygen a little low. Carbon dioxide normal for now, which won't last if they tire.",
+			"xray": "No collapsed lung. The lungs are over-inflated."
+		},
+		"key": [],
+		"go": "admit",
+		"plans": [
+			{
+				"text": "Oxygen, back-to-back salbutamol and ipratropium nebulisers, and steroids, then review in fifteen minutes",
+				"right": true,
+				"why": "A bad asthma attack: can't finish sentences, low oxygen, a fast pulse. Nebulisers and steroids now, and watch for tiring."
+			},
+			{
+				"text": "A sedative to calm the panic",
+				"effect": "harm",
+				"why": "Never sedate someone in an asthma attack. It slows the breathing they're fighting for."
+			},
+			{
+				"text": "Antibiotics and a cough syrup",
+				"effect": "worse",
+				"why": "Nothing here says infection, and syrup won't open airways. The wheeze needs nebulisers."
+			},
+			{
+				"text": "A new inhaler and home",
+				"effect": "back",
+				"why": "Oxygen in the low nineties and broken sentences is a hospital asthma attack, not one for home."
+			}
+		]
+	},
+	"heart_attack": {
+		"name": "Heart attack",
+		"board": "Chest pain, sweating",
+		"sex": "",
+		"age": [
+			45,
+			75
+		],
+		"triage": "red",
+		"start": [
+			50,
+			60
+		],
+		"worsens": 15,
+		"vitals": {
+			"pulse": [
+				90,
+				104
+			],
+			"bp": [
+				100,
+				118
+			],
+			"temp": [
+				36.6,
+				37.0
+			],
+			"spo2": [
+				94,
+				96
+			],
+			"breaths": [
+				18,
+				22
+			]
+		},
+		"answers": {
+			"pain": "In the middle of my chest. Like an elephant sitting on it. It goes into my left arm and my jaw.",
+			"when": "Forty minutes ago. I was climbing the stairs with the shopping.",
+			"other": "I have sugar and BP. I stopped the BP tablets, they made me tired."
+		},
+		"exam": "Grey and sweaty. Chest clear. Heart sounds normal.",
+		"results": {
+			"ecg": "ST elevation in II, III and aVF. A heart attack, happening now.",
+			"bloods": "Troponin raised."
+		},
+		"key": [
+			"ecg"
+		],
+		"go": "cath",
+		"plans": [
+			{
+				"text": "Aspirin to chew, the second blood thinner, and call cardiology for the cath lab now",
+				"right": true,
+				"why": "Crushing pain, sweating and ST elevation on the ECG: a heart attack in progress. Every minute counts, so open the artery."
+			},
+			{
+				"text": "Antacid and watch, it might be gas",
+				"effect": "harm",
+				"why": "Crushing chest pain in a grey, sweaty patient is the heart until proven otherwise. The ECG proved it."
+			},
+			{
+				"text": "Wait for the troponin before doing anything",
+				"effect": "worse",
+				"why": "With ST elevation on the ECG you don't wait for blood tests. Heart muscle dies while you wait."
+			},
+			{
+				"text": "A sleeping tablet and a bed on the ward",
+				"effect": "harm",
+				"why": "This needs the cath lab, not a ward bed and a sleeping tablet."
+			}
+		]
+	},
+	"dka": {
+		"name": "Diabetic ketoacidosis",
+		"board": "Vomiting, breathing fast, drowsy",
+		"sex": "",
+		"age": [
+			14,
+			30
+		],
+		"triage": "red",
+		"start": [
+			45,
+			55
+		],
+		"worsens": 10,
+		"vitals": {
+			"pulse": [
+				116,
+				128
+			],
+			"bp": [
+				98,
+				110
+			],
+			"temp": [
+				36.8,
+				37.4
+			],
+			"spo2": [
+				97,
+				99
+			],
+			"breaths": [
+				28,
+				32
+			]
+		},
+		"answers": {
+			"pain": "My stomach hurts. I've been vomiting since yesterday. I'm so thirsty.",
+			"when": "Since yesterday. I had a fever and didn't eat, so I didn't take my insulin.",
+			"other": "I've had diabetes since I was nine. Type one."
+		},
+		"exam": "Dry mouth. Deep, fast breathing. The breath smells fruity, like nail polish remover.",
+		"results": {
+			"sugar": "Sugar 486 mg/dL, very high.",
+			"gas": "Very acidic: pH 7.12, bicarbonate 9. Ketones high. Potassium 5.6.",
+			"urine": "Sugar and ketones strongly positive."
+		},
+		"key": [
+			"sugar",
+			"gas"
+		],
+		"go": "icu",
+		"plans": [
+			{
+				"text": "A fast saline drip first, then an insulin drip, potassium checked every hour, and HDU",
+				"right": true,
+				"why": "Diabetic ketoacidosis: high sugar, ketones, acid blood and deep breathing. Fluids first, then insulin, and watch the potassium closely."
+			},
+			{
+				"text": "An insulin injection and home once the sugar falls",
+				"effect": "back",
+				"why": "The sugar is only part of it. The acid and the dehydration take a drip and hours of watching."
+			},
+			{
+				"text": "An anti-sickness injection, and no insulin since they aren't eating",
+				"effect": "harm",
+				"why": "Skipping insulin because you're not eating is how DKA starts. Someone with type one diabetes always needs insulin."
+			},
+			{
+				"text": "A bicarbonate drip to fix the acid",
+				"effect": "worse",
+				"why": "Bicarbonate isn't the treatment for DKA. Fluids and insulin clear the acid safely."
+			}
+		]
+	},
+	"gastro": {
+		"name": "Food poisoning",
+		"board": "Vomiting and loose motions",
+		"sex": "",
+		"age": [
+			18,
+			60
+		],
+		"triage": "green",
+		"start": [
+			15,
+			25
+		],
+		"worsens": 3,
+		"vitals": {
+			"pulse": [
+				100,
+				110
+			],
+			"bp": [
+				112,
+				126
+			],
+			"temp": [
+				37.0,
+				37.8
+			],
+			"spo2": [
+				98,
+				99
+			],
+			"breaths": [
+				16,
+				18
+			]
+		},
+		"answers": {
+			"pain": "Stomach cramps. Loose motions, maybe ten times. And vomiting.",
+			"when": "Since morning. There was a wedding last night. Paneer, biryani, everything.",
+			"other": "No blood in it. Three of my cousins have the same thing."
+		},
+		"exam": "Dry lips. Belly soft, a little tender all over. Busy bowel sounds.",
+		"results": {
+			"bloods": "Sodium and potassium a little low. Kidneys fine."
+		},
+		"key": [],
+		"go": "home",
+		"plans": [
+			{
+				"text": "ORS, an anti-sickness injection, a drip till they can drink, then home with advice",
+				"right": true,
+				"why": "Food poisoning from the wedding, mild dehydration, no blood. Fluids are the treatment, and most people are better in a day or two."
+			},
+			{
+				"text": "A course of strong antibiotics and admit for a week",
+				"effect": "worse",
+				"why": "Watery diarrhoea after a meal is usually a toxin or a virus. Antibiotics don't help and can harm."
+			},
+			{
+				"text": "Nothing by mouth for a day to rest the stomach",
+				"effect": "worse",
+				"why": "Starving makes dehydration worse. Small, frequent sips of ORS are the way."
+			},
+			{
+				"text": "Nothing needed, send them home now",
+				"effect": "back",
+				"why": "They're dry and still vomiting. Get fluids in before they go."
+			}
+		]
+	},
+	"viper_bite": {
+		"name": "Viper bite",
+		"board": "Snake bite on the foot",
+		"sex": "",
+		"age": [
+			18,
+			65
+		],
+		"triage": "red",
+		"start": [
+			35,
+			45
+		],
+		"worsens": 9,
+		"vitals": {
+			"pulse": [
+				100,
+				112
+			],
+			"bp": [
+				108,
+				122
+			],
+			"temp": [
+				36.8,
+				37.2
+			],
+			"spo2": [
+				97,
+				99
+			],
+			"breaths": [
+				18,
+				22
+			]
+		},
+		"answers": {
+			"pain": "Here, on my foot. It keeps swelling. My gums are bleeding a little.",
+			"when": "Two hours ago, in the field. My cousin tied a rope above it and cut it with a blade.",
+			"other": "It was brown with chain marks on it. My cousin killed it, it's in the bag. You want to see?"
+		},
+		"exam": "Swelling up to the ankle. Oozing from the bite and the cut. Bleeding from the gums.",
+		"results": {
+			"clot": "Blood still liquid after 20 minutes. The venom has stopped it clotting.",
+			"bloods": "Platelets low. Clotting times very long."
+		},
+		"key": [
+			"clot"
+		],
+		"go": "admit",
+		"plans": [
+			{
+				"text": "Loosen the rope, keep the leg still, give anti-snake venom, and admit to watch the clotting",
+				"right": true,
+				"why": "A viper bite with blood that won't clot. Anti-snake venom is the treatment, and the 20-minute clotting test shows when it's working."
+			},
+			{
+				"text": "Tighten the rope and cut the bite to drain the venom",
+				"effect": "harm",
+				"why": "Tight ropes and cutting do harm. They can kill the limb and cause infection and bleeding."
+			},
+			{
+				"text": "Wait and see if it gets worse before giving anti-venom",
+				"effect": "worse",
+				"why": "Blood that won't clot is already serious poisoning. Waiting lets bleeding start somewhere worse."
+			},
+			{
+				"text": "Ice on the foot and home, it might be a dry bite",
+				"effect": "back",
+				"why": "The gums are bleeding and the clotting test failed. This is not a dry bite."
+			}
+		]
+	},
+	"wrist_fracture": {
+		"name": "Broken wrist",
+		"board": "Fell on the hand, wrist swollen",
+		"sex": "",
+		"age": [
+			50,
+			80
+		],
+		"triage": "green",
+		"start": [
+			15,
+			20
+		],
+		"worsens": 1,
+		"vitals": {
+			"pulse": [
+				84,
+				96
+			],
+			"bp": [
+				130,
+				148
+			],
+			"temp": [
+				36.6,
+				37.0
+			],
+			"spo2": [
+				97,
+				99
+			],
+			"breaths": [
+				14,
+				18
+			]
+		},
+		"answers": {
+			"pain": "My wrist. I slipped in the bathroom and put my hand out.",
+			"when": "An hour ago. My daughter-in-law brought me.",
+			"other": "I'm on calcium tablets for my bones. Sometimes I forget them."
+		},
+		"exam": "Swollen wrist, bent like a dinner fork. Fingers pink and moving. Feeling normal.",
+		"results": {
+			"xray": "A broken wrist bone just above the joint, tilted backwards."
+		},
+		"key": [
+			"xray"
+		],
+		"go": "home",
+		"plans": [
+			{
+				"text": "Pain relief, a numbing block, straighten the wrist, a plaster slab and a sling, then the bone clinic",
+				"right": true,
+				"why": "A broken wrist that's tilted. Line it up under a block, hold it in plaster, and the bone clinic follows it up."
+			},
+			{
+				"text": "A crepe bandage and home, no X-ray",
+				"effect": "back",
+				"why": "A dinner-fork wrist after a fall is broken until the X-ray says otherwise."
+			},
+			{
+				"text": "Book for surgery tonight",
+				"effect": "worse",
+				"why": "Most of these are lined up and plastered in casualty. Surgery isn't the first step tonight."
+			},
+			{
+				"text": "Massage it with oil to bring the swelling down",
+				"effect": "harm",
+				"why": "Rubbing a broken bone moves it and hurts. It needs lining up and holding still."
+			}
+		]
+	},
+	"malaria": {
+		"name": "Falciparum malaria",
+		"board": "Fever with shivering",
+		"sex": "",
+		"age": [
+			18,
+			55
+		],
+		"triage": "yellow",
+		"start": [
+			30,
+			40
+		],
+		"worsens": 6,
+		"vitals": {
+			"pulse": [
+				104,
+				116
+			],
+			"bp": [
+				104,
+				118
+			],
+			"temp": [
+				38.8,
+				39.8
+			],
+			"spo2": [
+				96,
+				98
+			],
+			"breaths": [
+				18,
+				22
+			]
+		},
+		"answers": {
+			"pain": "Fever with shivering, then sweating. Headache. It comes back every day.",
+			"when": "Four days. I came back from a construction site in Odisha last week.",
+			"other": "The chemist gave me tablets but I can't keep them down. I vomit everything."
+		},
+		"exam": "Hot, a little yellow in the eyes. The spleen can be felt under the left ribs.",
+		"results": {
+			"rapid": "Malaria rapid test positive for falciparum. Dengue negative.",
+			"bloods": "Parasites on the smear. Platelets low, bilirubin raised. Sugar normal."
+		},
+		"key": [
+			"rapid"
+		],
+		"go": "admit",
+		"plans": [
+			{
+				"text": "Admit, artesunate through the drip since they can't keep tablets down, and check the sugar",
+				"right": true,
+				"why": "Falciparum malaria, vomiting everything, a little jaundiced. Artesunate through the drip is the treatment, and falciparum can turn severe fast."
+			},
+			{
+				"text": "Chloroquine tablets and home",
+				"effect": "back",
+				"why": "Chloroquine doesn't work against falciparum here, and someone vomiting everything can't take tablets anyway."
+			},
+			{
+				"text": "Antibiotics for typhoid, and paracetamol",
+				"effect": "worse",
+				"why": "The rapid test and the smear show malaria. Typhoid tablets treat the wrong disease."
+			},
+			{
+				"text": "Paracetamol and fluids, wait for the fever to break",
+				"effect": "worse",
+				"why": "Falciparum doesn't settle by itself. Without artesunate it can reach the brain."
+			}
+		]
+	},
+	"brain_bleed": {
+		"name": "Bleed around the brain",
+		"board": "Sudden terrible headache",
+		"sex": "",
+		"age": [
+			35,
+			65
+		],
+		"triage": "red",
+		"start": [
+			40,
+			50
+		],
+		"worsens": 8,
+		"vitals": {
+			"pulse": [
+				60,
+				72
+			],
+			"bp": [
+				162,
+				184
+			],
+			"temp": [
+				36.8,
+				37.2
+			],
+			"spo2": [
+				97,
+				99
+			],
+			"breaths": [
+				16,
+				18
+			]
+		},
+		"answers": {
+			"pain": "Like someone hit the back of my head with a hammer. The worst headache of my life.",
+			"when": "It came all at once, an hour ago, while I was lifting a water drum.",
+			"other": "I vomited twice. The light hurts my eyes. I never get headaches."
+		},
+		"exam": "Stiff neck. Screws the eyes up at the light. Drowsy but answering.",
+		"results": {
+			"ct": "Blood in the spaces around the brain. A bleed."
+		},
+		"key": [
+			"ct"
+		],
+		"go": "refer",
+		"plans": [
+			{
+				"text": "CT now, then keep the blood pressure down, start nimodipine, and call neurosurgery",
+				"right": true,
+				"why": "A sudden worst-ever headache with vomiting and a stiff neck is a bleed around the brain until proven otherwise. The CT proved it."
+			},
+			{
+				"text": "A strong painkiller and home, it's a migraine",
+				"effect": "back",
+				"why": "Migraines build up. A headache that hits like a hammer in seconds is a bleed until the CT says no."
+			},
+			{
+				"text": "A spinal tap first, before any scan",
+				"effect": "harm",
+				"why": "With a possible bleed and drowsiness, the scan comes first. A spinal tap is only for when the scan is normal."
+			},
+			{
+				"text": "A bed on the general ward and a recheck in the morning",
+				"effect": "worse",
+				"why": "A bleed like this can bleed again within hours. It needs neurosurgery now, not a morning review."
+			}
+		]
+	},
+	"ectopic": {
+		"name": "Burst ectopic pregnancy",
+		"board": "Belly pain and feeling faint",
+		"sex": "f",
+		"age": [
+			20,
+			38
+		],
+		"triage": "red",
+		"start": [
+			45,
+			55
+		],
+		"worsens": 12,
+		"vitals": {
+			"pulse": [
+				112,
+				124
+			],
+			"bp": [
+				88,
+				98
+			],
+			"temp": [
+				36.6,
+				37.0
+			],
+			"spo2": [
+				97,
+				99
+			],
+			"breaths": [
+				20,
+				24
+			]
+		},
+		"answers": {
+			"pain": "Low down, on the right side. Sharp. And now my shoulder hurts, which makes no sense.",
+			"when": "Since this morning. I nearly fainted in the bathroom.",
+			"other": "My period is six weeks late. I thought it was stress."
+		},
+		"exam": "Pale. Tender low on the right, tensing against your hand. Cold hands.",
+		"results": {
+			"urine": "Pregnancy test positive.",
+			"usg": "No pregnancy in the womb. Fluid in the pelvis and a swelling beside the right tube.",
+			"bloods": "Haemoglobin 9.2, low."
+		},
+		"key": [
+			"urine",
+			"usg"
+		],
+		"go": "theatre",
+		"plans": [
+			{
+				"text": "Two big drips, blood cross-matched, and call gynaecology for theatre now",
+				"right": true,
+				"why": "A late period, a positive test, an empty womb and blood in the pelvis: a burst ectopic pregnancy. She's bleeding inside and needs theatre."
+			},
+			{
+				"text": "Urine infection: antibiotics and home",
+				"effect": "back",
+				"why": "Always do a pregnancy test when a woman who could be pregnant has belly pain. Here it was positive."
+			},
+			{
+				"text": "A repeat scan in two days to see where the pregnancy is",
+				"effect": "harm",
+				"why": "With low blood pressure and blood in the pelvis there's no time to wait. Waiting can kill."
+			},
+			{
+				"text": "A painkiller and observation on the ward",
+				"effect": "worse",
+				"why": "Shoulder pain and fainting mean blood in the belly. It needs theatre, not observation."
+			}
+		]
+	},
+	"pneumonia": {
+		"name": "Pneumonia",
+		"board": "Cough, fever, confused",
+		"sex": "",
+		"age": [
+			65,
+			85
+		],
+		"triage": "yellow",
+		"start": [
+			35,
+			45
+		],
+		"worsens": 5,
+		"vitals": {
+			"pulse": [
+				104,
+				114
+			],
+			"bp": [
+				98,
+				108
+			],
+			"temp": [
+				38.2,
+				38.9
+			],
+			"spo2": [
+				89,
+				92
+			],
+			"breaths": [
+				26,
+				30
+			]
+		},
+		"answers": {
+			"pain": "Cough. Yellow phlegm. Breathless when I walk to the bathroom.",
+			"when": "Three days. Today my son says I'm talking nonsense. I'm not.",
+			"other": "I take tablets for BP. And something for sugar."
+		},
+		"exam": "Crackles at the bottom of the right lung. Breathing fast. Muddled about the date.",
+		"results": {
+			"xray": "A white patch in the lower right lung. Pneumonia.",
+			"bloods": "White count 17,000. Urea raised."
+		},
+		"key": [
+			"xray"
+		],
+		"go": "admit",
+		"plans": [
+			{
+				"text": "Oxygen, antibiotics through the drip, fluids, and admit",
+				"right": true,
+				"why": "Pneumonia in an older person who's confused, breathing fast, with a raised urea. That's a high-risk score: admit and treat through the drip."
+			},
+			{
+				"text": "Cough syrup and home",
+				"effect": "back",
+				"why": "Confusion, fast breathing and low oxygen at this age mean admission, not syrup."
+			},
+			{
+				"text": "Antibiotic tablets and home with the son",
+				"effect": "back",
+				"why": "The right drug in the wrong place. With confusion and low oxygen, this is a hospital pneumonia."
+			},
+			{
+				"text": "Steroids only, for the breathing",
+				"effect": "worse",
+				"why": "Steroids don't treat a bacterial pneumonia. Antibiotics do."
+			}
+		]
+	},
+	"chest_wall": {
+		"name": "Strained chest muscle",
+		"board": "Chest pain after lifting",
+		"sex": "",
+		"age": [
+			22,
+			40
+		],
+		"triage": "yellow",
+		"start": [
+			10,
+			15
+		],
+		"worsens": 0,
+		"vitals": {
+			"pulse": [
+				78,
+				90
+			],
+			"bp": [
+				118,
+				130
+			],
+			"temp": [
+				36.6,
+				37.0
+			],
+			"spo2": [
+				98,
+				99
+			],
+			"breaths": [
+				14,
+				16
+			]
+		},
+		"answers": {
+			"pain": "Here, on the left. Sharp. It hurts when I press it, and when I twist.",
+			"when": "Since yesterday. I carried two gas cylinders up four floors. The lift was broken, obviously.",
+			"other": "No sweating, no breathlessness. I googled it, and now I'm scared."
+		},
+		"exam": "Pressing on the chest wall brings the pain back exactly. Chest clear. Heart sounds normal.",
+		"results": {
+			"bloods": "Normal counts. Troponin normal."
+		},
+		"key": [
+			"ecg"
+		],
+		"go": "home",
+		"plans": [
+			{
+				"text": "Explain it's a strained muscle, paracetamol, and home with a list of reasons to come back",
+				"right": true,
+				"why": "Young, pain you can press on and twist into, a normal ECG and troponin. A pulled chest muscle. Reassure, and say clearly when to come back."
+			},
+			{
+				"text": "A clot-busting injection, to be safe",
+				"effect": "harm",
+				"why": "Clot-busters cause serious bleeding. They're only for a proven heart attack, and this isn't one."
+			},
+			{
+				"text": "Admit to cardiac care for three days",
+				"effect": "worse",
+				"why": "The tests are normal and the story fits a strain. A cardiac bed is for someone else tonight."
+			},
+			{
+				"text": "Home without an ECG, they're young",
+				"effect": "lucky",
+				"why": "Young people do have heart attacks. Chest pain gets an ECG first, every time."
+			}
+		]
+	}
+}

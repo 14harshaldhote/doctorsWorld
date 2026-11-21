@@ -26,9 +26,22 @@ var reader: ReaderPanel
 var _done := false
 
 
+## While the phone's date is earlier than one the career has seen.
+const TIME_TRAVEL := "Your phone's date has gone back in time. Today's case and the mystery wait for the real date " \
+	+ "to catch up. Time travel is not a medical skill."
+
 func _init(for_profile: PlayerProfile = null, first_page: String = "map") -> void:
 	profile = for_profile if for_profile != null else PlayerProfile.new()
 	page = first_page
+
+
+## A still screen: the game asks for fewer frames while it shows.
+func _enter_tree() -> void:
+	FrameBudget.calm(true)
+
+
+func _exit_tree() -> void:
+	FrameBudget.calm(false)
 
 
 func _ready() -> void:
@@ -130,7 +143,7 @@ func _today_chip_text() -> String:
 ## True while today's 60-second case or this week's mystery guess is waiting
 ## (from meeting Dr. Iyer on Day 1: she runs the case).
 static func today_waiting(profile: PlayerProfile) -> bool:
-	if not CareerMap.today_open(profile):
+	if not CareerMap.today_open(profile) or ClockGuard.rolled_back(profile):
 		return false
 	return not DailyCase.played_today(profile) or not WeeklyMystery.guessed(profile)
 
@@ -350,6 +363,10 @@ func _daily_card() -> Control:
 		column.add_child(_wrapped("Streak: %d day%s · best %d. A new case at midnight, the same one for every doctor in the country." %
 			[run, "" if run == 1 else "s", profile.count("daily_case_best")], 14, UiKit.TEXT_SOFT, "DailyLine"))
 		column.add_child(_share_row())
+		column.add_child(_check_row())
+		return card
+	if ClockGuard.rolled_back(profile):
+		column.add_child(_wrapped(TIME_TRAVEL, 14, UiKit.TEXT_SOFT, "DailyLine"))
 		return card
 	column.add_child(UiKit.label("One emergency. One minute. The same case for every doctor today.", 17, UiKit.TEXT,
 		UiKit.heavy_font()))
@@ -386,13 +403,40 @@ func _share_row() -> Control:
 	return row
 
 
+## "Check a friend's result": reads a pasted result and says whether it adds up.
+func _check_row() -> Control:
+	var column := UiKit.vbox(4)
+	column.name = "CheckRow"
+	var button := UiKit.ghost_button("Check a friend's result", 36, 14)
+	button.name = "CheckFriend"
+	button.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	column.add_child(button)
+	var line := _wrapped("Copy their result from WhatsApp, then tap. Edited ones don't add up.", 13, UiKit.TEXT_SOFT, "CheckLine")
+	column.add_child(line)
+	button.pressed.connect(func() -> void:
+		var verdict := DailyCase.check_shared(Share.paste())
+		line.text = CareerMap.check_words(verdict)
+		line.add_theme_color_override("font_color", UiKit.MINT if bool(verdict.get("ok", false)) else UiKit.TEXT_SOFT))
+	return column
+
+
+static func check_words(verdict: Dictionary) -> String:
+	if bool(verdict.get("ok", false)):
+		return "That one's real: case #%d, %d of %d right in %ds. Annoying, isn't it?" % [int(verdict["number"]),
+			int(verdict["right"]), int(verdict["steps"]), int(verdict["seconds"])]
+	if str(verdict.get("why", "")) == "edited":
+		return "That doesn't add up. Either WhatsApp mangled it or your friend has been editing. We know where our money is."
+	return "Nothing to check. Copy a friend's result from WhatsApp first, then tap here."
+
+
 static func _day_name(date: String) -> String:
 	return str((WeeklyMystery.WEEKDAYS + ["Saturday", "Sunday"])[WeeklyMystery.weekday(date)])
 
 
 ## Plays today's 60-second case over the career map.
 func start_daily_case() -> CrisisView:
-	if case_view != null or DailyCase.played_today(profile) or not CareerMap.today_open(profile):
+	if case_view != null or DailyCase.played_today(profile) or not CareerMap.today_open(profile) \
+			or ClockGuard.rolled_back(profile):
 		return case_view
 	var task := DailyCase.make()
 	case_view = CrisisView.new(task)
@@ -469,6 +513,9 @@ func _mystery_card() -> Control:
 			else "You said %s. It wasn't. A new mystery on Monday, and a new chance to be confidently wrong." % said
 		column.add_child(_wrapped(verdict, 15, UiKit.MINT if right else UiKit.CORAL, "Verdict"))
 		column.add_child(_wrapped(str(mystery.get("explain", "")), 14, UiKit.TEXT, "Explain"))
+		return card
+	if ClockGuard.rolled_back(profile):
+		column.add_child(_wrapped(TIME_TRAVEL, 13, UiKit.TEXT_SOFT, "Rules"))
 		return card
 	column.add_child(_wrapped("One guess all week. Right on %d clue%s today: +%d XP. Every day you wait, it's worth less, " %
 		[open, "" if open == 1 else "s", WeeklyMystery.xp_for(open)] + "and you're surer. Classic medicine.", 13, UiKit.TEXT_SOFT, "Rules"))

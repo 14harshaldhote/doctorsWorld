@@ -7,6 +7,9 @@ var store := SaveStore.new()
 var settings_path := GameSettings.DEFAULT_PATH
 var profile: PlayerProfile
 var has_save := false
+## A line for the title screen about what happened to the save ("" if all
+## was well), shown once.
+var save_notice := ""
 var screen: Node
 var music: Music
 ## A dark curtain that lifts after every change of screen.
@@ -16,7 +19,8 @@ var _curtain: ColorRect
 func _ready() -> void:
 	var loaded := store.load_or_start()
 	profile = loaded["profile"]
-	has_save = loaded["outcome"] == SaveStore.Outcome.LOADED and profile.created
+	has_save = loaded["outcome"] in [SaveStore.Outcome.LOADED, SaveStore.Outcome.RESTORED] and profile.created
+	save_notice = notice_for(loaded)
 	var had_settings := FileAccess.file_exists(settings_path)
 	GameSettings.current = GameSettings.load_from(settings_path)
 	if not had_settings and has_save and not profile.sound_on:
@@ -42,14 +46,37 @@ func _ready() -> void:
 	show_title()
 
 
+## What to tell the player about their save, from SaveStore.load_or_start.
+static func notice_for(loaded: Dictionary) -> String:
+	var reason := str(loaded.get("reason", ""))
+	var back: bool = loaded.get("outcome") == SaveStore.Outcome.RESTORED
+	match reason:
+		"tampered":
+			return ("Your save was edited outside the game, so it's been put aside. You're back at your last honest "
+				+ "save. Medicine has no cheat codes either.") if back else ("Your save was edited outside the game, "
+				+ "so it's been put aside and a new career starts. Medicine has no cheat codes either.")
+		"corrupt":
+			return "Your save was damaged, so you're back at your last good one." if back \
+				else "Your save couldn't be read, so it's been put aside and a new career starts."
+		"newer_version":
+			return "Your save is from a newer version of the game. Update to carry on; it's been kept safe."
+	return ""
+
+
 ## A line being read aloud stops when the game goes to the background, and
 ## the reminders are brought up to date. Coming back counts as a session.
+## While another window is in front the game slows right down (FrameBudget).
 func _notification(what: int) -> void:
+	if what == NOTIFICATION_APPLICATION_FOCUS_OUT:
+		FrameBudget.set_away(true)
+	elif what == NOTIFICATION_APPLICATION_FOCUS_IN:
+		FrameBudget.set_away(false)
 	if what == NOTIFICATION_APPLICATION_PAUSED or what == NOTIFICATION_WM_CLOSE_REQUEST:
 		Speech.stop()
 		if profile != null:
 			Reminders.refresh(profile)
 	elif what == NOTIFICATION_APPLICATION_RESUMED:
+		FrameBudget.set_away(false)
 		_note_play()
 
 
@@ -91,7 +118,8 @@ func _lift_curtain() -> void:
 
 
 func show_title() -> void:
-	var title := TitleScreen.new(profile if has_save else null)
+	var title := TitleScreen.new(profile if has_save else null, save_notice)
+	save_notice = ""
 	title.new_career_pressed.connect(_on_new_career)
 	title.continue_pressed.connect(show_hospital)
 	_swap(title)

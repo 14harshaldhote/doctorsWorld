@@ -17,6 +17,16 @@ extends Node3D
 ## camera (+4). The theatre and the seminar room are built far below the
 ## ward (THEATRE_AT, SEMINAR_AT) and shown only while the story is in them.
 ## Time passes only through update().
+##
+## Casualty (from Day 4) is through the ward's door, built far below too
+## (CASUALTY_AT). Patients keep walking in all day (ShiftSim, ShiftDay);
+## the doctor can go down between story beats, see people in its four
+## cubicles and come back. While the doctor is free (walking, or standing
+## about) the hospital clock runs (CLOCK_RATE); talking, a task or a menu
+## stops it, and every piece of work on a patient costs fixed minutes. A
+## story beat paged and left waiting more than LATE_AFTER minutes is late,
+## and costs a little of the day's XP. Once the story is done, the day ends
+## when the doctor hands over at the nurses' station.
 
 signal save_requested
 signal menu_choice(choice: String)
@@ -36,6 +46,20 @@ const OP_XP_PER_STAR := 10
 ## The theatre's table and the seminar room, out of sight below the ward.
 const THEATRE_AT := Vector3(0, -40, 0)
 const SEMINAR_AT := Vector3(0, -80, 0)
+## Straight below the ward: only the height differs (see CasualtyRoom).
+const CASUALTY_AT := Vector3(0, -120, 0)
+## Hospital minutes that pass each real second while the doctor is free.
+const CLOCK_RATE := 0.5
+## A story beat may wait this many hospital minutes after its page.
+const LATE_AFTER := 60
+## The day's XP each late beat costs, and the least a day pays.
+const LATE_XP := 10
+const LEAST_SHIFT_XP := 60
+## Rows on casualty's board (the rest are counted in its title).
+const BOARD_ROWS := 4
+## Seconds between casualty's messages, and how many may wait.
+const TOAST_GAP := 3.2
+const TOAST_QUEUE := 3
 ## Experience for a day's work, on top of each task's.
 const SHIFT_XP := 120
 ## Each task gives this much experience plus half its score.
@@ -128,6 +152,9 @@ const DAYS := {
 			"page": "Dr. Iyer: We're ready for you. Don't run."},
 	],
 }
+## The day's last beat once casualty is open: hand over at the desk.
+const SIGN_OFF := {"id": "sign_off", "row": "Hand over and go home", "go": "desk", "minutes": 0,
+	"page": "Grace: Story's done for today. Hand over at the desk when you're ready. Or don't, casualty is right there."}
 ## A day with no story of its own (none now: the Chief's days follow Day 28).
 const QUIET := [
 	{"id": "morning", "talk": "quiet_morning", "with": "iyer"},
@@ -193,6 +220,30 @@ var table: OperatingTable
 var seminar: SeminarRoom
 ## The operation under way (or last played today).
 var operation: OperationTask
+var casualty: CasualtyRoom
+## Today's casualty (null before Day 4).
+var shift: ShiftSim
+## The card for the patient being seen, while it's open.
+var panel: PatientPanel
+## The casualty patient the doctor is walking to or seeing.
+var seeing: ShiftPatient
+## The cubicle of the patient on the card, kept after the decision frees it
+## so the camera stays put while the result shows.
+var _card_cubicle := -1
+## Where a free walk is heading: "casualty" (the ward's door), "ward" (back
+## through casualty's door), "cubicle" (to see `seeing`), or "".
+var heading := ""
+## Story beats reached late today, and casualty's XP today.
+var late_beats := 0
+var casualty_xp := 0
+var _clock_carry := 0.0
+var _paged_at := -1
+var _toasts: Array[Dictionary] = []
+var _toast_in := 0.0
+var _shown_minute := -1
+var _board_text := ""
+var _shift_over_said := false
+var _diverted_hour := -1
 
 var _layer: CanvasLayer
 var _environment: Environment
@@ -347,7 +398,7 @@ func _build_door() -> void:
 	var door := LowPoly.joint(self, "Door", Vector3(9.38, 0, DOOR.z))
 	LowPoly.put(door, LowPoly.box(Vector3(0.08, 2.3, 1.5), Color("#9CC7D9")), Vector3(0, 1.15, 0))
 	LowPoly.put(door, LowPoly.box(Vector3(0.1, 0.12, 1.7), TEAL), Vector3(0, 2.36, 0))
-	var label := LabStation.label3d("EXIT", 34, TEAL, 0.004)
+	var label := LabStation.label3d("CASUALTY", 34, Color("#C0392B"), 0.004)
 	label.position = Vector3(9.3, 2.62, DOOR.z)
 	label.rotation.y = -PI / 2
 	add_child(label)
@@ -381,6 +432,11 @@ func _build_stations() -> void:
 	seminar.position = SEMINAR_AT
 	seminar.visible = false
 	add_child(seminar)
+	casualty = CasualtyRoom.new()
+	casualty.position = CASUALTY_AT
+	casualty.visible = false
+	casualty.process_mode = Node.PROCESS_MODE_DISABLED
+	add_child(casualty)
 	# Night: warm lamps at the desk and along the beds.
 	for at: Vector3 in [DESK + Vector3(0, 1.9, 0), Vector3(-4.0, 2.3, -2.0), Vector3(3.0, 2.3, -2.0),
 			Vector3(-5.6, 2.2, 1.6)]:
@@ -920,6 +976,7 @@ func _begin_day() -> void:
 	if night:
 		profile.minutes = maxi(profile.minutes, NIGHT_START)
 	_set_night(night)
+	_start_shift()
 	beats = _beats_for(profile.day)
 	beat_index = -1
 	done_beats.clear()
@@ -954,7 +1011,9 @@ func _show_day_card() -> void:
 func _beats_for(day: int) -> Array[Dictionary]:
 	var found: Array[Dictionary] = []
 	if ChiefDays.is_chief_day(day):
-		return ChiefDays.beats(profile, day)
+		var chief: Array[Dictionary] = []
+		chief.assign(ChiefDays.beats(profile, day))
+		return _with_sign_off(chief, day)
 	var source: Array = DAYS.get(day, WardStory.DAYS.get(day, QUIET))
 	for beat: Dictionary in source:
 		found.append(beat)
@@ -962,6 +1021,14 @@ func _beats_for(day: int) -> Array[Dictionary]:
 	var crisis := Crises.beat(profile, day)
 	if not crisis.is_empty():
 		found.insert(maxi(0, found.size() - 1), crisis)
+	return _with_sign_off(found, day)
+
+
+## With casualty open the day doesn't end by itself: once the story is
+## done the doctor hands over at the nurses' station, whenever they like.
+func _with_sign_off(found: Array[Dictionary], day: int) -> Array[Dictionary]:
+	if ShiftDay.open(day):
+		found.append(SIGN_OFF)
 	return found
 
 
@@ -1021,6 +1088,7 @@ func _next_beat() -> void:
 		_refresh_hud()
 		return
 	if current.has("go"):
+		_paged_at = profile.minutes
 		_back_to_walking()
 		if not hud.pager_text().is_empty():
 			Sfx.play(self, "pager", -6.0)
@@ -1043,6 +1111,9 @@ func _finish_beat() -> void:
 
 
 func _refresh_hud() -> void:
+	if place == "casualty":
+		_refresh_casualty_hud()
+		return
 	var rows := []
 	for index in beats.size():
 		var entry := beats[index]
@@ -1056,8 +1127,10 @@ func _refresh_hud() -> void:
 	var walking := mode == "walk" or mode == "approach"
 	hud.set_pager(str(current.get("page", "")) if walking else "")
 	hud.set_clock("Day %d · %s · %s" % [profile.day, profile.clock_text(), _place_title()])
+	_shown_minute = profile.minutes
 	if walking and current.has("go"):
-		hud.set_hint("Tap %s · tap the floor to walk" % _place_phrase(_go_place()))
+		var also := " · the door goes to casualty" if shift != null and str(current.get("id", "")) == "sign_off" else ""
+		hud.set_hint("Tap %s · tap the floor to walk%s" % [_place_phrase(_go_place()), also])
 	else:
 		hud.set_hint("")
 
@@ -1065,6 +1138,8 @@ func _refresh_hud() -> void:
 ## Where the doctor is, for the clock line.
 func _place_title() -> String:
 	match place:
+		"casualty":
+			return "Casualty"
 		"theatre":
 			return str(operation.procedure.get("theatre", "Theatre 2")) if operation != null else "Theatre 2"
 		"seminar":
@@ -1225,10 +1300,14 @@ func _promote() -> void:
 
 
 func _end_day() -> void:
+	_close_panel()
+	if place == "casualty":
+		_go_to_place("ward")
 	mode = "end"
+	heading = ""
 	hud.set_talking(true)
-	shift_xp = SHIFT_XP
-	profile.total_xp += SHIFT_XP
+	shift_xp = maxi(LEAST_SHIFT_XP, SHIFT_XP - LATE_XP * late_beats)
+	profile.total_xp += shift_xp
 	profile.set_flag("ward_day%d" % profile.day)
 	if not night:
 		profile.minutes = maxi(profile.minutes, 18 * 60 + 30)
@@ -1236,7 +1315,13 @@ func _end_day() -> void:
 	if REVIEWS.has(profile.day):
 		title = "%s · %s" % [profile.full_title(), Rank.title(profile.rank())]
 	# What the day did, and under it what makes tomorrow worth starting.
-	_end_in = overlay.end_card(title, _end_line() + "   +%d XP" % SHIFT_XP, DayHooks.end_card(profile, profile.day))
+	var line := _end_line() + "   +%d XP" % shift_xp
+	var below := ShiftDay.summary_line(shift, casualty_xp)
+	if not below.is_empty():
+		line += "\n" + below
+	if late_beats > 0:
+		line += "\nLate %s today. People noticed." % ("once" if late_beats == 1 else "%d times" % late_beats)
+	_end_in = overlay.end_card(title, line, DayHooks.end_card(profile, profile.day))
 	var badges := Badges.check(profile)
 	if not badges.is_empty():
 		hud.toast(Badges.toast_text(badges))
@@ -1284,6 +1369,12 @@ func tap(screen_point: Vector2) -> void:
 		return
 	if mode != "walk" and mode != "approach":
 		return
+	if place == "casualty":
+		_tap_casualty(screen_point)
+		return
+	if _door_tapped(screen_point):
+		_walk_to_door()
+		return
 	var found := place_at(screen_point)
 	if not found.is_empty():
 		go_to(found)
@@ -1292,6 +1383,7 @@ func tap(screen_point: Vector2) -> void:
 	if floor_point == null:
 		return
 	mode = "walk"
+	heading = ""
 	var point := floor_point as Vector3
 	_send("you", Vector3(point.x, 0, point.z), WALK_SPEED)
 
@@ -1378,6 +1470,9 @@ func _tag_point(place: String) -> Vector3:
 func go_to(place: String) -> void:
 	if place != _go_place() or story.is_playing() or mode not in ["walk", "approach"]:
 		return
+	if self.place == "casualty":
+		return
+	heading = ""
 	mode = "approach"
 	var spot: Vector3 = mark(place) if place != "desk" else DESK + Vector3(-0.35, 0, 0.85)
 	_send("you", spot, WALK_SPEED)
@@ -1388,6 +1483,7 @@ func go_to(place: String) -> void:
 func _arrive() -> void:
 	var place := _go_place()
 	player.moving = 0.0
+	_check_late()
 	if BEDS.has(place):
 		_face(player, bed(place).pillow_point())
 	else:
@@ -1414,11 +1510,26 @@ func _send(who: String, to: Vector3, speed: float) -> void:
 		return
 	rig.sitting = false
 	rig.lying = false
-	var path := Crowd.plan(rig, to, story.actors.values(), walk_area)
+	var below := _in_casualty(rig)
+	var path := Crowd.plan(rig, to, _everyone(), casualty.walk_area if below else walk_area,
+		CASUALTY_AT.y if below else 0.0)
 	if path.is_empty():
 		_routes.erase(id)
 		return
 	_routes[id] = {"path": path, "speed": speed}
+
+
+## True for someone on casualty's floor.
+func _in_casualty(rig: Node3D) -> bool:
+	return rig != null and rig.global_position.y < CASUALTY_AT.y + 1.0
+
+
+## Everyone to walk round: the ward's people, and casualty's while it shows.
+func _everyone() -> Array:
+	var found := story.actors.values()
+	if place == "casualty":
+		found.append_array(casualty.rigs())
+	return found
 
 
 func is_walking(id: String) -> bool:
@@ -1431,16 +1542,21 @@ func _update_routes(delta: float) -> void:
 			continue
 		var rig := rig_for(id)
 		var route: Dictionary = _routes[id]
-		if Crowd.advance(rig, route, delta, story.actors.values(), walk_area):
+		var below := _in_casualty(rig)
+		var area := casualty.walk_area if below else walk_area
+		var floor_y := CASUALTY_AT.y if below else 0.0
+		if Crowd.advance(rig, route, delta, _everyone(), area, floor_y):
 			rig.moving = 0.0
 			_routes.erase(id)
-			Crowd.make_room(rig, story.actors.values(), Crowd.area_for(rig, walk_area))
+			Crowd.make_room(rig, _everyone(), Crowd.area_for(rig, area, floor_y))
 			if _leaving.has(id):
 				_leaving.erase(id)
 				_hide(id)
+			elif id == "you" and mode == "walk" and not heading.is_empty():
+				_arrive_heading()
 			elif id == "you" and mode == "approach":
 				_arrive()
-			elif id == "you" and mode == "walk" and not _go_place().is_empty() \
+			elif id == "you" and mode == "walk" and place == "ward" and not _go_place().is_empty() \
 					and near_place(player.position, _go_place(), NEAR_ARRIVE):
 				# Walked right up to the place without tapping it: that counts.
 				go_to(_go_place())
@@ -1688,12 +1804,14 @@ func _go_to_place(where: String) -> void:
 	theatre_set.visible = where == "theatre"
 	table.visible = where == "theatre"
 	seminar.visible = where == "seminar"
+	casualty.visible = where == "casualty"
+	casualty.process_mode = Node.PROCESS_MODE_INHERIT if where == "casualty" else Node.PROCESS_MODE_DISABLED
 	_light(night and where == "ward")
 	if not was.is_empty():
 		overlay.fade("black", 0.01)
 		overlay.fade("clear", 0.8)
 		Music.cue("theatre" if where == "theatre" else _place_music())
-		_camera_mode = "talk" if where != "ward" else "follow"
+		_camera_mode = "talk" if where not in ["ward", "casualty"] else "follow"
 		settle_camera.call_deferred()
 
 
@@ -1957,6 +2075,7 @@ func update(delta: float) -> void:
 				_talk(str(current["talk"]), str(current.get("with", "")))
 			elif current.has("go"):
 				# A moment passing, then the walk to wherever it happens.
+				_paged_at = profile.minutes
 				_back_to_walking()
 				if not hud.pager_text().is_empty():
 					Sfx.play(self, "pager", -6.0)
@@ -1968,6 +2087,7 @@ func update(delta: float) -> void:
 		if _end_in <= 0.0:
 			day_finished.emit()
 			return
+	_tick_shift(delta)
 	_settle_crowd()
 	story.update(delta)
 	_update_routes(delta)
@@ -2000,6 +2120,16 @@ func _place_camera(weight: float) -> void:
 		target = station.at(station.close_at)
 		fov = station.close_fov
 		offset = station.close_offset
+	elif place == "casualty":
+		var pose := casualty.camera_pose(player.position)
+		if seeing != null and _card_cubicle >= 0 and mode == "patient":
+			# With the card open on the right: the cubicle, from the aisle,
+			# set left of the middle so the card doesn't cover the patient.
+			var spot := casualty.doctor_spot(_card_cubicle)
+			pose = [spot + Vector3(1.4, 2.4, 3.4), spot + Vector3(-0.2, 0.7, -0.8)]
+			offset = 0.9
+		goal = pose[0]
+		target = pose[1]
 	elif place != "ward":
 		# The theatre team round the table, or the meeting round its table,
 		# leaning a little towards whoever speaks.
@@ -2050,7 +2180,10 @@ func _place_camera(weight: float) -> void:
 	else:
 		var focus := player.position
 		var place := _go_place() if mode == "walk" or mode == "approach" else ""
-		if not place.is_empty():
+		if heading == "casualty":
+			# On the way to casualty: lean towards its door, not the story's place.
+			focus = focus.lerp(Vector3(DOOR.x, 0, DOOR.z), 0.55)
+		elif not place.is_empty():
 			# Lean towards where the doctor is going, so it's on screen.
 			var there := _tag_point(place)
 			focus = focus.lerp(Vector3(there.x, 0, there.z), 0.55)
@@ -2090,11 +2223,13 @@ func _rest_point(rig: AvatarRig) -> Vector3:
 
 func _update_tags() -> void:
 	var walking := mode == "walk" or mode == "approach"
-	var place := _go_place() if walking else ""
+	var in_ward := self.place == "ward"
+	var place := _go_place() if walking and in_ward else ""
 	for key: String in ["bed1", "bed2", "bed3", "bed4", "bed5", "bed6", "side", "trolley", "desk", "lightbox"]:
 		var point := _tag_point(key)
 		var screen := camera.unproject_position(point) if not camera.is_position_behind(point) else _behind_point(point)
 		hud.set_tag("place_" + key, _tag_text(key), screen, walking and key == place, true, true)
+	_update_casualty_tags(walking)
 
 
 ## A point behind the camera, put where it would be on screen if the camera
@@ -2106,6 +2241,416 @@ func _behind_point(point: Vector3) -> Vector2:
 	if direction.length() < 0.001:
 		direction = Vector2(0, 1)
 	return view / 2.0 + direction.normalized() * view.length()
+
+
+# --- Casualty ---------------------------------------------------------------------
+
+## Today's casualty, from the day's first minute (none before Day 4).
+func _start_shift() -> void:
+	casualty.clear_all()
+	_close_panel()
+	shift = ShiftDay.make(profile, profile.day, profile.minutes)
+	heading = ""
+	late_beats = 0
+	casualty_xp = 0
+	_clock_carry = 0.0
+	_paged_at = -1
+	_toasts.clear()
+	_toast_in = 0.0
+	_board_text = ""
+	_shift_over_said = false
+	_diverted_hour = -1
+
+
+## The free clock, casualty catching up with it, its bodies and messages.
+func _tick_shift(delta: float) -> void:
+	if shift == null:
+		return
+	# Not while another app is in front, either: nobody gets worse while the
+	# doctor answers a message.
+	var free := mode in ["walk", "approach"] and place in ["ward", "casualty"] and view == null \
+		and not story.is_playing() and not FrameBudget.away
+	if free:
+		var end := ShiftDay.end_minute(night)
+		if profile.minutes < end:
+			_clock_carry += delta * CLOCK_RATE
+			var whole := int(_clock_carry)
+			if whole > 0:
+				_clock_carry -= whole
+				profile.pass_minutes(mini(whole, end - profile.minutes))
+		elif not _shift_over_said:
+			_shift_over_said = true
+			var done := str(beat().get("id", "")) == "sign_off"
+			_queue_toast("Your shift's over. Hand over at the nurses' station." if done
+				else "Your shift's over, on paper. Today's story isn't.", 3, true)
+	_catch_up()
+	if place == "casualty":
+		casualty.sync(shift, delta, [player])
+	if profile.minutes != _shown_minute:
+		_shown_minute = profile.minutes
+		hud.set_clock("Day %d · %s · %s" % [profile.day, profile.clock_text(), _place_title()])
+		if place == "casualty" and mode in ["walk", "approach"]:
+			_refresh_casualty_hud()
+	_tick_toasts(delta)
+
+
+## Steps casualty on to the clock and says what happened.
+func _catch_up() -> void:
+	if shift == null:
+		return
+	for event in shift.advance_to(profile.minutes):
+		_on_shift_event(event)
+	if seeing != null and not seeing.is_here():
+		if panel != null and not panel.showing_result():
+			_close_panel()
+			_back_to_walking()
+		elif heading == "cubicle":
+			heading = ""
+			seeing = null
+			_routes.erase("you")
+			player.moving = 0.0
+
+
+## Which of casualty's events the doctor hears about, and how loudly. Away
+## from casualty only what matters: a red patient, someone turning, a crash,
+## a result the doctor is waiting for.
+func _on_shift_event(event: Dictionary) -> void:
+	var patient: ShiftPatient = event.get("patient")
+	var text := str(event.get("text", ""))
+	if text.is_empty():
+		return
+	var here := place == "casualty"
+	match str(event.get("kind", "")):
+		"arrived":
+			var red := patient != null and patient.triage() == "red"
+			if here or red:
+				_queue_toast(text, 2 if red else 1, red)
+		"result":
+			if patient != null and patient.state == "seeing":
+				_queue_toast(text, 2, false)
+		"worse":
+			_queue_toast(text, 3, true)
+		"crashed":
+			_queue_toast(text, 4, true)
+		"back":
+			_queue_toast(text, 2, false)
+		"left":
+			if here:
+				_queue_toast(text, 1, false)
+		"diverted":
+			var hour := shift.minute / 60
+			if here and hour != _diverted_hour:
+				_diverted_hour = hour
+				_queue_toast(text, 1, false)
+
+
+## Queues a message: weight orders what's kept when too many come at once.
+func _queue_toast(text: String, weight: int, page: bool) -> void:
+	_toasts.append({"text": text, "weight": weight, "page": page})
+	while _toasts.size() > TOAST_QUEUE:
+		var lightest := 0
+		for index in _toasts.size():
+			if int(_toasts[index]["weight"]) < int(_toasts[lightest]["weight"]):
+				lightest = index
+		_toasts.remove_at(lightest)
+
+
+func _tick_toasts(delta: float) -> void:
+	_toast_in = maxf(0.0, _toast_in - delta)
+	if _toast_in > 0.0 or _toasts.is_empty() or mode not in ["walk", "approach", "patient"]:
+		return
+	var next: Dictionary = _toasts.pop_front()
+	hud.toast(str(next["text"]))
+	if bool(next["page"]):
+		Sfx.play(self, "pager", -8.0)
+	_toast_in = TOAST_GAP
+
+
+## Messages waiting to be shown, for tests.
+func toasts_waiting() -> Array:
+	return _toasts.map(func(entry: Dictionary) -> String: return str(entry["text"]))
+
+
+## A story beat reached long after its page is late (not the hand over).
+func _check_late() -> void:
+	var paged := _paged_at
+	_paged_at = -1
+	if paged < 0 or shift == null:
+		return
+	var current := beat()
+	var waited := profile.minutes - paged
+	if waited <= LATE_AFTER or str(current.get("id", "")) == "sign_off":
+		return
+	late_beats += 1
+	var who := str(StoryBook.cast().get(str(current.get("with", "")), {}).get("name", "Everyone"))
+	_queue_toast("You kept %s waiting %d minutes. Noted." % [who, waited], 3, false)
+
+
+## The ward's door, by its tag or the floor in front of it.
+func _door_tapped(screen_point: Vector2) -> bool:
+	if shift == null or place != "ward":
+		return false
+	if hud.tag_hit("place_casualty", screen_point):
+		return true
+	var floor_point: Variant = LabStation.ray_to_height(camera, screen_point, 0.0)
+	return floor_point != null and Vector2((floor_point as Vector3).x - DOOR.x, (floor_point as Vector3).z - DOOR.z).length() < 0.9
+
+
+func _walk_to_door() -> void:
+	heading = "casualty"
+	mode = "walk"
+	_send("you", DOOR, WALK_SPEED)
+	if not _routes.has("you"):
+		_arrive_heading()
+
+
+func _arrive_heading() -> void:
+	var going := heading
+	heading = ""
+	player.moving = 0.0
+	match going:
+		"casualty":
+			enter_casualty()
+		"ward":
+			leave_casualty()
+		"cubicle":
+			_open_panel()
+
+
+## Through the door into casualty.
+func enter_casualty() -> void:
+	if shift == null or place == "casualty" or mode not in ["walk", "approach"]:
+		return
+	_routes.erase("you")
+	heading = ""
+	player.position = casualty.world(CasualtyRoom.DOOR + Vector3(-0.5, 0, 0))
+	player.rotation = Vector3(0, -PI / 2, 0)
+	player.moving = 0.0
+	_board_text = ""
+	_go_to_place("casualty")
+	casualty.fresh_view()
+	casualty.sync(shift, 0.0, [player])
+	mode = "walk"
+	hud.set_talking(false)
+	if not profile.has_flag("casualty_intro"):
+		profile.set_flag("casualty_intro")
+		_toasts.push_front({"text": "Casualty. Four cubicles, one doctor: you. Tap someone waiting to see them.",
+			"weight": 5, "page": false})
+		_toast_in = 0.0
+	_refresh_hud()
+	settle_camera()
+
+
+## Back through the door to Ward 4.
+func leave_casualty() -> void:
+	if place != "casualty":
+		return
+	_close_panel()
+	_routes.erase("you")
+	heading = ""
+	player.position = DOOR + Vector3(-0.6, 0, 0)
+	player.rotation = Vector3(0, -PI / 2, 0)
+	player.moving = 0.0
+	_board_text = ""
+	_go_to_place("ward")
+	if mode == "patient":
+		mode = "walk"
+	hud.set_talking(false)
+	_refresh_hud()
+	settle_camera()
+
+
+func _tap_casualty(screen_point: Vector2) -> void:
+	if hud.tag_hit("cas_door", screen_point) or _near_casualty_door(screen_point):
+		heading = "ward"
+		mode = "walk"
+		_send("you", casualty.door_spot(), WALK_SPEED)
+		if not _routes.has("you"):
+			_arrive_heading()
+		return
+	# A tag first (a lifted one can sit over someone else's head), then a body.
+	var patient: ShiftPatient = null
+	for cubicle in CasualtyRoom.CUBICLE_X.size():
+		if patient == null and hud.tag_hit("cas_c%d" % cubicle, screen_point):
+			patient = shift.in_cubicle(cubicle)
+	for seat in CasualtyRoom.SEATS.size():
+		if patient == null and hud.tag_hit("cas_s%d" % seat, screen_point):
+			patient = casualty.patient_in_seat(seat)
+	if patient == null:
+		patient = casualty.patient_at(camera, screen_point)
+	if patient != null:
+		see_patient(patient)
+		return
+	var floor_point: Variant = LabStation.ray_to_height(camera, screen_point, CASUALTY_AT.y)
+	if floor_point == null:
+		return
+	mode = "walk"
+	heading = ""
+	var point := floor_point as Vector3
+	_send("you", Vector3(point.x, CASUALTY_AT.y, point.z), WALK_SPEED)
+
+
+func _near_casualty_door(screen_point: Vector2) -> bool:
+	var floor_point: Variant = LabStation.ray_to_height(camera, screen_point, CASUALTY_AT.y)
+	if floor_point == null:
+		return false
+	var door := casualty.door_spot()
+	return Vector2((floor_point as Vector3).x - door.x, (floor_point as Vector3).z - door.z).length() < 0.8
+
+
+## Goes to see a casualty patient: a waiting one is brought into a free
+## cubicle first. False if there's no cubicle free (the doctor is told).
+func see_patient(patient: ShiftPatient) -> bool:
+	if shift == null or patient == null or not patient.is_here() or patient.decided() or place != "casualty":
+		return false
+	if patient.state == "waiting" and not shift.take(patient):
+		_toasts.push_front({"text": "All four cubicles are busy. Finish with someone first.", "weight": 5, "page": false})
+		_toast_in = 0.0
+		return false
+	seeing = patient
+	heading = "cubicle"
+	mode = "walk"
+	_send("you", casualty.doctor_spot(patient.cubicle), WALK_SPEED)
+	if not _routes.has("you"):
+		_arrive_heading()
+	return true
+
+
+func _open_panel() -> void:
+	if seeing == null or not seeing.is_here() or seeing.state != "seeing":
+		seeing = null
+		return
+	casualty.settle(seeing)
+	_face(player, casualty.pillow_point(seeing.cubicle))
+	_card_cubicle = seeing.cubicle
+	mode = "patient"
+	hud.set_talking(true)
+	panel = PatientPanel.new(seeing, profile.minutes)
+	panel.acted.connect(_on_panel)
+	_layer.add_child(panel)
+	_layer.move_child(panel, overlay.get_index())
+
+
+func _close_panel() -> void:
+	if panel != null:
+		_layer.remove_child(panel)
+		panel.queue_free()
+		panel = null
+	seeing = null
+	_card_cubicle = -1
+	casualty.held = -1
+
+
+## What the patient card asked for.
+func _on_panel(kind: String, value: String) -> void:
+	if panel == null or seeing == null or shift == null:
+		return
+	match kind:
+		"ask":
+			if value in ShiftPatient.QUESTIONS and not seeing.asked.has(value):
+				shift.ask(seeing, value)
+				_spend(ShiftSim.ASK_MINUTES)
+		"exam":
+			if not seeing.examined:
+				shift.examine(seeing)
+				_spend(ShiftSim.EXAM_MINUTES)
+		"order":
+			if shift.order(seeing, value):
+				_spend(ShiftSim.ORDER_MINUTES)
+		"decide":
+			var result := shift.decide(seeing, int(value))
+			if result.is_empty():
+				return
+			casualty.held = seeing.id
+			var xp := ShiftDay.record(profile, result)
+			casualty_xp += xp
+			hud.refresh_profile()
+			Sfx.play(self, "chime" if bool(result["right"]) else "buzz", -6.0)
+			panel.show_result(result, xp)
+			_spend(ShiftSim.DECIDE_MINUTES)
+		"close", "done":
+			_close_panel()
+			_back_to_walking()
+
+
+## Work on a patient takes hospital minutes: the clock moves on and
+## casualty catches up (a result may come back, someone may turn).
+func _spend(minutes: int) -> void:
+	profile.pass_minutes(minutes)
+	_catch_up()
+	if panel != null:
+		panel.refresh(profile.minutes)
+
+
+## The task list becomes casualty's board: who's waiting, sickest first,
+## a dot of their triage colour and how long they've waited. Short, so it
+## stays clear of the room (the cubicles have their own tags).
+func _refresh_casualty_hud() -> void:
+	var rows := []
+	var waiting := shift.waiting().size()
+	for patient in shift.board():
+		if patient.state != "waiting" or rows.size() >= BOARD_ROWS:
+			continue
+		var waited := patient.waited(profile.minutes)
+		var when := "just in" if waited < 5 else "%d min" % (waited / 5 * 5)
+		rows.append(["%s · %s" % [patient.called(), when], false, -1,
+			PatientPanel.TRIAGE_COLOURS.get(patient.triage(), UiKit.MINT)])
+	var text := "%s|%d" % [str(rows), waiting]
+	if text != _board_text:
+		_board_text = text
+		hud.set_tasks(rows, "Casualty · %d waiting" % waiting if waiting > 0 else "Casualty · nobody waiting")
+	var walking := mode == "walk" or mode == "approach"
+	hud.set_pager(str(beat().get("page", "")) if walking else "")
+	hud.set_clock("Day %d · %s · Casualty" % [profile.day, profile.clock_text()])
+	_shown_minute = profile.minutes
+	hud.set_hint("Tap someone to see them · the door goes back to Ward 4" if walking else "")
+
+
+## The door's tag on the ward, and everyone's tags in casualty.
+func _update_casualty_tags(walking: bool) -> void:
+	var in_ward := place == "ward" and shift != null
+	var in_casualty := place == "casualty" and shift != null
+	var waiting: Array[ShiftPatient] = []
+	if shift != null:
+		waiting = shift.waiting()
+	var red := waiting.any(func(patient: ShiftPatient) -> bool: return patient.triage() == "red")
+	var door := DOOR + Vector3(0.3, 1.6, 0)
+	hud.set_tag("place_casualty", "Casualty · %d waiting" % waiting.size(), _screen_of(door), walking and in_ward, red)
+	var story_waits := str(beat().get("id", "sign_off")) != "sign_off"
+	# People sit close on the benches: the tags make way for each other, the
+	# door's and the cubicles' first, then the waiting, sickest first.
+	hud.start_crowd()
+	hud.set_tag("cas_door", "Ward 4", _screen_of(casualty.door_tag_point()), walking and in_casualty, story_waits,
+		story_waits)
+	hud.crowd_note("cas_door")
+	if in_casualty and walking:
+		# And off the doctor.
+		var feet := _screen_of(player.position)
+		var head := _screen_of(player.position + Vector3(0, 1.8, 0))
+		var half := UiKit.px(16)
+		hud.crowd_block(Rect2(minf(feet.x, head.x) - half, head.y, absf(feet.x - head.x) + half * 2.0, feet.y - head.y))
+	for cubicle in CasualtyRoom.CUBICLE_X.size():
+		var patient := shift.in_cubicle(cubicle) if in_casualty else null
+		var shown := patient != null and walking
+		var text := "%d · %s" % [cubicle + 1, patient.called()] if patient != null else ""
+		hud.set_tag("cas_c%d" % cubicle, text, _screen_of(casualty.cubicle_tag_point(cubicle)), shown,
+			patient != null and patient.triage() == "red", false, true)
+	var tagged := {}
+	if in_casualty:
+		for patient in shift.board():
+			var seat := casualty.seat_of(patient)
+			if seat < 0:
+				continue
+			tagged[seat] = true
+			hud.set_tag("cas_s%d" % seat, patient.called(), _screen_of(casualty.tag_point(patient)), walking,
+				patient.triage() == "red", false, true)
+	for seat in CasualtyRoom.SEATS.size():
+		if not tagged.has(seat):
+			hud.set_tag("cas_s%d" % seat, "", Vector2.ZERO, false)
+
+
+func _screen_of(point: Vector3) -> Vector2:
+	return camera.unproject_position(point) if not camera.is_position_behind(point) else _behind_point(point)
 
 
 # --- For tests and screenshots ------------------------------------------------------
@@ -2167,6 +2712,10 @@ func play_until(until: Callable, picker: Callable = Callable(), bot: AutoPlayer 
 				view.done_pressed.emit()
 			else:
 				player_bot.step(view, step)
+		elif mode == "patient":
+			_on_panel("done" if panel != null and panel.done_button.visible else "close", "")
+		elif mode == "walk" and place == "casualty":
+			leave_casualty()
 		elif mode == "walk" and not _go_place().is_empty():
 			go_to(_go_place())
 		update(step)

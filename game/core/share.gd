@@ -9,6 +9,7 @@ extends RefCounted
 ## own; tests put recorders here so nothing really opens.
 static var opener := Callable()
 static var copier := Callable()
+static var paster := Callable()
 
 
 static func whatsapp_url(text: String) -> String:
@@ -34,3 +35,10 @@ static func copy(text: String) -> void:
 		copier.call(text)
 	else:
 		DisplayServer.clipboard_set(text)
+
+
+## What's on the clipboard (a friend's result, pasted in to check).
+static func paste() -> String:
+	if paster.is_valid():
+		return str(paster.call())
+	return DisplayServer.clipboard_get()

@@ -52,7 +52,7 @@ jobs:
         # the preset's include filter names them.
         run: |
           ~/godot/godot --headless --path . --export-pack "iOS" /tmp/game.pck
-          for chapter in cast opening day1 banter training theatre cases ward junior letters crises crisis_lines mysteries; do
+          for chapter in cast opening day1 banter training theatre cases ward junior letters crises crisis_lines mysteries conditions; do
             grep -a -q "story/$chapter.json" /tmp/game.pck || { echo "story/$chapter.json is missing from the export"; exit 1; }
           done
 
@@ -68,7 +68,7 @@ jobs:
           # A script error while drawing a screen fails the build.
           if grep -h "SCRIPT ERROR" shots-*.log; then exit 1; fi
           ls -la screenshots
-          test "$(ls screenshots/*.png | wc -l)" -eq 346
+          test "$(ls screenshots/*.png | wc -l)" -eq 356
 
       - name: Upload screenshots
         uses: actions/upload-artifact@v4
@@ -99,22 +99,22 @@ jobs:
           git push -qf origin HEAD:screenshots
 
   ios-macos:
-    name: iOS build (macOS)
+    name: iOS and Mac builds (macOS)
     runs-on: macos-15
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
 
-      - name: Cache Godot and the iOS template
+      - name: Cache Godot and the iOS and Mac templates
         id: godot-cache
         uses: actions/cache@v4
         with:
           path: |
             ~/godot
             ~/Library/Application Support/Godot/export_templates
-          key: godot-macos-ios-${{ env.GODOT_VERSION }}
+          key: godot-macos-ios-mac-${{ env.GODOT_VERSION }}
 
-      - name: Download Godot and the iOS export template
+      - name: Download Godot and the iOS and Mac export templates
         if: steps.godot-cache.outputs.cache-hit != 'true'
         run: |
           set -euo pipefail
@@ -124,7 +124,7 @@ jobs:
           curl -fsSL -o /tmp/templates.tpz "$GODOT_RELEASE/Godot_v${GODOT_VERSION}-stable_export_templates.tpz"
           TEMPLATES="$HOME/Library/Application Support/Godot/export_templates/${GODOT_VERSION}.stable"
           mkdir -p "$TEMPLATES"
-          unzip -q -j /tmp/templates.tpz templates/ios.zip templates/version.txt -d "$TEMPLATES"
+          unzip -q -j /tmp/templates.tpz templates/ios.zip templates/macos.zip templates/version.txt -d "$TEMPLATES"
           rm /tmp/templates.tpz
           ls -la "$TEMPLATES"
 
@@ -176,3 +176,28 @@ jobs:
           # The reminders code made it into the app, linked to the phone's notifications.
           otool -L "$APP/DoctorsWorld" | grep UserNotifications || echo "UserNotifications will be loaded at run time"
           strings "$APP/DoctorsWorld" | grep -c DW_REMINDERS_STATUS
+
+      - name: Export the Mac app (Intel and Apple silicon, ad-hoc signed)
+        run: |
+          set -o pipefail
+          mkdir -p build/macos
+          ~/godot/Godot.app/Contents/MacOS/Godot --headless --path . --export-release "macOS" build/macos/DoctorsWorld.zip 2>&1 \
+            | tee export-mac.log
+          ls -la build/macos
+          cd build/macos
+          unzip -q DoctorsWorld.zip
+          APP=$(ls -d *.app | head -1)
+          echo "App: $APP"
+          BIN="$APP/Contents/MacOS/$(defaults read "$PWD/$APP/Contents/Info" CFBundleExecutable)"
+          lipo -info "$BIN" | tee /dev/stderr | grep -q "x86_64" && lipo -info "$BIN" | grep -q "arm64"
+          codesign -dv "$APP" 2>&1 | tee /dev/stderr | grep -q "Signature=adhoc"
+          test -f "$APP/Contents/Resources/"*.pck || ls "$APP/Contents/Resources"
+          # It starts, loads the title screen and quits cleanly.
+          "$BIN" --headless --quit-after 240 2>&1 | tee run-mac.log
+          if grep -E "SCRIPT ERROR|Parse Error" run-mac.log; then exit 1; fi
+
+      - name: Upload the Mac app
+        uses: actions/upload-artifact@v4
+        with:
+          name: DoctorsWorld-mac
+          path: build/macos/DoctorsWorld.zip

@@ -454,7 +454,7 @@ func test_review_day_promotion_is_left_out_of_the_race() -> void:
 
 
 func test_the_map_opens_from_the_ward_and_reading_is_saved() -> void:
-	for file: String in ["save.json", "save.json.tmp", "settings.json", "settings.json.tmp"]:
+	for file: String in ["save.json", "save.json.tmp", "settings.json", "settings.json.tmp", "save.bak1.json", "save.bak2.json", "save.bak3.json", ".install"]:
 		if FileAccess.file_exists("user://test_career/" + file):
 			DirAccess.remove_absolute("user://test_career/" + file)
 	var main := Main.new()

@@ -33,6 +33,7 @@ plan"). This file covers how to build, run and test the game.
 | 19. Daily hooks | On the career map's Today page: the 60-second case (`DailyCase`, six quick emergencies in `QuickCases`, one a day, the same for everyone, played with `CrisisTask` against one minute), the weekly mystery (`WeeklyMystery`, `story/mysteries.json`, one clue a weekday and one guess a week), and 20 badges on the Badges page (`Badges`) | Done |
 | 20. Tighter start | Six more quick cases (asthma, fits and eclampsia, head injury, poisoning, sepsis, heat), eight more mysteries, four more badges; Day 2 needs four stations (`SkillsLab.NEEDED`), not six; filler trimmed from the longest speeches; quick cases as story beats on Days 21, 23 and 27; a two-card cold open; the Today page from meeting Dr. Iyer on Day 1; Varun's first message on Day 1's card | Done |
 | 21. Lines that sound like people, and a share card | junior, senior, surgeon, hod and the Chief's days (`tools/chief_story.py`, which writes `story/chief.json`: edit the script, never the JSON) rewritten in a spoken voice, about 1,300 lines; the young characters (Zoya, Ira Saxena, Dev, Arif, Ananya) talk Gen Z and the seniors get more sarcastic; the 60-second case can be shared (`Share`: a wa.me link plus the clipboard, swappable `Share.opener` / `Share.copier` for tests; `DailyCase.share_text` from the counters `daily_case_marks`, `daily_case_seconds`, `daily_case_slow`; case numbers from `DailyCase.FIRST_DATE`); screenshots 167-169. 1.11.1: no emoji anywhere in the game (the share card's marks are words, `DailyCase.MARK_WORDS`), checked by `test_nothing_in_the_game_uses_emoji` | Done |
+| 22. Casualty and the clock | `game/shift/`: `ShiftSim` (arrivals by the hour, four cubicles, six seats, worse/crash/leave, tests coming back), `ShiftDay` (load by day and tier, the career's `hospital_seed`), `ShiftPatient`, `Conditions` (`story/conditions.json`), `NameMaker`, `PatientLook`, `ShiftBot`; `CasualtyRoom` behind the ward's door, `PatientPanel` (the card); the free clock (`Ward.CLOCK_RATE`), late beats, the `sign_off` beat; sealed saves (`SaveStore` v3: HMAC over the body, `.install` secret, three backups, `save.tampered.json`), `ClockGuard` on the daily XP, case and mystery, check codes on shared results (`DailyCase.check_code`, `check_shared`), `FrameBudget`; the macOS preset and CI job; screenshots 170-174 | Done |
 
 The earlier SwiftUI and SpriteKit prototype is kept on the git branch
 `swift-prototype`.
@@ -46,6 +47,25 @@ The earlier SwiftUI and SpriteKit prototype is kept on the git branch
 
 Controls on a computer: click the floor to walk, click a person to talk, or
 use WASD / arrow keys. On a phone or tablet: tap.
+
+## Run it on a Mac
+
+Every push to `main` builds a Mac app in CI (the **DoctorsWorld-mac**
+artifact on the run's page): one app for Intel and Apple silicon, ad-hoc
+signed, because there is no paid Apple Developer account to sign it
+properly. To open it:
+
+1. Download the artifact, unzip it (twice: GitHub zips the zip), and drag
+   **Doctors World.app** into Applications.
+2. Double-click it. macOS says it can't check the developer; click **Done**.
+3. Open **System Settings > Privacy & Security**, scroll down to the line
+   about Doctors World and click **Open Anyway**, then confirm.
+
+After that it opens like any other app. To build it yourself instead: in
+Godot, **Project > Export**, pick the **macOS** preset and click
+**Export Project** (Godot's 4.7.2 export templates must be installed).
+The Mac App Store would need the paid account; the game doesn't use it.
+The save lives in `~/Library/Application Support/Godot/app_userdata/Doctors World/`.
 
 ## Run it on your iPhone or iPad
 
@@ -678,6 +698,38 @@ Lines with no recording use the device's text-to-speech (Godot's
   Voices > English, where the enhanced voices can be downloaded; the game
   prefers them by itself.
 
+## Casualty and the clock
+
+From Day 4, `Ward._start_shift()` makes the day's `ShiftSim` (`ShiftDay.make`).
+It runs on the main thread, catching up with `profile.minutes` whenever they
+move (`Ward._catch_up`), which costs about 0.4 ms per hospital hour; there is
+no background thread to go wrong. The clock moves at `Ward.CLOCK_RATE`
+hospital minutes a second only while the doctor is free (walking, no
+conversation, task or menu, and the game in front), and each action on the
+card spends minutes of its own (`ShiftSim.ASK_MINUTES` and so on). A story
+beat reached more than `Ward.LATE_AFTER` minutes after it paged is late and
+costs `Ward.LATE_XP`. `CasualtyRoom.sync()` builds at most one body a frame;
+people already waiting sit down, newcomers walk in from the door. The HUD's
+crowded tags (`LobbyHud.start_crowd`, `set_tag(..., crowded)`) make way for
+each other, sickest first, and keep off the doctor.
+
+## Honest saves
+
+`SaveStore` writes version 3 saves sealed with an HMAC-SHA256 of the body,
+keyed with `SaveStore.PEPPER` and a per-install secret in `user://.install`.
+A broken seal, an unsealed save after the install has sealed one, or a save
+copied from another install is moved to `save.tampered.json`, and the newest
+good backup (`save.bak1.json` to `save.bak3.json`) loads instead, with a line
+on the title screen (`Main.notice_for`). `SaveStore.make_plausible` caps
+experience at a generous bound for the day. `ClockGuard` keeps the latest
+date seen; while the phone's date is earlier, `DailyReward.claim`,
+`DailyCase.record` and `WeeklyMystery.guess` pay nothing. Shared results end
+with `DailyCase.check_code`, and `DailyCase.check_shared` checks a pasted
+one. This stops editing saves and dates; someone who takes the app itself
+apart can get round any of it, as with every offline game.
+`test_the_game_has_no_back_doors` keeps networking, outside code and debug
+keys out of `game/`.
+
 ## Performance
 
 Everything is built from small meshes, and each costs a draw call.
@@ -745,3 +797,7 @@ shadows are off; characters and furniture have soft contact shadows instead
 - **macOS:** exports the iOS Xcode project with Godot's templates and builds
   the iPhone and iPad app with code signing turned off. (Godot's simulator
   library is Intel only, so CI builds the real device app instead.)
+  It also exports the Mac app (universal, ad-hoc signed), checks both
+  architectures and the signature, starts it headless for a few seconds to
+  make sure it boots cleanly, and uploads it as the `DoctorsWorld-mac`
+  artifact.

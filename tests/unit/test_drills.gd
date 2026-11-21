@@ -8,7 +8,7 @@ const STEP := 1.0 / 30.0
 
 
 func _main(day: int) -> Main:
-	for file: String in ["save.json", "save.json.tmp", "settings.json", "settings.json.tmp"]:
+	for file: String in ["save.json", "save.json.tmp", "settings.json", "settings.json.tmp", "save.bak1.json", "save.bak2.json", "save.bak3.json", ".install"]:
 		if FileAccess.file_exists("user://test_drills/" + file):
 			DirAccess.remove_absolute("user://test_drills/" + file)
 	var main := Main.new()

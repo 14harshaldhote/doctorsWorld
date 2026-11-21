@@ -484,7 +484,8 @@ func test_a_story_day_puts_its_crisis_before_the_last_beat_and_plays_to_the_end(
 	var ward := _ward(10, Rank.JUNIOR_RESIDENT)
 	var ids := ward.beats.map(func(entry: Dictionary) -> String: return str(entry.get("id", "")))
 	expect("crisis" in ids, "Day 10 has its crisis")
-	expect_equal(ids.find("crisis"), ids.size() - 2, "just before the last beat")
+	expect_equal(ids.find("crisis"), ids.size() - 3, "just before the last story beat")
+	expect_equal(ids[-1], "sign_off", "and the hand over after it")
 	var heard := [false]
 	var finished := [false]
 	ward.day_finished.connect(func() -> void: finished[0] = true)

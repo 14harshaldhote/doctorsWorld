@@ -22,6 +22,12 @@ const FIRST_DATE := "2026-11-19"
 ## Each step's word on the share card: wrong, half right, right. Plain
 ## words, no emoji.
 const MARK_WORDS := ["wrong", "half right", "right"]
+## The check code at the bottom of a shared result: six letters worked out
+## from the result itself, so a friend's game can tell an edited one (any
+## changed number) from the real thing. Like the save's seal, it keeps out
+## the casual fibber, not someone who takes the app apart.
+const CHECK_KEY := "dw|60s|honest-results-only|3b91e0"
+const CHECK_LETTERS := "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"
 ## The share card's last word, by how it went. Picked by the date, so the
 ## same result on the same day says the same thing.
 const BRAG := {
@@ -117,11 +123,13 @@ static func streak(profile: PlayerProfile, date: String = "") -> int:
 
 
 ## Records a finished case and pays for it: {"xp", "streak", "perfect"}.
-## A second case on the same day records nothing.
+## A second case on the same day records nothing, and so does one while the
+## phone's date has been moved back (ClockGuard).
 static func record(profile: PlayerProfile, task: CrisisTask, date: String = "") -> Dictionary:
 	var when := date if not date.is_empty() else DailyReward.today()
-	if played_today(profile, when):
+	if played_today(profile, when) or ClockGuard.rolled_back(profile, when):
 		return {}
+	ClockGuard.note(profile, when)
 	var run := streak(profile, when) + 1
 	var perfect := task.all_right()
 	profile.set_count("daily_case_date", date_number(when))
@@ -205,5 +213,59 @@ static func share_text(profile: PlayerProfile, date: String = "") -> String:
 		how = "none"
 	var said: Array = BRAG[how]
 	lines.append(str(said[absi(hash("brag|" + when)) % said.size()]))
+	lines.append("Check code: " + check_code(case_number(when), digits, profile.count("daily_case_seconds", int(SECONDS)),
+		run if run >= 2 else 0))
 	lines.append("Same case for every doctor today. Your move.")
 	return "\n".join(lines)
+
+
+## The check code for a result: case number, the marks (as digits), the
+## seconds and the streak shown (0 when none is).
+static func check_code(number: int, marks: String, seconds: int, run: int) -> String:
+	var digest := Crypto.new().hmac_digest(HashingContext.HASH_SHA256, CHECK_KEY.to_utf8_buffer(),
+		("%d|%s|%d|%d" % [number, marks, seconds, run]).to_utf8_buffer())
+	var code := ""
+	for index in 6:
+		code += CHECK_LETTERS[digest[index] % CHECK_LETTERS.length()]
+	return code.substr(0, 3) + "-" + code.substr(3)
+
+
+## Checks a result a friend shared (pasted from WhatsApp, say):
+## {"ok": true, "number", "right", "steps", "seconds"}, or {"ok": false,
+## "why": "no_result"} when it isn't one, or "edited" when it doesn't add up.
+static func check_shared(text: String) -> Dictionary:
+	var number := -1
+	var seconds := -1
+	var right := -1
+	var steps := -1
+	var run := 0
+	var marks := ""
+	var code := ""
+	for raw in text.split("\n"):
+		var line := raw.strip_edges()
+		if line.contains("60-second case #"):
+			number = int(line.get_slice("60-second case #", 1).strip_edges())
+		elif line.contains(" right in ") and line.contains(" of "):
+			var counts := line.get_slice(" · ", 1) if line.contains(" · ") else line
+			right = int(counts.get_slice(" of ", 0))
+			steps = int(counts.get_slice(" of ", 1).get_slice(" ", 0))
+			seconds = int(line.get_slice(" right in ", 1).trim_suffix("s"))
+		elif line.ends_with(" days running"):
+			run = int(line.get_slice(" ", 0))
+		elif line.contains("Check code:"):
+			code = line.get_slice("Check code:", 1).strip_edges().to_upper()
+		else:
+			var digits := ""
+			for word in line.to_lower().split(", "):
+				var mark := MARK_WORDS.find(word.strip_edges())
+				if mark < 0:
+					digits = ""
+					break
+				digits += str(mark + 1)
+			if not digits.is_empty():
+				marks = digits
+	if number < 1 or seconds < 0 or marks.is_empty() or code.is_empty():
+		return {"ok": false, "why": "no_result"}
+	if code != check_code(number, marks, seconds, run) or steps != marks.length() or right != marks.count("3"):
+		return {"ok": false, "why": "edited"}
+	return {"ok": true, "number": number, "right": right, "steps": steps, "seconds": seconds}

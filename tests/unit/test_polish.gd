@@ -19,7 +19,7 @@ func _fresh_settings() -> GameSettings:
 
 
 func _remove_files() -> void:
-	for file: String in ["settings.json", "settings.json.tmp", "save.json", "save.json.tmp"]:
+	for file: String in ["settings.json", "settings.json.tmp", "save.json", "save.json.tmp", "save.bak1.json", "save.bak2.json", "save.bak3.json", ".install"]:
 		if FileAccess.file_exists(FOLDER + "/" + file):
 			DirAccess.remove_absolute(FOLDER + "/" + file)
 
@@ -123,7 +123,8 @@ func test_settings_from_the_title_screen_apply_at_once_and_save() -> void:
 	expect_equal(Engine.max_fps, 30, "battery saver runs at 30 frames a second")
 	expect_near(tree.root.scaling_3d_scale, GameSettings.SAVER_3D_SCALE, 0.001)
 	panel.pick("graphics", 0)
-	expect_equal(Engine.max_fps, 60)
+	expect_equal(FrameBudget.base, 60, "smooth again")
+	expect_equal(Engine.max_fps, FrameBudget.MENU_FPS, "though the title and settings themselves only need 30")
 	panel.pick("reduce_motion", 1)
 	panel.pick("colour_safe", 1)
 	expect(GameSettings.current.reduce_motion and GameSettings.current.colour_safe)

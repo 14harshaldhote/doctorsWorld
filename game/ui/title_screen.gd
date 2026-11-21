@@ -7,6 +7,8 @@ signal continue_pressed
 
 ## The saved doctor, or null when there is no save to continue.
 var saved: PlayerProfile
+## A line about the save (edited, damaged), or "".
+var notice := ""
 
 var new_button: Button
 var continue_button: Button
@@ -14,8 +16,18 @@ var settings_button: Button
 var settings: SettingsPanel
 
 
-func _init(saved_profile: PlayerProfile = null) -> void:
+func _init(saved_profile: PlayerProfile = null, save_notice: String = "") -> void:
 	saved = saved_profile
+	notice = save_notice
+
+
+## A still screen: the game asks for fewer frames while it shows.
+func _enter_tree() -> void:
+	FrameBudget.calm(true)
+
+
+func _exit_tree() -> void:
+	FrameBudget.calm(false)
 
 
 func _ready() -> void:
@@ -80,6 +92,13 @@ func _ready() -> void:
 	if saved != null:
 		continue_button = _continue_button()
 		buttons.add_child(continue_button)
+	if not notice.is_empty():
+		var line := UiKit.label(notice, 14, UiKit.AMBER)
+		line.name = "SaveNotice"
+		line.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		line.custom_minimum_size = Vector2(UiKit.px(340), 0)
+		line.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+		column.add_child(line)
 	settings_button = UiKit.ghost_button("Settings", 40, 15)
 	settings_button.name = "SettingsButton"
 	settings_button.custom_minimum_size.x = UiKit.px(120)

@@ -29,6 +29,15 @@ func _init(editing: GameSettings = null) -> void:
 	settings = editing if editing != null else GameSettings.current
 
 
+## A still screen: the game asks for fewer frames while it shows.
+func _enter_tree() -> void:
+	FrameBudget.calm(true)
+
+
+func _exit_tree() -> void:
+	FrameBudget.calm(false)
+
+
 func _ready() -> void:
 	name = "Settings"
 	theme = UiKit.theme()

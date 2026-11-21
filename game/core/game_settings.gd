@@ -175,7 +175,7 @@ func apply_display(window: Window) -> void:
 	if window == null:
 		return
 	var saver := graphics == "saver"
-	Engine.max_fps = 30 if saver else 60
+	FrameBudget.set_base(30 if saver else 60)
 	window.scaling_3d_scale = SAVER_3D_SCALE if saver else 1.0
 	window.msaa_3d = Viewport.MSAA_DISABLED if saver else Viewport.MSAA_2X
 

@@ -33,7 +33,7 @@ func cleanup() -> void:
 	Reminders.profile = _profile_before
 	GameSettings.current = _settings_before
 	SettingsPanel.save_path = _save_path_before
-	for file: String in ["settings.json", "settings.json.tmp", "save.json", "save.json.tmp"]:
+	for file: String in ["settings.json", "settings.json.tmp", "save.json", "save.json.tmp", "save.bak1.json", "save.bak2.json", "save.bak3.json", ".install"]:
 		if FileAccess.file_exists(FOLDER + "/" + file):
 			DirAccess.remove_absolute(FOLDER + "/" + file)
 

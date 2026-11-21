@@ -129,7 +129,7 @@ func test_two_people_walking_at_each_other_pass() -> void:
 # --- Whole days, every frame ----------------------------------------------
 
 func _main() -> Main:
-	for file: String in ["save.json", "save.json.tmp", "settings.json", "settings.json.tmp"]:
+	for file: String in ["save.json", "save.json.tmp", "settings.json", "settings.json.tmp", "save.bak1.json", "save.bak2.json", "save.bak3.json", ".install"]:
 		if FileAccess.file_exists("user://test_crowd/" + file):
 			DirAccess.remove_absolute("user://test_crowd/" + file)
 	var main := Main.new()

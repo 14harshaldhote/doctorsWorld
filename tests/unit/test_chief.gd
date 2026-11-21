@@ -67,7 +67,8 @@ func test_a_generated_day_in_a_later_tier_plays_to_the_end() -> void:
 func test_a_board_day_reports_on_the_hospital() -> void:
 	var ward := _ward(38)
 	expect(ChiefDays.is_report_day(38))
-	expect_equal(ward.beats[ward.beats.size() - 1]["id"], "report", "the report is the day's last beat")
+	expect_equal(ward.beats[ward.beats.size() - 2]["id"], "report", "the report is the day's last story beat")
+	expect_equal(ward.beats[ward.beats.size() - 1]["id"], "sign_off", "then the doctor hands over")
 	expect(_play_day(ward), "the day ends")
 	var verdicts := ["board_strong", "board_mixed", "board_poor"].filter(func(f: String) -> bool:
 		return ward.profile.has_flag(f))

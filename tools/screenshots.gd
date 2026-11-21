@@ -528,6 +528,9 @@ func _ward_shots() -> void:
 	# Stage 21: the new voice of the later chapters, and the WhatsApp share.
 	await _share_shots()
 
+	# Stage 22: casualty through the ward's door.
+	await _casualty_shots()
+
 
 ## The career map over the ward: the road and the race, a Chief's road,
 ## the wall of letters, one letter open, and the end card with the post.
@@ -676,6 +679,111 @@ func _share_shots() -> void:
 	var again := CareerMap.new(player, "today")
 	await _shot("169-share-today", again)
 	DailyReward.today_override = ""
+
+
+## A ward day played to its first walk, with casualty busy and the doctor
+## down there (patients on the benches and in two cubicles).
+func _casualty_ward(day: int) -> Ward:
+	var ward := Ward.new(sample_profile_on_ward(day, ["beds_checked", "casualty_intro"]))
+	ward.profile.set_count("hospital_seed", 2026)
+	return ward
+
+
+static func _into_casualty(ward: Ward) -> void:
+	ward.play_until(func() -> bool: return ward.mode == "walk", Ward.pick_tones(["Patient first", "Honest", "Calm"]))
+	ward.profile.minutes += 150
+	ward._catch_up()
+	ward._toasts.clear()
+	ward.enter_casualty()
+	for frame in 60:
+		ward.update(1.0 / 30.0)
+	var waiting := ward.shift.waiting()
+	for index in mini(2, waiting.size()):
+		ward.shift.take(waiting[index])
+	for frame in 300:
+		ward.update(1.0 / 30.0)
+	ward._toasts.clear()
+
+
+## A patient seen in a cubicle: two questions, the examination, a test sent.
+static func _see_one(ward: Ward, condition: String, decide: bool) -> void:
+	var patient := ward.shift.make_patient(condition)
+	ward.shift.patients.append(patient)
+	ward.see_patient(patient)
+	for frame in 600:
+		if ward.panel != null:
+			break
+		ward.update(1.0 / 30.0)
+	var panel := ward.panel
+	if panel == null:
+		push_error("The patient card never opened")
+		return
+	panel.button("Ask_pain").pressed.emit()
+	panel.button("Ask_when").pressed.emit()
+	panel.button("Examine").pressed.emit()
+	for test: String in patient.condition.get("key", []):
+		panel.button("Test_" + test).pressed.emit()
+	if decide:
+		ward.profile.minutes += 40
+		ward._catch_up()
+		panel.button("Plan%d" % (ShiftBot.position_of(patient, true) + 1)).pressed.emit()
+		panel.confirm_button.pressed.emit()
+	ward._toasts.clear()
+	ward.settle_camera()
+
+
+## Fails loudly if the patient card spills off the screen.
+func _check_card(ward: Ward, shot_name: String) -> void:
+	if ward.panel == null:
+		return
+	var screen := root.get_viewport().get_visible_rect()
+	var sheet := ward.panel.sheet.get_global_rect()
+	if not screen.grow(1.0).encloses(sheet):
+		push_error("SCRIPT ERROR: %s: the patient card %s spills off the screen %s" % [shot_name, sheet, screen])
+
+
+func _casualty_shots() -> void:
+	var busy := _casualty_ward(12)
+	await _shot("170-casualty", busy, func() -> void:
+		_into_casualty(busy)
+		busy.settle_camera()
+		busy.set_process(false))
+	var card := _casualty_ward(12)
+	await _shot("171-casualty-card", card, func() -> void:
+		_into_casualty(card)
+		_see_one(card, "renal_colic", false)
+		card.set_process(false))
+	_check_card(card, "171-casualty-card")
+	var result := _casualty_ward(15)
+	await _shot("172-casualty-result", result, func() -> void:
+		_into_casualty(result)
+		_see_one(result, "appendicitis", true)
+		result.set_process(false))
+	_check_card(result, "172-casualty-result")
+	var door := _casualty_ward(12)
+	await _shot("173-casualty-door", door, func() -> void:
+		door.play_until(func() -> bool: return door.mode == "walk", Ward.pick_tones(["Patient first", "Honest", "Calm"]))
+		door.profile.minutes += 90
+		door._catch_up()
+		door._toasts.clear()
+		door.player.position = Ward.DOOR + Vector3(-4.2, 0, 0.4)
+		door.player.rotation.y = PI / 2
+		door._walk_to_door()
+		for frame in 30:
+			door.update(1.0 / 30.0)
+		door.settle_camera()
+		door.set_process(false))
+	var ending := _casualty_ward(12)
+	await _shot("174-casualty-day-end", ending, func() -> void:
+		_into_casualty(ending)
+		_see_one(ending, "gastro", true)
+		ending._on_panel("done", "")
+		ending.leave_casualty()
+		if not ending.play_until(func() -> bool: return ending.mode == "end", Ward.pick_tones(["Patient first", "Honest", "Calm"]),
+				AutoPlayer.new()):
+			push_error("The day never ended")
+		ending.overlay.tick(1.0)
+		ending.set_process(false))
 
 
 ## The crises on their story days: [shot, day, step on show, answers given].
