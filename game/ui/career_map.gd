@@ -349,6 +349,7 @@ func _daily_card() -> Control:
 		column.add_child(UiKit.label("Today's case: %d / 100" % profile.count("daily_case_score"), 17, UiKit.TEXT, UiKit.heavy_font()))
 		column.add_child(_wrapped("Streak: %d day%s · best %d. A new case at midnight, the same one for every doctor in the country." %
 			[run, "" if run == 1 else "s", profile.count("daily_case_best")], 14, UiKit.TEXT_SOFT, "DailyLine"))
+		column.add_child(_share_row())
 		return card
 	column.add_child(UiKit.label("One emergency. One minute. The same case for every doctor today.", 17, UiKit.TEXT,
 		UiKit.heavy_font()))
@@ -363,6 +364,26 @@ func _daily_card() -> Control:
 	start.pressed.connect(start_daily_case)
 	column.add_child(start)
 	return card
+
+
+## "Share on WhatsApp" and "Copy" for today's result, once it's played.
+func _share_row() -> Control:
+	var row := UiKit.hbox(8)
+	row.name = "ShareRow"
+	var text := DailyCase.share_text(profile)
+	var whatsapp := UiKit.primary_button("Share on WhatsApp", 40, 15)
+	whatsapp.name = "ShareWhatsApp"
+	whatsapp.pressed.connect(func() -> void:
+		Share.whatsapp(text)
+		whatsapp.text = "Shared · copied too")
+	row.add_child(whatsapp)
+	var copy := UiKit.ghost_button("Copy", 40, 15)
+	copy.name = "ShareCopy"
+	copy.pressed.connect(func() -> void:
+		Share.copy(text)
+		copy.text = "Copied")
+	row.add_child(copy)
+	return row
 
 
 static func _day_name(date: String) -> String:
@@ -396,6 +417,7 @@ func _on_case_finished(task: TrainingTask) -> void:
 	var reward := "+%d XP · streak %d" % [int(result.get("xp", 0)), int(result.get("streak", 0))] if not result.is_empty() else ""
 	if not new.is_empty():
 		reward += " · " + Badges.toast_text(new)
+	case_view.share_text = DailyCase.share_text(profile)
 	case_view.show_result(reward)
 
 

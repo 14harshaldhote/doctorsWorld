@@ -33,6 +33,9 @@ var can_retry := true
 var kicker_override := ""
 ## A true story from medicine for the bottom of the score card ("" for none).
 var fact := ""
+## A message for friends: shows a "Share on WhatsApp" button on the score
+## card ("" for none). The 60-second case sets it.
+var share_text := ""
 
 var _header: PanelContainer
 var _title: Label
@@ -175,6 +178,13 @@ func show_result(reward: String) -> void:
 	again.pressed.connect(func() -> void: retry_pressed.emit())
 	again.visible = can_retry
 	buttons.add_child(again)
+	if not share_text.is_empty():
+		var share := UiKit.ghost_button("Share on WhatsApp", 44, 15)
+		share.name = "Share"
+		share.pressed.connect(func() -> void:
+			Share.whatsapp(share_text)
+			share.text = "Shared · copied too")
+		buttons.add_child(share)
 	var done := UiKit.primary_button(done_text, 44, 16)
 	done.name = "Done"
 	done.pressed.connect(func() -> void: done_pressed.emit())

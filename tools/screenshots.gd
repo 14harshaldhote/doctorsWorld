@@ -525,6 +525,9 @@ func _ward_shots() -> void:
 	# first message.
 	await _hook_shots()
 
+	# Stage 21: the new voice of the later chapters, and the WhatsApp share.
+	await _share_shots()
+
 
 ## The career map over the ward: the road and the race, a Chief's road,
 ## the wall of letters, one letter open, and the end card with the post.
@@ -647,6 +650,32 @@ func _hook_shots() -> void:
 		for frame in 60:
 			evening.overlay.tick(1.0 / 30.0)
 		evening.set_process(false))
+
+
+func _share_shots() -> void:
+	var senior := Ward.pick_tones(["Open door", "Patient first", "Honest"])
+	await _ward_shot("167-zoya-intro", 14, [], "", func(w: Ward) -> bool:
+		return w.conversation == "handover14" and w.talk_ui.line_text().contains("Lowkey") and not w.talk_ui.is_typing(),
+		senior)
+	DailyReward.today_override = "2026-11-19"
+	var player := sample_profile_on_ward(12, ["beds_checked"])
+	var played := CareerMap.new(player, "today")
+	await _shot("168-share-result", played, func() -> void:
+		var view := played.start_daily_case()
+		await process_frame
+		var task := view.task as CrisisTask
+		task.time_total = 34.6
+		var guard := 0
+		while not task.finished and guard < 10:
+			view.pick(str(CrisisTask.right_answer(task.current())))
+			view.confirm()
+			guard += 1
+		for frame in 60:
+			view.tick(1.0 / 30.0)
+		played.set_process(false))
+	var again := CareerMap.new(player, "today")
+	await _shot("169-share-today", again)
+	DailyReward.today_override = ""
 
 
 ## The crises on their story days: [shot, day, step on show, answers given].

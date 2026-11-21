@@ -344,7 +344,10 @@ Here's everything, in order, so you can decide how much of your life to give it:
   met you.
   Easy on Monday, hard by Thursday, extreme at the weekend, because that's
   when casualty is. Play every day for a streak. Miss one and it starts
-  again from one, and Dr. Iyer will know.
+  again from one, and Dr. Iyer will know. Then share it on WhatsApp: the
+  case number, a row of ticks and crosses, your time and one line of
+  self-roast, and never what the case was, so your batchmates can't cheat.
+  They will try.
 - A weekly mystery: one patient nobody can diagnose, a new clue every
   weekday, and one guess all week. Guess on Monday for a lot of XP and the
   risk of looking silly, or wait for Friday and be sure, like a consultant.
@@ -430,6 +433,12 @@ Here's everything, in order, so you can decide how much of your life to give it:
   people actually talk at six in the morning.
 - The first two weeks were rewritten in the way people speak, not the way
   they write. More "na", fewer speeches. Dr. Iyer is exactly as unimpressed.
+- And then the rest of it, from the eight months later card to the Chief's
+  endless days: about thirteen hundred lines that now sound like people
+  rather than minutes of a meeting. The seniors got more sarcastic. The young
+  ones got Gen Z: Zoya is lowkey a fan and highkey terrified, Dev Malhotra
+  finds his father's budget voice so cringe, and Dr. Saxena's brain is a
+  loading screen. Dr. Iyer had to ask what "it's giving" means. She regrets it.
 
 Screenshots of every screen are rebuilt automatically after each change, on
 the [`screenshots` branch](../../tree/screenshots).

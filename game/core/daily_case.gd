@@ -16,6 +16,38 @@ const BASE_XP := 30
 const STREAK_XP := 5
 const PERFECT_XP := 25
 const LEVELS_BY_WEEKDAY := ["extreme", "easy", "easy", "easy", "hard", "hard", "extreme"]
+## The first 60-second case, case #1. The share card numbers the rest from
+## it, so friends playing the same day share a number.
+const FIRST_DATE := "2026-11-19"
+## Each step's mark on the share card: wrong, half right, right.
+const MARK_EMOJI := ["❌", "🟨", "✅"]
+## The share card's last word, by how it went. Picked by the date, so the
+## same result on the same day says the same thing.
+const BRAG := {
+	"perfect": [
+		"Dr. Iyer said acceptable. Out loud. I'm framing it.",
+		"Zero mistakes. Main character energy, honestly.",
+		"Flawless. The patient didn't even need me. Rude.",
+		"Perfect. The nurse looked mildly impressed. Mildly.",
+	],
+	"some": [
+		"The patient lived. My ego, less so.",
+		"Not perfect. The patient doesn't need to know.",
+		"Kind of mid, but the patient's fine. That's the bar, right?",
+		"Some right, some... learning opportunities.",
+	],
+	"none": [
+		"Dr. Iyer took over. We don't talk about it.",
+		"The patient is fine. No thanks to me.",
+		"Down bad. The nurse knew more than me.",
+		"I panicked. The patient was very understanding.",
+	],
+	"slow": [
+		"Ran out of time. Casualty doesn't do extensions.",
+		"The minute ended before I did.",
+		"Sixty seconds. I needed sixty-one. Classic.",
+	],
+}
 
 
 ## The date as a number: "2026-11-19" is 20261119.
@@ -41,6 +73,14 @@ static func case_for(date: String) -> String:
 
 static func _round(round_index: int) -> Array:
 	return SeededRandom.new(absi(hash("daily|%d" % round_index)) % 1000003 + 1).shuffled(QuickCases.IDS)
+
+
+## Which 60-second case this is, counting from the first one: case #1 was
+## FIRST_DATE.
+static func case_number(date: String) -> int:
+	var first := int(Time.get_unix_time_from_datetime_string(FIRST_DATE + "T12:00:00")) / 86400
+	var day := int(Time.get_unix_time_from_datetime_string(date + "T12:00:00")) / 86400
+	return maxi(1, day - first + 1)
 
 
 static func seed_for(date: String) -> int:
@@ -87,6 +127,9 @@ static func record(profile: PlayerProfile, task: CrisisTask, date: String = "") 
 	profile.set_count("daily_case_streak", run)
 	profile.set_count("daily_case_best", maxi(run, profile.count("daily_case_best")))
 	profile.set_count("daily_case_score", task.score())
+	profile.set_count("daily_case_marks", marks_code(task))
+	profile.set_count("daily_case_seconds", seconds_used(task))
+	profile.set_count("daily_case_slow", task.timeouts)
 	profile.add_count("daily_cases", 1)
 	if perfect:
 		profile.add_count("daily_cases_perfect", 1)
@@ -99,7 +142,64 @@ static func record(profile: PlayerProfile, task: CrisisTask, date: String = "") 
 		profile.morning["total_xp"] = int(profile.morning.get("total_xp", profile.total_xp - xp)) + xp
 		var counters: Dictionary = profile.morning.get("counters", {})
 		for key: String in ["daily_case_date", "daily_case_streak", "daily_case_best", "daily_case_score", "daily_cases",
-				"daily_cases_perfect"]:
+				"daily_cases_perfect", "daily_case_marks", "daily_case_seconds", "daily_case_slow"]:
 			counters[key] = profile.count(key)
 		profile.morning["counters"] = counters
 	return {"xp": xp, "streak": run, "perfect": perfect}
+
+
+## Each step's mark as a digit, in order (3 right, 2 half right, 1 wrong or
+## never reached), read as one number: 331 is right, right, wrong.
+static func marks_code(task: CrisisTask) -> int:
+	var code := 0
+	for index in task.steps.size():
+		var mark := task.marks[index] if index < task.marks.size() else 0.0
+		code = code * 10 + (3 if mark >= 0.999 else (2 if mark > 0.0 else 1))
+	return code
+
+
+## Whole seconds of the minute used, 1 to 60.
+static func seconds_used(task: CrisisTask) -> int:
+	if task.time_total < 0.0:
+		return int(SECONDS)
+	return clampi(ceili(SECONDS - task.time_total), 1, int(SECONDS))
+
+
+## Today's result as a message for friends, or "" if today's case isn't
+## played yet. It says how it went, never what the case was, so nobody's
+## case is spoilt:
+##   Doctors World · 60-second case #3 🩺
+##   Hard · ✅✅❌ 2/3 in 38s
+##   🔥 5 days running
+##   The patient lived. My ego, less so.
+##   Same case for every doctor today. Your move.
+static func share_text(profile: PlayerProfile, date: String = "") -> String:
+	var when := date if not date.is_empty() else DailyReward.today()
+	if not played_today(profile, when):
+		return ""
+	var digits := str(profile.count("daily_case_marks"))
+	var row := ""
+	var right := 0
+	for digit in digits:
+		var mark := clampi(int(digit), 1, 3)
+		row += str(MARK_EMOJI[mark - 1])
+		if mark == 3:
+			right += 1
+	var lines: Array[String] = []
+	lines.append("Doctors World · 60-second case #%d 🩺" % case_number(when))
+	lines.append("%s · %s %d/%d in %ds" % [level_for(when).capitalize(), row, right, digits.length(),
+		profile.count("daily_case_seconds", int(SECONDS))])
+	var run := streak(profile, when)
+	if run >= 2:
+		lines.append("🔥 %d days running" % run)
+	var how := "some"
+	if right == digits.length():
+		how = "perfect"
+	elif profile.count("daily_case_slow") > 0:
+		how = "slow"
+	elif right == 0:
+		how = "none"
+	var said: Array = BRAG[how]
+	lines.append(str(said[absi(hash("brag|" + when)) % said.size()]))
+	lines.append("Same case for every doctor today. Your move.")
+	return "\n".join(lines)

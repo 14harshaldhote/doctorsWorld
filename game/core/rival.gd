@@ -30,8 +30,8 @@ const DAYS := [
 	[-60, "Varun was found asleep in the CarePlus MRI. Inside it. Switched off, thankfully."],
 	[60, "Varun gave a talk called 'Leadership in Surgery'. He has led nothing."],
 	[-90, "Varun's patient asked for a different doctor. Politely. In writing. With a copy to his mother."],
-	[30, "Varun started a podcast. Two episodes, eleven listeners, nine of them relatives."],
-	[0, "Varun spent the day on a 'wellness retreat' paid for by CarePlus. Very well. Very rested."],
+	[30, "Varun started a podcast called Scrubbed In, No Cap. Two episodes, eleven listeners, nine of them relatives."],
+	[0, "Varun spent the day on a 'wellness retreat' paid for by CarePlus. He called it a soft reset. Very rested. Very insufferable."],
 	[110, "Varun caught a missed fracture on nights. Annoyingly, a genuinely good catch."],
 	[-40, "Varun argued with a scrub nurse. The scrub nurse won. Scrub nurses always win."],
 	[70, "CarePlus put Varun's face on a hoarding at the highway signal. Twelve feet tall. Smiling."],
@@ -39,7 +39,7 @@ const DAYS := [
 	[50, "Varun has learnt your name. He says it in meetings now, na. Not kindly."],
 	[120, "Varun did two operations back to back and called his mother between them. Both went well."],
 	[-30, "A nursing student corrected Varun's scrub technique in the comments of his own reel."],
-	[20, "Varun ate lunch standing up and told everyone about it."],
+	[20, "Varun ate lunch standing up and posted it as a grindset reel. Caption: surgeons don't sit."],
 	[-50, "Varun's consultant took credit for his case. Welcome to medicine, Varun."],
 ]
 

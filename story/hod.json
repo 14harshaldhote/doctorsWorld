@@ -2,27 +2,27 @@
 	"morning24": [
 		{
 			"say": "grace",
-			"text": "Morning, {called}. Six months in Dr. Rao's office. You've kicked that door open four hundred and twelve times. I keep count.",
+			"text": "Morning, {called}. Six months in Dr. Rao's office. You've kicked that door open four hundred and twelve times. Yes, I keep count. Somebody has to.",
 			"mood": "happy",
 			"gesture": "point"
 		},
 		{
 			"say": "iyer",
-			"text": "News from the top floor. Dean Menon retires at the end of the month. He's been Chief of Medicine since before the lifts worked.",
+			"text": "News from the top floor. Dean Menon retires at the end of the month. He's been Chief of Medicine since before the lifts worked. So, forever.",
 			"mood": "calm",
 			"gesture": "explain",
 			"to": "you"
 		},
 		{
 			"say": "iyer",
-			"text": "The board votes for the next one on Friday. Your name's on the list. Mine isn't. I asked them to take it off; I'd rather teach than sit in meetings.",
+			"text": "The board votes for the next one on Friday. Your name's on the list. Mine isn't. I asked them to take it off. I'd rather teach than sit in meetings.",
 			"mood": "calm",
 			"gesture": "open_hands",
 			"to": "you"
 		},
 		{
 			"say": "iyer",
-			"text": "The other name is Dr. Sameer Kapoor. Medical Director of CarePlus Hospitals. Mr. Malhotra found him. He's touring the wards today.",
+			"text": "The other name is Dr. Sameer Kapoor, Medical Director of CarePlus Hospitals. Mr. Malhotra found him. He's touring the wards today.",
 			"mood": "focused",
 			"gesture": "wag"
 		},
@@ -34,7 +34,7 @@
 					"then": [
 						{
 							"say": "iyer",
-							"text": "Varun's boss, yes. Varun has already posted about it. Twice. With a sunglasses emoji.",
+							"text": "Varun's boss, yes. Varun has already posted about it. Twice. Caption, it's giving takeover. With a sunglasses emoji. I had to ask Zoya what that means.",
 							"mood": "tired",
 							"gesture": "shrug",
 							"to": "you"
@@ -80,7 +80,7 @@
 					"then": [
 						{
 							"say": "grace",
-							"text": "You told the board you'd find the money they're pretending they don't have. That was six months ago. Did you find it?",
+							"text": "You told the board you'd find the money they're pretending they don't have. That was six months ago. So? Did you find it, or did it find you?",
 							"mood": "calm",
 							"gesture": "fold_arms",
 							"to": "you"
@@ -112,13 +112,13 @@
 					"then": [
 						{
 							"say": "grace",
-							"text": "In writing. Dr. Rao never put anything in writing.",
+							"text": "In writing! Dr. Rao never put anything in writing.",
 							"mood": "shocked",
 							"head": "tilt"
 						},
 						{
 							"say": "grace",
-							"text": "...Thank you. They'll still say no. But they'll have to say it to you.",
+							"text": "...Thank you. They'll still say no. But at least they'll have to say it to you.",
 							"mood": "happy",
 							"head": "nod"
 						}
@@ -164,7 +164,7 @@
 		},
 		{
 			"say": "grace",
-			"text": "Either way, the sickest keep their nurses. Life and limb cover. We plan it together on Thursday at seven, before I walk out. We're nurses, not monsters.",
+			"text": "Either way, the sickest keep their nurses. Life and limb cover. We plan it together on Thursday at seven, before I walk out. We're nurses, Doctor, not monsters.",
 			"mood": "calm",
 			"gesture": "explain",
 			"to": "you"
@@ -184,7 +184,7 @@
 	"kapoor_tour": [
 		{
 			"say": "malhotra",
-			"text": "{called}, Dr. Sameer Kapoor. Medical Director of CarePlus. Twelve hospitals, four cities.",
+			"text": "{called}, this is Dr. Sameer Kapoor. Medical Director of CarePlus. Twelve hospitals, four cities.",
 			"mood": "happy",
 			"gesture": "open_hands",
 			"to": "you"
@@ -247,7 +247,7 @@
 					"then": [
 						{
 							"say": "kapoor",
-							"text": "'Safe.' A lovely word. Very hard to put on a spreadsheet.",
+							"text": "Safe. A lovely word. Very hard to put on a spreadsheet.",
 							"mood": "calm",
 							"gesture": "fold_arms"
 						}
@@ -302,14 +302,14 @@
 	"morning25": [
 		{
 			"say": "iyer",
-			"text": "Emergency sent one up at five. Mrs. Rekha Sinha, fifty-two. Dr. Sethi took her gallbladder out on Saturday. The day-case pilot. Home by six.",
+			"text": "Emergency sent one up at five. Mrs. Rekha Sinha, fifty-two. Dr. Sethi took out her gallbladder on Saturday. The day-case pilot. Home by six.",
 			"mood": "focused",
 			"gesture": "explain",
 			"to": "you"
 		},
 		{
 			"say": "iyer",
-			"text": "Fever, and her belly's tight. Dr. Sethi's in clinic all morning, then the board's lunch for Dr. Kapoor.",
+			"text": "Fever, and her belly's tight. Dr. Sethi's in clinic all morning, then at the board's lunch for Dr. Kapoor. Priorities.",
 			"mood": "calm",
 			"gesture": "fold_arms"
 		},
@@ -322,20 +322,20 @@
 		},
 		{
 			"do": "page",
-			"text": "Priya: Admissions. Mrs. Sinha. Thirty-nine degrees and a belly like a board. She's correcting my grammar."
+			"text": "Priya: Admissions, please. Mrs. Sinha. Thirty-nine degrees and a belly like a board. She's correcting my grammar."
 		}
 	],
 	"sinha_arrive": [
 		{
 			"say": "priya",
-			"text": "Mrs. Sinha. Temperature thirty-nine, pulse a hundred and ten. Pressure's holding, for now.",
+			"text": "Mrs. Sinha. Temperature thirty-nine, pulse a hundred and ten. Pressure's holding. For now.",
 			"mood": "focused",
 			"gesture": "explain",
 			"to": "you"
 		},
 		{
 			"say": "sinha",
-			"text": "Doctor. I taught Hindi for thirty-one years. I know the difference between 'some pain' and this.",
+			"text": "Doctor. I taught Hindi for thirty-one years. I know the difference between some pain and this.",
 			"mood": "tired",
 			"gesture": "chest",
 			"to": "you"
@@ -354,7 +354,7 @@
 			"then": [
 				{
 					"say": "iyer",
-					"text": "Three days after a keyhole gallbladder: pain spreading, fever, and she's yellowing. The scan shows fluid round her liver. A litre at least.",
+					"text": "Three days after a keyhole gallbladder. Pain spreading, fever, and she's going yellow. The scan shows fluid round her liver. A litre at least.",
 					"mood": "focused",
 					"gesture": "explain",
 					"to": "you"
@@ -381,7 +381,7 @@
 			"then": [
 				{
 					"say": "iyer",
-					"text": "And the penicillin. Good that you asked. The day-case form says 'none known'. Somebody was in a hurry on Saturday.",
+					"text": "And the penicillin. Good that you asked. The day-case form says none known. Somebody was in a hurry on Saturday.",
 					"mood": "calm",
 					"gesture": "hold"
 				}
@@ -389,7 +389,7 @@
 		},
 		{
 			"say": "sinha",
-			"text": "Inside again? He said 'textbook'. Dr. Sethi. He said it twice, and then he ran. He had a conference. With slides.",
+			"text": "Inside again? He said textbook. Dr. Sethi. He said it twice, and then he ran. He had a conference. With slides.",
 			"mood": "worried",
 			"gesture": "open_hands",
 			"to": "you"
@@ -420,7 +420,7 @@
 					"then": [
 						{
 							"say": "sinha",
-							"text": "'A known complication.' Known to whom, Doctor? Not to me.",
+							"text": "A known complication. Known to whom, Doctor? Not to me.",
 							"mood": "angry",
 							"gesture": "fold_arms"
 						}
@@ -430,20 +430,20 @@
 		},
 		{
 			"do": "page",
-			"text": "Priya: Theatre 2 at two o'clock for Mrs. Sinha. Dr. Sethi's clinic says he's 'unavailable'."
+			"text": "Priya: Theatre 2 at two o'clock for Mrs. Sinha. Dr. Sethi's clinic says he's unavailable. Of course."
 		}
 	],
 	"sinha_ready": [
 		{
 			"say": "sinha",
-			"text": "My son is driving from Lucknow. He's a lawyer. Please be finished before he arrives; he asks questions in paragraphs.",
+			"text": "My son is driving from Lucknow. He's a lawyer. Please be finished before he arrives. He asks questions in paragraphs.",
 			"mood": "worried",
 			"gesture": "point",
 			"to": "you"
 		},
 		{
 			"say": "sinha",
-			"text": "And, Doctor. Whatever you find. Tell me the whole sentence, not half of it.",
+			"text": "And, Doctor. Whatever you find, tell me the whole sentence. Not half of it.",
 			"mood": "calm",
 			"head": "tilt",
 			"to": "you"
@@ -452,14 +452,14 @@
 	"bile_brief": [
 		{
 			"say": "iyer",
-			"text": "Your patient, your lead. I'll hold the camera and keep my opinions under the drapes.",
+			"text": "Your patient, your lead. I'll hold the camera and keep my opinions under the drapes. Mostly.",
 			"mood": "calm",
 			"gesture": "open_hands",
 			"to": "you"
 		},
 		{
 			"say": "neha",
-			"text": "Neha. Three ports, a clip applier loaded with six, and a drain on the side, just in case. Everything on the board.",
+			"text": "Neha. Three ports, a clip applier loaded with six, and a drain on the side, just in case. Everything on the board. Obviously.",
 			"mood": "focused",
 			"gesture": "point"
 		},
@@ -471,7 +471,7 @@
 		},
 		{
 			"say": "neha",
-			"text": "Time-out, Doctor. I'll read the board.",
+			"text": "Time-out, Doctor. I'll read out the board.",
 			"mood": "focused",
 			"gesture": "point",
 			"to": "you"
@@ -483,7 +483,7 @@
 			"then": [
 				{
 					"say": "iyer",
-					"text": "She's washed out and the leak's dealt with. I finished it. Septic patients don't give you time. Learn it; don't carry it.",
+					"text": "She's washed out and the leak's dealt with. I finished it. Septic patients don't give you time. Learn it, don't carry it.",
 					"mood": "calm",
 					"gesture": "explain",
 					"to": "you"
@@ -495,7 +495,7 @@
 					"then": [
 						{
 							"say": "iyer",
-							"text": "Washed out and dry. She'll feel better by tonight than she has all week.",
+							"text": "Washed out and dry. She'll feel better tonight than she has all week.",
 							"mood": "happy",
 							"head": "nod",
 							"to": "you"
@@ -530,7 +530,7 @@
 			"then": [
 				{
 					"say": "iyer",
-					"text": "One clip on the stump, and one lying loose in her belly. Dr. Sethi's notes say 'two clips applied, secure'.",
+					"text": "One clip on the stump, and one lying loose in her belly. Dr. Sethi's notes say two clips applied, secure.",
 					"mood": "focused",
 					"gesture": "hold"
 				},
@@ -553,7 +553,7 @@
 				},
 				{
 					"say": "iyer",
-					"text": "But she was home by six on Saturday, with a leaflet that told her pain was normal, and nobody rang her. That part's somebody's fault.",
+					"text": "But she was home by six on Saturday, with a leaflet that told her pain was normal, and nobody rang her. That part is somebody's fault.",
 					"mood": "focused",
 					"gesture": "wag"
 				}
@@ -564,7 +564,7 @@
 			"then": [
 				{
 					"say": "iyer",
-					"text": "A burn on the side of her main duct. The hook, too close, too fast. The liver team stents it in the morning; she should heal without another operation.",
+					"text": "A burn on the side of her main duct. The hook, too close, too fast. The liver team stents it in the morning. She should heal without another operation.",
 					"mood": "focused",
 					"gesture": "explain"
 				}
@@ -621,14 +621,14 @@
 		},
 		{
 			"say": "sethi",
-			"text": "The board votes on Friday. Kapoor's pitch is that we're careless and slow. If this is on the incident list before Friday, it's his whole presentation.",
+			"text": "The board votes on Friday. Kapoor's whole pitch is that we're careless and slow. If this is on the incident list before Friday, it's his entire presentation.",
 			"mood": "worried",
 			"gesture": "explain",
 			"to": "you"
 		},
 		{
 			"say": "sethi",
-			"text": "I'm not asking for me. Well. Not only for me. Wait until Monday. Then I'll tell her everything, I promise. Just not this week.",
+			"text": "I'm not asking for me. Well. Not only for me. Wait till Monday. Then I'll tell her everything, I promise. Just not this week.",
 			"mood": "worried",
 			"gesture": "open_hands",
 			"to": "you"
@@ -653,7 +653,7 @@
 						},
 						{
 							"say": "sethi",
-							"text": "He told me about that. He said it was the worst hour of his life, and the best thing anyone did for him.",
+							"text": "He told me about that. He said it was the worst hour of his life, and the best thing anyone ever did for him.",
 							"mood": "calm",
 							"head": "down"
 						}
@@ -719,7 +719,7 @@
 						},
 						{
 							"say": "iyer",
-							"text": "I'll pretend I didn't hear that, {called}. I'm not good at pretending.",
+							"text": "I'll pretend I didn't hear that, {called}. I'm very bad at pretending.",
 							"mood": "angry",
 							"gesture": "fold_arms",
 							"to": "you"
@@ -733,7 +733,7 @@
 			"then": [
 				{
 					"do": "page",
-					"text": "Priya: Mrs. Sinha's awake. Asking for 'the doctor with the whole sentence'. And Dr. Sethi."
+					"text": "Priya: Mrs. Sinha's awake. Asking for the doctor with the whole sentence. And Dr. Sethi."
 				}
 			]
 		}
@@ -744,7 +744,7 @@
 			"then": [
 				{
 					"say": "sinha",
-					"text": "Doctor. And Dr. Sethi, who said 'textbook'.",
+					"text": "Doctor. And Dr. Sethi, who said textbook.",
 					"mood": "calm",
 					"gesture": "fold_arms",
 					"to": "sethi"
@@ -766,7 +766,7 @@
 					"then": [
 						{
 							"say": "sethi",
-							"text": "Mrs. Sinha. On Saturday, working too fast, I burnt the side of your main bile duct. It leaked. The liver team will put a small tube inside it tomorrow, so it heals.",
+							"text": "Mrs. Sinha. On Saturday, working too fast, I burnt the side of your main bile duct. It leaked. Tomorrow the liver team will put a small tube inside it, so it heals.",
 							"mood": "tired",
 							"gesture": "chest",
 							"to": "sinha"
@@ -778,7 +778,7 @@
 					"then": [
 						{
 							"say": "sethi",
-							"text": "Mrs. Sinha. A tiny duct in your liver was leaking. That can happen to anyone. But I sent you home six hours after the operation, and nobody rang you. That part's on me.",
+							"text": "Mrs. Sinha. A tiny duct in your liver was leaking. That can happen to anyone. But I sent you home six hours after the operation, and nobody rang you. That part is on me.",
 							"mood": "tired",
 							"gesture": "chest",
 							"to": "sinha"
@@ -787,7 +787,7 @@
 				},
 				{
 					"say": "sinha",
-					"text": "Thirty-one years of girls telling me the dog ate their homework. You know which ones I liked? The ones who said 'I didn't do it, Ma'am. I'm sorry.'",
+					"text": "Thirty-one years of girls telling me the dog ate their homework. You know which ones I liked? The ones who said, I didn't do it, Ma'am. I'm sorry.",
 					"mood": "calm",
 					"gesture": "explain",
 					"to": "sethi"
@@ -841,7 +841,7 @@
 					"then": [
 						{
 							"say": "sinha",
-							"text": "A little duct, nobody's fault, he said. And a leaflet that should have been a phone call. That was his fault, he said.",
+							"text": "A little duct, nobody's fault, he said. And a leaflet that should've been a phone call. That part was his fault, he said.",
 							"mood": "calm",
 							"gesture": "hold"
 						}
@@ -849,7 +849,7 @@
 				},
 				{
 					"say": "sinha",
-					"text": "Thirty-one years of girls telling me the dog ate their homework. The ones I liked said 'I didn't do it, Ma'am. I'm sorry.' He said it properly. Subject, verb, sorry.",
+					"text": "Thirty-one years of girls telling me the dog ate their homework. The ones I liked said, I didn't do it, Ma'am, I'm sorry. He said it properly. Subject, verb, sorry.",
 					"mood": "calm",
 					"gesture": "explain",
 					"to": "you"
@@ -869,7 +869,7 @@
 					"then": [
 						{
 							"say": "sinha",
-							"text": "A phone call. Imagine. My son will be so disappointed; he'd prepared paragraphs.",
+							"text": "A phone call. Imagine! My son will be so disappointed. He'd prepared paragraphs.",
 							"mood": "happy",
 							"gesture": "shrug"
 						}
@@ -900,7 +900,7 @@
 	"strike_rota_arrive": [
 		{
 			"say": "grace",
-			"text": "Seven o'clock. I'm in my own clothes, and that placard is face down because I can't bear to look at it.",
+			"text": "Seven o'clock. I'm in my own clothes, and that placard's face down because I can't bear to look at it.",
 			"mood": "tired",
 			"gesture": "point",
 			"to": "you"
@@ -931,7 +931,7 @@
 					"else": [
 						{
 							"say": "grace",
-							"text": "You asked me to call it off. I asked the members. Ninety-four percent, this time. You helped.",
+							"text": "You asked me to call it off. So I asked the members. Ninety-four percent, this time. You helped. Thank you so much.",
 							"mood": "angry",
 							"gesture": "fold_arms",
 							"to": "you"
@@ -1018,7 +1018,7 @@
 			"then": [
 				{
 					"say": "priya",
-					"text": "Everyone's had their checks on time. Tom says theatre nursing is easier; at least in theatre the patients don't ask for tea.",
+					"text": "Everyone's had their checks on time. Tom says theatre nursing is easier. At least in theatre the patients don't ask for tea.",
 					"mood": "happy",
 					"gesture": "shrug",
 					"to": "you"
@@ -1030,7 +1030,7 @@
 					"then": [
 						{
 							"say": "priya",
-							"text": "A drip ran dry for two hours. The agency nurse saw it but isn't allowed to touch IV here, and I was on the other side of the floor.",
+							"text": "A drip ran dry for two hours. The agency nurse saw it, but she isn't allowed to touch drips here, and I was on the other side of the floor.",
 							"mood": "worried",
 							"gesture": "point",
 							"to": "you"
@@ -1078,7 +1078,7 @@
 					"then": [
 						{
 							"say": "priya",
-							"text": "Ananya had the heaviest patient on the floor. She did well. She also cried in the sluice.",
+							"text": "Ananya had the heaviest patient on the floor. She did well. She also cried in the sluice. She says it was a vibe, not a breakdown.",
 							"mood": "calm",
 							"gesture": "shrug",
 							"to": "you"
@@ -1089,14 +1089,14 @@
 		},
 		{
 			"say": "malhotra",
-			"text": "Ah, {called}. Good news. Dr. Kapoor has offered us CarePlus agency nurses. Twelve of them, here by four o'clock. All you need to do is sign.",
+			"text": "Ah, {called}. Good news! Dr. Kapoor has offered us CarePlus agency nurses. Twelve of them, here by four. All you need to do is sign.",
 			"mood": "happy",
 			"gesture": "offer",
 			"to": "you"
 		},
 		{
 			"say": "priya",
-			"text": "Agency nurses through the picket line. On the day.",
+			"text": "Agency nurses through the picket line. On the day. Wow.",
 			"mood": "angry",
 			"gesture": "fold_arms",
 			"to": "malhotra"
@@ -1137,14 +1137,14 @@
 					"then": [
 						{
 							"say": "priya",
-							"text": "Patients come before principles. Write that on my placard, Doctor.",
+							"text": "Patients before principles. Write that on my placard, Doctor.",
 							"mood": "angry",
 							"gesture": "point",
 							"to": "you"
 						},
 						{
 							"say": "malhotra",
-							"text": "Four o'clock. I'll have them sign in at the side door.",
+							"text": "Four o'clock. I'll have them sign in at the side door. Very discreet.",
 							"mood": "happy",
 							"gesture": "clap"
 						}
@@ -1164,7 +1164,7 @@
 	"picket": [
 		{
 			"say": "grace",
-			"text": "Head of Department. On the picket line. We brought it in out of the rain; admissions is technically outside the ward. Mr. Malhotra will need a lie down.",
+			"text": "Head of Department. On the picket line. We brought it in out of the rain, and admissions is technically outside the ward. Mr. Malhotra will need a lie down.",
 			"mood": "calm",
 			"gesture": "fold_arms",
 			"to": "you"
@@ -1181,7 +1181,7 @@
 				},
 				{
 					"say": "grace",
-					"text": "They'll go home tonight, and so will we. The strike's over, because you broke it. The board won't need to offer us anything now.",
+					"text": "They'll go home tonight, and so will we. The strike's over, because you broke it. So the board won't need to offer us anything now. Well done.",
 					"mood": "tired",
 					"head": "down",
 					"to": "you"
@@ -1237,7 +1237,7 @@
 					"then": [
 						{
 							"say": "grace",
-							"text": "Eleven. You counted us. That's the most Head-of-Department thing you've ever done.",
+							"text": "Eleven. You counted us. That's the most Head of Department thing you've ever done.",
 							"mood": "happy",
 							"gesture": "clap"
 						}
@@ -1304,7 +1304,7 @@
 		},
 		{
 			"say": "iyer",
-			"text": "Answer what they ask. Say 'I don't know' when you don't. And don't try to out-slide Kapoor. Nobody can.",
+			"text": "Answer what they ask. Say I don't know when you don't. And don't try to out-slide Kapoor. Nobody can.",
 			"mood": "calm",
 			"gesture": "wag",
 			"to": "you"
@@ -1380,7 +1380,7 @@
 									"then": [
 										{
 											"say": "sinha",
-											"text": "'Known.' That word again. My son will be pleased. He likes it when people use that word.",
+											"text": "Known. That word again. My son will be pleased. He likes it when people use that word.",
 											"mood": "angry",
 											"gesture": "fold_arms"
 										}
@@ -1405,7 +1405,7 @@
 	"board_vote": [
 		{
 			"say": "rajan",
-			"text": "We've heard Dr. Kapoor. Forty minutes, three videos and a pause that lasted longer than my marriage. Now you.",
+			"text": "We've heard Dr. Kapoor. Forty minutes, three videos, and a pause that lasted longer than my marriage. Now you.",
 			"mood": "calm",
 			"gesture": "fold_arms",
 			"to": "you"
@@ -1525,7 +1525,7 @@
 			"then": [
 				{
 					"say": "dean",
-					"text": "One small thing. I've read the midday report from Thursday. The cover wasn't perfect.",
+					"text": "One small thing. I've read Thursday's midday report. The cover wasn't perfect.",
 					"mood": "calm",
 					"gesture": "hold"
 				},
@@ -1547,7 +1547,7 @@
 			"then": [
 				{
 					"say": "kapoor",
-					"text": "Her son sent me the operation videos, and the discharge letter. 'Known complication', the letter says. Signed by the Head of Department. The videos say something longer.",
+					"text": "Her son sent me the operation videos, and the discharge letter. Known complication, the letter says. Signed by the Head of Department. The videos say something longer.",
 					"mood": "happy",
 					"gesture": "hold"
 				},
@@ -1738,7 +1738,7 @@
 					"then": [
 						{
 							"say": "malhotra",
-							"text": "Finally. Somebody gets it.",
+							"text": "Finally! Somebody gets it.",
 							"mood": "happy",
 							"gesture": "clap"
 						},
@@ -1754,7 +1754,7 @@
 		},
 		{
 			"say": "rajan",
-			"text": "Thank you both. We've voted while Dr. Kapoor was setting up his projector. He took a while.",
+			"text": "Thank you both. We voted while Dr. Kapoor was setting up his projector. He took a while.",
 			"mood": "calm",
 			"gesture": "explain"
 		},
@@ -1813,7 +1813,7 @@
 		},
 		{
 			"say": "dean",
-			"text": "My office is on the top floor. The window opens if you swear at it. Use it often; the view helps.",
+			"text": "My office is on the top floor. The window opens if you swear at it. Use it often. The view helps.",
 			"mood": "happy",
 			"gesture": "point",
 			"to": "you"
@@ -1829,7 +1829,7 @@
 	"morning28": [
 		{
 			"say": "iyer",
-			"text": "Chief. I'm going to have to practise that. Chief.",
+			"text": "Chief. I'm going to have to practise that. Chief. No, it still sounds strange.",
 			"mood": "happy",
 			"gesture": "point",
 			"to": "you"
@@ -1853,7 +1853,7 @@
 					"then": [
 						{
 							"say": "iyer",
-							"text": "I said no to the board. I'll say yes to you. On one condition: I keep teaching on Tuesdays, and nobody schedules a meeting on a Tuesday.",
+							"text": "I said no to the board. I'll say yes to you. On one condition. I keep teaching on Tuesdays, and nobody schedules a meeting on a Tuesday. Ever.",
 							"mood": "happy",
 							"head": "nod"
 						}
@@ -1913,7 +1913,7 @@
 	"intern_day1": [
 		{
 			"say": "saxena",
-			"text": "Dr. Ira Saxena. Intern. Sorry, I'm early. I've read every fire notice twice. There are four exits and a hose.",
+			"text": "Dr. Ira Saxena, intern. Sorry, I'm early. I've read every fire notice twice. There are four exits and a hose. I'm not nervous, this is just my face.",
 			"mood": "worried",
 			"gesture": "open_hands",
 			"to": "you"
@@ -1930,20 +1930,20 @@
 		},
 		{
 			"say": "saxena",
-			"text": "Pen. Yes. I have three. In case.",
+			"text": "Pen. Yes. I have three. In case. I'm that girl, sorry.",
 			"mood": "worried",
 			"gesture": "hold"
 		},
 		{
 			"say": "grace",
-			"text": "Bed one: Mr. Ghosh, hernia, going home today. He's been going home since Thursday. He'll tell you about his son. Twice. Bed four: Mrs. Sinha's bed, clean sheets, waiting for whoever comes next.",
+			"text": "Bed one, Mr. Ghosh, hernia, going home today. He's been going home since Thursday. He'll tell you about his son. Twice. Bed four, Mrs. Sinha's bed. Clean sheets, waiting for whoever's next.",
 			"mood": "calm",
 			"gesture": "explain",
 			"to": "saxena"
 		},
 		{
 			"say": "saxena",
-			"text": "Can I ask something? What do I do first? Honestly?",
+			"text": "Okay, can I ask something? What do I do first? Honestly? Because my brain is currently a loading screen.",
 			"mood": "worried",
 			"head": "tilt",
 			"to": "you"
@@ -1960,7 +1960,7 @@
 					"then": [
 						{
 							"say": "saxena",
-							"text": "Every time. Even the stupid ones?",
+							"text": "Every time? Even the stupid ones? Bold of you, but okay.",
 							"mood": "calm",
 							"head": "tilt"
 						},
@@ -2000,7 +2000,7 @@
 					"then": [
 						{
 							"say": "saxena",
-							"text": "That's on the poster in theatre. The laminated one.",
+							"text": "That's on the poster in theatre. The laminated one. Very iconic.",
 							"mood": "calm",
 							"gesture": "point"
 						},
@@ -2016,7 +2016,7 @@
 		},
 		{
 			"say": "saxena",
-			"text": "Where do I start?",
+			"text": "So where do I start?",
 			"mood": "calm",
 			"gesture": "open_hands",
 			"to": "you"
@@ -2027,7 +2027,7 @@
 		},
 		{
 			"say": "saxena",
-			"text": "I don't know any patients yet.",
+			"text": "I don't know any patients yet. Small problem.",
 			"mood": "worried",
 			"gesture": "shrug"
 		},
@@ -2058,7 +2058,7 @@
 			"then": [
 				{
 					"say": "grace",
-					"text": "Mrs. Kurup writes every month. Four pages about her garden, one line about you. This month's line was 'Tell the young surgeon I'm still not dead. Thanks to them.'",
+					"text": "Mrs. Kurup writes every month. Four pages about her garden, one line about you. This month's line was, tell the young surgeon I'm still not dead. Thanks to them.",
 					"mood": "happy",
 					"gesture": "hold",
 					"to": "you"
@@ -2209,7 +2209,7 @@
 		},
 		{
 			"say": "iyer",
-			"text": "Go home. Sleep. It's allowed.",
+			"text": "Go home. Sleep. It's allowed. Shocking, I know.",
 			"mood": "happy",
 			"gesture": "wave",
 			"to": "you"

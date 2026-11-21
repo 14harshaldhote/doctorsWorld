@@ -2,7 +2,7 @@
 	"handover14": [
 		{
 			"say": "grace",
-			"text": "Morning, {called}. A year as Senior Resident. You've stopped flinching at the pager and started flinching at Mr. Malhotra.",
+			"text": "Morning, {called}. A whole year as Senior Resident. You've stopped flinching at the pager and started flinching at Mr. Malhotra. Growth.",
 			"mood": "happy",
 			"gesture": "fold_arms"
 		},
@@ -11,7 +11,7 @@
 			"then": [
 				{
 					"say": "grace",
-					"text": "Raju Yadav came for his clinic. Back on the scaffolding, with a belt this time. He asked after you.",
+					"text": "Raju Yadav came for his clinic. Back on the scaffolding, with a belt this time. Miracles do happen. He asked after you.",
 					"mood": "calm",
 					"gesture": "explain"
 				}
@@ -19,7 +19,7 @@
 			"else": [
 				{
 					"say": "grace",
-					"text": "Raju Yadav laid the new wall round the car park. He says it's crooked on purpose, for character.",
+					"text": "Raju Yadav built the new wall round the car park. He says it's crooked on purpose. For character.",
 					"mood": "happy",
 					"gesture": "shrug"
 				}
@@ -27,34 +27,34 @@
 		},
 		{
 			"say": "grace",
-			"text": "News. Dr. Sethi got the consultant post. He has a parking space with his name on it. He mentions it.",
+			"text": "And news. Dr. Sethi got the consultant post. He has a parking space with his name on it. He mentions it. Often.",
 			"mood": "calm",
 			"gesture": "wag"
 		},
 		{
 			"say": "iyer",
-			"text": "And this is Dr. Zoya Qureshi. Intern. First week. Yours.",
+			"text": "And this is Dr. Zoya Qureshi. Intern. First week. Yours. No returns.",
 			"mood": "calm",
 			"gesture": "open_hands",
 			"to": "you"
 		},
 		{
 			"say": "zoya",
-			"text": "Hello! Hi. Sorry. Good morning, Doctor. Dr. Iyer teaches from your admission notes. I've read them twice. I wrote the important bits on my hand.",
+			"text": "Hi! Hello. Sorry. Good morning, Doctor. Dr. Iyer teaches from your admission notes, so I've read them twice. Lowkey a fan, highkey terrified. I wrote the important bits on my hand.",
 			"mood": "worried",
 			"gesture": "open_hands",
 			"to": "you"
 		},
 		{
 			"say": "iyer",
-			"text": "Check everything she writes. Teach her the way you wanted to be taught. You remember how you wanted to be taught?",
+			"text": "Check everything she writes. Teach her the way you wanted to be taught. You do remember how you wanted to be taught, na?",
 			"mood": "focused",
 			"gesture": "wag",
 			"to": "you"
 		},
 		{
 			"say": "iyer",
-			"text": "One more thing. Orthopaedics is a senior short this month. Dr. Bhatt has borrowed you for tomorrow's hip list. Dr. Rao says it's good for you.",
+			"text": "One more thing. Orthopaedics is a senior short this month, so Dr. Bhatt has borrowed you for tomorrow's hip list. Dr. Rao says it'll be good for you.",
 			"mood": "calm",
 			"gesture": "explain"
 		},
@@ -78,7 +78,7 @@
 					"then": [
 						{
 							"say": "zoya",
-							"text": "Any time. Even the... okay. I'll be very annoying.",
+							"text": "Any time? Even the... okay. Bet. You're going to regret saying that. I have so many questions.",
 							"mood": "happy",
 							"head": "nod"
 						},
@@ -101,7 +101,7 @@
 					"then": [
 						{
 							"say": "zoya",
-							"text": "Watch. Okay. I'm good at watching. It's the doing I'm worried about.",
+							"text": "Watch. Okay. Watching I can do. I've watched four seasons of a hospital show, so I'm basically qualified.",
 							"mood": "worried",
 							"head": "nod"
 						}
@@ -118,7 +118,7 @@
 					"then": [
 						{
 							"say": "iyer",
-							"text": "Catch her early, {called}. Interns fall fast, and quietly.",
+							"text": "Catch her early, {called}. Interns fall fast, and very quietly.",
 							"mood": "focused",
 							"gesture": "wag",
 							"to": "you"
@@ -129,25 +129,25 @@
 		},
 		{
 			"do": "page",
-			"text": "Priya: Admissions. Eighty-one, fell at home. She wants someone who doesn't whisper."
+			"text": "Priya: Admissions, please. Eighty-one, fell at home. She wants someone who doesn't whisper."
 		}
 	],
 	"gomes_arrive": [
 		{
 			"say": "priya",
-			"text": "Mrs. Philomena Gomes, eighty-one. Fell in the night. Lay on her kitchen floor until the milkman found her at six. Left leg short and turned out.",
+			"text": "Mrs. Philomena Gomes, eighty-one. Fell in the night, and lay on her kitchen floor till the milkman found her at six. Left leg short and turned out.",
 			"mood": "focused",
 			"gesture": "explain"
 		},
 		{
 			"say": "gomes",
-			"text": "EH? Is that the doctor? Everybody in this hospital whispers. Is it a hospital or a library?",
+			"text": "EH? Is that the doctor? Everybody in this hospital whispers! Is it a hospital or a library?",
 			"mood": "angry",
 			"gesture": "open_hands"
 		},
 		{
 			"say": "zoya",
-			"text": "She keeps asking us to repeat things. Should I do a confusion score?",
+			"text": "She keeps making us repeat stuff. Should I do a confusion score? Because she is giving confused.",
 			"mood": "worried",
 			"head": "tilt",
 			"to": "you"
@@ -169,7 +169,7 @@
 						},
 						{
 							"say": "gomes",
-							"text": "Ah. A face. Finally. The young man on the ambulance spoke to my feet.",
+							"text": "Ah. A face. Finally. The young man on the ambulance talked to my feet.",
 							"mood": "happy",
 							"gesture": "point"
 						}
@@ -195,7 +195,7 @@
 		},
 		{
 			"say": "priya",
-			"text": "Dr. Bhatt wants her on tomorrow's list. Ask her everything you'll need for theatre.",
+			"text": "Dr. Bhatt wants her on tomorrow's list. So ask her everything you'll need for theatre.",
 			"mood": "calm",
 			"gesture": "point",
 			"to": "you"
@@ -207,13 +207,13 @@
 			"then": [
 				{
 					"say": "gomes",
-					"text": "Much better. Now you can stop shouting. Francis says I'm deaf. I say everybody mumbles.",
+					"text": "Much better. Now you can all stop shouting. Francis says I'm deaf. I say everybody mumbles.",
 					"mood": "happy",
 					"gesture": "shrug"
 				},
 				{
 					"say": "zoya",
-					"text": "Oh. She isn't confused at all. She just couldn't hear us.",
+					"text": "Oh. She's not confused at all. She just couldn't hear us. Love that for the whole medical system.",
 					"mood": "shocked",
 					"gesture": "chest",
 					"to": "you"
@@ -229,7 +229,7 @@
 							"then": [
 								{
 									"say": "zoya",
-									"text": "Hearing aid, glasses, teeth. Writing it down.",
+									"text": "Hearing aid, glasses, teeth. Writing it down. On my hand. Where else.",
 									"mood": "focused",
 									"gesture": "hold"
 								}
@@ -244,7 +244,7 @@
 							"then": [
 								{
 									"say": "zoya",
-									"text": "Already did. Both hands.",
+									"text": "Already did. Both hands. Very aesthetic. My mother will be thrilled.",
 									"mood": "happy",
 									"gesture": "open_hands"
 								}
@@ -262,14 +262,14 @@
 				},
 				{
 					"say": "zoya",
-					"text": "She's quite muddled. She didn't answer half the questions. I'll put 'confused' in the notes.",
+					"text": "She's quite muddled. She didn't answer half the questions. I'll write confused in the notes. Vibe check failed, sorry.",
 					"mood": "worried",
 					"gesture": "hold",
 					"to": "you"
 				},
 				{
 					"say": "priya",
-					"text": "Her son's driving from Pune. He'll know how she usually is.",
+					"text": "Her son's driving down from Pune. He'll know how she usually is.",
 					"mood": "calm",
 					"gesture": "shrug"
 				}
@@ -291,7 +291,7 @@
 				},
 				{
 					"say": "zoya",
-					"text": "Stop warfarin, vitamin K, clotting at six. On the chart.",
+					"text": "Stop warfarin, vitamin K, clotting at six. On the chart. Say less.",
 					"mood": "focused",
 					"gesture": "hold"
 				}
@@ -299,13 +299,13 @@
 			"else": [
 				{
 					"say": "zoya",
-					"text": "I'll copy her tablets from the GP letter onto the chart tonight. All of them.",
+					"text": "I'll copy her tablets from the GP letter onto the chart tonight. All of them. How hard can it be?",
 					"mood": "calm",
 					"gesture": "hold"
 				},
 				{
 					"say": "priya",
-					"text": "All of them, Doctor?",
+					"text": "All of them, Doctor? Really?",
 					"mood": "worried",
 					"head": "tilt",
 					"to": "zoya"
@@ -325,7 +325,7 @@
 		},
 		{
 			"say": "gomes",
-			"text": "Will I walk again? My granddaughter gets married in March. I have a blue sari waiting.",
+			"text": "Will I walk again? My granddaughter's getting married in March. I have a blue sari waiting.",
 			"mood": "worried",
 			"gesture": "chest"
 		},
@@ -374,20 +374,20 @@
 	"francis_talk": [
 		{
 			"say": "francis",
-			"text": "Francis Gomes. Her son. Five hours from Pune, and the highway was a car park. Where do I sign? Let's get this done.",
+			"text": "Francis Gomes, her son. Five hours from Pune, and the highway was a car park. Where do I sign? Let's just get this done.",
 			"mood": "angry",
 			"gesture": "open_hands"
 		},
 		{
 			"say": "grace",
-			"text": "Consent forms are for the patient, Mr. Gomes.",
+			"text": "Consent forms are for the patient, Mr. Gomes. Shocking, I know.",
 			"mood": "calm",
 			"gesture": "fold_arms",
 			"to": "francis"
 		},
 		{
 			"say": "francis",
-			"text": "She's eighty-one, Sister. She gets confused. Last Sunday on the phone she didn't know what day it was. I'm her son. I'll sign.",
+			"text": "She's eighty-one, Sister. She gets confused. Last Sunday on the phone she didn't even know what day it was. I'm her son. I'll sign.",
 			"mood": "worried",
 			"gesture": "chest",
 			"to": "grace"
@@ -409,7 +409,7 @@
 							"then": [
 								{
 									"say": "francis",
-									"text": "Her hearing aid. She hates it. She says it whistles. ...She answered everything?",
+									"text": "Her hearing aid. She hates it. Says it whistles. ...She answered everything?",
 									"mood": "shocked",
 									"head": "tilt"
 								},
@@ -419,7 +419,7 @@
 								},
 								{
 									"say": "francis",
-									"text": "The blue sari. ...Okay. We ask her together. In the morning.",
+									"text": "The blue sari. ...Okay. We'll ask her together. In the morning.",
 									"mood": "calm",
 									"head": "nod"
 								}
@@ -443,7 +443,7 @@
 								},
 								{
 									"say": "francis",
-									"text": "Thank you. Finally someone in this hospital who gets things done.",
+									"text": "Thank you. Finally somebody in this hospital who gets things done.",
 									"mood": "calm",
 									"gesture": "point"
 								}
@@ -474,7 +474,7 @@
 								},
 								{
 									"say": "gomes",
-									"text": "Now I can hear. Francis? You drove all this way! Did you eat anything?",
+									"text": "Now I can hear! Francis? You drove all this way! Did you eat anything?",
 									"mood": "happy",
 									"gesture": "open_hands"
 								},
@@ -486,7 +486,7 @@
 								},
 								{
 									"say": "grace",
-									"text": "She's deaf, Mr. Gomes. Deaf people get called confused in hospitals every day. That's our fault, not theirs.",
+									"text": "She's deaf, Mr. Gomes. Deaf people get called confused in hospitals every single day. That's our fault, not theirs.",
 									"mood": "calm",
 									"gesture": "explain",
 									"to": "francis"
@@ -517,7 +517,7 @@
 		},
 		{
 			"say": "francis",
-			"text": "Should she even have an operation at her age? Isn't it safer to let it heal on its own?",
+			"text": "Should she even have an operation at her age? Isn't it safer to just let it heal on its own?",
 			"mood": "worried",
 			"head": "tilt"
 		},
@@ -548,7 +548,7 @@
 					"then": [
 						{
 							"say": "francis",
-							"text": "Everyone here will explain tomorrow.",
+							"text": "Everyone here explains tomorrow.",
 							"mood": "tired",
 							"gesture": "shrug"
 						}
@@ -573,13 +573,13 @@
 	"morning15": [
 		{
 			"say": "zoya",
-			"text": "Morning. I wrote Mrs. Gomes's drug chart at three, after the second admission. And a stomach ache. And a man who swallowed a key.",
+			"text": "Morning! I wrote Mrs. Gomes's drug chart at three, after the second admission. And a stomach ache. And a man who swallowed a key. Normal Tuesday, apparently.",
 			"mood": "tired",
 			"gesture": "hold"
 		},
 		{
 			"say": "iyer",
-			"text": "Check it together before the drug round. Teach, don't fix. Fix it for her and she makes the same mistake on someone else next Tuesday at three.",
+			"text": "Check it together before the drug round. Teach, don't fix. Fix it for her and she'll make the same mistake on someone else next Tuesday at three.",
 			"mood": "focused",
 			"gesture": "wag",
 			"to": "you"
@@ -589,7 +589,7 @@
 			"then": [
 				{
 					"say": "zoya",
-					"text": "I copied her tablets from the GP letter exactly. So that part's definitely right.",
+					"text": "I copied her tablets from the GP letter exactly. So that part's definitely right. No cap. Copy-paste is my one skill.",
 					"mood": "calm",
 					"head": "nod"
 				}
@@ -597,7 +597,7 @@
 		},
 		{
 			"say": "zoya",
-			"text": "Tell me what's wrong. Be nice about it. Or don't. Whichever works.",
+			"text": "Tell me what's wrong. Be nice about it. Or don't, I'm an intern, my self-esteem is already on the floor.",
 			"mood": "worried",
 			"gesture": "open_hands",
 			"to": "you"
@@ -609,7 +609,7 @@
 			"then": [
 				{
 					"say": "zoya",
-					"text": "Every one. And you never doubted the lines I got right. I'm making a list of what you checked, so I can check it myself.",
+					"text": "Every single one. And you never doubted the lines I got right. I'm making a list of what you checked, so next time I can be the annoying one.",
 					"mood": "happy",
 					"gesture": "hold"
 				}
@@ -620,14 +620,14 @@
 					"then": [
 						{
 							"say": "iyer",
-							"text": "And her warfarin? Still on the chart. Nobody gave the vitamin K. Her clotting this morning is 2.8. Theatre needs to know.",
+							"text": "And her warfarin? Still on the chart. Nobody gave the vitamin K. Her clotting this morning is two point eight. Theatre needs to know.",
 							"mood": "focused",
 							"gesture": "point",
 							"to": "you"
 						},
 						{
 							"say": "zoya",
-							"text": "That's mine. I copied it straight across.",
+							"text": "That's mine. I copied it straight across. Copy-paste, my one skill. Great. I'm so cooked.",
 							"mood": "worried",
 							"head": "down"
 						}
@@ -657,13 +657,13 @@
 					"then": [
 						{
 							"say": "zoya",
-							"text": "I thought you'd shout. A surgeon at my medical college threw a chart once.",
+							"text": "I thought you'd shout. A surgeon at my medical college threw a chart once. Very main character of him.",
 							"mood": "calm",
 							"head": "tilt"
 						},
 						{
 							"say": "iyer",
-							"text": "We don't throw charts here. We file them.",
+							"text": "We don't throw charts here. We file them. Much more painful.",
 							"mood": "happy",
 							"gesture": "shrug",
 							"to": "zoya"
@@ -681,7 +681,7 @@
 					"then": [
 						{
 							"say": "zoya",
-							"text": "Slow down, or call you. ...Yes. Sorry.",
+							"text": "Slow down, or call you. ...Yes. Sorry. Noted. Tattooing it.",
 							"mood": "worried",
 							"head": "nod"
 						}
@@ -698,7 +698,7 @@
 					"then": [
 						{
 							"say": "zoya",
-							"text": "An incident form. With my name on it?",
+							"text": "An incident form. With my name on it? Cool, cool. Love a permanent record.",
 							"mood": "shocked",
 							"gesture": "chest"
 						},
@@ -726,7 +726,7 @@
 	"gomes_consent": [
 		{
 			"say": "gomes",
-			"text": "Ah, my doctor with the face. Francis says I'm having an operation. Am I? Nobody has told me.",
+			"text": "Ah, my doctor with the face. Francis says I'm having an operation. Am I? Nobody's told me.",
 			"mood": "calm",
 			"head": "tilt"
 		},
@@ -748,7 +748,7 @@
 				},
 				{
 					"say": "gomes",
-					"text": "Then someone should have found my hearing aid! It's in my handbag! It has always been in my handbag!",
+					"text": "Then someone should have found my hearing aid! It's in my handbag! It's always been in my handbag!",
 					"mood": "angry",
 					"gesture": "wag",
 					"to": "francis"
@@ -799,7 +799,7 @@
 			"else": [
 				{
 					"say": "gomes",
-					"text": "Francis says you told him I can decide for myself. Nobody has said that to me since my husband died.",
+					"text": "Francis says you told him I can decide for myself. Nobody's said that to me since my husband died.",
 					"mood": "happy",
 					"gesture": "chest"
 				}
@@ -844,7 +844,7 @@
 	"hip_brief": [
 		{
 			"say": "bhatt",
-			"text": "Ah! General surgery's finest, on loan. Welcome to the bone room. Drills, hammers, X-rays. Very relaxing.",
+			"text": "Ah! General surgery's finest, on loan. Welcome to the bone room. Drills, hammers, X-rays. Very relaxing. Like a spa, but louder.",
 			"mood": "happy",
 			"gesture": "open_hands",
 			"to": "you"
@@ -857,7 +857,7 @@
 		},
 		{
 			"say": "bhatt",
-			"text": "The plan: a guide wire under X-ray, a screw up the neck along the wire, a plate on the side. Read both X-ray views. Bones lie from one angle.",
+			"text": "The plan. Guide wire under X-ray, a screw up the neck along the wire, a plate on the side. Read both X-ray views. Bones lie from one angle.",
 			"mood": "focused",
 			"gesture": "explain"
 		},
@@ -866,7 +866,7 @@
 			"then": [
 				{
 					"say": "khan",
-					"text": "Her clotting's 2.8 this morning. Somebody never stopped her warfarin. I've given vitamin K, but it's slow. Expect her to bleed.",
+					"text": "Her clotting's two point eight this morning. Somebody never stopped her warfarin. I've given vitamin K, but it's slow. Expect her to bleed.",
 					"mood": "angry",
 					"gesture": "fold_arms"
 				},
@@ -880,7 +880,7 @@
 			"else": [
 				{
 					"say": "khan",
-					"text": "Clotting's 1.4. Whoever stopped her warfarin in time: thank you.",
+					"text": "Clotting's one point four. Whoever stopped her warfarin in time, thank you.",
 					"mood": "happy",
 					"head": "nod"
 				}
@@ -888,7 +888,7 @@
 		},
 		{
 			"say": "tom",
-			"text": "Time-out first, Doctor. I'll read the board.",
+			"text": "Time-out first, Doctor. I'll read out the board.",
 			"mood": "calm",
 			"gesture": "point",
 			"to": "you"
@@ -917,7 +917,7 @@
 							"then": [
 								{
 									"say": "gomes",
-									"text": "Honest and alive. Both good things in a doctor.",
+									"text": "Honest, and alive. Both good things in a doctor.",
 									"mood": "calm",
 									"head": "nod"
 								}
@@ -948,7 +948,7 @@
 					"then": [
 						{
 							"say": "bhatt",
-							"text": "Screw dead centre, plate flat. You can borrow my drill any time, Doctor.",
+							"text": "Screw dead centre, plate flat. You can borrow my drill any time, Doctor. I don't say that to everyone.",
 							"mood": "happy",
 							"gesture": "clap",
 							"to": "you"
@@ -995,7 +995,7 @@
 			"then": [
 				{
 					"say": "bhatt",
-					"text": "And next time, the wire stays out of the joint. I nudged it back.",
+					"text": "And next time, the wire stays out of the joint. I nudged it back. You're welcome.",
 					"mood": "calm",
 					"gesture": "wag",
 					"to": "you"
@@ -1041,7 +1041,7 @@
 		},
 		{
 			"say": "francis",
-			"text": "She lives alone. Who's going to be with her when she goes home?",
+			"text": "She lives alone. Who'll be with her when she goes home?",
 			"mood": "worried",
 			"gesture": "open_hands"
 		},
@@ -1057,7 +1057,7 @@
 					"then": [
 						{
 							"say": "gomes",
-							"text": "Together. Listen to that, Francis. Together.",
+							"text": "Together. You hear that, Francis? Together.",
 							"mood": "happy",
 							"gesture": "point",
 							"to": "francis"
@@ -1093,25 +1093,25 @@
 	"budget_preview": [
 		{
 			"say": "malhotra",
-			"text": "Doctor! Five minutes. On Thursday the budget committee votes. One big item for surgery. Two choices.",
+			"text": "Doctor! Five minutes, please. On Thursday the budget committee votes. One big item for surgery. Two choices.",
 			"mood": "happy",
 			"gesture": "open_hands"
 		},
 		{
 			"say": "malhotra",
-			"text": "Choice A: a surgical robot. Patients from three districts. Our name in the newspaper. Look, the brochure has a smiling grandmother.",
+			"text": "Choice A, a surgical robot. Patients from three districts, our name in the newspaper. Look, the brochure even has a smiling grandmother.",
 			"mood": "happy",
 			"gesture": "offer"
 		},
 		{
 			"say": "malhotra",
-			"text": "Choice B: a second doctor at night, so the senior resident isn't alone with the whole floor. Very worthy. Nobody puts a night doctor in a newspaper.",
+			"text": "Choice B, a second doctor at night, so the senior resident isn't alone with the whole floor. Very worthy. Nobody puts a night doctor in a newspaper.",
 			"mood": "calm",
 			"gesture": "shrug"
 		},
 		{
 			"say": "malhotra",
-			"text": "Dr. Sethi wants the robot. Dr. Iyer wants the doctor. Dr. Rao chairs and won't say. Which leaves you with the deciding vote. Congratulations.",
+			"text": "Dr. Sethi wants the robot, Dr. Iyer wants the doctor, and Dr. Rao chairs and won't say. Which leaves you with the deciding vote. Congratulations.",
 			"mood": "happy",
 			"gesture": "point",
 			"to": "you"
@@ -1145,7 +1145,7 @@
 					"then": [
 						{
 							"say": "malhotra",
-							"text": "Finally. Someone who reads to page forty.",
+							"text": "Finally! Someone who reads to page forty.",
 							"mood": "happy",
 							"gesture": "clap"
 						}
@@ -1243,7 +1243,7 @@
 		},
 		{
 			"say": "zoya",
-			"text": "So it's just us. Forty patients, one of you, one of me. And Priya.",
+			"text": "So it's just us. Forty patients, one of you, one of me. And Priya. Totally fine. Not panicking. At all.",
 			"mood": "worried",
 			"gesture": "open_hands"
 		},
@@ -1266,7 +1266,7 @@
 					"then": [
 						{
 							"say": "zoya",
-							"text": "Together. Okay. I'll bring the charts. Checked ones.",
+							"text": "Together. Okay. I'll bring the charts. Checked ones this time, since apparently that's a thing.",
 							"mood": "happy",
 							"head": "nod"
 						}
@@ -1284,7 +1284,7 @@
 							"then": [
 								{
 									"say": "zoya",
-									"text": "Anything. Any time. You said.",
+									"text": "Anything. Any time. You said. I'm holding you to that, and I'm very clingy.",
 									"mood": "calm",
 									"head": "nod"
 								}
@@ -1292,7 +1292,7 @@
 							"else": [
 								{
 									"say": "zoya",
-									"text": "Only if it's really bad, though. I don't want to waste your time.",
+									"text": "Only if it's really bad, though. I don't want to be that intern.",
 									"mood": "worried",
 									"head": "down"
 								}
@@ -1309,7 +1309,7 @@
 			"then": [
 				{
 					"say": "zoya",
-					"text": "His pulse was ninety at eight. It's a hundred and twelve now. Dr. Sethi said sore is normal, but you said any time.",
+					"text": "His pulse was ninety at eight. It's a hundred and twelve now. Dr. Sethi said sore is normal, but you said any time, and this feels lowkey sus.",
 					"mood": "worried",
 					"gesture": "hold",
 					"to": "you"
@@ -1318,7 +1318,7 @@
 			"else": [
 				{
 					"say": "zoya",
-					"text": "I've watched him since ten. His pulse kept going up. Dr. Sethi said not to call about sore, and I didn't want to waste your time.",
+					"text": "I've watched him since ten. His pulse just kept going up. Dr. Sethi said not to call about sore, and I didn't want to be that intern.",
 					"mood": "worried",
 					"head": "down",
 					"to": "you"
@@ -1334,7 +1334,7 @@
 							"then": [
 								{
 									"say": "zoya",
-									"text": "Wasting your time is your job. ...That's going on my hand.",
+									"text": "Wasting your time is your job. ...Okay, that's going on my hand. Next to the other forty things.",
 									"mood": "calm",
 									"head": "nod"
 								}
@@ -1349,7 +1349,7 @@
 							"then": [
 								{
 									"say": "zoya",
-									"text": "I know. I know.",
+									"text": "I know. I know. Trust me, I know.",
 									"mood": "worried",
 									"head": "down"
 								}
@@ -1372,7 +1372,7 @@
 			"then": [
 				{
 					"say": "zoya",
-					"text": "A leak? From the join? That's bad, isn't it?",
+					"text": "A leak? From the join? That's bad, isn't it? That's like, really bad.",
 					"mood": "shocked",
 					"gesture": "chest",
 					"to": "you"
@@ -1381,7 +1381,7 @@
 			"else": [
 				{
 					"say": "zoya",
-					"text": "So it isn't a leak? Good. I read about leaks. They scared me.",
+					"text": "So it isn't a leak? Good. I read about leaks. Zero stars, would not recommend.",
 					"mood": "calm",
 					"head": "tilt",
 					"to": "you"
@@ -1440,7 +1440,7 @@
 						},
 						{
 							"say": "zoya",
-							"text": "He's coming. He's actually coming.",
+							"text": "He's coming. He's actually coming. Okay, Dr. Sethi ate that. Didn't see that plot twist.",
 							"mood": "happy",
 							"gesture": "chest"
 						}
@@ -1459,7 +1459,7 @@
 						},
 						{
 							"say": "zoya",
-							"text": "An hour. Okay. I'll set an alarm.",
+							"text": "An hour. Okay. I'll set an alarm. And three backup alarms.",
 							"mood": "worried",
 							"head": "nod"
 						}
@@ -1485,7 +1485,7 @@
 						},
 						{
 							"say": "zoya",
-							"text": "...Morphine. Okay.",
+							"text": "...Morphine. Okay. Sure. That fixes everything, right?",
 							"mood": "worried",
 							"head": "down"
 						}
@@ -1497,19 +1497,19 @@
 	"imran_arrive": [
 		{
 			"say": "priya",
-			"text": "Imran Ali, twenty-four. Fell two floors from the scaffolding at the new mall. His friends carried him in on a door.",
+			"text": "Imran Ali, twenty-four. Fell two floors off the scaffolding at the new mall. His friends carried him in on a door.",
 			"mood": "focused",
 			"gesture": "explain"
 		},
 		{
 			"say": "imran",
-			"text": "No harness. The contractor said harnesses slow the work.",
+			"text": "No harness. The contractor said harnesses slow down the work.",
 			"mood": "worried",
 			"head": "down"
 		},
 		{
 			"say": "zoya",
-			"text": "His friends are outside. One of them is crying.",
+			"text": "His friends are outside. One of them's crying. The other one's filming. Of course he is.",
 			"mood": "worried",
 			"gesture": "point"
 		},
@@ -1544,7 +1544,7 @@
 					"then": [
 						{
 							"say": "zoya",
-							"text": "No allergies. No medicines. Rice at seven. And his wife is on her way.",
+							"text": "No allergies. No medicines. Rice at seven. And his wife's on her way. Asked and answered, see? I'm learning.",
 							"mood": "focused",
 							"gesture": "hold"
 						}
@@ -1606,7 +1606,7 @@
 					"then": [
 						{
 							"say": "priya",
-							"text": "Theatre 1 is ready. Dr. Khan's on her way up.",
+							"text": "Theatre 1's ready. Dr. Khan's on her way up.",
 							"mood": "calm",
 							"head": "nod"
 						}
@@ -1623,7 +1623,7 @@
 						{
 							"do": "card",
 							"title": "Twenty-five minutes later",
-							"text": "In the scanner his pressure fell to seventy. The scan shows a burst spleen. Everyone already knew."
+							"text": "In the scanner his pressure fell to seventy. The scan showed a burst spleen. Everyone already knew."
 						}
 					]
 				}
@@ -1631,7 +1631,7 @@
 		},
 		{
 			"say": "zoya",
-			"text": "Who watches the ward while you're in theatre? Mr. Nanda...",
+			"text": "Who watches the ward while you're in theatre? Mr. Nanda... Please don't say me.",
 			"mood": "worried",
 			"gesture": "open_hands",
 			"to": "you"
@@ -1656,7 +1656,7 @@
 						},
 						{
 							"say": "zoya",
-							"text": "Call the consultant. Myself. ...Okay. I can do that. I can definitely do that.",
+							"text": "Call the consultant. Myself. At night. ...Okay. Sure. Totally normal thing for a nine-day doctor. I can do that.",
 							"mood": "worried",
 							"head": "nod"
 						}
@@ -1673,7 +1673,7 @@
 					"then": [
 						{
 							"say": "priya",
-							"text": "Priya holds forty patients. Alone. Again. Lovely.",
+							"text": "So Priya holds forty patients. Alone. Again. Lovely.",
 							"mood": "tired",
 							"gesture": "fold_arms"
 						}
@@ -1685,7 +1685,7 @@
 	"imran_ready": [
 		{
 			"say": "priya",
-			"text": "Theatre 1. Blood's running through the warmer. Go.",
+			"text": "Theatre 1. Blood's going through the warmer. Go.",
 			"mood": "focused",
 			"gesture": "point"
 		},
@@ -1702,7 +1702,7 @@
 			"then": [
 				{
 					"say": "sethi",
-					"text": "Two in one night. Mr. Nanda's join was leaking, as you said. Washed out and stable. Now this one.",
+					"text": "Two in one night. Mr. Nanda's join was leaking, like you said. Washed out, stable. Now this one.",
 					"mood": "focused",
 					"gesture": "explain",
 					"to": "you"
@@ -1790,7 +1790,7 @@
 			"then": [
 				{
 					"say": "sethi",
-					"text": "No spleen. He needs vaccines, and antibiotics for any fever, for the rest of his life. Write it big in the notes.",
+					"text": "No spleen. So he needs vaccines, and antibiotics for any fever, for the rest of his life. Write it big in the notes.",
 					"mood": "focused",
 					"gesture": "point"
 				}
@@ -1839,7 +1839,7 @@
 				},
 				{
 					"say": "sethi",
-					"text": "Your intern made the call that should have been made at midnight.",
+					"text": "Your intern made the call that should've been made at midnight.",
 					"mood": "calm",
 					"head": "tilt",
 					"to": "you"
@@ -1899,14 +1899,14 @@
 				},
 				{
 					"say": "zoya",
-					"text": "I was.",
+					"text": "I was. Like, so scared. Still am, honestly.",
 					"mood": "calm",
 					"head": "nod",
 					"to": "nanda"
 				},
 				{
 					"say": "sethi",
-					"text": "By morning he'd have been septic. You called me at midnight. That's the whole story. Remember it for the M&M: sometimes it's about what went right.",
+					"text": "By morning he'd have been septic. You called me at midnight. That's the whole story. Remember it for the M&M. Sometimes it's about what went right.",
 					"mood": "calm",
 					"gesture": "explain",
 					"to": "you"
@@ -1925,7 +1925,7 @@
 						},
 						{
 							"say": "zoya",
-							"text": "I nearly didn't call. I kept hearing 'don't call for sore'.",
+							"text": "I nearly didn't call. Don't call for sore was living in my head rent free.",
 							"mood": "worried",
 							"head": "down"
 						}
@@ -1940,7 +1940,7 @@
 						},
 						{
 							"say": "zoya",
-							"text": "I should have called. I watched his pulse go up all night and I wrote it down very neatly.",
+							"text": "I should've called. I watched his pulse go up all night and I wrote it down very neatly. Gorgeous handwriting. Useless.",
 							"mood": "worried",
 							"head": "down"
 						},
@@ -1966,7 +1966,7 @@
 					"then": [
 						{
 							"say": "sethi",
-							"text": "Coming in is the job. Saying 'call me' and meaning it is the job too. I'm learning that late.",
+							"text": "Coming in is the job. Saying call me, and meaning it, is the job too. I'm learning that late.",
 							"mood": "calm",
 							"head": "nod"
 						}
@@ -1981,7 +1981,7 @@
 					"then": [
 						{
 							"say": "zoya",
-							"text": "I don't think I can sleep. But I'll lie down and stare at the ceiling. Professionally.",
+							"text": "I don't think I can sleep. But I'll lie down and stare at the ceiling. Professionally. It's giving burnout already.",
 							"mood": "tired",
 							"gesture": "shrug"
 						}
@@ -1993,7 +1993,7 @@
 	"imran_visit": [
 		{
 			"say": "rubina",
-			"text": "Rubina. His wife. They told me he fell, and that he nearly died. Nobody has told me what happened in between.",
+			"text": "Rubina. His wife. They told me he fell, and that he nearly died. Nobody's told me what happened in between.",
 			"mood": "worried",
 			"gesture": "open_hands"
 		},
@@ -2051,7 +2051,7 @@
 					"then": [
 						{
 							"say": "rubina",
-							"text": "Fine. Everyone says fine. Fine is not a medical word.",
+							"text": "Fine. Everyone says fine. Fine is not a medical word, Doctor.",
 							"mood": "angry",
 							"gesture": "fold_arms"
 						}
@@ -2067,7 +2067,7 @@
 		},
 		{
 			"say": "imran",
-			"text": "If I don't sign, he won't hire me again. If I sign, who pays for this?",
+			"text": "If I don't sign, he won't hire me again. If I sign, who pays for all this?",
 			"mood": "worried",
 			"head": "down"
 		},
@@ -2100,7 +2100,7 @@
 					"then": [
 						{
 							"say": "rubina",
-							"text": "Of course. Everyone stays out of it. That's how he keeps doing it.",
+							"text": "Of course. Everyone stays out of it. That's exactly how he keeps doing it.",
 							"mood": "angry",
 							"head": "down"
 						}
@@ -2112,13 +2112,13 @@
 	"mm": [
 		{
 			"say": "rao",
-			"text": "Morbidity and mortality. The rules: we talk about what went wrong, not about whom to hang. Dr. Qureshi.",
+			"text": "Morbidity and mortality. The rule is, we talk about what went wrong, not about whom to hang. Dr. Qureshi.",
 			"mood": "calm",
 			"gesture": "open_hands"
 		},
 		{
 			"say": "zoya",
-			"text": "Mr. Harish Nanda, fifty-eight. A piece of bowel removed by Dr. Sethi, day two. At eight in the evening his pulse was ninety. At ten, a hundred and four.",
+			"text": "Mr. Harish Nanda, fifty-eight. Bowel resection by Dr. Sethi, day two. At eight in the evening, pulse ninety. At ten, a hundred and four.",
 			"mood": "worried",
 			"gesture": "explain"
 		},
@@ -2151,7 +2151,7 @@
 							"then": [
 								{
 									"say": "zoya",
-									"text": "Oh.",
+									"text": "Oh. Okay. Wow. Didn't have that on my bingo card.",
 									"mood": "shocked",
 									"gesture": "chest"
 								},
@@ -2160,7 +2160,7 @@
 									"then": [
 										{
 											"say": "sethi",
-											"text": "I remember a meeting in this room where I did the opposite. Point taken.",
+											"text": "I remember a meeting in this room where I did the exact opposite. Point taken.",
 											"mood": "calm",
 											"head": "down"
 										}
@@ -2187,7 +2187,7 @@
 							"then": [
 								{
 									"say": "zoya",
-									"text": "...Yes.",
+									"text": "...Yes. Sure. Totally.",
 									"mood": "worried",
 									"head": "down"
 								},
@@ -2208,7 +2208,7 @@
 					"then": [
 						{
 							"say": "zoya",
-							"text": "I watched him until half past twelve, then he was seen. Then a trauma came in. I phoned Dr. Sethi myself at half past three. Theatre at four. Intensive care. Alive.",
+							"text": "I watched him till half past twelve, then he was seen. Then a trauma came in. I phoned Dr. Sethi myself at half past three. Theatre at four. Intensive care. Alive.",
 							"mood": "worried",
 							"gesture": "explain"
 						}
@@ -2216,7 +2216,7 @@
 					"else": [
 						{
 							"say": "zoya",
-							"text": "I watched him until half past twelve before anyone was told. Then a trauma came in. Nobody saw him again until half past five. Septic shock. Theatre at six. He's still on a ventilator.",
+							"text": "I watched him till half past twelve before anyone was told. Then a trauma came in. Nobody saw him again till half past five. Septic shock. Theatre at six. He's still on a ventilator.",
 							"mood": "worried",
 							"head": "down"
 						}
@@ -2257,7 +2257,7 @@
 										},
 										{
 											"say": "sethi",
-											"text": "...No. They're right. I said it. I've said it for ten years.",
+											"text": "...No. They're right. I said it. I've been saying it for ten years.",
 											"mood": "tired",
 											"head": "down"
 										}
@@ -2265,7 +2265,7 @@
 									"else": [
 										{
 											"say": "sethi",
-											"text": "I said that. I've said it for ten years. It sounded clever.",
+											"text": "I said that. I've been saying it for ten years. It sounded clever at the time.",
 											"mood": "tired",
 											"head": "down"
 										}
@@ -2315,7 +2315,7 @@
 								},
 								{
 									"say": "rao",
-									"text": "She has been a doctor for nine days, {called}. Who taught her what to call about?",
+									"text": "She's been a doctor for nine days, {called}. Who taught her what to call about?",
 									"mood": "angry",
 									"gesture": "wag",
 									"to": "you"
@@ -2328,20 +2328,20 @@
 		},
 		{
 			"say": "rao",
-			"text": "Actions. One: any doctor can call any consultant at any hour, and nobody says 'sore'. Two: a rising pulse after a bowel join is a leak until proven otherwise.",
+			"text": "Two actions. One, any doctor can call any consultant at any hour, and nobody says sore. Two, a rising pulse after a bowel join is a leak until proven otherwise.",
 			"mood": "focused",
 			"gesture": "explain"
 		},
 		{
 			"say": "rao",
-			"text": "Write it on the wall. Write it on your hand, Dr. Qureshi. I've seen you do it.",
+			"text": "Write it on the wall. And write it on your hand, Dr. Qureshi. I've seen you do it.",
 			"mood": "happy",
 			"gesture": "point",
 			"to": "zoya"
 		},
 		{
 			"say": "zoya",
-			"text": "Already did.",
+			"text": "Already did, sir. Left hand. Right one's full.",
 			"mood": "happy",
 			"gesture": "open_hands"
 		}
@@ -2349,7 +2349,7 @@
 	"vote": [
 		{
 			"say": "malhotra",
-			"text": "The budget. One item, two options. A: the robot. B: a second doctor at night. Dr. Sethi?",
+			"text": "The budget. One item, two options. A, the robot. B, a second doctor at night. Dr. Sethi?",
 			"mood": "calm",
 			"gesture": "open_hands"
 		},
@@ -2386,7 +2386,7 @@
 		},
 		{
 			"say": "rao",
-			"text": "I chair. I don't vote. {called}, you were alone with the floor on Tuesday night. You decide it.",
+			"text": "I chair, I don't vote. {called}, you were alone with the floor on Tuesday night. You decide it.",
 			"mood": "calm",
 			"gesture": "point",
 			"to": "you"
@@ -2431,7 +2431,7 @@
 					"then": [
 						{
 							"say": "malhotra",
-							"text": "The robot brochure had a smiling grandmother.",
+							"text": "But the robot brochure had a smiling grandmother.",
 							"mood": "worried",
 							"gesture": "offer"
 						},
@@ -2456,7 +2456,7 @@
 					"then": [
 						{
 							"say": "iyer",
-							"text": "Then come and do my nights with the robot, {called}.",
+							"text": "Then come and do my nights with the robot, {called}. Bring it chai.",
 							"mood": "angry",
 							"gesture": "fold_arms",
 							"to": "you"
@@ -2484,7 +2484,7 @@
 			"then": [
 				{
 					"say": "grace",
-					"text": "Mrs. Gomes walked to the window with a frame. Slowly. She said 'March' to the physiotherapist twice.",
+					"text": "Mrs. Gomes walked to the window with a frame. Slowly. She said March to the physiotherapist twice.",
 					"mood": "calm",
 					"gesture": "explain"
 				}
@@ -2492,7 +2492,7 @@
 			"else": [
 				{
 					"say": "grace",
-					"text": "Mrs. Gomes walked the length of the ward with a frame and told the physiotherapist he has no rhythm.",
+					"text": "Mrs. Gomes walked the whole ward with a frame and told the physiotherapist he has no rhythm.",
 					"mood": "happy",
 					"gesture": "explain"
 				}
@@ -2503,7 +2503,7 @@
 			"then": [
 				{
 					"say": "grace",
-					"text": "She left you a card. 'For the doctor who let me sign my own name.' In Portuguese, then English, then Portuguese again to be sure.",
+					"text": "She left you a card. For the doctor who let me sign my own name. In Portuguese, then English, then Portuguese again, to be sure.",
 					"mood": "happy",
 					"gesture": "offer"
 				}
@@ -2522,7 +2522,7 @@
 			"then": [
 				{
 					"say": "grace",
-					"text": "The labour inspector came for Imran's notes. The contractor is paying the hospital bill. And buying harnesses. Thirty of them.",
+					"text": "The labour inspector came for Imran's notes. The contractor's paying the hospital bill. And buying harnesses. Thirty of them.",
 					"mood": "happy",
 					"gesture": "clap"
 				}
@@ -2541,7 +2541,7 @@
 			"then": [
 				{
 					"say": "grace",
-					"text": "Mr. Nanda is off the ventilator. He asked for his daughter, then for idli. In that order.",
+					"text": "Mr. Nanda's off the ventilator. He asked for his daughter, then for idli. In that order.",
 					"mood": "calm",
 					"gesture": "explain"
 				}
@@ -2549,7 +2549,7 @@
 			"else": [
 				{
 					"say": "grace",
-					"text": "Mr. Nanda goes home this morning. He shook Zoya's hand for a full minute.",
+					"text": "Mr. Nanda goes home this morning. He shook Zoya's hand for one full minute.",
 					"mood": "happy",
 					"gesture": "explain"
 				}
@@ -2568,7 +2568,7 @@
 			"else": [
 				{
 					"say": "grace",
-					"text": "And someone has drawn a moustache on the grandmother in the robot brochure. Not me. Probably not me.",
+					"text": "And someone's drawn a moustache on the grandmother in the robot brochure. Not me. Probably not me.",
 					"mood": "calm",
 					"gesture": "shrug"
 				}
@@ -2579,7 +2579,7 @@
 			"then": [
 				{
 					"say": "zoya",
-					"text": "Good luck at your review, Doctor.",
+					"text": "Good luck at your review, Doctor. You've got this. And if you don't, I'll lie and say you did.",
 					"mood": "calm",
 					"head": "down"
 				}
@@ -2590,7 +2590,7 @@
 					"then": [
 						{
 							"say": "zoya",
-							"text": "You said there are no stupid questions at three in the morning. I asked eleven this week. Thank you for answering all of them.",
+							"text": "You said there are no stupid questions at three in the morning. I asked eleven this week. Some were very stupid. Thank you for answering all of them anyway.",
 							"mood": "happy",
 							"gesture": "chest",
 							"to": "you"
@@ -2599,7 +2599,7 @@
 					"else": [
 						{
 							"say": "zoya",
-							"text": "Thank you for checking my chart. I check everyone's now. People hate it.",
+							"text": "Thank you for checking my chart. I check everyone's now. People hate it. Not my problem.",
 							"mood": "happy",
 							"gesture": "shrug",
 							"to": "you"
@@ -2620,7 +2620,7 @@
 					"then": [
 						{
 							"say": "zoya",
-							"text": "That's what Dr. Iyer said about you. I asked her.",
+							"text": "That's what Dr. Iyer said about you. I asked her. She said it with a straight face, so honestly, who knows.",
 							"mood": "happy",
 							"gesture": "point"
 						}
@@ -2635,7 +2635,7 @@
 					"then": [
 						{
 							"say": "zoya",
-							"text": "I've run out of hand. I've started on my arm.",
+							"text": "I've run out of hand. I've started on my arm. It's a whole aesthetic now.",
 							"mood": "happy",
 							"gesture": "open_hands"
 						}
@@ -2645,7 +2645,7 @@
 		},
 		{
 			"say": "grace",
-			"text": "Review at three. Seminar room. Clean coat. You know the drill.",
+			"text": "Review's at three, in the seminar room. Clean coat. You know the drill.",
 			"mood": "focused",
 			"gesture": "point"
 		}
@@ -2762,7 +2762,7 @@
 			"then": [
 				{
 					"say": "rao",
-					"text": "Tuesday night: two emergencies, both alive, and a consultant called at midnight because you trusted your hands over his words.",
+					"text": "Tuesday night. Two emergencies, both alive, and a consultant called at midnight because you trusted your hands over his words.",
 					"mood": "happy",
 					"gesture": "explain"
 				}
@@ -2773,7 +2773,7 @@
 					"then": [
 						{
 							"say": "rao",
-							"text": "Tuesday night: you told your intern to make the call, and she made it. Next time, make it yourself at midnight.",
+							"text": "Tuesday night. You told your intern to make the call, and she made it. Next time, make it yourself, at midnight.",
 							"mood": "calm",
 							"gesture": "explain"
 						}
@@ -2781,7 +2781,7 @@
 					"else": [
 						{
 							"say": "rao",
-							"text": "Tuesday night: Mr. Nanda nearly died, and you know when it could have been different. Good. A surgeon who doesn't carry one patient around is dangerous.",
+							"text": "Tuesday night. Mr. Nanda nearly died, and you know when it could have been different. Good. A surgeon who doesn't carry one patient around is dangerous.",
 							"mood": "calm",
 							"head": "down"
 						}
@@ -2835,7 +2835,7 @@
 					"then": [
 						{
 							"say": "iyer",
-							"text": "Now keep yours in yours. Your intern is watching.",
+							"text": "Now keep yours in yours. Your intern is watching. And taking notes. On her arm.",
 							"mood": "happy",
 							"head": "nod"
 						}

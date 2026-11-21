@@ -36,6 +36,8 @@ func _ids(list: Array) -> Array:
 
 func cleanup() -> void:
 	DailyReward.today_override = ""
+	Share.opener = Callable()
+	Share.copier = Callable()
 	super.cleanup()
 
 
@@ -557,3 +559,138 @@ func test_every_kind_of_quick_case_right_earns_the_casualty_badge() -> void:
 	doctor.add_count("daily_cases", 1)
 	expect("minute_thirty" in Badges.check(doctor))
 	expect(bool((doctor.morning["flags"] as Dictionary).get("badge_minute_thirty", false)), "a badge survives a restarted day")
+
+
+# --- Stage 21: the WhatsApp share card ---------------------------------------------
+
+func test_the_cases_are_numbered_from_the_first_one() -> void:
+	expect_equal(DailyCase.case_number(DailyCase.FIRST_DATE), 1)
+	expect_equal(DailyCase.case_number("2026-11-20"), 2)
+	expect_equal(DailyCase.case_number("2026-12-19"), 31, "across a month")
+	expect_equal(DailyCase.case_number("2027-11-19"), 366, "and a year")
+	expect_equal(DailyCase.case_number("2026-01-01"), 1, "never below one")
+
+
+func test_the_share_card_says_how_it_went_but_not_what_the_case_was() -> void:
+	DailyReward.today_override = THURSDAY
+	var doctor := _doctor()
+	expect_equal(DailyCase.share_text(doctor), "", "nothing to share before playing")
+	var task := DailyCase.make()
+	task.time_total = 38.7
+	_play(task, true)
+	DailyCase.record(doctor, task)
+	var text := DailyCase.share_text(doctor)
+	var lines := text.split("\n")
+	expect_equal(lines[0], "Doctors World · 60-second case #1 🩺")
+	var marks := "✅".repeat(task.steps.size())
+	expect_equal(lines[1], "Hard · %s %d/%d in 22s" % [marks, task.steps.size(), task.steps.size()])
+	expect(str(lines[2]) in DailyCase.BRAG["perfect"], "a perfect brag: %s" % lines[2])
+	expect_equal(lines[lines.size() - 1], "Same case for every doctor today. Your move.")
+	expect(not ("🔥" in text), "no streak line on the first day")
+	for word in [task.title(), task.case_title, task.card_title]:
+		if str(word).length() > 3:
+			expect(not (str(word) in text), "the case isn't spoilt: %s" % word)
+	expect_equal(DailyCase.share_text(doctor), text, "the same text all day")
+
+
+func test_the_share_card_marks_each_step_and_the_streak() -> void:
+	DailyReward.today_override = "2026-11-18"
+	var doctor := _doctor()
+	var first := DailyCase.make()
+	_play(first, true)
+	DailyCase.record(doctor, first)
+	DailyReward.today_override = THURSDAY
+	var task := DailyCase.make()
+	# Right, then wrong for the rest.
+	task.choose(str(CrisisTask.right_answer(task.current())))
+	task.confirm()
+	_play(task, false)
+	DailyCase.record(doctor, task)
+	var text := DailyCase.share_text(doctor)
+	var row := "✅" + "❌".repeat(task.steps.size() - 1)
+	expect(row + " 1/%d" % task.steps.size() in text, "each step in order: %s" % text)
+	expect("🔥 2 days running" in text, "the streak")
+	var said := text.split("\n")[3]
+	expect(said in DailyCase.BRAG["some"], "a some-right brag: %s" % said)
+
+
+func test_a_minute_run_out_gets_the_slow_brag() -> void:
+	# A Monday: easy, so no step has a clock of its own.
+	DailyReward.today_override = "2026-11-16"
+	var doctor := _doctor()
+	var task := DailyCase.make()
+	for frame in 70:
+		task.tick(1.0)
+	expect(task.finished, "the minute ran out")
+	DailyCase.record(doctor, task)
+	var text := DailyCase.share_text(doctor)
+	expect("in 60s" in text, "the whole minute: %s" % text)
+	expect("❌".repeat(task.steps.size()) + " 0/" in text)
+	var said := text.split("\n")[2]
+	expect(said in DailyCase.BRAG["slow"], "the slow brag: %s" % said)
+
+
+func test_every_brag_is_written() -> void:
+	for how: String in ["perfect", "some", "none", "slow"]:
+		var said: Array = DailyCase.BRAG[how]
+		expect(said.size() >= 3, "%s has a few" % how)
+		for line: Variant in said:
+			expect(str(line).length() > 10 and str(line).length() < 80, "%s: %s" % [how, line])
+
+
+func test_whatsapp_opens_with_the_message_typed_and_copied() -> void:
+	var opened: Array = []
+	var copied: Array = []
+	Share.opener = func(url: String) -> void: opened.append(url)
+	Share.copier = func(text: String) -> void: copied.append(text)
+	var text := "Doctors World · 60-second case #4 🩺\nHard · ✅✅❌ 2/3 in 38s"
+	Share.whatsapp(text)
+	expect_equal(copied, [text], "copied too")
+	expect_equal(opened.size(), 1)
+	var url := str(opened[0])
+	expect(url.begins_with("https://wa.me/?text="), url)
+	expect(not (" " in url) and not ("\n" in url), "encoded")
+	expect_equal(url.trim_prefix("https://wa.me/?text=").uri_decode(), text, "the message comes through whole")
+	Share.whatsapp("")
+	expect_equal(opened.size(), 1, "nothing to send, nothing opens")
+	Share.copy("hello")
+	expect_equal(copied, [text, "hello"])
+
+
+func test_the_result_and_the_today_card_can_share() -> void:
+	DailyReward.today_override = THURSDAY
+	var opened: Array = []
+	var copied: Array = []
+	Share.opener = func(url: String) -> void: opened.append(url)
+	Share.copier = func(text: String) -> void: copied.append(text)
+	var doctor := _doctor()
+	var map := add_node(CareerMap.new(doctor, "today")) as CareerMap
+	expect(map.find_child("ShareRow", true, false) == null, "nothing to share yet")
+	var view := map.start_daily_case()
+	var task := view.task as CrisisTask
+	_play(task, true)
+	for frame in 40:
+		view.tick(0.1)
+	expect(view.result_open(), "the result shows")
+	var share := view.find_child("Share", true, false) as Button
+	expect(share != null and share.visible, "a share button on the result")
+	share.pressed.emit()
+	expect_equal(opened.size(), 1, "WhatsApp opens")
+	expect_equal(copied, [DailyCase.share_text(doctor)], "with today's text")
+	expect_equal(share.text, "Shared · copied too")
+	view.done_pressed.emit()
+	var row := map.find_child("ShareRow", true, false)
+	expect(row != null, "the Today card can share it again")
+	(row.find_child("ShareCopy", true, false) as Button).pressed.emit()
+	expect_equal(copied.size(), 2)
+	expect_equal(str(copied[1]), DailyCase.share_text(doctor))
+	(row.find_child("ShareWhatsApp", true, false) as Button).pressed.emit()
+	expect_equal(opened.size(), 2)
+
+
+func test_other_training_has_no_share_button() -> void:
+	var task := CrisisTask.new("quick_sugar", 3, "easy")
+	var view := add_node(CrisisView.new(task)) as CrisisView
+	_play(task, true)
+	view.show_result("")
+	expect(view.find_child("Share", true, false) == null, "only the 60-second case shares")

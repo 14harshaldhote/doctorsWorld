@@ -40,23 +40,23 @@ S = {}
 
 # ------------------------------------------------------------ The morning's news
 LOST = {
-	"grace": "About yesterday. You did everything that could be done. Today's a new list, and it's long.",
+	"grace": "About yesterday. You did everything that could be done. Today's a new list, and it's a long one.",
 	"priya": "About yesterday, Chief. Grace would say you did everything that could be done. So I'm saying it.",
 	"iyer": "About yesterday. I've lost patients on that table too. You carry it, and you come back in. Today's a new list.",
 }
 STAFF_LOW = {
-	"grace": "Two more resignation letters on my desk. CarePlus pays better and shouts less.",
+	"grace": "Two more resignation letters on my desk. CarePlus pays better and shouts less. Hard to compete with that.",
 	"priya": "Two more nurses handed in their notice. CarePlus pays better and shouts less.",
 	"iyer": "Two more nurses have resigned. Grace hasn't said anything. That's how you know it's bad.",
 }
-MONEY_LOW = "Pharmacy has put the antibiotic order on hold until Mr. Malhotra finds the money. He's looking under the cushions."
-PUBLIC_LOW = "There's a reporter in the lobby again. Waiting times, she says. She's timing the lifts."
+MONEY_LOW = "Pharmacy's put the antibiotic order on hold till Mr. Malhotra finds the money. He's checking under the sofa cushions."
+PUBLIC_LOW = "There's a reporter in the lobby again. Waiting times, she says. She's timing the lifts. They're losing."
 HIGH = {
-	"grace": "The night nurses sent you a cake. I've had it tested. It's just a cake.",
+	"grace": "The night nurses sent you a cake. I've had it tested. It's just a cake. Suspicious, but just a cake.",
 	"priya": "The night nurses sent you a cake. Grace had it tested. It's just a cake.",
 	"iyer": "The night nurses sent you a cake. Grace has had it tested. Apparently it's just a cake.",
 }
-REPORT = "And the board report is at five. Mrs. Rajan wants the numbers by two. She'll have read them by two-oh-one."
+REPORT = "And the board report's at five. Mrs. Rajan wants the numbers by two. She'll have read them by two-oh-one."
 
 def opener(sp):
 	return [
@@ -73,11 +73,11 @@ def opener(sp):
 
 # ======================================================== Day 29: Mrs. Banerjee
 S["cb_banerjee_morning"] = [
-	say("grace", "Good morning, Chief. That's the first time I've said it to your face. It felt strange. I'll be used to it by Thursday.", "happy", "wave", to="you"),
+	say("grace", "Good morning, Chief. First time I've said it to your face. It felt strange. I'll be used to it by Thursday. Maybe.", "happy", "wave", to="you"),
 ] + opener("grace") + [
-	say("grace", "Your intern is in the canteen teaching the canteen staff to wash their hands. She's going to be a terror. I'm so proud.", "happy", "shrug"),
-	say("iyer", "And there's a name on the admissions board you'll know. Banerjee. Seventy-nine now. She cut her arm on a glass bowl last night and wouldn't come in until morning.", "calm", "explain", to="you"),
-	say("grace", "She told the ambulance she'd only see 'the doctor who held my hand'. The crew asked me who that was. I said the Chief.", "happy", "chest", to="you"),
+	say("grace", "Your intern's in the canteen teaching the canteen staff to wash their hands. She called it a hygiene era. She's going to be a terror. I'm so proud.", "happy", "shrug"),
+	say("iyer", "And there's a name on the admissions board you'll know. Banerjee. Seventy-nine now. She cut her arm on a glass bowl last night and refused to come in till morning.", "calm", "explain", to="you"),
+	say("grace", "She told the ambulance she'd only see the doctor who held her hand. The crew asked me who that was. I said, the Chief.", "happy", "chest", to="you"),
 	choose(
 		opt("Warm", "Then the Chief had better go and hold it again.", trust={"grace": 2}, then=[
 			say("grace", "Take tissues. She cries at weather forecasts.", "happy", "point"),
@@ -89,16 +89,16 @@ S["cb_banerjee_morning"] = [
 ]
 
 S["cb_banerjee_arrive"] = [
-	say("banerjee", "Beta! Look at you. A white coat with your name stitched on it. In gold!", "happy", "open_hands", to="you"),
+	say("banerjee", "Beta! Look at you! A white coat with your name stitched on it. In gold!", "happy", "open_hands", to="you"),
 	say("banerjee", "I dropped my husband's old glass bowl making payesh. Fifty-one years that bowl lasted. One bad evening.", "tired", "shrug"),
-	say("priya", "Deep cut on the right forearm, Chief. The bleeding's stopped. There may be glass in it. She won't let me look until you've said hello.", "calm", "point", to="you"),
+	say("priya", "Deep cut on the right forearm, Chief. Bleeding's stopped. There may be glass in it. She won't let me look till you've said hello.", "calm", "point", to="you"),
 	say("banerjee", "Hello first. Then glass. That's manners.", "calm", "wag"),
 	choose(
 		opt("Warm", "Hello, Mrs. Banerjee. I remember the radio officer who listened to the sea.", trust={"banerjee": 3}, then=[
 			say("banerjee", "You remember! Nobody remembers anything about old women except their blood pressure.", "happy", "chest"),
 		]),
 		opt("Brisk", "Hello. Let's look at that arm before anything else.", then=[
-			say("banerjee", "Straight to work. Same as before. Ask your questions, then.", "calm", head="nod"),
+			say("banerjee", "Straight to work. Same as before. Achha, ask your questions, then.", "calm", head="nod"),
 		]),
 	),
 ]
@@ -154,9 +154,9 @@ S["cb_banerjee_after_op"] = [
 ]
 
 S["hc_night_nurses"] = [
-	say("malhotra", "Chief. Congratulations again. Now, the budget. The strike settlement promised two nurses on every night shift.", "calm", "explain", to="you"),
+	say("malhotra", "Chief. Congratulations again. Now. The budget. The strike settlement promised two nurses on every night shift.", "calm", "explain", to="you"),
 	say("malhotra", "That's eleven new salaries. The settlement didn't say where the money comes from. Settlements never do.", "worried", "open_hands", to="you"),
-	say("grace", "It comes from where the money for the new marble in the lobby came from, Mr. Malhotra.", "calm", "fold_arms", to="malhotra"),
+	say("grace", "It comes from wherever the money for the new marble in the lobby came from, Mr. Malhotra.", "calm", "fold_arms", to="malhotra"),
 	say("malhotra", "The marble was a donation.", "calm", "shrug", to="grace"),
 	say("grace", "So were my nurses' knees.", "angry", "point", to="malhotra"),
 	choose(
@@ -167,12 +167,12 @@ S["hc_night_nurses"] = [
 		]),
 		opt("Agency", "One nurse, and an agency nurse on call for the busy nights.", flag="hc_night_nurses_agency",
 			trust={"grace": -3, "malhotra": 2}, standing={"money": 4, "staff": -6}, then=[
-			say("grace", "Agency nurses don't know where the oxygen is kept. Or the patients' names. But they're cheap.", "angry", "fold_arms"),
+			say("grace", "Agency nurses don't know where the oxygen's kept. Or the patients' names. But they're cheap. So that's nice.", "angry", "fold_arms"),
 		]),
 		opt("Trip", "Two nurses. Pay for it from the conference budget. Starting with my trip.", flag="hc_night_nurses_trip",
 			trust={"grace": 2, "malhotra": 1}, standing={"staff": 6, "money": -3}, then=[
 			say("malhotra", "The Chief cancelling the Chief's own conference. I'll put it in the newsletter.", "happy", "clap"),
-			say("grace", "Singapore will survive without you.", "happy", "shrug"),
+			say("grace", "Singapore will survive without you. Somehow.", "happy", "shrug"),
 		]),
 	),
 ]
@@ -184,7 +184,7 @@ S["cb_dev_morning"] = [
 	say("grace", "Mr. Malhotra rang at five. His son has a pain in his belly. He rang me, then the Dean, then the Dean's wife.", "tired", "shrug", to="you"),
 	say("grace", "The Dean is retired. The Dean's wife is not amused.", "calm", "fold_arms"),
 	say("iyer", "Fifteen, pain that started round the navel and moved low on the right. If that's not an appendix, I'll eat my own clips.", "calm", "explain", to="you"),
-	say("grace", "Mr. Malhotra will ask for things. A private room. The Chief in person.", "calm", "wag", to="you"),
+	say("grace", "Mr. Malhotra will ask for things. A private room. The Chief in person. A small parade.", "calm", "wag", to="you"),
 	choose(
 		opt("Fair", "Today he's a parent, not the administrator. He gets what every parent gets.", trust={"grace": 2}, then=[
 			say("grace", "Every parent gets my tea and my opinions. He'll get both.", "happy", head="nod"),
@@ -197,15 +197,15 @@ S["cb_dev_morning"] = [
 
 S["cb_dev_arrive"] = [
 	say("malhotra", "Chief. Thank you for coming down yourself. I know everyone is busy. Dev is... Dev is fifteen.", "worried", "open_hands", to="you"),
-	say("dev", "Papa, stop. You're doing the voice. The budget meeting voice.", "tired", "shrug", to="malhotra"),
-	say("dev", "It hurts here. Low down, on the right. Since last night. I was sick in Mama's car. Don't tell her it was on the seat.", "worried", "point", to="you"),
+	say("dev", "Papa, stop. You're doing the voice. The budget meeting voice. It's so cringe.", "tired", "shrug", to="malhotra"),
+	say("dev", "It hurts here. Low down, on the right. Since last night. I threw up in Mama's car. Don't tell her it was on the seat. She'll literally end me.", "worried", "point", to="you"),
 	say("priya", "Temperature thirty-eight. He winces when the trolley bumps. He says the pain moved after midnight.", "focused", "hold", to="you"),
 	choose(
 		opt("Patient", "Dev, I'm going to ask you some questions. Your father can stay, but you answer.", trust={"dev": 3, "malhotra": 1}, then=[
-			say("dev", "Finally. Someone who talks to me and not about me.", "happy", "open_hands"),
+			say("dev", "Finally. Someone who talks to me and not about me. Respect.", "happy", "open_hands"),
 		]),
 		opt("Father", "Mr. Malhotra, tell me what happened from the start.", trust={"dev": -2, "malhotra": 2}, then=[
-			say("dev", "He wasn't even there. He was on a call. About parking.", "angry", "fold_arms"),
+			say("dev", "He wasn't even there. He was on a call. About parking. Peak dad behaviour.", "angry", "fold_arms"),
 			say("malhotra", "...About parking.", "tired", head="down"),
 		]),
 	),
@@ -223,17 +223,17 @@ S["cb_dev_after"] = [
 			say("malhotra", "Every case. Yes. Of course. Every case.", "calm", head="nod"),
 		]),
 		opt("Reassure", "It's the commonest operation we do. He'll be home in two days.", trust={"malhotra": 1}, then=[
-			say("dev", "Two days. We've got a cricket final on Sunday.", "worried", "point"),
-			say("malhotra", "You'll be watching it.", "calm", "wag", to="dev"),
+			say("dev", "Two days? We've got a cricket final on Sunday. I'm literally the opener.", "worried", "point"),
+			say("malhotra", "You'll be watching it. From the sofa.", "calm", "wag", to="dev"),
 		]),
 	),
-	say("dev", "Can Papa stop phoning people now?", "tired", "shrug"),
+	say("dev", "Can Papa stop phoning people now? He's called, like, four uncles.", "tired", "shrug"),
 	say("malhotra", "One more call. Your mother.", "worried", "hold", to="dev"),
 ]
 
 S["hc_dev_room"] = [
 	say("malhotra", "Chief. One small thing. After his operation, the side room. Dev would rest better there. Quieter. Private.", "calm", "open_hands", to="you"),
-	say("malhotra", "I know Mrs. Chawla is in it. Her chest. But she could go in the bay for one night, surely. With a curtain.", "worried", "explain", to="you"),
+	say("malhotra", "I know Mrs. Chawla's in it. Her chest. But she could go in the bay for one night, surely. With a curtain.", "worried", "explain", to="you"),
 	say("grace", "Mrs. Chawla has a resistant chest infection, Mr. Malhotra. That's why she's behind a door.", "calm", "fold_arms", to="malhotra"),
 	say("malhotra", "I've spent twelve years telling doctors who gets which bed. I know exactly what I'm asking. I'm asking anyway. He's my son.", "tired", "chest", to="you"),
 	choose(
@@ -254,17 +254,17 @@ S["hc_dev_room"] = [
 ]
 
 S["cb_dev_ready"] = [
-	say("dev", "Will I have a scar? A proper one? For the team photo?", "worried", head="tilt", to="you"),
+	say("dev", "Will I have a scar? A proper one? For the team photo? It has to look hard.", "worried", head="tilt", to="you"),
 	choose(
 		opt("Honest", "A small one, low on the right. About as long as your little finger.", trust={"dev": 2}, then=[
-			say("dev", "Little finger. That's nothing. Arjun has a scar from a dog.", "happy", "shrug"),
+			say("dev", "Little finger. That's nothing. Arjun has a scar from a dog. His is way more aura.", "happy", "shrug"),
 		]),
 		opt("Joke", "A small one. Tell them it was a shark.", trust={"dev": 3}, then=[
-			say("dev", "A shark. In a swimming pool. They'll believe it. They're very stupid.", "happy", "point"),
+			say("dev", "A shark. In a swimming pool. They'll believe it. They're very stupid. Love them, though.", "happy", "point"),
 		]),
 	),
 	say("malhotra", "Chief. I'll be in the corridor. Phone off. I promise.", "worried", "chest", to="you"),
-	say("dev", "He won't. He'll put it on silent. Which is worse.", "tired", "wag"),
+	say("dev", "He won't. He'll put it on silent. Which is somehow worse.", "tired", "wag"),
 ]
 
 S["cb_dev_after_op"] = [
@@ -274,14 +274,14 @@ S["cb_dev_after_op"] = [
 	], [
 		say("iyer", "Out, clean, nothing spilled. He'll be eating by tonight.", "happy", "open_hands", to="malhotra"),
 	]),
-	say("dev", "Did you keep it? The appendix? Can I see?", "happy", "point", to="you"),
+	say("dev", "Did you keep it? The appendix? Can I see? For content?", "happy", "point", to="you"),
 	say("malhotra", "Chief. I've thanked a lot of doctors in this building. Mostly for coming in under budget. This is different.", "calm", "chest", to="you"),
 	choose(
 		opt("Warm", "Sit with him. The budget can wait until tomorrow.", trust={"malhotra": 3}, then=[
 			say("malhotra", "The budget can wait. Write that down, Dev. You'll never hear me say it again.", "happy", "point"),
 		]),
 		opt("Dry", "He did the hard part. He kept still and told me the truth.", trust={"dev": 2, "malhotra": 1}, then=[
-			say("dev", "I always tell the truth. Except about the car seat.", "happy", "shrug"),
+			say("dev", "I always tell the truth. Except about the car seat. That's between me and God.", "happy", "shrug"),
 		]),
 	),
 ]
@@ -290,7 +290,7 @@ S["cb_dev_after_op"] = [
 S["cb_tom_morning"] = [
 	say("grace", "Morning, Chief. Sit down. You'll want to.", "worried", "point", to="you"),
 ] + opener("grace") + [
-	say("grace", "Tom came in at six to set up theatre. At half past, he was sitting on the floor of the scrub room, very pale, and lying to me.", "worried", "explain", to="you"),
+	say("grace", "Tom came in at six to set up theatre. By half past he was sitting on the scrub room floor, very pale, and lying to me.", "worried", "explain", to="you"),
 	say("iyer", "A lump in his groin that goes back in when he lies down. Since he lifted the new instrument trays last week. Except this morning, it won't go back.", "focused", "hold", to="you"),
 	say("grace", "Twenty years he's handed you all scissors. Today somebody hands him a pillow. He'll hate it.", "calm", "shrug"),
 	choose(
@@ -312,14 +312,14 @@ S["cb_tom_arrive"] = [
 			say("tom", "Fine. But if you ask me where the forceps live, I'm answering.", "happy", "point"),
 		]),
 		opt("Joke", "Tom, you've counted every swab I've ever used. Let me count something of yours.", trust={"priya": 1}, then=[
-			say("tom", "That's the strangest thing anyone's said to me in this building. And I've worked here twenty years.", "happy", "shrug"),
+			say("tom", "That's the strangest thing anyone's ever said to me in this building. And I've worked here twenty years.", "happy", "shrug"),
 		]),
 	),
 ]
 
 S["cb_tom_after"] = [
 	iff("cb_tom_history_meal", [
-		say("priya", "Two samosas at five, before his shift. Dr. Khan will want that before he goes to sleep.", "focused", "hold", to="you"),
+		say("priya", "Two samosas at five, before his shift. Dr. Khan will want to know that before he goes to sleep.", "focused", "hold", to="you"),
 	], [
 		say("priya", "Nobody asked when he last ate, Chief. Dr. Khan will ask.", "worried", "shrug", to="you"),
 	]),
@@ -329,15 +329,15 @@ S["cb_tom_after"] = [
 			say("tom", "Neha. Good. She'll put everything back where I keep it. And pretend she never moved anything.", "happy", head="nod"),
 		]),
 		opt("Rules", "You can't scrub for your own operation, Tom. I checked the rules.", then=[
-			say("tom", "There's no such rule. I looked. Grace wrote one this morning.", "tired", "fold_arms"),
+			say("tom", "There's no such rule. I checked. Grace wrote one this morning.", "tired", "fold_arms"),
 		]),
 	),
-	say("priya", "Theatre 2 at two. Neha's already in there, rearranging his trays to annoy him.", "happy", "point"),
+	say("priya", "Theatre 2 at two. Neha's already in there, rearranging his trays just to annoy him.", "happy", "point"),
 ]
 
 S["cb_tom_ready"] = [
 	say("tom", "Before I go to sleep. Count the swabs out loud. I want to hear it, even asleep.", "focused", "point", to="you"),
-	say("tom", "And when Neha says 'all present', make her say it twice.", "calm", "wag"),
+	say("tom", "And when Neha says all present, make her say it twice.", "calm", "wag"),
 	choose(
 		opt("Promise", "Every swab, out loud, twice. That's your rule.", then=[
 			say("tom", "Good. Now I can sleep.", "calm", head="nod"),
@@ -371,17 +371,17 @@ S["cb_tom_after_op"] = [
 S["cb_tom_rota_arrive"] = [
 	say("priya", "Four nurses off sick, Chief. The flu's going round the nurses' hostel like gossip.", "tired", "open_hands", to="you"),
 	say("priya", "And with Tom in bed four, that's one more bed and one less pair of hands. Grace says you do tonight's rota with me. She says it's good for you.", "calm", "point", to="you"),
-	say("grace", "It's very good for you. I'll be watching.", "happy", "fold_arms", to="you"),
+	say("grace", "It's very good for you. I'll be watching. Like a hawk. A tired hawk.", "happy", "fold_arms", to="you"),
 ]
 
 S["chief_rota_after"] = [
 	iff("chief_rota_gap", [
-		say("priya", "Somebody's got nobody tonight, Chief. I'll stay until midnight and cover them myself. Again.", "tired", "fold_arms", to="you"),
+		say("priya", "Somebody's got nobody tonight, Chief. So I'll stay till midnight and cover them myself. Again. Love that for me.", "tired", "fold_arms", to="you"),
 	], [
 		iff("chief_rota_right", [
 			say("priya", "That holds. Every bed has a name, and nobody's carrying more than they can. I'll sign it.", "happy", head="nod", to="you"),
 		], [
-			say("priya", "Signed. It'll do. Someone's carrying more than they should, and they'll feel it at four in the morning.", "calm", "shrug", to="you"),
+			say("priya", "Signed. It'll do. But someone's carrying more than they should, and they'll feel it at four in the morning.", "calm", "shrug", to="you"),
 		]),
 	]),
 	iff("staff_low", [
@@ -390,9 +390,9 @@ S["chief_rota_after"] = [
 ]
 
 S["hc_sponsor"] = [
-	say("malhotra", "Good news, Chief. Medivance Pharma wants to pay for the new day surgery unit. All of it. The building, the beds, the coffee machine.", "happy", "open_hands", to="you"),
+	say("malhotra", "Good news, Chief! Medivance Pharma wants to pay for the new day surgery unit. All of it. The building, the beds, the coffee machine.", "happy", "open_hands", to="you"),
 	say("malhotra", "In return, their name over the door. Their antibiotics first on our list. And their reps in the canteen on Tuesdays. With pens.", "calm", "explain", to="you"),
-	say("iyer", "Their antibiotic costs three times the old one and works the same. Dr. Khan will have views.", "calm", "fold_arms", to="you"),
+	say("iyer", "Their antibiotic costs three times the old one and works exactly the same. Dr. Khan will have views.", "calm", "fold_arms", to="you"),
 	choose(
 		opt("All", "Take all of it. A day unit now is worth a few pens.", flag="hc_sponsor_all",
 			trust={"malhotra": 3, "iyer": -2}, standing={"money": 12, "public": -4, "staff": -3}, then=[
@@ -415,10 +415,10 @@ S["hc_sponsor"] = [
 S["cb_salim_morning"] = [
 	say("grace", "Morning, Chief. Quiet so far. Which means it won't be.", "calm", "fold_arms", to="you"),
 ] + opener("grace") + [
-	say("iyer", "The ring road's flooded, so every lorry in the state is on the highway through the toll plaza. If anything happens today, it happens there.", "focused", "explain", to="you"),
+	say("iyer", "The ring road's flooded, so every lorry in the state is on the highway through the toll plaza. If anything happens today, it'll happen there.", "focused", "explain", to="you"),
 	choose(
 		opt("Ready", "Then let's check the trauma bay before anything happens.", trust={"grace": 2}, then=[
-			say("grace", "Stocked at six. Checked at seven. I'll check it again because you asked nicely.", "happy", head="nod"),
+			say("grace", "Stocked at six. Checked at seven. I'll check it again, because you asked so nicely.", "happy", head="nod"),
 		]),
 		opt("Hope", "Then let's hope nothing happens.", then=[
 			say("grace", "Hope isn't on the stock list, Chief.", "calm", "wag"),
@@ -428,7 +428,7 @@ S["cb_salim_morning"] = [
 
 S["cb_salim_triage_arrive"] = [
 	say("priya", "A bus lost its brakes at the toll plaza. It went through the queue of motorbikes like skittles.", "worried", "open_hands", to="you"),
-	say("priya", "Six off the first ambulances, more coming. Tag them, Chief. Red now, yellow soon, green walks, black beyond help.", "focused", "point", to="you"),
+	say("priya", "Six off the first ambulances, more coming. Tag them, Chief. Red now, yellow soon, green walks, black is beyond help.", "focused", "point", to="you"),
 ]
 
 S["chief_triage_after"] = [
@@ -436,9 +436,9 @@ S["chief_triage_after"] = [
 		say("priya", "One you tagged to wait went grey on the trolley, Chief. Dr. Iyer pulled them forward. They'll live. Just.", "worried", "hold", to="you"),
 	], [
 		iff("chief_triage_right", [
-			say("priya", "Every tag right. The trauma bay says it's the calmest crash they've had.", "happy", head="nod", to="you"),
+			say("priya", "Every tag right. The trauma bay says it's the calmest crash they've ever had.", "happy", head="nod", to="you"),
 		], [
-			say("priya", "Sent in. Dr. Iyer will check the tags again inside. Some of them were generous.", "calm", "shrug", to="you"),
+			say("priya", "Sent in. Dr. Iyer will check the tags again inside. Some of them were... generous.", "calm", "shrug", to="you"),
 		]),
 	]),
 ]
@@ -476,7 +476,7 @@ S["cb_salim_after"] = [
 		]),
 		opt("Delegate", "Priya will call her now.", trust={"salim": 1}, then=[
 			say("priya", "I'm calling. What do I say?", "calm", "hold"),
-			say("salim", "Say her papa is being difficult. She'll understand.", "tired", "shrug"),
+			say("salim", "Say her papa's being difficult. She'll understand.", "tired", "shrug"),
 		]),
 	),
 ]
@@ -488,7 +488,7 @@ S["cb_salim_ready"] = [
 			say("salim", "Everything. Good. That's all a man can ask.", "calm", head="nod"),
 		]),
 		opt("Reassure", "It won't go wrong. I won't let it.", trust={"salim": 1}, then=[
-			say("salim", "Doctors always say that in films.", "tired", "shrug"),
+			say("salim", "Doctors always say that in films. Right before the sad music.", "tired", "shrug"),
 		]),
 	),
 ]
@@ -499,15 +499,15 @@ S["cb_salim_after_op"] = [
 	], [
 		say("iyer", "Dry. His pressure's a hundred and twenty. Good hands, Chief. Fast hands.", "happy", "open_hands", to="you"),
 	]),
-	say("pooja", "Papa? The nurse said you were being difficult.", "worried"),
+	say("pooja", "Papa? The nurse said you were being difficult. So, normal?", "worried"),
 	say("salim", "Always, beti. Always difficult.", "happy", "chest"),
-	say("pooja", "Is the doctor there? Can I talk to the doctor?", "worried"),
+	say("pooja", "Is the doctor there? Can I talk to the doctor? Like, the actual one?", "worried"),
 	choose(
 		opt("Warm", "I'm here, Pooja. Your papa's going to be fine. Bring him something to read. He talks too much.", trust={"salim": 2}, then=[
-			say("pooja", "He does. I'll bring him my maths homework. He hates maths.", "happy"),
+			say("pooja", "He does. I'll bring him my maths homework. He hates maths. It's the perfect revenge.", "happy"),
 		]),
 		opt("Plain", "He's out of the operation and he's stable. You can see him at four.", trust={"salim": 1}, then=[
-			say("pooja", "Four. I'm counting.", "calm"),
+			say("pooja", "Four. I'm counting. Don't be late, I will notice.", "calm"),
 		]),
 	),
 ]
@@ -519,15 +519,15 @@ S["hc_reporter"] = [
 	choose(
 		opt("Film", "They can film inside, with written consent from every patient, and nobody who says no.", flag="hc_reporter_film",
 			trust={"malhotra": 2, "grace": -2}, standing={"public": 6, "staff": -3}, then=[
-			say("grace", "Consent from people on morphine. I'll be standing beside every form.", "angry", "point"),
+			say("grace", "Consent from people on morphine. I'll be standing beside every single form.", "angry", "point"),
 		]),
 		opt("Statement", "No cameras on the ward. I'll speak outside, and thank the nurses by name.", flag="hc_reporter_statement",
 			trust={"grace": 2, "malhotra": 1}, standing={"public": 3, "staff": 3}, then=[
-			say("malhotra", "Outside, by name. Priya will cry. I'll make sure the tissue is in shot.", "happy", "clap"),
+			say("malhotra", "Outside, by name. Priya will cry. I'll make sure the tissue's in shot.", "happy", "clap"),
 		]),
 		opt("No", "No cameras and no statement. We had a crash, not a show.", flag="hc_reporter_no",
 			trust={"grace": 1, "malhotra": -2}, standing={"public": -4, "staff": 2}, then=[
-			say("malhotra", "They'll film the van leaving and say 'the hospital declined to comment'. It always sounds like guilt.", "tired", "shrug"),
+			say("malhotra", "They'll film the van leaving and say the hospital declined to comment. It always sounds like guilt.", "tired", "shrug"),
 		]),
 	),
 ]
@@ -540,15 +540,15 @@ S["cb_mehra_morning"] = [
 	say("iyer", "Her son Suresh sits on the board. He's rung Mrs. Rajan, Mr. Malhotra and me. I let it ring.", "calm", "shrug", to="you"),
 	say("grace", "You met her years ago, when she waited two hours for her heartburn. She remembers. She remembers everything.", "calm", "wag", to="you"),
 	iff("mehra_charmed", [
-		say("grace", "She told the ambulance crew the young doctor had manners. She meant you.", "happy", "point"),
+		say("grace", "She told the ambulance crew the young doctor had manners. She meant you. Don't let it go to your head.", "happy", "point"),
 	], [
 		iff("mehra_complaint", [
-			say("grace", "She told the ambulance crew she hoped the young doctor had learned manners. She meant you.", "calm", "fold_arms"),
+			say("grace", "She told the ambulance crew she hoped the young doctor had learned some manners. She meant you.", "calm", "fold_arms"),
 		]),
 	]),
 	choose(
 		opt("Fair", "She's a patient with a broken hip. That's all she is until it's fixed.", trust={"grace": 2}, then=[
-			say("grace", "Tell her son that. Slowly.", "calm", "wag"),
+			say("grace", "Tell her son that. Slowly. With pictures.", "calm", "wag"),
 		]),
 		opt("Wary", "Board day, and a board member's mother. Of course it is.", trust={"iyer": 1}, then=[
 			say("iyer", "The universe has a sense of humour. It just isn't very good.", "calm", "shrug"),
@@ -564,10 +564,10 @@ S["cb_mehra_arrive"] = [
 		iff("mehra_complaint", [
 			say("mehra", "I wrote to the board about your manners. They wrote back about your skills. Very irritating.", "calm", "fold_arms"),
 		], [
-			say("mehra", "And now you're the Chief. My son says you're too young. I told him he was too young once.", "calm", "wag"),
+			say("mehra", "And now you're the Chief. My son says you're too young. I told him he was too young once. He still is.", "calm", "wag"),
 		]),
 	]),
-	say("priya", "Left leg short and turned out, Chief. A broken hip. The pain's controlled. Her son has phoned the desk four times.", "focused", "hold", to="you"),
+	say("priya", "Left leg short and turned out, Chief. A broken hip. The pain's controlled. Her son's phoned the desk four times.", "focused", "hold", to="you"),
 	say("mehra", "Five. He'll phone again. He thinks if he phones enough, things happen faster. Like his father.", "tired", "shrug"),
 	choose(
 		opt("Kind", "Then let's give him good news to phone about. A few questions first.", trust={"mehra": 3}, then=[
@@ -593,13 +593,13 @@ S["cb_mehra_after"] = [
 
 S["hc_mehra_first"] = [
 	say("malhotra", "Chief. Two broken hips came in this morning. Mrs. Mehra, and a Mr. Gaikwad, a farmer from Sangli, waiting since yesterday afternoon.", "worried", "explain", to="you"),
-	say("bhatt", "One theatre, one of me, one afternoon. At their age, every day on their back is a day nearer pneumonia.", "focused", "open_hands", to="you"),
-	say("malhotra", "Suresh Mehra has called the board, the Dean and me. In that order. And today is the board report. I'm only saying.", "calm", "shrug", to="you"),
+	say("bhatt", "One theatre, one of me, one afternoon. At their age, every day on their back is a day closer to pneumonia.", "focused", "open_hands", to="you"),
+	say("malhotra", "Suresh Mehra has called the board, the Dean and me. In that order. And today's the board report. I'm only saying.", "calm", "shrug", to="you"),
 	choose(
 		opt("Queue", "Mr. Gaikwad waited longest. He goes first. Mrs. Mehra second, if Dr. Bhatt will stay late.", flag="hc_mehra_first_queue",
 			trust={"malhotra": -2, "bhatt": 2, "mehra": -3}, standing={"public": 5, "staff": -2, "money": -2}, then=[
-			say("bhatt", "I'll stay. Order the coffee.", "calm", head="nod"),
-			say("malhotra", "I'll tell Suresh. From a distance.", "tired", "shrug"),
+			say("bhatt", "I'll stay. Order the coffee. The good one.", "calm", head="nod"),
+			say("malhotra", "I'll tell Suresh. From a safe distance.", "tired", "shrug"),
 		]),
 		opt("VIP", "Mrs. Mehra first. Mr. Gaikwad tomorrow morning.", flag="hc_mehra_first_vip",
 			trust={"malhotra": 3, "bhatt": -2, "mehra": 2}, standing={"money": 5, "public": -6, "staff": -2}, then=[
@@ -607,7 +607,7 @@ S["hc_mehra_first"] = [
 		]),
 		opt("Both", "Both today. Open Theatre 1 for Mr. Gaikwad, with Dr. Iyer, and pay the overtime.", flag="hc_mehra_first_both",
 			trust={"bhatt": 2, "iyer": 1}, standing={"staff": -5, "money": -3, "public": 3}, then=[
-			say("malhotra", "Overtime. On a Saturday rate. On board day.", "worried", "chest"),
+			say("malhotra", "Overtime. At the Saturday rate. On board day. Wonderful.", "worried", "chest"),
 			say("bhatt", "Two hips, two theatres. Like the old days. I love the old days.", "happy", "clap"),
 		]),
 	),
@@ -624,7 +624,7 @@ S["cb_mehra_ready"] = [
 	say("mehra", "Will I walk at my grandson's wedding? March. He's marrying a dentist. I have opinions.", "worried", head="tilt", to="you"),
 	choose(
 		opt("Honest", "If the screw goes in well, you'll stand tomorrow. Walking to March is up to you and the physiotherapist.", trust={"mehra": 2}, then=[
-			say("mehra", "A young man shouting 'one more step'. I'll manage him.", "happy", "wag"),
+			say("mehra", "A young man shouting one more step. I'll manage him.", "happy", "wag"),
 		]),
 		opt("Promise", "You'll dance at it.", then=[
 			say("mehra", "Don't promise dancing. My husband promised dancing. Forty years, not one dance.", "calm", "shrug"),
@@ -653,7 +653,7 @@ S["cb_mehra_after_op"] = [
 
 # ======================================================== Day 34: Mrs. Verghese
 S["cb_verghese_morning"] = [
-	say("grace", "Before you ask: no, I'm fine. It's indigestion. Everybody my age has indigestion.", "tired", "fold_arms", to="you"),
+	say("grace", "Before you ask, no, I'm fine. It's indigestion. Everybody my age has indigestion.", "tired", "fold_arms", to="you"),
 ] + opener("grace") + [
 	say("iyer", "You're holding your side, Grace.", "focused", "point", to="grace"),
 	say("grace", "I'm holding my clipboard. Against my side. It's a different thing.", "calm", "shrug", to="iyer"),
@@ -665,13 +665,13 @@ S["cb_verghese_morning"] = [
 			say("grace", "At noon I'll be busy. At one, I'll be busy. I'm always busy, Chief. That's the job.", "tired", "shrug"),
 		]),
 		opt("Case", "Let's see her. And get her notes from CarePlus before anyone at CarePlus edits them.", trust={"iyer": 2}, then=[
-			say("iyer", "Already asked. They said they'd 'look into it'. That's never a good sentence.", "calm", "fold_arms"),
+			say("iyer", "Already asked. They said they'd look into it. That's never a good sentence.", "calm", "fold_arms"),
 		]),
 	),
 ]
 
 S["cb_verghese_arrive"] = [
-	say("verghese", "Are you the Chief? Good. Somebody in charge. CarePlus gave me a leaflet and a number that rings for ever.", "tired", "open_hands", to="you"),
+	say("verghese", "Are you the Chief? Good. Somebody in charge. CarePlus gave me a leaflet and a number that rings forever.", "tired", "open_hands", to="you"),
 	say("priya", "Thirty-nine point two, yellow eyes, belly tight as a drum. Operation at CarePlus three days ago.", "focused", "hold", to="you"),
 	say("verghese", "They said it was textbook. Everybody keeps saying textbook. I count money for a bank, Doctor. When the numbers don't add up, I don't call it textbook.", "angry", "wag", to="you"),
 	choose(
@@ -696,14 +696,14 @@ S["cb_verghese_after"] = [
 			say("verghese", "Find it. And write down what you find. In ink.", "calm", "point"),
 		]),
 		opt("Vague", "We'll take a look and see.", trust={"verghese": -1}, then=[
-			say("verghese", "'Take a look and see.' That's what CarePlus said.", "angry", "shrug"),
+			say("verghese", "Take a look and see. That's exactly what CarePlus said.", "angry", "shrug"),
 		]),
 	),
 ]
 
 S["hc_kapoor_back"] = [
 	say("kapoor", "Chief. Congratulations, belatedly. Board votes are so very public.", "happy", "open_hands", to="you"),
-	say("kapoor", "Mrs. Verghese is ours. We'd like her back. Our ambulance is outside, our surgeon is waiting, our cost entirely. No paperwork.", "calm", "explain", to="you"),
+	say("kapoor", "Mrs. Verghese is ours. We'd like her back. Our ambulance is outside, our surgeon's waiting, our cost entirely. No paperwork.", "calm", "explain", to="you"),
 	say("iyer", "She's septic, Sameer. She isn't going anywhere in an ambulance today.", "focused", "fold_arms", to="kapoor"),
 	say("kapoor", "Then let's keep it collegial. Whatever you find in there stays between our two hospitals. Surgeons have bad days. Even yours.", "calm", "shrug", to="you"),
 	iff("sinha_covered", [
@@ -720,7 +720,7 @@ S["hc_kapoor_back"] = [
 		]),
 		opt("Quiet", "She stays. What's in the notes stays in the notes.", flag="hc_kapoor_back_quiet",
 			trust={"kapoor": 3, "iyer": -4}, standing={"public": -5, "money": 2}, then=[
-			say("iyer", "That's how notes end up saying 'known complication', Chief.", "angry", "fold_arms"),
+			say("iyer", "That's how notes end up saying known complication, Chief.", "angry", "fold_arms"),
 		]),
 	),
 ]
@@ -749,7 +749,7 @@ S["cb_verghese_after_op"] = [
 			say("verghese", "Shouldn't have been. Thank you. That's the first sentence about this anyone has finished.", "calm", head="nod"),
 		]),
 		opt("Soft", "These things happen sometimes. It's fixed now.", trust={"verghese": -2}, then=[
-			say("verghese", "'These things happen.' I'll write that down. Next to 'textbook'.", "angry", "fold_arms"),
+			say("verghese", "These things happen. I'll write that down. Next to textbook.", "angry", "fold_arms"),
 		]),
 	),
 	iff("hc_kapoor_back_report", [
@@ -784,7 +784,7 @@ S["cb_grace_morning"] = [
 
 S["cb_grace_arrive"] = [
 	say("grace", "Don't look at me like that. I'm lying on a trolley in my own admissions bay, and I'm fine.", "tired", "fold_arms", to="you"),
-	say("grace", "Who's on the desk? Has anyone checked the controlled drugs? Priya, you're here. Who's on the desk?", "worried", "point", to="priya"),
+	say("grace", "Who's on the desk? Has anyone checked the controlled drugs? Priya, you're here. So who's on the desk?", "worried", "point", to="priya"),
 	say("priya", "Tom's on the desk. With his hernia. On a chair. He's loving it.", "calm", "shrug", to="grace"),
 	choose(
 		opt("Gentle", "Grace. For once the ward can look after itself. Let me look after you.", trust={"grace": 3}, then=[
@@ -847,13 +847,13 @@ S["cb_grace_after_op"] = [
 ]
 
 S["hc_grace_cover"] = [
-	say("grace", "Right. Who's running my floor for two weeks? And don't say 'we'll manage'. Nobody manages. Somebody runs it.", "focused", "point", to="you"),
+	say("grace", "Right. Who's running my floor for two weeks? And don't say we'll manage. Nobody manages. Somebody runs it.", "focused", "point", to="you"),
 	say("priya", "Grace, you've just had an operation...", "worried", "open_hands", to="grace"),
 	say("grace", "And my floor has just lost its head nurse. Chief?", "calm", "fold_arms", to="you"),
 	choose(
 		opt("Priya", "Priya runs it. Acting head nurse, with the pay that goes with it.", flag="hc_grace_cover_priya",
 			trust={"grace": 3, "priya": 4}, standing={"staff": 5, "money": -2}, then=[
-			say("priya", "Me? With the pay?", "shocked", head="up"),
+			say("priya", "Me? With the pay? Okay, now I'm scared.", "shocked", head="up"),
 			say("grace", "With the pay. Write it down, Chief. Today.", "happy", "point"),
 		]),
 		opt("Agency", "An agency matron, for two weeks. Priya has enough on.", flag="hc_grace_cover_agency",
@@ -873,10 +873,10 @@ S["rounds_morning"] = [
 	iff("chief_rounds_first", [
 		say("iyer", "The casebook's closed, Chief. Seven patients in seven days, and every one of them went home or will. Now it's just the job.", "calm", "open_hands", to="you"),
 		iff("hc_grace_cover_priya", [
-			say("iyer", "Priya's acting head nurse. She's ordered a new badge. It says 'Acting', very small.", "happy", "shrug", to="you"),
+			say("iyer", "Priya's acting head nurse. She's ordered a new badge. It says Acting, very small.", "happy", "shrug", to="you"),
 		], [
 			iff("hc_grace_cover_agency", [
-				say("iyer", "The agency matron has asked me twice where the oxygen is kept. I've told her twice.", "tired", "fold_arms", to="you"),
+				say("iyer", "The agency matron's asked me twice where the oxygen is kept. I've told her twice.", "tired", "fold_arms", to="you"),
 			], [
 				say("iyer", "Grace is running the floor from her bed, by phone. She's rung four times since six.", "happy", "shrug", to="you"),
 			]),
@@ -887,47 +887,47 @@ S["rounds_morning"] = [
 		], [
 			iff("grace_away", [
 				iff("rounds_a", [say("iyer", "Grace rang at six to ask who left the drug cupboard open. Nobody did. She just wanted to ring.", "happy", "shrug", to="you")]),
-				iff("rounds_b", [say("iyer", "Grace has sent a list. Forty-one things. Number one says 'Don't let the Chief skip lunch'.", "happy", "point", to="you")]),
+				iff("rounds_b", [say("iyer", "Grace has sent a list. Forty-one things. Number one says, don't let the Chief skip lunch.", "happy", "point", to="you")]),
 				iff("rounds_c", [say("iyer", "Grace walked to the end of her road this morning. She rang to tell me. Then she rang to tell Priya.", "happy", "open_hands", to="you")]),
 			], [
-				iff("rounds_a", [say("iyer", "Mr. Malhotra's chart has four bars now. He added one for 'morale'. It's purple.", "calm", "shrug", to="you")]),
+				iff("rounds_a", [say("iyer", "Mr. Malhotra's chart has four bars now. He added one for morale. It's purple.", "calm", "shrug", to="you")]),
 				iff("rounds_b", [say("iyer", "Tom's back at the ring. He's told Neha she can keep three of her changes. Only three.", "happy", "wag", to="you")]),
-				iff("rounds_c", [say("iyer", "Dr. Saxena did her first night alone. Nobody died, and she labelled every drawer in the doctors' room.", "happy", "shrug", to="you")]),
+				iff("rounds_c", [say("iyer", "Dr. Saxena did her first night alone. Nobody died, and she labelled every drawer in the doctors' room. She called it a reset. It's very beige.", "happy", "shrug", to="you")]),
 			]),
 		]),
 	]),
 	iff("milestone_today", [
-		say("iyer", "Today's a milestone, Chief. Grace has counted every day since you read the fire notices on your first morning. The number is on a cake.", "happy", "clap", to="you"),
-		say("iyer", "Don't make a speech. The interns will film it.", "happy", "wag", to="you"),
+		say("iyer", "Today's a milestone, Chief. Grace has counted every day since you read the fire notices on your first morning. The number's on a cake.", "happy", "clap", to="you"),
+		say("iyer", "Don't make a speech. The interns will film it. It'll be a reel by lunch.", "happy", "wag", to="you"),
 	]),
 	iff("tier_up_today", [
-		iff("rounds_a", [say("iyer", "The new housing past the bypass opened last week. Six thousand more people, the same number of beds. From today, every day is busier.", "focused", "explain", to="you")]),
-		iff("rounds_b", [say("iyer", "CarePlus has shut its emergency department at night. Too expensive, they say. Their ambulances come to us now. Every day is busier from today.", "focused", "explain", to="you")]),
+		iff("rounds_a", [say("iyer", "The new housing past the bypass opened last week. Six thousand more people, the same number of beds. From today, every day's busier.", "focused", "explain", to="you")]),
+		iff("rounds_b", [say("iyer", "CarePlus has shut its emergency department at night. Too expensive, they say. So their ambulances come to us now. Every day's busier from today.", "focused", "explain", to="you")]),
 		iff("rounds_c", [say("iyer", "They've widened the highway. Two more lanes, and twice the crashes. The council calls it progress. Dr. Khan calls it job security.", "tired", "shrug", to="you")]),
 		say("iyer", "And the board has raised its bar. They'll want a better report than last time. They always will.", "calm", "wag", to="you"),
 	]),
 	iff("busy_today", [
-		say("iyer", "It's one of those days. A rota to fill before eight, and ambulance control says the highway is already blocked.", "worried", "hold", to="you"),
+		say("iyer", "It's one of those days. A rota to fill before eight, and ambulance control says the highway's already blocked.", "worried", "hold", to="you"),
 	]),
 	iff("event_starts&event_monsoon", [
-		say("iyer", "The rains have come, Chief. All of them at once. The underpass is a river, and the highway's a skating rink.", "worried", "explain", to="you"),
-		say("iyer", "This week: more crashes, nurses who can't get in, and fevers in every bed. And the town will remember how we coped.", "focused", "wag", to="you"),
+		say("iyer", "The rains have come, Chief. All of them, at once. The underpass is a river, and the highway's a skating rink.", "worried", "explain", to="you"),
+		say("iyer", "This week, more crashes, nurses who can't get in, and fevers in every bed. And the town will remember how we coped.", "focused", "wag", to="you"),
 	], [
-		iff("event_monsoon&rounds_a", [say("iyer", "Still raining. The basement's flooded again. Housekeeping have built a wall of sandbags and named it.", "tired", "shrug", to="you")]),
+		iff("event_monsoon&rounds_a", [say("iyer", "Still raining. The basement's flooded again. Housekeeping have built a wall of sandbags and given it a name.", "tired", "shrug", to="you")]),
 		iff("event_monsoon&rounds_b", [say("iyer", "Dengue in four more beds overnight. And a snake in the ambulance bay. The snake's fine.", "tired", "open_hands", to="you")]),
-		iff("event_monsoon&rounds_c", [say("iyer", "The roof over bed six is leaking. Grace has put a bucket under it and a sign on the bucket.", "calm", "shrug", to="you")]),
+		iff("event_monsoon&rounds_c", [say("iyer", "The roof over bed six is leaking. Grace has put a bucket under it, and a sign on the bucket.", "calm", "shrug", to="you")]),
 	]),
 	iff("event_starts&event_festival", [
 		say("iyer", "Festival week, Chief. Lights on every building, fireworks every night, and half the staff on leave.", "happy", "open_hands", to="you"),
-		say("iyer", "Burns, crushes and food poisoning. It costs us overtime every year. Mr. Malhotra has already sighed twice.", "focused", "wag", to="you"),
+		say("iyer", "Burns, crushes and food poisoning. It costs us overtime every year. Mr. Malhotra's already sighed twice.", "focused", "wag", to="you"),
 	], [
-		iff("event_festival&rounds_a", [say("iyer", "The canteen's made festival sweets. Dr. Khan has eaten eleven. For quality control.", "happy", "shrug", to="you")]),
-		iff("event_festival&rounds_b", [say("iyer", "Three burnt hands overnight, all from the same brand of rocket. I've rung the police. They've rung the shop.", "tired", "fold_arms", to="you")]),
+		iff("event_festival&rounds_a", [say("iyer", "The canteen's made festival sweets. Dr. Khan has eaten eleven. For quality control, she says.", "happy", "shrug", to="you")]),
+		iff("event_festival&rounds_b", [say("iyer", "Three burnt hands overnight, all from the same brand of rocket. I've rung the police. They've rung the shop. The shop has rung its lawyer.", "tired", "fold_arms", to="you")]),
 		iff("event_festival&rounds_c", [say("iyer", "The agency wants festival rates for every night nurse. Mr. Malhotra is lying down in his office.", "calm", "shrug", to="you")]),
 	]),
 	iff("event_starts&event_outbreak", [
 		say("iyer", "It's an outbreak, Chief. The burst water main in the old town. Forty cases of the stomach bug overnight, and it's in the nurses' hostel.", "worried", "explain", to="you"),
-		say("iyer", "This week: keep it away from the patients who can't fight it, and keep enough nurses standing to do that.", "focused", "wag", to="you"),
+		say("iyer", "This week, keep it away from the patients who can't fight it, and keep enough nurses standing to do that.", "focused", "wag", to="you"),
 	], [
 		iff("event_outbreak&rounds_a", [say("iyer", "Twelve more with the bug overnight. The council says the water's fine. The council drinks bottled water.", "tired", "fold_arms", to="you")]),
 		iff("event_outbreak&rounds_b", [say("iyer", "Two more nurses off with it. Grace has put hand gel on every surface, including the lift buttons and Mr. Malhotra.", "tired", "shrug", to="you")]),
@@ -936,18 +936,18 @@ S["rounds_morning"] = [
 	iff("walkin_today", [
 		iff("rounds_a", [say("iyer", "And a walk-in on the board, Chief. Somebody new. Priya will page you once they're on a trolley.", "calm", "point", to="you")]),
 		iff("rounds_b", [say("iyer", "There's a new name on the admissions board. Came in off the street this morning. Yours, if you want them. You do.", "calm", "explain", to="you")]),
-		iff("rounds_c", [say("iyer", "Somebody walked in at dawn and asked for 'the best surgeon'. The porter sent them to you. I didn't correct him.", "happy", "shrug", to="you")]),
+		iff("rounds_c", [say("iyer", "Somebody walked in at dawn and asked for the best surgeon. The porter sent them to you. I didn't correct him. Don't make me regret it.", "happy", "shrug", to="you")]),
 	]),
 ] + opener("iyer") + [
-	iff("!walkin_today&rounds_a", [say("iyer", "The interns have the simulator booked for half past one. They've asked for you. Apparently you're 'intense'.", "happy", "shrug", to="you")]),
-	iff("!walkin_today&rounds_b", [say("iyer", "Dr. Saxena has loaded another real case into the simulator. She's made it harder. She says you'd want that.", "calm", "explain", to="you")]),
-	iff("!walkin_today&rounds_c", [say("iyer", "The simulator's booked all afternoon. The interns are placing bets on your score. I've put money on you.", "happy", "point", to="you")]),
+	iff("!walkin_today&rounds_a", [say("iyer", "The interns have the simulator booked for half past one. They've asked for you. Apparently you're intense. And also, quote, a whole vibe.", "happy", "shrug", to="you")]),
+	iff("!walkin_today&rounds_b", [say("iyer", "Dr. Saxena's loaded another real case into the simulator. She's made it harder. She says you'd want that. She's not wrong, sadly.", "calm", "explain", to="you")]),
+	iff("!walkin_today&rounds_c", [say("iyer", "The simulator's booked all afternoon. The interns are placing bets on your score. I've put money on you. Don't embarrass me.", "happy", "point", to="you")]),
 ]
 
 S["rounds_rota_arrive"] = [
 	iff("rounds_a", [say("priya", "Four off sick, Chief. The flu again. Every bed needs a name before eight.", "tired", "open_hands", to="you")]),
 	iff("rounds_b", [say("priya", "Two on leave, two off sick, and one stuck behind a landslide on the ghat road. Rota, Chief.", "tired", "shrug", to="you")]),
-	iff("rounds_c", [say("priya", "The agency's cancelled three of tonight's nurses. They found a hospital that pays more. Rota, Chief.", "angry", "fold_arms", to="you")]),
+	iff("rounds_c", [say("priya", "The agency's cancelled three of tonight's nurses. They found a hospital that pays more. Loyalty, na. Rota, Chief.", "angry", "fold_arms", to="you")]),
 	iff("grace_away", [
 		say("priya", "Grace has rung twice to ask if we've done it yet. We haven't. So let's.", "calm", "point", to="you"),
 	]),
@@ -956,14 +956,14 @@ S["rounds_rota_arrive"] = [
 S["rounds_triage_arrive"] = [
 	iff("rounds_a", [say("priya", "The highway again, Chief. A bus and a lorry, head on. They're coming in now.", "worried", "open_hands", to="you")]),
 	iff("rounds_b", [say("priya", "A bus went off the ghat road and landed on its wheels, thank God. Everyone off it is coming here.", "worried", "point", to="you")]),
-	iff("rounds_c", [say("priya", "The toll plaza again. Another bus with no brakes. Somebody should close that road.", "angry", "open_hands", to="you")]),
-	say("priya", "Red now, yellow soon, green walks, black beyond help. Tag them, Chief.", "focused", "point", to="you"),
+	iff("rounds_c", [say("priya", "The toll plaza again. Another bus with no brakes. Somebody really should close that road.", "angry", "open_hands", to="you")]),
+	say("priya", "Red now, yellow soon, green walks, black is beyond help. Tag them, Chief.", "focused", "point", to="you"),
 ]
 
 S["sim_arrive"] = [
-	iff("rounds_a", [say("saxena", "Chief! The simulator's loaded. A real case from last month: same scans, same surprises. I've turned the difficulty up. You said you liked it hard.", "happy", "open_hands", to="you")]),
-	iff("rounds_b", [say("saxena", "Chief. The new interns are behind the glass. Someone told them you never lose a patient. Please don't lose a patient.", "worried", "point", to="you")]),
-	iff("rounds_c", [say("saxena", "I've loaded one of your own cases. I'm not saying which. Dr. Iyer says that's 'cheeky'. I looked it up. It's a compliment.", "happy", "shrug", to="you")]),
+	iff("rounds_a", [say("saxena", "Chief! The simulator's loaded. A real case from last month, same scans, same surprises. I've turned the difficulty up. You said you liked it hard. Your funeral. Not literally.", "happy", "open_hands", to="you")]),
+	iff("rounds_b", [say("saxena", "Chief. The new interns are behind the glass. Someone told them you never lose a patient. So, no pressure, but please don't lose a patient.", "worried", "point", to="you")]),
+	iff("rounds_c", [say("saxena", "I've loaded one of your own cases. Not saying which. Dr. Iyer says that's cheeky. I looked it up. It's basically a compliment. I'll take it.", "happy", "shrug", to="you")]),
 ]
 
 S["sim_brief"] = [
@@ -973,25 +973,25 @@ S["sim_brief"] = [
 
 S["sim_after"] = [
 	iff("op_sim_failed", [
-		say("saxena", "The simulator won that one. The interns went very quiet. Then they asked to watch it again. That's good, isn't it?", "worried", head="tilt", to="you"),
+		say("saxena", "The simulator won that one. The interns went very quiet. Then they asked to watch it again. That's good, isn't it? Please say that's good.", "worried", head="tilt", to="you"),
 	], [
 		iff("op_sim_won", [
-			say("saxena", "Clean run! The interns clapped. Dr. Iyer told them to stop clapping. Then she clapped.", "happy", "clap", to="you"),
+			say("saxena", "Clean run! The interns clapped. Dr. Iyer told them to stop clapping. Then she clapped. Honestly, iconic.", "happy", "clap", to="you"),
 		], [
-			say("saxena", "You got there. The interns saw every wobble. One wrote 'even the Chief wobbles' in her notebook, and underlined it.", "calm", "shrug", to="you"),
+			say("saxena", "You got there. The interns saw every wobble. One of them wrote even the Chief wobbles in her notebook, and underlined it. Twice.", "calm", "shrug", to="you"),
 		]),
 	]),
-	say("saxena", "Same time tomorrow? I'll make it harder.", "happy", "point", to="you"),
+	say("saxena", "Same time tomorrow? I'll make it harder. You've been warned.", "happy", "point", to="you"),
 ]
 
 S["hc_intern_slip"] = [
 	say("saxena", "Chief. Last night I gave Mr. Arora his blood thinner twice. At ten, and again at midnight. I didn't check the chart. Priya caught it at two.", "worried", "open_hands", to="you"),
-	say("saxena", "His clotting's fine. He's fine. Nobody else knows except Priya. She said I had to tell you. So I'm telling you.", "worried", head="down", to="you"),
-	say("saxena", "Please don't put it in the incident system. It'll follow me for ever.", "worried", "chest", to="you"),
+	say("saxena", "His clotting's fine. He's fine. Nobody else knows except Priya. She said I had to tell you. So. I'm telling you. This is me, telling you.", "worried", head="down", to="you"),
+	say("saxena", "Please don't put it in the incident system. It'll follow me forever. Like, actually forever.", "worried", "chest", to="you"),
 	choose(
 		opt("Report", "We report it, together. You write it, I'll sit beside you. That's how this place gets safer.", flag="hc_intern_slip_report",
 			trust={"saxena": 1}, standing={"staff": 3, "public": 2}, then=[
-			say("saxena", "Together. ...Dr. Iyer said you'd say that.", "calm", head="nod"),
+			say("saxena", "Together. ...Dr. Iyer said you'd say that. She does an impression of you. It's very accurate.", "calm", head="nod"),
 		]),
 		opt("Quiet", "Nobody was hurt. Learn from it, and we'll leave it there.", flag="hc_intern_slip_quiet",
 			trust={"saxena": 3}, standing={"staff": -2}, then=[
@@ -999,7 +999,7 @@ S["hc_intern_slip"] = [
 		]),
 		opt("Nights", "We report it, and you're off nights until you've done the drug safety course again.", flag="hc_intern_slip_nights",
 			trust={"saxena": -3}, standing={"staff": -3, "public": 1}, then=[
-			say("saxena", "Off nights. Yes, Chief. I understand.", "tired", head="down"),
+			say("saxena", "Off nights. Yes, Chief. I understand. Fair.", "tired", head="down"),
 		]),
 	),
 ]
@@ -1011,7 +1011,7 @@ S["hc_monsoon_beds"] = [
 	choose(
 		opt("Cancel", "Cancel everything that can wait. The two cancers stay on the list.", flag="hc_monsoon_beds_cancel",
 			trust={"malhotra": 2}, standing={"public": -2, "money": -3, "staff": 2}, then=[
-			say("malhotra", "Everything that can wait. Thirty-eight phone calls. I'll start with the angriest.", "tired", "shrug"),
+			say("malhotra", "Everything that can wait. Thirty-eight phone calls. I'll start with the angriest. For practice.", "tired", "shrug"),
 		]),
 		opt("Seminar", "Keep the list. Turn the seminar room into a fever ward.", flag="hc_monsoon_beds_seminar",
 			trust={"iyer": 2}, standing={"public": 5, "staff": -6}, then=[
@@ -1026,9 +1026,9 @@ S["hc_monsoon_beds"] = [
 
 S["hc_rao_returns"] = [
 	say("rao", "Chief. Don't get up. I've been retired for seven months. I've read every book I own. Twice.", "calm", "open_hands", to="you"),
-	say("rao", "My wife says if I reorganise the spice rack once more she'll leave me. So I'm offering you two days a week. Teaching. Unpaid.", "happy", "shrug", to="you"),
+	say("rao", "My wife says if I reorganise the spice rack once more, she'll leave me. So I'm offering you two days a week. Teaching. Unpaid.", "happy", "shrug", to="you"),
 	iff("count_rule", [
-		say("rao", "I see the count rule is still on every wall. Good. Some things should outlive the people who were wrong about them.", "calm", head="nod"),
+		say("rao", "I see the count rule's still on every wall. Good. Some things should outlive the people who were wrong about them.", "calm", head="nod"),
 	]),
 	choose(
 		opt("Teach", "Two days a week with the interns. They need someone who's made mistakes and said so.", flag="hc_rao_returns_teach",
@@ -1048,9 +1048,9 @@ S["hc_rao_returns"] = [
 
 S["hc_budget_month"] = [
 	iff("rounds_a", [say("malhotra", "The monthly budget, Chief. Three columns and money for one. Column one, nurses. Two, the scanner that reboots in the middle of scans. Three, the Saturday clinic.", "calm", "explain", to="you")]),
-	iff("rounds_b", [say("malhotra", "The budget again, Chief. Column one, nurses. Two, new monitors for the recovery room; the old ones beep at nothing. Three, the Saturday clinic.", "calm", "explain", to="you")]),
+	iff("rounds_b", [say("malhotra", "The budget again, Chief. Column one, nurses. Two, new monitors for recovery, the old ones beep at nothing. Three, the Saturday clinic.", "calm", "explain", to="you")]),
 	iff("rounds_c", [say("malhotra", "Budget, Chief. Column one, nurses. Two, a second ultrasound, so nobody waits a day for a scan. Three, the Saturday clinic.", "calm", "explain", to="you")]),
-	say("malhotra", "One pen. Choose.", "tired", "offer", to="you"),
+	say("malhotra", "One pen. Choose. No pressure.", "tired", "offer", to="you"),
 	choose(
 		opt("Nurses", "Nurses. Two more on the wards.", flag="hc_budget_month_nurses", standing={"staff": 6, "money": -4}, then=[
 			say("malhotra", "Nurses. Again. The machines will sulk.", "tired", "shrug"),
@@ -1113,7 +1113,7 @@ S["hc_inspection"] = [
 	say("malhotra", "Chief, we could show them the new wing first. It's very shiny. The old wing could have a quiet morning.", "calm", "explain", to="you"),
 	choose(
 		opt("Everything", "Show them everything, old wing first. If something's wrong, we need to know.", flag="hc_inspection_real", standing={"public": 4, "money": -2}, then=[
-			say("priya", "Old wing first. The sluice will be thrilled to meet someone at last.", "happy", "shrug"),
+			say("priya", "Old wing first. The sluice will be thrilled to finally meet someone.", "happy", "shrug"),
 		]),
 		opt("Tidy", "Give us an hour to tidy up, then show them round.", flag="hc_inspection_tidy", standing={"public": -2, "staff": -2, "money": 1}, then=[
 			say("priya", "An hour of hiding things is an hour of not nursing.", "angry", "fold_arms"),
@@ -1155,9 +1155,9 @@ call("vip_queue", [
 ])
 
 call("drug_shortage", [
-	("priya", "Chief, the strong antibiotic's run short. Four vials left, and six patients written up for it. The next delivery is Thursday.", "worried", "hold"),
-	("priya", "We're out of the anti-venom except for two vials. It's snake season in the villages, and the ambulance is bringing a third bite.", "worried", "open_hands"),
-	("priya", "The insulin pump supplies are stuck at the port. Three diabetic patients and supplies for one.", "worried", "hold"),
+	("priya", "Chief, the strong antibiotic's run short. Four vials left, and six patients written up for it. The next delivery's Thursday.", "worried", "hold"),
+	("priya", "We're out of anti-venom except for two vials. It's snake season in the villages, and the ambulance is bringing in a third bite.", "worried", "open_hands"),
+	("priya", "The insulin pump supplies are stuck at the port. Three diabetic patients, and supplies for one.", "worried", "hold"),
 ], [
 	say("priya", "Pharmacy wants a decision by six. Nobody wants to be the one who chose.", "tired", "fold_arms", to="you"),
 ], [
@@ -1175,27 +1175,27 @@ call("drug_shortage", [
 call("resident_tired", [
 	("saxena", "Chief. Dr. Kunte fell asleep at a red light driving home. Thirty-six hours on. He's fine. The scooter in front of him isn't.", "worried", "open_hands"),
 	("saxena", "One of the residents wrote the wrong dose at hour thirty. The pharmacist caught it. She cried in the sluice, and then she went back to work.", "worried", "hold"),
-	("saxena", "Three residents asked me to ask you, because they're scared to. Can the shifts stop being thirty-six hours?", "worried", "chest"),
+	("saxena", "Three residents asked me to ask you, because they're scared to. Can the shifts please stop being thirty-six hours?", "worried", "chest"),
 ], [
-	say("saxena", "When I was an intern I thought being tired was part of the training. Now I think it's just being tired.", "tired", "shrug", to="you"),
+	say("saxena", "When I was an intern I thought being tired was part of the training. Now I think it's just being tired. And it's not the flex people think it is.", "tired", "shrug", to="you"),
 ], [
 	("Cap", "No shift longer than twenty-four hours, from Monday. I'll find the money.", "cap", {"staff": 6, "money": -5}, [
-		say("saxena", "From Monday. I'm going to tell them in the canteen. Loudly.", "happy", "clap"),
+		say("saxena", "From Monday! I'm going to tell them in the canteen. Loudly.", "happy", "clap"),
 	]),
 	("Rest", "A rest room with a door that locks, and a taxi home after any night shift.", "rest", {"staff": 3, "money": -2}, [
 		say("saxena", "A door that locks. You have no idea how much that's worth.", "calm", head="nod"),
 	]),
 	("Tough", "Every doctor in this building did those hours. It's how we learnt.", "tough", {"staff": -6, "money": 2}, [
-		say("saxena", "It's how you learnt. Some of us also learnt to fall asleep at red lights.", "angry", "fold_arms"),
+		say("saxena", "It's how you learnt. Some of us also learnt to fall asleep at red lights. Great system.", "angry", "fold_arms"),
 	]),
 ])
 
 call("scanner_down", [
-	("iyer", "The CT scanner's died. Smoke, a smell, and an engineer who says 'next week' in a voice that means 'next month'.", "worried", "explain"),
+	("iyer", "The CT scanner's died. Smoke, a smell, and an engineer who says next week in a voice that means next month.", "worried", "explain"),
 	("iyer", "The scanner's down again. The engineer can fix it tonight, at triple his normal rate, because he knows we're desperate.", "tired", "shrug"),
 	("iyer", "Half the X-ray department's gone off with a burnt-out cable. We can scan the urgent ones, slowly, or not at all.", "worried", "open_hands"),
 ], [
-	say("iyer", "Every head injury and every belly we can't read is a guess until it's fixed.", "focused", "wag", to="you"),
+	say("iyer", "Every head injury and every belly we can't read is a guess till it's fixed.", "focused", "wag", to="you"),
 ], [
 	("Divert", "Divert head injuries and big crashes to CarePlus until it's fixed.", "divert", {"public": -4, "money": 2}, [
 		say("iyer", "CarePlus will take the money and the credit. But the patients get scanned.", "calm", "shrug"),
@@ -1210,7 +1210,7 @@ call("scanner_down", [
 
 call("blood_bank", [
 	("priya", "The blood bank's down to a day's stock, Chief. O negative is down to four units, and it's a Friday.", "worried", "hold"),
-	("priya", "The crash yesterday used a week's blood in an afternoon. The blood bank is begging, politely.", "worried", "open_hands"),
+	("priya", "The crash yesterday used a week's blood in an afternoon. The blood bank is begging. Politely.", "worried", "open_hands"),
 	("priya", "A fridge failed overnight. We lost thirty units. Nobody's fault. Everybody's problem.", "worried", "hold"),
 ], [
 	say("priya", "Three planned operations tomorrow need blood ready. So does anyone who comes off the highway.", "focused", "point", to="you"),
@@ -1227,9 +1227,9 @@ call("blood_bank", [
 ])
 
 call("tv_hero", [
-	("malhotra", "Chief, a television channel wants a 'hero doctor' story. Ten minutes, prime time. They asked for you, by name. And by face.", "happy", "open_hands"),
-	("malhotra", "The news channel wants to film the night shift. 'A night in the life'. They've promised not to film anyone being sick. They always film someone being sick.", "calm", "explain"),
-	("malhotra", "A magazine wants you on the cover. 'The Chief Who Never Sleeps.' I said you do sleep. They said that's not a cover.", "happy", "shrug"),
+	("malhotra", "Chief, a television channel wants a hero doctor story. Ten minutes, prime time. They asked for you, by name. And by face.", "happy", "open_hands"),
+	("malhotra", "The news channel wants to film the night shift. A night in the life. They've promised not to film anyone being sick. They always film someone being sick.", "calm", "explain"),
+	("malhotra", "A magazine wants you on the cover. The Chief Who Never Sleeps. I said you do sleep. They said that's not a cover.", "happy", "shrug"),
 ], [
 	say("malhotra", "It's free advertising. The town would love it. CarePlus would hate it, which is a bonus.", "happy", "point", to="you"),
 ], [
@@ -1246,10 +1246,10 @@ call("tv_hero", [
 
 call("drug_trial", [
 	("iyer", "A drug company wants to run a trial here. A new blood thinner. Good money, a research nurse, and a lot of forms.", "calm", "explain"),
-	("iyer", "The trial people are back. They'd like to start next week, with 'simplified consent'. I don't like the word simplified.", "focused", "fold_arms"),
+	("iyer", "The trial people are back. They'd like to start next week, with simplified consent. I don't like the word simplified.", "focused", "fold_arms"),
 	("iyer", "A university wants our patients for a study on wound healing. Less money, more paperwork, and they'd train two of our nurses.", "calm", "open_hands"),
 ], [
-	say("iyer", "Research is how medicine gets better. It's also how hospitals get into the newspapers for the wrong reasons.", "calm", "wag", to="you"),
+	say("iyer", "Research is how medicine gets better. It's also how hospitals end up in the newspapers for the wrong reasons.", "calm", "wag", to="you"),
 ], [
 	("Properly", "Yes, with full consent, our own ethics committee, and a patient's right to say no at any point.", "properly", {"money": 3, "public": 1, "staff": -1}, [
 		say("iyer", "Properly. It'll take three months to start. That's how you know it's right.", "calm", head="nod"),
@@ -1323,15 +1323,15 @@ call("careplus_offer", [
 
 # --- Arif Mirza: appendix, penicillin allergy
 S["cb_arif_arrive"] = [
-	say("arif", "Doctor, sorry, is this going to take long? I have an exam at nine. Had. I had an exam at nine.", "worried", "open_hands", to="you"),
+	say("arif", "Doctor, sorry, is this going to take long? I have an exam at nine. Had. I had an exam at nine. Okay, I'm cooked.", "worried", "open_hands", to="you"),
 	say("priya", "Nineteen, from the engineering hostel. Pain low on the right since the night, a temperature, and he's been sick twice. His friends carried him down three floors.", "calm", "point", to="you"),
-	say("arif", "They're in the corridor. One of them is drawing my appendix. He's never seen one. Neither have I.", "tired", "shrug"),
+	say("arif", "They're in the corridor. One of them's drawing my appendix. He's never seen one. Neither have I. Main character moment, honestly.", "tired", "shrug"),
 	choose(
 		opt("Kind", "Forget the exam for today. Let me find out what's wrong first.", trust={"arif": 3}, then=[
-			say("arif", "Forget the exam. My father will need to hear that from you personally.", "happy", "chest"),
+			say("arif", "Forget the exam? My father will need to hear that from you personally. On speaker.", "happy", "chest"),
 		]),
 		opt("Joke", "Tell your friend the appendix is the shape of a small worm. He can fix the drawing.", trust={"arif": 2}, then=[
-			say("arif", "A worm. He's drawn it like a banana. I'll tell him. He'll be devastated.", "happy", "point"),
+			say("arif", "A worm. He's drawn it like a banana. I'll tell him. He'll be devastated. It's giving fruit.", "happy", "point"),
 		]),
 	),
 ]
@@ -1341,26 +1341,26 @@ S["cb_arif_after"] = [
 	], [
 		say("priya", "Nobody asked him about allergies, Chief. Theatre will give the usual antibiotic unless somebody tells them.", "worried", "shrug", to="you"),
 	]),
-	say("arif", "Do I need an operation? Honestly? My mother will want to know everything. She's a pharmacist.", "worried", head="tilt", to="you"),
+	say("arif", "Do I need an operation? Honestly? No cap? My mother will want to know everything. She's a pharmacist.", "worried", head="tilt", to="you"),
 	choose(
 		opt("Honest", "Yes. Your appendix is inflamed, and it comes out today, before it bursts.", trust={"arif": 2}, then=[
-			say("arif", "Today. Okay. Okay. I'll ring her. You'll talk to her? She'll have questions. Forty of them.", "worried", "open_hands"),
+			say("arif", "Today. Okay. Okay. I'll ring her. You'll talk to her? She'll have questions. Forty of them. Minimum.", "worried", "open_hands"),
 		]),
 		opt("Gentle", "Probably. Let's get you comfortable first, and I'll explain it all to you and your mother.", trust={"arif": 1}, then=[
-			say("arif", "Probably. That's a doctor's yes, isn't it. My mother says 'probably' the same way.", "calm", "shrug"),
+			say("arif", "Probably. That's a doctor's yes, isn't it. My mother says probably the same way.", "calm", "shrug"),
 		]),
 	),
 	say("priya", "Theatre 2 at two. I'll keep the friends out. They've started a group chat about it.", "happy", "point"),
 ]
 S["cb_arif_ready"] = [
-	say("arif", "My mother rang Dr. Khan. Dr. Khan is still on the phone. I'm sorry.", "worried", "open_hands", to="you"),
+	say("arif", "My mother rang Dr. Khan. Dr. Khan is still on the phone. I'm so sorry. She's like this.", "worried", "open_hands", to="you"),
 	say("khan", "She's very well informed. She's asked for my qualifications. I've sent them.", "calm", "shrug", to="you"),
 	choose(
 		opt("Reassure", "You're in very good hands, Arif. Dr. Khan has put thousands of people to sleep. And woken them up.", trust={"arif": 2}, then=[
-			say("arif", "Woken them up. That's the important part. Please tell my mother that part.", "calm", head="nod"),
+			say("arif", "Woken them up. That's the important part. Please tell my mother that part. Twice.", "calm", head="nod"),
 		]),
 		opt("Joke", "When you wake up, it'll be lunchtime, and the exam will be somebody else's problem.", trust={"arif": 1}, then=[
-			say("arif", "Somebody else's problem. That's the nicest thing anyone's said to me this term.", "happy", "chest"),
+			say("arif", "Somebody else's problem. That's the nicest thing anyone's said to me this term. Genuinely.", "happy", "chest"),
 		]),
 	),
 ]
@@ -1370,25 +1370,25 @@ S["cb_arif_after_op"] = [
 	], [
 		say("iyer", "Out, before it burst. Neat work. He'll be home in two days, and back at his desk complaining in three.", "happy", "open_hands", to="you"),
 	]),
-	say("arif", "Is it out? Can I see it? My friends want a photograph. For science.", "tired", head="tilt", to="you"),
+	say("arif", "Is it out? Can I see it? My friends want a photograph. For science. And the group chat.", "tired", head="tilt", to="you"),
 	choose(
 		opt("Yes", "It's in a jar. One photograph. For science.", trust={"arif": 2}, then=[
-			say("arif", "For science. They'll put it on the hostel noticeboard. You'll be famous.", "happy", "point"),
+			say("arif", "For science. They'll put it on the hostel noticeboard. You'll be famous. Like, lowkey famous.", "happy", "point"),
 		]),
 		opt("Rest", "Sleep first. Science can wait until tomorrow.", then=[
-			say("arif", "Science can wait. You sound like my mother. She'll like you.", "calm", head="nod"),
+			say("arif", "Science can wait. You sound like my mother. She'll like you. That's a threat.", "calm", head="nod"),
 		]),
 	),
 ]
 
 # --- Mohan Tiwari: hernia, poha at five
 S["cb_mohan_arrive"] = [
-	say("mohan", "Doctor sahib, it's nothing. A small lump. I'll push it back and go. Forty cylinders on the tempo.", "tired", "open_hands", to="you"),
+	say("mohan", "Doctor sahab, it's nothing. A small lump. I'll push it back and go. Forty cylinders on the tempo.", "tired", "open_hands", to="you"),
 	say("priya", "He's the man who brings our gas cylinders, Chief. A lump in his groin that's been stuck since he lifted one this morning. It's hard, and he's grey.", "calm", "point", to="you"),
 	say("mohan", "I'm not grey. I'm always this colour. It's the stairs.", "worried", head="down"),
 	choose(
 		opt("Kind", "Lie back, Mr. Tiwari. The cylinders can wait an hour. You can't.", trust={"mohan": 3}, then=[
-			say("mohan", "An hour. The canteen won't be able to make chai. You're a brave man, doctor.", "happy", "chest"),
+			say("mohan", "An hour? The canteen won't be able to make chai. You're a brave man, doctor.", "happy", "chest"),
 		]),
 		opt("Firm", "Don't push it back. If it's stuck, it stays where it is until I've looked.", trust={"mohan": 1}, then=[
 			say("mohan", "Don't push. Okay. You're the doctor. I'm only the cylinders.", "calm", head="nod"),
@@ -1397,11 +1397,11 @@ S["cb_mohan_arrive"] = [
 ]
 S["cb_mohan_after"] = [
 	iff("cb_mohan_history_meal", [
-		say("priya", "A big plate of poha at five. Dr. Khan will want that before anything else.", "focused", "hold", to="you"),
+		say("priya", "A big plate of poha at five. Dr. Khan will want to know that before anything else.", "focused", "hold", to="you"),
 	], [
 		say("priya", "Nobody asked when he last ate, Chief. Dr. Khan will ask. Loudly.", "worried", "shrug", to="you"),
 	]),
-	say("mohan", "My daughter is at the nursing college. She'll want to know what you're doing. Tell me properly, so I can tell her.", "worried", head="tilt", to="you"),
+	say("mohan", "My daughter's at the nursing college. She'll want to know what you're doing. Tell me properly, so I can tell her.", "worried", head="tilt", to="you"),
 	choose(
 		opt("Explain", "Your bowel has slipped through a weak spot and got stuck. We free it, check it's healthy, and patch the spot with mesh.", trust={"mohan": 2}, then=[
 			say("mohan", "Mesh. Like a sieve. My wife will understand that. She sieves everything.", "happy", "point"),
@@ -1410,14 +1410,14 @@ S["cb_mohan_after"] = [
 			say("mohan", "Small. My daughter will say nothing is small. She's very strict.", "calm", "shrug"),
 		]),
 	),
-	say("priya", "Theatre 2 at two. His driver's parked in the ambulance bay. I've asked him nicely. Twice.", "tired", "point"),
+	say("priya", "Theatre 2 at two. His driver's parked in the ambulance bay. I've asked him nicely. Twice. Next time, less nicely.", "tired", "point"),
 ]
 S["cb_mohan_ready"] = [
-	say("mohan", "Doctor, who will deliver the cylinders this week? The canteen needs two. Theatre needs one.", "worried", "open_hands", to="you"),
+	say("mohan", "Doctor, who'll deliver the cylinders this week? The canteen needs two. Theatre needs one.", "worried", "open_hands", to="you"),
 	say("tom", "I'll ring the depot. Theatre's oxygen comes from a different man. Don't worry about our gas.", "calm", "wag", to="mohan"),
 	choose(
 		opt("Promise", "I'll make sure the canteen gets its cylinders. You think about getting better.", trust={"mohan": 2}, then=[
-			say("mohan", "You'll make sure. The Chief, delivering cylinders. I'll tell everyone.", "happy", "chest"),
+			say("mohan", "You'll make sure? The Chief, delivering cylinders. I'll tell everyone.", "happy", "chest"),
 		]),
 		opt("Joke", "If the canteen runs out of chai, I'll blame you personally.", trust={"mohan": 1}, then=[
 			say("mohan", "Blame me. Everybody does. When the gas runs out, nobody blames the gas.", "happy", "shrug"),
@@ -1428,7 +1428,7 @@ S["cb_mohan_after_op"] = [
 	iff("op_mohan_failed", [
 		say("iyer", "The loop was tight and angry. I finished the mesh. He'll heal, Chief.", "calm", "open_hands", to="you"),
 	], [
-		say("iyer", "The bowel pinked up nicely, and the mesh is flat. He'll be carrying again in six weeks. Lighter loads, if he listens.", "happy", "open_hands", to="you"),
+		say("iyer", "The bowel pinked up nicely, and the mesh is flat. He'll be carrying again in six weeks. Lighter loads, if he listens. He won't.", "happy", "open_hands", to="you"),
 	]),
 	say("mohan", "Six weeks? Who carries the cylinders for six weeks?", "worried", "open_hands", to="you"),
 	choose(
@@ -1443,7 +1443,7 @@ S["cb_mohan_after_op"] = [
 
 # --- Savitri Kale: hand wound, tetanus twenty years ago
 S["cb_savitri_arrive"] = [
-	say("savitri", "Doctor! I brought tea. For the nurses. You also, if you're not too important.", "happy", "offer", to="you"),
+	say("savitri", "Doctor! I brought tea. For the nurses. For you also, if you're not too important.", "happy", "offer", to="you"),
 	say("priya", "Sixty-six, runs the tea stall at the bus stand. A glass broke in her hand while she was washing up. Deep cut across the left palm. The towel's doing its best.", "calm", "point", to="you"),
 	say("savitri", "Thirty-one years, never a cut. Today, one glass. The old kind. Thick.", "tired", "shrug"),
 	choose(
@@ -1470,7 +1470,7 @@ S["cb_savitri_after"] = [
 			say("savitri", "Tomorrow? With a hand like this? Doctor, I'm old, not foolish.", "angry", "wag"),
 		]),
 	),
-	say("priya", "Minor theatre at two. Tom's laying out the tray. He's already had two cups.", "happy", "point"),
+	say("priya", "Minor theatre at two. Tom's laying out the tray. He's already had two of her teas.", "happy", "point"),
 ]
 S["cb_savitri_ready"] = [
 	say("savitri", "Will the injection hurt? I can stand anything except injections. And the price of milk.", "worried", head="tilt", to="you"),
@@ -1490,7 +1490,7 @@ S["cb_savitri_after_op"] = [
 	], [
 		say("iyer", "Every sliver out, and neat stitches. She'll be pouring tea in ten days.", "happy", "open_hands", to="you"),
 	]),
-	say("savitri", "Finished? I felt only tugging. Like somebody darning a sock.", "happy", "open_hands", to="you"),
+	say("savitri", "Finished? I only felt tugging. Like somebody darning a sock.", "happy", "open_hands", to="you"),
 	choose(
 		opt("Care", "Keep it dry, keep it up, and come back in five days so I can look.", trust={"savitri": 2}, then=[
 			say("savitri", "Dry, up, five days. I'll bring tea when I come. Don't argue.", "happy", "point"),
@@ -1504,7 +1504,7 @@ S["cb_savitri_after_op"] = [
 # --- Usha Krishnan: gallbladder, aspirin for her heart
 S["cb_usha_arrive"] = [
 	say("usha", "Good morning. Sit up straight, Priya. Yes, I remember you. Third row, by the window. Always late.", "calm", "wag", to="priya"),
-	say("priya", "Yes, Ma'am. Sixty-one, Chief. Pain under the right ribs since her niece's engagement dinner, and a fever since midnight. She was my headmistress.", "worried", "hold", to="you"),
+	say("priya", "Yes, Ma'am. Sixty-one, Chief. Pain under the right ribs since her niece's engagement dinner, and a fever since midnight. She was my headmistress. I'm still scared.", "worried", "hold", to="you"),
 	say("usha", "And now I'm a patient. Very strange. Usually I'm the one asking the questions.", "tired", "shrug", to="you"),
 	choose(
 		opt("Respect", "Then today I'll ask, and you can mark my questions, Mrs. Krishnan.", trust={"usha": 3}, then=[
@@ -1534,7 +1534,7 @@ S["cb_usha_after"] = [
 ]
 S["cb_usha_ready"] = [
 	say("usha", "Neha Joshi. I remember you. Your handwriting was dreadful. Is it better now?", "calm", "wag", to="neha"),
-	say("neha", "Yes, Ma'am. I write the theatre count. Everybody can read it.", "worried", head="nod", to="usha"),
+	say("neha", "Yes, Ma'am. I write the theatre count now. Everybody can read it. Mostly.", "worried", head="nod", to="usha"),
 	choose(
 		opt("Kind", "She's the best scrub nurse we have, Mrs. Krishnan. You taught her well.", trust={"usha": 2}, then=[
 			say("usha", "I taught her to sit still. The rest she did herself.", "happy", "chest"),
@@ -1563,12 +1563,12 @@ S["cb_usha_after_op"] = [
 
 # --- Rosy Pereira: hip, warfarin, penicillin allergy
 S["cb_rosy_arrive"] = [
-	say("rosy", "Young doctor. Before anything: somebody must feed Clementine. Half a tin at noon, half at six. She won't eat the cheap one.", "worried", "point", to="you"),
-	say("priya", "Eighty-three, fell over her cat at six this morning. Lay on the floor until the milkman found her. Her left leg is short and turned out.", "calm", "explain", to="you"),
+	say("rosy", "Young doctor. Before anything, somebody must feed Clementine. Half a tin at noon, half at six. She won't eat the cheap one.", "worried", "point", to="you"),
+	say("priya", "Eighty-three, fell over her cat at six this morning. Lay on the floor till the milkman found her. Her left leg's short and turned out.", "calm", "explain", to="you"),
 	say("rosy", "Clementine is not to blame. She has slept on that step for nine years. I'm the one who changed.", "tired", "shrug"),
 	choose(
 		opt("Kind", "We'll find somebody to feed Clementine. Now let me look after you.", trust={"rosy": 3}, then=[
-			say("rosy", "Thank you. The tin opener is in the second drawer. It sticks.", "happy", "chest"),
+			say("rosy", "Thank you. The tin opener's in the second drawer. It sticks.", "happy", "chest"),
 		]),
 		opt("Brisk", "The cat can wait an hour, Mrs. Pereira. Your hip can't.", trust={"rosy": -1}, then=[
 			say("rosy", "You've never met Clementine. But fine. Ask.", "angry", "fold_arms"),
@@ -1582,7 +1582,7 @@ S["cb_rosy_after"] = [
 		say("priya", "Nobody asked about her medicines, Chief. At eighty-three, with an irregular heart, somebody should.", "worried", "shrug", to="you"),
 	]),
 	iff("cb_rosy_history_allergy", [
-		say("priya", "And penicillin, since 1971. She finished the Chopin first. I've put it on the board.", "calm", "point", to="you"),
+		say("priya", "And penicillin, since 1971. She finished the Chopin first, she says. I've put it on the board.", "calm", "point", to="you"),
 	]),
 	say("rosy", "Will I play again? I don't play with my hip, but I need it to get to the piano.", "worried", head="tilt", to="you"),
 	choose(
@@ -1593,7 +1593,7 @@ S["cb_rosy_after"] = [
 			say("rosy", "No time. Doctors always say no time. Time is the only thing I have plenty of.", "calm", "shrug"),
 		]),
 	),
-	say("priya", "Theatre 3 at two. I'll feed the cat on my way home. Half a tin. The good one.", "happy", "point"),
+	say("priya", "Theatre 3 at two. I'll feed the cat on my way home. Half a tin. The good one. Obviously.", "happy", "point"),
 ]
 S["cb_rosy_ready"] = [
 	say("rosy", "Dr. Bhatt says I'll be awake behind a screen. May we have music? Something with a steady tempo.", "calm", "open_hands", to="you"),
@@ -1611,7 +1611,7 @@ S["cb_rosy_after_op"] = [
 	iff("op_rosy_failed", [
 		say("bhatt", "Old bone, and it fought me. I finished the screws. It'll hold, Chief.", "calm", "open_hands", to="you"),
 	], [
-		say("bhatt", "Lined up, screw dead centre, plate flat. She hummed the whole way through. In tune.", "happy", "open_hands", to="you"),
+		say("bhatt", "Lined up, screw dead centre, plate flat. She hummed the whole way through. In tune. Annoyingly.", "happy", "open_hands", to="you"),
 	]),
 	say("rosy", "Is it done? I heard you counting. You count well. Most people rush.", "tired", head="tilt", to="you"),
 	choose(
@@ -1626,7 +1626,7 @@ S["cb_rosy_after_op"] = [
 
 # --- Gurdeep Sandhu: spleen, lorry on the ghat
 S["cb_gurdeep_arrive"] = [
-	say("gurdeep", "Doctor. I walked in. That's good, yes? A man who walks in can't be too bad.", "worried", "open_hands", to="you"),
+	say("gurdeep", "Doctor. I walked in. That's good, haan? A man who walks in can't be too bad.", "worried", "open_hands", to="you"),
 	say("priya", "Forty-five. His lorry rolled at the top of the ghat. The steering wheel hit him under the left ribs. Pressure's ninety-five and falling. He's pale and sweating.", "worried", "point", to="you"),
 	say("gurdeep", "Eighteen tonnes of onions on the road. The village is collecting them. Somebody should tell my company.", "tired", "shrug"),
 	choose(
@@ -1653,7 +1653,7 @@ S["cb_gurdeep_after"] = [
 			say("gurdeep", "Fix it. Okay. I trust you. I've no choice, but I trust you.", "worried", "shrug"),
 		]),
 	),
-	say("priya", "Theatre 1 is open. Dr. Iyer's scrubbing. Blood's on its way down.", "focused", "point"),
+	say("priya", "Theatre 1's open. Dr. Iyer's scrubbing. Blood's on its way down.", "focused", "point"),
 ]
 S["cb_gurdeep_ready"] = [
 	say("gurdeep", "Doctor, if something happens, my brother has the lorry papers. And the onion money. Tell him.", "worried", "open_hands", to="you"),
@@ -1717,13 +1717,13 @@ S["cb_anwar_after"] = [
 ]
 S["cb_anwar_ready"] = [
 	say("anwar", "Young lady. Your stitches. Small and even, yes? Like a good suit.", "calm", "wag", to="neha"),
-	say("neha", "Small and even, Mr. Hussain. I promise. The Chief does the stitching.", "happy", head="nod", to="anwar"),
+	say("neha", "Small and even, Mr. Hussain. Promise. The Chief does the stitching, so blame them.", "happy", head="nod", to="anwar"),
 	choose(
 		opt("Promise", "Small, even, and strong enough for that cough.", trust={"anwar": 2}, then=[
 			say("anwar", "Strong enough for my cough. That's a big promise. I accept.", "happy", "chest"),
 		]),
 		opt("Joke", "If you don't like the seam, you can take it in yourself.", trust={"anwar": 1}, then=[
-			say("anwar", "Take it in. At my age. I'll let it out instead. More biryani.", "happy", "shrug"),
+			say("anwar", "Take it in? At my age? I'll let it out instead. More biryani.", "happy", "shrug"),
 		]),
 	),
 ]
@@ -1746,15 +1746,15 @@ S["cb_anwar_after_op"] = [
 
 # --- Kavita Bhave: gallbladder, two aspirin this morning
 S["cb_kavita_arrive"] = [
-	say("kavita", "Ticket? No, sorry. Habit. Doctor, I've got pain here and a son who won't look up from his phone.", "tired", "open_hands", to="you"),
+	say("kavita", "Ticket? No, sorry. Habit. Doctor, I've got pain here, and a son who won't look up from his phone.", "tired", "open_hands", to="you"),
 	say("priya", "Forty-four, bus conductor on the forty-two. Pain under the right ribs since her night shift, shivering since four. She came in on her own bus.", "calm", "point", to="you"),
-	say("kavita", "The driver didn't charge me. First time in eleven years. I knew it was serious.", "worried", "shrug"),
+	say("kavita", "The driver didn't charge me. First time in eleven years. That's how I knew it was serious.", "worried", "shrug"),
 	choose(
 		opt("Warm", "Let's make the free ride worth it. Tell me about the pain.", trust={"kavita": 3}, then=[
 			say("kavita", "Worth it. I like that. Okay. Ask.", "happy", head="nod"),
 		]),
 		opt("Brisk", "Lie back. Questions first, then we'll see.", then=[
-			say("kavita", "Questions. Fine. I ask questions all night. 'Where to?' 'Change?'", "calm", "shrug"),
+			say("kavita", "Questions. Fine. I ask questions all night. Where to? Change?", "calm", "shrug"),
 		]),
 	),
 ]
@@ -1773,14 +1773,14 @@ S["cb_kavita_after"] = [
 			say("kavita", "Less vada pav. You're a cruel person, doctor.", "angry", "fold_arms"),
 		]),
 	),
-	say("priya", "Theatre 2 at two. Her son's asked for the wi-fi password. I've said no.", "happy", "point"),
+	say("priya", "Theatre 2 at two. Her son's asked for the wi-fi password. Twice. I've said no. Twice.", "happy", "point"),
 ]
 S["cb_kavita_ready"] = [
 	say("kavita", "How long will it take? The forty-two does the round trip in fifty minutes.", "focused", head="tilt", to="you"),
 	say("tom", "We're slower than the forty-two. But we stop at every stop, and nobody falls off.", "happy", "shrug", to="kavita"),
 	choose(
 		opt("Honest", "About an hour. Your son will see you when you wake up.", trust={"kavita": 2}, then=[
-			say("kavita", "An hour. Tell him to look up from his phone when I come out. Once.", "calm", head="nod"),
+			say("kavita", "An hour. Tell him to look up from his phone when I come out. Once. That's all I ask.", "calm", head="nod"),
 		]),
 		opt("Joke", "About ten minutes longer than the forty-two. No tickets needed.", trust={"kavita": 1}, then=[
 			say("kavita", "No tickets. Best ride I'll ever get.", "happy", "chest"),
@@ -1810,26 +1810,26 @@ S["cb_kavita_after_op"] = [
 # last line (ChiefDays.EVENTS).
 
 S["monsoon_rota_arrive"] = [
-	iff("rounds_a", [say("priya", "Half the night shift is stuck behind the flooded underpass, Chief. One of them rang from a rickshaw floating past the post office.", "tired", "open_hands", to="you")]),
+	iff("rounds_a", [say("priya", "Half the night shift's stuck behind the flooded underpass, Chief. One of them rang from a rickshaw floating past the post office.", "tired", "open_hands", to="you")]),
 	iff("rounds_b", [say("priya", "The rain's taken out the road from the nurses' hostel. Three can't get in. One swam. Don't tell Grace.", "tired", "shrug", to="you")]),
 	iff("rounds_c", [say("priya", "Two off with fever, two stuck at home with water in the kitchen. Rota, Chief, and quickly.", "worried", "hold", to="you")]),
 	say("priya", "Every bed needs a name before eight. The rain doesn't care.", "focused", "point", to="you"),
 ]
 S["monsoon_triage_arrive"] = [
 	iff("rounds_a", [say("priya", "A bus aquaplaned into a lorry on the highway. The rain's so heavy the ambulances can't see the road.", "worried", "open_hands", to="you")]),
-	iff("rounds_b", [say("priya", "A pile-up under the flyover. Six vehicles. The water was up to the wheels and nobody slowed down.", "worried", "point", to="you")]),
+	iff("rounds_b", [say("priya", "A pile-up under the flyover. Six vehicles. The water was up to the wheels and nobody slowed down. Of course.", "worried", "point", to="you")]),
 	iff("rounds_c", [say("priya", "The ghat road again. A landslide in front of a bus, and a line of bikes behind it.", "worried", "open_hands", to="you")]),
-	say("priya", "They're soaked and cold, and cold hides shock. Red now, yellow soon, green walks, black beyond help. Tag them, Chief.", "focused", "point", to="you"),
+	say("priya", "They're soaked and cold, and cold hides shock. Red now, yellow soon, green walks, black is beyond help. Tag them, Chief.", "focused", "point", to="you"),
 ]
 S["festival_rota_arrive"] = [
 	iff("rounds_a", [say("priya", "Half the nurses are on festival leave, Chief. The other half want to be. Rota.", "tired", "open_hands", to="you")]),
-	iff("rounds_b", [say("priya", "Two of the regulars are at their villages, one's at her sister's wedding, and the agency is charging festival rates. Rota, Chief.", "tired", "shrug", to="you")]),
-	iff("rounds_c", [say("priya", "Three nurses on leave, two who ate the canteen's festival sweets and regret it. Rota, Chief.", "tired", "fold_arms", to="you")]),
-	say("priya", "Every bed needs a name before eight. Then I'm going to see the fireworks. From the window.", "calm", "point", to="you"),
+	iff("rounds_b", [say("priya", "Two of the regulars are in their villages, one's at her sister's wedding, and the agency is charging festival rates. Rota, Chief.", "tired", "shrug", to="you")]),
+	iff("rounds_c", [say("priya", "Three nurses on leave, and two who ate the canteen's festival sweets and regret it. Rota, Chief.", "tired", "fold_arms", to="you")]),
+	say("priya", "Every bed needs a name before eight. Then I'm going to see the fireworks. From the window. Living the dream.", "calm", "point", to="you"),
 ]
 S["festival_triage_arrive"] = [
 	iff("rounds_a", [say("priya", "The festival grounds, Chief. A firework stall went up, and the crowd ran into the stage. The stage fell.", "worried", "open_hands", to="you")]),
-	iff("rounds_b", [say("priya", "A crush at the festival gate. Too many people, one gate, and a firework somebody let off to make them hurry.", "worried", "point", to="you")]),
+	iff("rounds_b", [say("priya", "A crush at the festival gate. Too many people, one gate, and a firework somebody let off to make them hurry. Genius.", "worried", "point", to="you")]),
 	iff("rounds_c", [say("priya", "The lighting tower at the festival came down in the wind. Then the firework stall caught. Everybody's coming here.", "worried", "open_hands", to="you")]),
 	say("priya", "Burns, crushes, and a lot of shouting. The loud ones aren't the sick ones. Tag them, Chief.", "focused", "point", to="you"),
 ]
@@ -1838,21 +1838,21 @@ S["festival_triage_after"] = [
 		say("priya", "One you tagged to wait went grey on the trolley, Chief. Dr. Iyer pulled them forward. They'll live. Just.", "worried", "hold", to="you"),
 	], [
 		iff("festival_triage_right", [
-			say("priya", "Every tag right. The burns unit says it's the best-sorted festival they've ever had. They've had a lot.", "happy", head="nod", to="you"),
+			say("priya", "Every tag right. The burns unit says it's the best-sorted festival they've ever had. And they've had a lot.", "happy", head="nod", to="you"),
 		], [
-			say("priya", "Sent in. Dr. Iyer will check the tags again inside. One or two were hopeful.", "calm", "shrug", to="you"),
+			say("priya", "Sent in. Dr. Iyer will check the tags again inside. One or two were... hopeful.", "calm", "shrug", to="you"),
 		]),
 	]),
 ]
 S["outbreak_rota_arrive"] = [
-	iff("rounds_a", [say("priya", "The stomach bug's taken two more nurses, Chief. Lata's on the bathroom floor at home, phoning in her apologies.", "tired", "open_hands", to="you")]),
+	iff("rounds_a", [say("priya", "The stomach bug's taken two more nurses, Chief. Lata's on her bathroom floor at home, phoning in her apologies.", "tired", "open_hands", to="you")]),
 	iff("rounds_b", [say("priya", "Six new admissions with the bug overnight, and three of our nurses with it too. The water's still bad in the old town.", "worried", "hold", to="you")]),
 	iff("rounds_c", [say("priya", "Neha's on loan from theatre. The list's cancelled, because half the anaesthetists have the bug.", "tired", "shrug", to="you")]),
-	say("priya", "The rule that matters this week: the bug never shares a nurse with anyone who can't fight it. Every bed needs a name by eight.", "focused", "wag", to="you"),
+	say("priya", "The rule that matters this week. The bug never shares a nurse with anyone who can't fight it. Every bed needs a name by eight.", "focused", "wag", to="you"),
 ]
 S["outbreak_rota_after"] = [
 	iff("outbreak_rota_gap", [
-		say("priya", "Somebody's got nobody tonight, Chief. In an outbreak. I'll stay and cover them myself.", "tired", "fold_arms", to="you"),
+		say("priya", "Somebody's got nobody tonight, Chief. In an outbreak. So I'll stay and cover them myself.", "tired", "fold_arms", to="you"),
 	], [
 		iff("outbreak_rota_right", [
 			say("priya", "That holds. The bug stays on one side of the floor, and the fragile ones stay on the other. I'll sign it.", "happy", head="nod", to="you"),
@@ -1866,37 +1866,37 @@ S["outbreak_rota_after"] = [
 ]
 S["outbreak_triage_arrive"] = [
 	say("priya", "The bug's in every other bed, Chief, and now the highway's sent a bus crash. They don't take turns.", "worried", "open_hands", to="you"),
-	say("priya", "Red now, yellow soon, green walks, black beyond help. Tag them, and wash your hands after.", "focused", "point", to="you"),
+	say("priya", "Red now, yellow soon, green walks, black is beyond help. Tag them, and wash your hands after.", "focused", "point", to="you"),
 ]
 
 # ======================================================== Every fifth day: the board
 S["board_report"] = [
-	say("rajan", "Chief. Sit, please. The board has your numbers: staff, money, and what the town thinks of us. Mr. Malhotra has made a chart.", "calm", "open_hands", to="you"),
+	say("rajan", "Chief. Sit, please. The board has your numbers. Staff, money, and what the town thinks of us. Mr. Malhotra has made a chart.", "calm", "open_hands", to="you"),
 	say("malhotra", "Three bars. I chose the colours myself.", "happy", "point"),
 	iff("board_first", [
 		say("rajan", "Your first report. I was a judge for nineteen years. First reports tell you less than people think, and more than they'd like.", "calm", "wag", to="you"),
 	]),
 	iff("board_strong", [
 		say("rajan", "Strong. The nurses are staying, the money adds up, and the town trusts us with its relatives. I'll keep this one.", "happy", head="nod", to="you"),
-		say("malhotra", "Even the money bar is green. I've never had a green money bar. I may frame it.", "happy", "clap"),
+		say("malhotra", "Even the money bar is green! I've never had a green money bar. I may frame it.", "happy", "clap"),
 		{"xp": 200, "trust": {"rajan": 3}},
 	], [
 		iff("board_poor", [
 			say("rajan", "Poor. I won't decorate it.", "focused", "fold_arms", to="you"),
 			iff("staff_low", [say("rajan", "Nurses are leaving. A hospital without nurses is an expensive car park.", "focused", "point", to="you")]),
 			iff("money_low", [say("rajan", "The money doesn't add up. Mr. Malhotra has stopped sleeping.", "focused", "shrug", to="you")]),
-			iff("public_low", [say("rajan", "And the town is losing faith. The newspaper has a weekly column about our waiting times. It's very well written.", "focused", "open_hands", to="you")]),
+			iff("public_low", [say("rajan", "And the town's losing faith. The newspaper has a weekly column about our waiting times. It's very well written.", "focused", "open_hands", to="you")]),
 			iff("board_warned_before", [
-				say("rajan", "This is the second poor report running. Dr. Kapoor has offered CarePlus 'management support'. Some of the board would like to accept.", "angry", "wag", to="you"),
+				say("rajan", "This is the second poor report running. Dr. Kapoor has offered CarePlus management support. Some of the board would like to accept.", "angry", "wag", to="you"),
 			], [
 				say("rajan", "One poor report is a warning. Two is a pattern. Boards act on patterns.", "calm", "wag", to="you"),
 			]),
 			{"trust": {"rajan": -2}},
 		], [
-			say("rajan", "Mixed. Some of it is good. Some of it will be a problem by the next report.", "calm", "shrug", to="you"),
+			say("rajan", "Mixed. Some of it's good. Some of it will be a problem by the next report.", "calm", "shrug", to="you"),
 			iff("staff_low", [say("rajan", "Nurses are leaving. A hospital without nurses is an expensive car park.", "focused", "point", to="you")]),
 			iff("money_low", [say("rajan", "The money doesn't add up. Mr. Malhotra has stopped sleeping.", "focused", "shrug", to="you")]),
-			iff("public_low", [say("rajan", "And the town is losing faith. The newspaper has a weekly column about our waiting times. It's very well written.", "focused", "open_hands", to="you")]),
+			iff("public_low", [say("rajan", "And the town's losing faith. The newspaper has a weekly column about our waiting times. It's very well written.", "focused", "open_hands", to="you")]),
 			{"xp": 80},
 		]),
 	]),
