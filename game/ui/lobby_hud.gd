@@ -39,6 +39,9 @@ var _today_dot: Panel
 var _toast: PanelContainer
 var _toast_label: Label
 var _toast_time := 0.0
+## The stretch of the screen toasts are centred in, as shares of its width:
+## all of it, or only the left while the patient card covers the right.
+var _toast_span := Vector2(0.0, 1.0)
 var _portrait_rig: AvatarRig
 var _shown_level := -1
 var _xp_tween: Tween
@@ -445,10 +448,45 @@ func today_dot() -> bool:
 ## Shows a short message under the clock for a few seconds.
 func toast(text: String) -> void:
 	_toast_label.text = text
+	_fit_toast()
 	if not _toast.visible:
 		_toast.visible = true
 		UiKit.pop_in(_toast, 0.22)
 	_toast_time = 3.0
+
+
+## Keeps toasts within part of the screen (shares of its width), so nothing
+## is hidden behind the patient card; set_toast_span(0, 1) for all of it.
+func set_toast_span(left: float, right: float) -> void:
+	_toast_span = Vector2(clampf(left, 0.0, 1.0), clampf(right, 0.0, 1.0))
+	_fit_toast()
+
+
+## Centres the toast in its stretch of the screen, its words wrapped to fit.
+func _fit_toast() -> void:
+	if _toast == null or not is_inside_tree():
+		return
+	var middle := (_toast_span.x + _toast_span.y) * 0.5
+	_toast.anchor_left = middle
+	_toast.anchor_right = middle
+	var room := (_toast_span.y - _toast_span.x) * get_viewport_rect().size.x - UiKit.px(32 + 28)
+	var font := _toast_label.get_theme_font("font")
+	var wide := font.get_string_size(_toast_label.text, HORIZONTAL_ALIGNMENT_LEFT, -1,
+		_toast_label.get_theme_font_size("font_size")).x
+	if wide > room:
+		_toast_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		_toast_label.custom_minimum_size.x = maxf(room, UiKit.px(120))
+	else:
+		_toast_label.autowrap_mode = TextServer.AUTOWRAP_OFF
+		_toast_label.custom_minimum_size.x = 0.0
+	# No width of its own: it grows from the middle to fit its words.
+	_toast.offset_left = 0.0
+	_toast.offset_right = 0.0
+
+
+## The toast's rectangle on screen, for tests.
+func toast_rect() -> Rect2:
+	return _toast.get_global_rect()
 
 
 func refresh_profile() -> void:

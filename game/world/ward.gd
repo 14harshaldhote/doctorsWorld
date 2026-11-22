@@ -236,6 +236,8 @@ var heading := ""
 ## Story beats reached late today, and casualty's XP today.
 var late_beats := 0
 var casualty_xp := 0
+## The patient's answer being read aloud (Speech's line number), or 0.
+var _answer_line := 0
 var _clock_carry := 0.0
 var _paged_at := -1
 var _toasts: Array[Dictionary] = []
@@ -2093,6 +2095,12 @@ func update(delta: float) -> void:
 			day_finished.emit()
 			return
 	_tick_shift(delta)
+	if _answer_line != 0:
+		# A recorded answer keeps its own clock (the story's lines tick theirs).
+		if Speech.speaking(_answer_line):
+			Speech.tick(delta)
+		else:
+			_answer_line = 0
 	_settle_crowd()
 	story.update(delta)
 	_update_routes(delta)
@@ -2327,6 +2335,8 @@ func _on_shift_event(event: Dictionary) -> void:
 	var here := place == "casualty"
 	match str(event.get("kind", "")):
 		"arrived":
+			if patient != null and not patient.known_id.is_empty():
+				ShiftDay.note_return(profile, patient.known_id)
 			var red := patient != null and patient.triage() == "red"
 			if here or red:
 				_queue_toast(text, 2 if red else 1, red)
@@ -2342,6 +2352,15 @@ func _on_shift_event(event: Dictionary) -> void:
 		"left":
 			if here:
 				_queue_toast(text, 1, false)
+		"visit":
+			# A cured patient from an earlier day, with sweets: casualty's
+			# thanks, heard about anywhere.
+			var gift := int(event.get("xp", 0))
+			profile.total_xp += gift
+			casualty_xp += gift
+			hud.refresh_profile()
+			ShiftDay.note_return(profile, str((event.get("entry", {}) as Dictionary).get("id", "")))
+			_queue_toast("%s +%d XP." % [text, gift], 1, false)
 		"diverted":
 			var hour := shift.minute / 60
 			if here and hour != _diverted_hour:
@@ -2534,9 +2553,15 @@ func _open_panel() -> void:
 	panel.acted.connect(_on_panel)
 	_layer.add_child(panel)
 	_layer.move_child(panel, overlay.get_index())
+	# News while the card is up shows beside it, not behind it.
+	var screen := get_viewport().get_visible_rect().size.x
+	hud.set_toast_span(0.0, 1.0 - (-panel.sheet.offset_left + UiKit.px(24)) / maxf(1.0, screen))
 
 
 func _close_panel() -> void:
+	_stop_answer()
+	if hud != null:
+		hud.set_toast_span(0.0, 1.0)
 	if panel != null:
 		_layer.remove_child(panel)
 		panel.queue_free()
@@ -2553,8 +2578,9 @@ func _on_panel(kind: String, value: String) -> void:
 	match kind:
 		"ask":
 			if value in ShiftPatient.QUESTIONS and not seeing.asked.has(value):
-				shift.ask(seeing, value)
+				var answer := shift.ask(seeing, value)
 				_spend(ShiftSim.ASK_MINUTES)
+				_speak_answer(answer)
 		"exam":
 			if not seeing.examined:
 				shift.examine(seeing)
@@ -2567,7 +2593,7 @@ func _on_panel(kind: String, value: String) -> void:
 			if result.is_empty():
 				return
 			casualty.held = seeing.id
-			var xp := ShiftDay.record(profile, result)
+			var xp := ShiftDay.record(profile, result, seeing)
 			casualty_xp += xp
 			hud.refresh_profile()
 			Sfx.play(self, "chime" if bool(result["right"]) else "buzz", -6.0)
@@ -2576,6 +2602,30 @@ func _on_panel(kind: String, value: String) -> void:
 		"close", "done":
 			_close_panel()
 			_back_to_walking()
+
+
+## A patient's answer, read aloud in their own recorded voice (the voice of
+## whoever answers for them). The patient's mouth moves on each word when
+## the answer is theirs; a parent or workmate is standing out of view.
+func _speak_answer(text: String) -> void:
+	_stop_answer()
+	if seeing == null or seeing.voice.is_empty() or text.strip_edges().is_empty():
+		return
+	var rig: AvatarRig = casualty.rig_of(seeing) if seeing.speaker == "self" else null
+	_answer_line = Speech.say(text, seeing.voice, Callable(), func(_end: int) -> void:
+		if rig != null and is_instance_valid(rig):
+			rig.say_syllable("a", false))
+
+
+func _stop_answer() -> void:
+	if _answer_line != 0:
+		Speech.stop_line(_answer_line)
+		_answer_line = 0
+
+
+## The patient's answer being read aloud now, or 0 (for tests).
+func answer_line() -> int:
+	return _answer_line if Speech.speaking(_answer_line) else 0
 
 
 ## Work on a patient takes hospital minutes: the clock moves on and

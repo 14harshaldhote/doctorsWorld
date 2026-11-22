@@ -35,7 +35,7 @@ var rank_held := Rank.INTERN
 ## hospital's standing (see Standing).
 var counters := {}
 ## How the career stood when today began: {"day", "total_xp", "minutes",
-## "relationships", "flags", "skills", "rank", "counters"}. A day that is
+## "relationships", "flags", "skills", "rank", "counters", "patients"}. A day that is
 ## started again from its first beat (the game was closed halfway) goes
 ## back to it, so nothing is earned, promoted or decided twice.
 var morning := {}
@@ -45,10 +45,13 @@ var last_played := ""
 ## The doctor's phone: what has been read, answered and picked up (see
 ## PhoneBook). Not part of a day's snapshot: a message read stays read.
 var phone := {}
+## People the player has treated lately, so some can walk back in (see
+## ShiftDay.remember): a short list of plain records, newest last.
+var patients: Array = []
 
 const DAY_START := 7 * 60
 ## What a day keeps in the morning snapshot.
-const MORNING_KEYS := ["total_xp", "minutes", "relationships", "flags", "skills", "rank", "counters"]
+const MORNING_KEYS := ["total_xp", "minutes", "relationships", "flags", "skills", "rank", "counters", "patients"]
 
 
 ## Trims spaces, collapses runs of spaces and cuts overly long names.
@@ -183,6 +186,7 @@ func to_dict() -> Dictionary:
 		"morning": morning.duplicate(true),
 		"last_played": last_played,
 		"phone": phone.duplicate(true),
+		"patients": patients.duplicate(true),
 	}
 
 
@@ -243,6 +247,7 @@ static func from_dict(data: Variant) -> PlayerProfile:
 		profile.last_played = played
 	if data.has("phone"):
 		profile.phone = PhoneBook.clean(data["phone"])
+	profile.patients = ShiftDay.clean_patients(data.get("patients"))
 	return profile
 
 
@@ -264,6 +269,7 @@ func begin_day() -> bool:
 		skills = back.skills
 		rank_held = back.rank_held
 		counters = back.counters
+		patients = back.patients
 		return true
 	morning = {"day": day}
 	var now := to_dict()

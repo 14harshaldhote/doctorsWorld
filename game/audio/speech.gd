@@ -392,6 +392,11 @@ static func voice_for(who: String) -> Dictionary:
 		return _picked[who]
 	var cast := StoryBook.cast()
 	var entry: Dictionary = cast.get(who, {})
+	# A made-up patient's voice (PatientVoices) reads like a cast member of
+	# that sex and voice, after the whole cast.
+	var patient := entry.is_empty() and PatientVoices.has(who)
+	if patient:
+		entry = PatientVoices.cast_entry(who)
 	var higher := _speaks_higher(entry)
 	var pool := _pool(higher)
 	if pool.is_empty():
@@ -403,6 +408,8 @@ static func voice_for(who: String) -> Dictionary:
 			break
 		if _speaks_higher(cast[other]) == higher:
 			order += 1
+	if patient:
+		order += PatientVoices.ids().find(who)
 	var voice: Dictionary = pool[order % pool.size()]
 	var level := float(entry.get("voice", 1.0))
 	var pitch: float

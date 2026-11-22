@@ -71,14 +71,44 @@
 				"effect": "worse",
 				"why": "Watching without treatment lets it get worse. Antibiotics and the surgeons, now."
 			}
-		]
+		],
+		"weight": 6,
+		"from_day": 4,
+		"plain": "the appendix",
+		"late": {
+			"chance": 0.3,
+			"answers": {
+				"pain": "It was low on the right. Now it's everywhere, and I can't move without it stabbing.",
+				"when": "Two days now. I thought it was gas, so I had Eno. Four times."
+			},
+			"exam": "Tender all over the belly, worst low on the right. The belly is tight and guarded. Coughing hurts.",
+			"results": {
+				"bloods": "White count 21,400. CRP very high.",
+				"usg": "A burst appendix, with fluid in the pelvis."
+			},
+			"start": [
+				48,
+				58
+			],
+			"worsens": 9,
+			"vitals": {
+				"temp": [
+					38.6,
+					39.2
+				],
+				"pulse": [
+					112,
+					124
+				]
+			}
+		}
 	},
 	"dengue": {
 		"name": "Dengue with warning signs",
 		"board": "Fever for four days, now vomiting",
 		"sex": "",
 		"age": [
-			10,
+			12,
 			60
 		],
 		"triage": "yellow",
@@ -145,7 +175,10 @@
 				"effect": "back",
 				"why": "A falling fever on day four is the most dangerous time in dengue, not the end of it."
 			}
-		]
+		],
+		"weight": 7,
+		"from_day": 4,
+		"plain": "the dengue"
 	},
 	"renal_colic": {
 		"name": "Kidney stone",
@@ -220,7 +253,10 @@
 				"effect": "worse",
 				"why": "A week in bed for a small stone helps nobody, and blocks a bed someone else needs."
 			}
-		]
+		],
+		"weight": 8,
+		"from_day": 4,
+		"plain": "the kidney stone"
 	},
 	"asthma": {
 		"name": "Severe asthma attack",
@@ -291,7 +327,10 @@
 				"effect": "back",
 				"why": "Oxygen in the low nineties and broken sentences is a hospital asthma attack, not one for home."
 			}
-		]
+		],
+		"weight": 5,
+		"from_day": 4,
+		"plain": "the asthma attack"
 	},
 	"heart_attack": {
 		"name": "Heart attack",
@@ -364,7 +403,10 @@
 				"effect": "harm",
 				"why": "This needs the cath lab, not a ward bed and a sleeping tablet."
 			}
-		]
+		],
+		"weight": 5,
+		"from_day": 4,
+		"plain": "the heart attack"
 	},
 	"dka": {
 		"name": "Diabetic ketoacidosis",
@@ -439,7 +481,35 @@
 				"effect": "worse",
 				"why": "Bicarbonate isn't the treatment for DKA. Fluids and insulin clear the acid safely."
 			}
-		]
+		],
+		"weight": 3,
+		"from_day": 4,
+		"plain": "the sugar trouble",
+		"late": {
+			"chance": 0.3,
+			"answers": {
+				"when": "Since two days. I had a fever and didn't eat, so I didn't take my insulin. Today I can't stay awake."
+			},
+			"exam": "Very dry mouth. Deep, sighing breaths. The breath smells fruity. Drowsy, only answers when shaken.",
+			"results": {
+				"gas": "Severely acidic: pH 6.98, bicarbonate 4. Ketones very high. Potassium 5.9."
+			},
+			"start": [
+				58,
+				66
+			],
+			"worsens": 11,
+			"vitals": {
+				"pulse": [
+					124,
+					136
+				],
+				"bp": [
+					92,
+					102
+				]
+			}
+		}
 	},
 	"gastro": {
 		"name": "Food poisoning",
@@ -509,7 +579,10 @@
 				"effect": "back",
 				"why": "They're dry and still vomiting. Get fluids in before they go."
 			}
-		]
+		],
+		"weight": 10,
+		"from_day": 4,
+		"plain": "the food poisoning"
 	},
 	"viper_bite": {
 		"name": "Viper bite",
@@ -582,7 +655,15 @@
 				"effect": "back",
 				"why": "The gums are bleeding and the clotting test failed. This is not a dry bite."
 			}
-		]
+		],
+		"with": "cousin",
+		"jobs": [
+			"farmer",
+			"farm labourer"
+		],
+		"weight": 3,
+		"from_day": 4,
+		"plain": "the snake bite"
 	},
 	"wrist_fracture": {
 		"name": "Broken wrist",
@@ -654,7 +735,11 @@
 				"effect": "harm",
 				"why": "Rubbing a broken bone moves it and hurts. It needs lining up and holding still."
 			}
-		]
+		],
+		"with": "daughter-in-law",
+		"weight": 7,
+		"from_day": 4,
+		"plain": "the broken wrist"
 	},
 	"malaria": {
 		"name": "Falciparum malaria",
@@ -727,7 +812,35 @@
 				"effect": "worse",
 				"why": "Falciparum doesn't settle by itself. Without artesunate it can reach the brain."
 			}
-		]
+		],
+		"weight": 5,
+		"from_day": 4,
+		"plain": "the malaria",
+		"late": {
+			"chance": 0.3,
+			"answers": {
+				"when": "Six days. I came back from a construction site in Odisha last week. Today my family says I'm talking nonsense."
+			},
+			"exam": "Deeply yellow eyes. Drowsy, muddled about the day. The spleen can be felt under the left ribs.",
+			"results": {
+				"bloods": "Parasites on six in a hundred red cells. Platelets 40,000. Bilirubin 7. Sugar 72, on the low side."
+			},
+			"start": [
+				50,
+				60
+			],
+			"worsens": 8,
+			"vitals": {
+				"pulse": [
+					116,
+					126
+				],
+				"bp": [
+					96,
+					106
+				]
+			}
+		}
 	},
 	"brain_bleed": {
 		"name": "Bleed around the brain",
@@ -799,7 +912,10 @@
 				"effect": "worse",
 				"why": "A bleed like this can bleed again within hours. It needs neurosurgery now, not a morning review."
 			}
-		]
+		],
+		"weight": 3,
+		"from_day": 4,
+		"plain": ""
 	},
 	"ectopic": {
 		"name": "Burst ectopic pregnancy",
@@ -874,7 +990,10 @@
 				"effect": "worse",
 				"why": "Shoulder pain and fainting mean blood in the belly. It needs theatre, not observation."
 			}
-		]
+		],
+		"weight": 3,
+		"from_day": 4,
+		"plain": ""
 	},
 	"pneumonia": {
 		"name": "Pneumonia",
@@ -947,7 +1066,11 @@
 				"effect": "worse",
 				"why": "Steroids don't treat a bacterial pneumonia. Antibiotics do."
 			}
-		]
+		],
+		"with": "son",
+		"weight": 6,
+		"from_day": 4,
+		"plain": "the chest infection"
 	},
 	"chest_wall": {
 		"name": "Strained chest muscle",
@@ -1019,6 +1142,3512 @@
 				"effect": "lucky",
 				"why": "Young people do have heart attacks. Chest pain gets an ECG first, every time."
 			}
-		]
+		],
+		"weight": 7,
+		"from_day": 4,
+		"plain": "the chest pain that wasn't the heart"
+	},
+	"typhoid": {
+		"name": "Typhoid fever",
+		"board": "Fever for a week, tummy ache",
+		"sex": "",
+		"age": [
+			14,
+			45
+		],
+		"triage": "yellow",
+		"start": [
+			20,
+			30
+		],
+		"worsens": 3,
+		"vitals": {
+			"pulse": [
+				92,
+				100
+			],
+			"bp": [
+				106,
+				118
+			],
+			"temp": [
+				38.6,
+				39.4
+			],
+			"spo2": [
+				97,
+				99
+			],
+			"breaths": [
+				16,
+				20
+			]
+		},
+		"answers": {
+			"pain": "Fever every day, a little higher each evening. Headache, a dull ache in the tummy. I feel like a wet towel.",
+			"when": "A week now. I ate pani puri at the station on the way back from my village. Worth it at the time.",
+			"other": "No cough. No rash. I'm constipated, which my mother says is the real problem."
+		},
+		"exam": "Coated tongue. Pulse slower than the fever says it should be. Tender all over the belly, worst on the right, low down.",
+		"results": {
+			"bloods": "White count low-normal, 4,100. Liver enzymes a little raised. Typhoid IgM test positive, blood culture sent.",
+			"rapid": "Malaria and dengue tests negative."
+		},
+		"key": [
+			"bloods"
+		],
+		"go": "home",
+		"plans": [
+			{
+				"text": "Azithromycin tablets, paracetamol and fluids, home, and back in three days with the culture report",
+				"why": "A week of rising fever, a slow pulse, a coated tongue and a positive typhoid test, and they can eat and drink. Azithromycin by mouth treats it at home.",
+				"right": true
+			},
+			{
+				"text": "Ciprofloxacin tablets for five days",
+				"why": "Most typhoid in India no longer responds to ciprofloxacin. The fever just carries on.",
+				"effect": "back"
+			},
+			{
+				"text": "Steroids to bring the fever down",
+				"why": "Steroids hide the fever and don't treat the infection. They can make a gut ulcer bleed or burst.",
+				"effect": "harm"
+			},
+			{
+				"text": "Artesunate for malaria, just in case",
+				"why": "The malaria test is negative. Treating the wrong disease leaves typhoid untouched.",
+				"effect": "worse"
+			}
+		],
+		"weight": 5,
+		"from_day": 6,
+		"plain": "the typhoid"
+	},
+	"leptospirosis": {
+		"name": "Leptospirosis",
+		"board": "Fever, aching legs after the floods",
+		"sex": "",
+		"age": [
+			18,
+			60
+		],
+		"triage": "yellow",
+		"start": [
+			30,
+			40
+		],
+		"worsens": 6,
+		"vitals": {
+			"pulse": [
+				104,
+				116
+			],
+			"bp": [
+				100,
+				112
+			],
+			"temp": [
+				38.6,
+				39.4
+			],
+			"spo2": [
+				95,
+				97
+			],
+			"breaths": [
+				20,
+				24
+			]
+		},
+		"answers": {
+			"pain": "High fever, and my calves ache like I've climbed a mountain. My eyes went red yesterday.",
+			"when": "Four days. Last week I walked home through knee-deep flood water. The whole road was a river.",
+			"other": "I've hardly passed urine since morning. And the little I did was dark, like strong tea."
+		},
+		"exam": "Red eyes without any discharge. Very tender calf muscles. A yellow tinge to the eyes. Dry tongue.",
+		"results": {
+			"bloods": "Creatinine 2.6, the kidneys are struggling. Platelets 64,000. Bilirubin raised. Leptospira IgM positive.",
+			"rapid": "Malaria and dengue tests negative.",
+			"urine": "Protein and a little blood in the urine."
+		},
+		"key": [
+			"bloods"
+		],
+		"go": "admit",
+		"plans": [
+			{
+				"text": "Admit, IV penicillin or ceftriaxone, careful fluids, and measure every drop of urine",
+				"why": "Flood water, aching calves, red eyes, jaundice and failing kidneys: severe leptospirosis. It needs antibiotics through the drip and close watching of the kidneys.",
+				"right": true
+			},
+			{
+				"text": "Diclofenac for the leg pain, and home",
+				"why": "Diclofenac is hard on kidneys, and these kidneys are already failing. And this fever needs a bed.",
+				"effect": "harm"
+			},
+			{
+				"text": "Paracetamol and home, it's viral fever",
+				"why": "In the monsoon, fever with aching calves after flood water is leptospirosis until proven otherwise. It kills by kidney and lung failure.",
+				"effect": "back"
+			},
+			{
+				"text": "Treat it as dengue: fluids only, no antibiotics",
+				"why": "The dengue test is negative and leptospira is positive. Without antibiotics it gets worse.",
+				"effect": "worse"
+			}
+		],
+		"jobs": [
+			"delivery rider",
+			"sanitation worker",
+			"vegetable seller",
+			"farmer",
+			"security guard"
+		],
+		"weight": 3,
+		"from_day": 8,
+		"plain": "the fever from the flood water",
+		"late": {
+			"chance": 0.3,
+			"answers": {
+				"when": "Six days. Last week I walked home through knee-deep flood water. Since yesterday I'm breathless too."
+			},
+			"exam": "Deeply yellow eyes. Very tender calves. Crackles at the bottoms of both lungs. Drowsy.",
+			"results": {
+				"bloods": "Creatinine 4.1, the kidneys are failing. Platelets 31,000. Bilirubin 9. Leptospira IgM positive."
+			},
+			"start": [
+				50,
+				60
+			],
+			"worsens": 8,
+			"vitals": {
+				"spo2": [
+					91,
+					93
+				],
+				"breaths": [
+					26,
+					30
+				],
+				"bp": [
+					92,
+					102
+				]
+			}
+		}
+	},
+	"scrub_typhus": {
+		"name": "Scrub typhus",
+		"board": "Fever, a black scab nobody noticed",
+		"sex": "",
+		"age": [
+			18,
+			65
+		],
+		"triage": "yellow",
+		"start": [
+			25,
+			35
+		],
+		"worsens": 4,
+		"vitals": {
+			"pulse": [
+				100,
+				110
+			],
+			"bp": [
+				106,
+				118
+			],
+			"temp": [
+				38.8,
+				39.6
+			],
+			"spo2": [
+				95,
+				97
+			],
+			"breaths": [
+				18,
+				22
+			]
+		},
+		"answers": {
+			"pain": "Fever with a pounding headache. Every muscle hurts. Even my hair hurts, if that's possible.",
+			"when": "Six days. We were cutting grass and clearing bushes on the farm before that.",
+			"other": "There's a small black scab here, near my armpit. It doesn't hurt, so I ignored it."
+		},
+		"exam": "A painless black scab with a red rim in the right armpit. Swollen glands nearby. The liver edge can just be felt.",
+		"results": {
+			"bloods": "Platelets 88,000. Liver enzymes raised. Scrub typhus IgM positive.",
+			"rapid": "Malaria and dengue tests negative."
+		},
+		"key": [
+			"bloods"
+		],
+		"go": "admit",
+		"plans": [
+			{
+				"text": "Doxycycline, paracetamol and fluids, and admit to watch the liver and the lungs",
+				"why": "Fever after working in the bushes, a black scab and a positive test: scrub typhus. Doxycycline works within a day or two.",
+				"right": true
+			},
+			{
+				"text": "Ceftriaxone through the drip",
+				"why": "Ceftriaxone doesn't reach scrub typhus. The fever carries on, and it can spread to the lungs and brain.",
+				"effect": "worse"
+			},
+			{
+				"text": "Paracetamol and home, it's viral",
+				"why": "A black scab and fever after farm work is scrub typhus. Untreated, it can turn into lung and brain trouble.",
+				"effect": "back"
+			},
+			{
+				"text": "Steroids for the body ache",
+				"why": "Steroids don't treat an infection and can make this one worse.",
+				"effect": "harm"
+			}
+		],
+		"jobs": [
+			"farmer",
+			"gardener",
+			"forest guard",
+			"farm labourer",
+			"construction worker"
+		],
+		"weight": 2,
+		"from_day": 8,
+		"plain": "the scrub typhus",
+		"late": {
+			"chance": 0.3,
+			"answers": {
+				"when": "Nine days. We were cutting grass on the farm before that. Now I get breathless walking to the gate."
+			},
+			"exam": "A painless black scab with a red rim in the right armpit. Crackles in both lungs. Puffy around the eyes.",
+			"results": {
+				"bloods": "Platelets 52,000. Liver enzymes high, albumin low. Scrub typhus IgM positive."
+			},
+			"start": [
+				45,
+				55
+			],
+			"worsens": 6,
+			"vitals": {
+				"spo2": [
+					91,
+					93
+				],
+				"breaths": [
+					24,
+					28
+				],
+				"bp": [
+					96,
+					106
+				]
+			}
+		}
+	},
+	"tb": {
+		"name": "Pulmonary tuberculosis",
+		"board": "Cough for six weeks, losing weight",
+		"sex": "",
+		"age": [
+			20,
+			60
+		],
+		"triage": "green",
+		"start": [
+			15,
+			25
+		],
+		"worsens": 1,
+		"vitals": {
+			"pulse": [
+				96,
+				104
+			],
+			"bp": [
+				104,
+				116
+			],
+			"temp": [
+				37.6,
+				38.2
+			],
+			"spo2": [
+				94,
+				96
+			],
+			"breaths": [
+				18,
+				22
+			]
+		},
+		"answers": {
+			"pain": "This cough won't go. Six weeks. Sometimes there's a streak of blood in the phlegm. My shirts are getting loose.",
+			"when": "It started after Diwali. I took three courses of cough syrup from the chemist. Three different flavours.",
+			"other": "I sweat at night, the sheets get wet. A man in my room at the hostel had the same cough last year."
+		},
+		"exam": "Thin. A few crackles at the top of the right lung. Small glands in the neck.",
+		"results": {
+			"xray": "Patchy shadows and a cavity at the top of the right lung. Looks like TB.",
+			"bloods": "Haemoglobin 10.4. ESR high. HIV test negative."
+		},
+		"key": [
+			"xray"
+		],
+		"go": "tb_clinic",
+		"plans": [
+			{
+				"text": "A mask on, sputum sent for the TB gene test, and the TB clinic to start the four-drug treatment once it's confirmed",
+				"why": "Six weeks of cough, blood in the phlegm, night sweats, weight loss and a cavity on the X-ray: TB. Confirm it on sputum, then the free government treatment, and the people he lives with get checked.",
+				"right": true
+			},
+			{
+				"text": "Another week of cough syrup and home",
+				"why": "Cough syrup has failed three times. TB doesn't go with syrup, and he's coughing it onto everyone at the hostel.",
+				"effect": "back"
+			},
+			{
+				"text": "A week of levofloxacin to see if it settles",
+				"why": "A quinolone can damp TB down just enough to hide it, and teaches it resistance to one of the drugs we'll need later.",
+				"effect": "worse"
+			},
+			{
+				"text": "Steroids for the cough",
+				"why": "Steroids weaken the body's fight against TB and let it spread.",
+				"effect": "harm"
+			}
+		],
+		"weight": 2,
+		"from_day": 11,
+		"plain": "the cough"
+	},
+	"chikungunya": {
+		"name": "Chikungunya",
+		"board": "Fever, every joint aching",
+		"sex": "",
+		"age": [
+			16,
+			70
+		],
+		"triage": "green",
+		"start": [
+			15,
+			20
+		],
+		"worsens": 1,
+		"vitals": {
+			"pulse": [
+				96,
+				106
+			],
+			"bp": [
+				112,
+				126
+			],
+			"temp": [
+				38.6,
+				39.4
+			],
+			"spo2": [
+				97,
+				99
+			],
+			"breaths": [
+				16,
+				20
+			]
+		},
+		"answers": {
+			"pain": "Fever, and every joint hurts. My wrists, my ankles, my fingers. I couldn't open the toothpaste this morning.",
+			"when": "Two days. Half my colony is walking like old people this week.",
+			"other": "A rash came on my arms yesterday. No bleeding anywhere."
+		},
+		"exam": "Swollen, tender wrists and ankles. A faint red rash on the arms and chest. No bleeding spots.",
+		"results": {
+			"bloods": "Chikungunya IgM positive. Platelets normal. Kidneys normal.",
+			"rapid": "Dengue NS1 negative. Malaria negative."
+		},
+		"key": [
+			"rapid"
+		],
+		"go": "home",
+		"plans": [
+			{
+				"text": "Paracetamol, fluids and rest at home, and no ibuprofen-type painkillers until dengue is ruled out for sure",
+				"why": "Fever with very painful joints and a rash, in an outbreak: chikungunya. It's treated with rest, fluids and paracetamol. The joint pain can last weeks.",
+				"right": true
+			},
+			{
+				"text": "Steroids to take the joint pain away",
+				"why": "Steroids aren't used in the fever stage of chikungunya. They can make the joint trouble come back worse later.",
+				"effect": "harm"
+			},
+			{
+				"text": "A course of antibiotics",
+				"why": "Chikungunya is a virus. Antibiotics do nothing for it.",
+				"effect": "lucky"
+			},
+			{
+				"text": "Admit for a week of drips",
+				"why": "They can eat, drink and walk, slowly. A week in a ward bed helps nobody.",
+				"effect": "lucky"
+			}
+		],
+		"weight": 3,
+		"from_day": 6,
+		"plain": "the chikungunya"
+	},
+	"meningitis": {
+		"name": "Bacterial meningitis",
+		"board": "Headache, fever, confused",
+		"sex": "",
+		"age": [
+			16,
+			40
+		],
+		"triage": "red",
+		"start": [
+			45,
+			55
+		],
+		"worsens": 12,
+		"vitals": {
+			"pulse": [
+				116,
+				128
+			],
+			"bp": [
+				100,
+				112
+			],
+			"temp": [
+				39.2,
+				40.0
+			],
+			"spo2": [
+				95,
+				97
+			],
+			"breaths": [
+				22,
+				26
+			]
+		},
+		"answers": {
+			"pain": "My head. It's splitting. The light... please turn the light off.",
+			"when": "Since last night. I thought it was a hangover. I didn't even drink.",
+			"other": "My neck is stiff. I've vomited three times. My roommate says I was talking strangely this morning."
+		},
+		"exam": "Stiff neck. Can't bear the light. Drowsy and muddled about the day. A few purple spots on the legs that don't fade when you press a glass on them.",
+		"results": {
+			"bloods": "White count 24,000. CRP very high. Blood culture sent.",
+			"ct": "No bleed and no swelling. Safe for a spinal tap."
+		},
+		"key": [],
+		"go": "icu",
+		"plans": [
+			{
+				"text": "Ceftriaxone and dexamethasone right now, then the scan and the spinal tap, and intensive care",
+				"why": "Fever, headache, a stiff neck, confusion and a rash that doesn't fade: bacterial meningitis. Antibiotics come first, before any scan or test, because every hour counts.",
+				"right": true
+			},
+			{
+				"text": "CT scan first, and antibiotics once the scan's back",
+				"why": "Waiting an hour for a scan before antibiotics in meningitis costs lives. Give the antibiotics first.",
+				"effect": "worse"
+			},
+			{
+				"text": "Paracetamol and a dark room, it's a migraine",
+				"why": "A migraine doesn't bring a fever, a stiff neck, confusion and purple spots. This is meningitis.",
+				"effect": "back"
+			},
+			{
+				"text": "Antibiotic tablets and home with the roommate",
+				"why": "Confusion and a rash mean this can kill within hours. It needs the drip and intensive care.",
+				"effect": "back"
+			}
+		],
+		"weight": 1,
+		"from_day": 11,
+		"plain": "the meningitis",
+		"late": {
+			"chance": 0.25,
+			"answers": {
+				"when": "Since yesterday afternoon. I thought it was a hangover. Today I can't keep my eyes open."
+			},
+			"exam": "Stiff neck. Only opens the eyes to a voice. Purple spots spreading on the legs and arms that don't fade under a glass. Cold hands.",
+			"start": [
+				60,
+				68
+			],
+			"worsens": 14,
+			"vitals": {
+				"bp": [
+					86,
+					96
+				],
+				"pulse": [
+					128,
+					140
+				]
+			}
+		}
+	},
+	"pyelonephritis": {
+		"name": "Kidney infection",
+		"board": "Fever, back pain, burning urine",
+		"sex": "f",
+		"age": [
+			18,
+			50
+		],
+		"triage": "yellow",
+		"start": [
+			25,
+			35
+		],
+		"worsens": 4,
+		"vitals": {
+			"pulse": [
+				104,
+				114
+			],
+			"bp": [
+				104,
+				116
+			],
+			"temp": [
+				38.8,
+				39.6
+			],
+			"spo2": [
+				97,
+				99
+			],
+			"breaths": [
+				18,
+				22
+			]
+		},
+		"answers": {
+			"pain": "Pain here, at the back, on the left. Burning when I pass urine, and I go every ten minutes.",
+			"when": "The burning for three days. The fever and the back pain since last night. I've been shivering.",
+			"other": "I vomited twice this morning, so I couldn't keep the tablets down. My last period was two weeks ago."
+		},
+		"exam": "Tender at the back on the left, over the kidney. Belly soft. Dry tongue.",
+		"results": {
+			"urine": "Nitrites and white cells in the urine. Pregnancy test negative.",
+			"bloods": "White count 18,500. Kidney function normal.",
+			"usg": "Left kidney a little swollen. No stone, no blockage."
+		},
+		"key": [
+			"urine"
+		],
+		"go": "admit",
+		"plans": [
+			{
+				"text": "Admit, ceftriaxone through the drip, fluids and an anti-sickness injection, and send the urine for culture",
+				"why": "Burning urine, then fever, shivering and kidney pain, and she can't keep tablets down: a kidney infection. Antibiotics through the drip until she can eat.",
+				"right": true
+			},
+			{
+				"text": "Nitrofurantoin tablets and home",
+				"why": "Nitrofurantoin treats bladder infections but doesn't reach the kidney. And she's vomiting the tablets.",
+				"effect": "worse"
+			},
+			{
+				"text": "Cranberry juice, lots of water and home",
+				"why": "Juice doesn't treat a kidney infection. This one can spread to the blood.",
+				"effect": "back"
+			},
+			{
+				"text": "Painkillers only, no antibiotics",
+				"why": "The infection is the cause of the pain. Without antibiotics it spreads.",
+				"effect": "worse"
+			}
+		],
+		"weight": 3,
+		"from_day": 6,
+		"plain": "the kidney infection"
+	},
+	"cholera": {
+		"name": "Cholera",
+		"board": "Watery diarrhoea, can't stand",
+		"sex": "",
+		"age": [
+			18,
+			70
+		],
+		"triage": "red",
+		"start": [
+			40,
+			50
+		],
+		"worsens": 10,
+		"vitals": {
+			"pulse": [
+				118,
+				130
+			],
+			"bp": [
+				84,
+				96
+			],
+			"temp": [
+				36.6,
+				37.2
+			],
+			"spo2": [
+				97,
+				99
+			],
+			"breaths": [
+				22,
+				26
+			]
+		},
+		"answers": {
+			"pain": "Loose motions like rice water. Again and again. I can't count any more. I can't stand up.",
+			"when": "Since early morning. The water tank in our lane was cracked for a week. The municipality is 'looking into it'.",
+			"other": "Cramps in my legs. My mouth is like sandpaper. I haven't passed urine since morning."
+		},
+		"exam": "Sunken eyes. Skin goes back slowly when pinched. Cold hands, a weak fast pulse. Barely able to sit up.",
+		"results": {
+			"bloods": "Potassium low. Bicarbonate low. Creatinine raised from the dehydration."
+		},
+		"key": [],
+		"go": "admit",
+		"plans": [
+			{
+				"text": "Ringer's lactate through two drips, fast, ORS as soon as they can drink, and one dose of doxycycline",
+				"why": "Rice-water stools, sunken eyes and shock from a cracked water tank: cholera with severe dehydration. Fluids fast are what save lives. One antibiotic dose shortens it.",
+				"right": true
+			},
+			{
+				"text": "Loperamide to stop the diarrhoea",
+				"why": "Stopping the bowel keeps the toxin in and hides how much fluid is being lost. Never in cholera.",
+				"effect": "harm"
+			},
+			{
+				"text": "A slow drip and wait for the results",
+				"why": "Shock from dehydration needs litres of fluid now, not a slow drip.",
+				"effect": "worse"
+			},
+			{
+				"text": "Antibiotics only, then home",
+				"why": "The antibiotic helps, but dehydration is what kills. They need litres of fluid first.",
+				"effect": "worse"
+			}
+		],
+		"weight": 2,
+		"from_day": 8,
+		"plain": "the cholera"
+	},
+	"hepatitis": {
+		"name": "Hepatitis E",
+		"board": "Yellow eyes, can't eat",
+		"sex": "",
+		"age": [
+			18,
+			45
+		],
+		"triage": "green",
+		"start": [
+			15,
+			25
+		],
+		"worsens": 2,
+		"vitals": {
+			"pulse": [
+				84,
+				94
+			],
+			"bp": [
+				108,
+				120
+			],
+			"temp": [
+				37.2,
+				37.8
+			],
+			"spo2": [
+				97,
+				99
+			],
+			"breaths": [
+				14,
+				18
+			]
+		},
+		"answers": {
+			"pain": "My eyes have gone yellow. I feel sick all the time, and food smells disgusting. Even biryani.",
+			"when": "A week of feeling off, and the yellow since two days. Our society's water has been smelling funny.",
+			"other": "My urine is dark, like cola. My uncle wants me to see a man who cures jaundice with a garland."
+		},
+		"exam": "Yellow eyes and skin. The liver is a little enlarged and tender. Alert, no confusion. No bruises.",
+		"results": {
+			"bloods": "Bilirubin 6.8. Liver enzymes very high, ALT 1,900. Clotting normal. Hepatitis E IgM positive.",
+			"usg": "Liver a little swollen. Gallbladder and bile ducts normal."
+		},
+		"key": [
+			"bloods"
+		],
+		"go": "home",
+		"plans": [
+			{
+				"text": "Home with rest, fluids and small meals, no alcohol, no extra medicines, and a blood test in a week",
+				"why": "Jaundice after dirty water, a positive hepatitis E test and normal clotting. It's usually mild and gets better on its own with rest.",
+				"right": true
+			},
+			{
+				"text": "The garland man and the herbal jaundice powder",
+				"why": "Herbal 'jaundice cures' can damage a liver that's already inflamed. Rest is the treatment.",
+				"effect": "harm"
+			},
+			{
+				"text": "Steroids to bring the bilirubin down",
+				"why": "Steroids don't help hepatitis E and can cause harm.",
+				"effect": "harm"
+			},
+			{
+				"text": "Admit for antibiotics through the drip",
+				"why": "Hepatitis E is a virus. Antibiotics do nothing, and they can eat and drink.",
+				"effect": "lucky"
+			}
+		],
+		"weight": 2,
+		"from_day": 6,
+		"plain": "the jaundice"
+	},
+	"febrile_seizure": {
+		"name": "Febrile seizure",
+		"board": "Child had a fit with fever",
+		"sex": "",
+		"age": [
+			1,
+			4
+		],
+		"triage": "yellow",
+		"start": [
+			20,
+			30
+		],
+		"worsens": 2,
+		"vitals": {
+			"pulse": [
+				130,
+				144
+			],
+			"bp": [
+				88,
+				96
+			],
+			"temp": [
+				38.8,
+				39.6
+			],
+			"spo2": [
+				97,
+				99
+			],
+			"breaths": [
+				26,
+				32
+			]
+		},
+		"answers": {
+			"pain": "Baby went stiff and started shaking, all over. Eyes rolled up. I thought my heart would stop.",
+			"when": "About an hour ago. Two minutes, maybe less. It felt like an hour. Fever since this morning.",
+			"other": "Runny nose since yesterday. Never had a fit before. My brother had fits like this when he was small."
+		},
+		"exam": "Awake, crying, playing with the stethoscope. Red ear drum on the left. Neck not stiff. No rash.",
+		"results": {
+			"sugar": "Sugar 104 mg/dL, normal.",
+			"bloods": "White count a little raised. Salts normal."
+		},
+		"key": [
+			"sugar"
+		],
+		"go": "home",
+		"plans": [
+			{
+				"text": "Check the sugar, find the fever's cause (an ear infection), paracetamol for comfort, watch a few hours, and teach the parents what to do if it happens again",
+				"why": "A short fit with fever in a toddler who's now awake and playing: a simple febrile seizure. The ear is the cause. It doesn't harm the brain, and it isn't epilepsy.",
+				"right": true
+			},
+			{
+				"text": "Start epilepsy tablets for the rest of childhood",
+				"why": "One short fit with fever isn't epilepsy. Daily tablets bring side effects for nothing.",
+				"effect": "harm"
+			},
+			{
+				"text": "A cold-water bath to bring the fever down",
+				"why": "Cold water makes a child shiver, which raises the temperature. Paracetamol and light clothes do the job.",
+				"effect": "harm"
+			},
+			{
+				"text": "Home straight away, it was only fever",
+				"why": "The fever has a cause, here an ear infection, that needs treating, and the parents need to know what to do next time.",
+				"effect": "back"
+			}
+		],
+		"told_by": "parent",
+		"weight": 3,
+		"from_day": 6,
+		"plain": "the fit"
+	},
+	"croup": {
+		"name": "Croup",
+		"board": "Child with a barking cough",
+		"sex": "",
+		"age": [
+			1,
+			5
+		],
+		"triage": "yellow",
+		"start": [
+			25,
+			35
+		],
+		"worsens": 4,
+		"vitals": {
+			"pulse": [
+				130,
+				144
+			],
+			"bp": [
+				88,
+				98
+			],
+			"temp": [
+				37.8,
+				38.4
+			],
+			"spo2": [
+				95,
+				97
+			],
+			"breaths": [
+				32,
+				38
+			]
+		},
+		"answers": {
+			"pain": "This cough. Like a seal barking. And a noise when breathing in. The whole building woke up.",
+			"when": "It started at midnight. Cold since two days before that.",
+			"other": "Drinking milk fine. No drooling. Nobody at home smokes. Well, nobody admits it."
+		},
+		"exam": "A harsh, high noise breathing in, worse when crying. Barking cough. Chest pulling in a little under the ribs. Alert and fighting the nurse.",
+		"results": {
+			"xray": "Narrowing just below the voice box, like a steeple. Lungs clear."
+		},
+		"key": [],
+		"go": "home",
+		"plans": [
+			{
+				"text": "One dose of dexamethasone by mouth, keep the child calm on a parent's lap, and watch for an hour or two",
+				"why": "A barking cough, a noisy breath in and a cold before it: croup. One dose of steroid settles the swelling in the windpipe. Upsetting the child makes it worse.",
+				"right": true
+			},
+			{
+				"text": "Pin the child down to look at the throat with a spatula",
+				"why": "Frightening a child with a narrowed windpipe makes the narrowing worse. Keep them calm.",
+				"effect": "harm"
+			},
+			{
+				"text": "A course of antibiotics",
+				"why": "Croup is a virus. Antibiotics don't touch it.",
+				"effect": "lucky"
+			},
+			{
+				"text": "Cough syrup and home",
+				"why": "The noisy breath at rest needs a steroid dose and watching, not syrup.",
+				"effect": "back"
+			}
+		],
+		"told_by": "parent",
+		"weight": 2,
+		"from_day": 8,
+		"plain": "the croup"
+	},
+	"child_diarrhoea": {
+		"name": "Diarrhoea with some dehydration",
+		"board": "Child with loose motions",
+		"sex": "",
+		"age": [
+			1,
+			5
+		],
+		"triage": "yellow",
+		"start": [
+			20,
+			30
+		],
+		"worsens": 4,
+		"vitals": {
+			"pulse": [
+				126,
+				140
+			],
+			"bp": [
+				86,
+				94
+			],
+			"temp": [
+				37.6,
+				38.2
+			],
+			"spo2": [
+				97,
+				99
+			],
+			"breaths": [
+				26,
+				32
+			]
+		},
+		"answers": {
+			"pain": "Loose motions, eight or nine times. Vomited twice. Cranky, won't play.",
+			"when": "Since yesterday morning. The neighbour's kids had it last week.",
+			"other": "Fewer wet nappies today. The chemist gave a syrup to stop the motions. I didn't give it yet."
+		},
+		"exam": "Restless, irritable, drinks eagerly. Eyes a little sunken. Skin pinch goes back slowly. No blood in the stool.",
+		"results": {
+			"bloods": "Sodium and potassium a little low. Kidneys fine."
+		},
+		"key": [],
+		"go": "home",
+		"plans": [
+			{
+				"text": "ORS in small sips over four hours, zinc for fourteen days, keep feeding, and home once drinking well",
+				"why": "Some dehydration from diarrhoea in a child who still drinks eagerly. ORS by mouth works as well as a drip here, and zinc shortens the illness.",
+				"right": true
+			},
+			{
+				"text": "The syrup to stop the motions, and an antibiotic",
+				"why": "Anti-motion syrups are dangerous in small children, and plain watery diarrhoea doesn't need antibiotics.",
+				"effect": "harm"
+			},
+			{
+				"text": "No food until the motions stop",
+				"why": "Starving a child with diarrhoea makes them weaker. Keep feeding.",
+				"effect": "worse"
+			},
+			{
+				"text": "Nothing needed, it'll pass",
+				"why": "The child is already dry. Fluids now, or it turns into severe dehydration.",
+				"effect": "back"
+			}
+		],
+		"told_by": "parent",
+		"weight": 4,
+		"from_day": 6,
+		"plain": "the loose motions"
+	},
+	"diabetic_foot": {
+		"name": "Infected diabetic foot",
+		"board": "Foot wound, spreading redness",
+		"sex": "",
+		"age": [
+			45,
+			75
+		],
+		"triage": "yellow",
+		"start": [
+			30,
+			40
+		],
+		"worsens": 4,
+		"vitals": {
+			"pulse": [
+				100,
+				110
+			],
+			"bp": [
+				126,
+				140
+			],
+			"temp": [
+				38.2,
+				38.8
+			],
+			"spo2": [
+				96,
+				98
+			],
+			"breaths": [
+				18,
+				22
+			]
+		},
+		"answers": {
+			"pain": "This foot. There was a small sore from my new chappal. Now the whole foot is red and swollen and it smells.",
+			"when": "The sore for two weeks. The redness since four days. I put turmeric on it.",
+			"other": "Sugar for fifteen years. Tablets, sometimes. I can't feel my feet very well anyway."
+		},
+		"exam": "A deep ulcer under the big toe with pus and a bad smell. Redness up to the ankle. Can't feel a pinprick on either foot. Foot pulses weak.",
+		"results": {
+			"sugar": "Sugar 372 mg/dL, high.",
+			"bloods": "White count 17,200. HbA1c 11.2%. Kidney function normal.",
+			"xray": "No gas in the tissues. The bone under the ulcer looks a little eaten away."
+		},
+		"key": [
+			"sugar",
+			"xray"
+		],
+		"go": "admit",
+		"plans": [
+			{
+				"text": "Admit, antibiotics through the drip, insulin to control the sugar, and the surgeons to clean out the wound",
+				"why": "A deep infected ulcer, spreading redness, fever and high sugar in a foot that can't feel. It needs the drip, sugar control and the dead tissue cleaned away to save the foot.",
+				"right": true
+			},
+			{
+				"text": "Dress it, antibiotic tablets and home",
+				"why": "Spreading infection with fever and a sugar of 372 won't settle on tablets at home. This is how toes and feet are lost.",
+				"effect": "back"
+			},
+			{
+				"text": "Amputate below the knee today",
+				"why": "This foot can still be saved. Clean it, treat it, control the sugar, and decide on surgery after.",
+				"effect": "harm"
+			},
+			{
+				"text": "Steroid cream on the redness",
+				"why": "Steroids help the infection spread and push the sugar higher.",
+				"effect": "harm"
+			}
+		],
+		"weight": 2,
+		"from_day": 11,
+		"plain": "the foot"
+	},
+	"cholecystitis": {
+		"name": "Gallbladder infection",
+		"board": "Pain under the right ribs after a heavy meal",
+		"sex": "",
+		"age": [
+			30,
+			65
+		],
+		"triage": "yellow",
+		"start": [
+			25,
+			35
+		],
+		"worsens": 4,
+		"vitals": {
+			"pulse": [
+				98,
+				108
+			],
+			"bp": [
+				118,
+				132
+			],
+			"temp": [
+				38.0,
+				38.6
+			],
+			"spo2": [
+				97,
+				99
+			],
+			"breaths": [
+				16,
+				20
+			]
+		},
+		"answers": {
+			"pain": "Here, under the right ribs. It goes through to my shoulder blade. It's been constant since last night.",
+			"when": "After a family dinner. Puri, chole, three kinds of sweets. I had the same pain after Holi, but it went away.",
+			"other": "I vomited twice. No yellow in the eyes. I've been told I have stones, but who has time for an operation?"
+		},
+		"exam": "Tender under the right ribs. Stops breathing in when you press there. The rest of the belly is soft.",
+		"results": {
+			"bloods": "White count 14,800. Liver tests normal. Lipase normal.",
+			"usg": "Gallstones with a thick-walled, swollen gallbladder and fluid around it. Bile ducts not widened."
+		},
+		"key": [
+			"usg"
+		],
+		"go": "admit",
+		"plans": [
+			{
+				"text": "Admit, nothing by mouth for now, a drip, antibiotics and pain relief, and the surgeons to plan the gallbladder operation",
+				"why": "Constant pain under the right ribs after a fatty meal, fever, a positive press test and a swollen gallbladder full of stones: an infected gallbladder. Treat it, then take it out.",
+				"right": true
+			},
+			{
+				"text": "Antacid and home",
+				"why": "This isn't acidity. An infected gallbladder sent home can burst or turn into an abscess.",
+				"effect": "back"
+			},
+			{
+				"text": "A pain injection and home, come back if it happens again",
+				"why": "It's not just pain this time: fever and a swollen gallbladder mean infection. It needs antibiotics and a bed.",
+				"effect": "back"
+			},
+			{
+				"text": "Laxatives to clear the gut",
+				"why": "Laxatives do nothing for gallbladder infection and dry them out further.",
+				"effect": "worse"
+			}
+		],
+		"weight": 3,
+		"from_day": 6,
+		"plain": "the gallbladder",
+		"late": {
+			"chance": 0.3,
+			"answers": {
+				"when": "Three days now. It started after a family dinner. Today I'm shivering and I can't stand straight."
+			},
+			"results": {
+				"bloods": "White count 21,400. Liver tests a little raised. Lipase normal."
+			},
+			"start": [
+				42,
+				52
+			],
+			"worsens": 6,
+			"vitals": {
+				"temp": [
+					38.8,
+					39.4
+				],
+				"pulse": [
+					110,
+					120
+				],
+				"bp": [
+					100,
+					112
+				]
+			}
+		}
+	},
+	"pancreatitis": {
+		"name": "Acute pancreatitis",
+		"board": "Upper belly pain going to the back",
+		"sex": "",
+		"age": [
+			25,
+			60
+		],
+		"triage": "yellow",
+		"start": [
+			35,
+			45
+		],
+		"worsens": 6,
+		"vitals": {
+			"pulse": [
+				108,
+				118
+			],
+			"bp": [
+				104,
+				116
+			],
+			"temp": [
+				37.6,
+				38.2
+			],
+			"spo2": [
+				95,
+				97
+			],
+			"breaths": [
+				20,
+				24
+			]
+		},
+		"answers": {
+			"pain": "Right in the middle, at the top. It bores through to my back. Sitting forward helps a bit. Lying flat is murder.",
+			"when": "Since last night. Vomiting since then. Even water comes back.",
+			"other": "I had stones in my gallbladder on a scan last year. The doctor said 'operate', I said 'later'. This is later, I suppose."
+		},
+		"exam": "Very tender at the top of the belly. Belly a little swollen. Prefers to sit leaning forward. Dry tongue.",
+		"results": {
+			"bloods": "Lipase over five times normal. White count 15,600. Calcium normal. Liver tests a little raised.",
+			"usg": "Gallstones. The pancreas looks swollen."
+		},
+		"key": [
+			"bloods"
+		],
+		"go": "admit",
+		"plans": [
+			{
+				"text": "Admit, plenty of fluids through the drip, strong pain relief and anti-sickness, and food again as soon as the pain allows",
+				"why": "Pain boring through to the back, vomiting and a lipase five times normal: acute pancreatitis, here from gallstones. Generous fluids and pain relief are the treatment.",
+				"right": true
+			},
+			{
+				"text": "Antacid and home",
+				"why": "The lipase is five times normal. Pancreatitis can go bad fast and needs a bed and fluids.",
+				"effect": "back"
+			},
+			{
+				"text": "Keep the fluids low so the belly doesn't swell",
+				"why": "Pancreatitis pulls fluid out of the blood. Too little drip and the kidneys fail.",
+				"effect": "worse"
+			},
+			{
+				"text": "Antibiotics for everyone with pancreatitis",
+				"why": "Antibiotics don't help pancreatitis unless there's a proven infection.",
+				"effect": "lucky"
+			}
+		],
+		"weight": 2,
+		"from_day": 8,
+		"plain": "the pancreas",
+		"late": {
+			"chance": 0.3,
+			"answers": {
+				"when": "Two days now. Vomiting since then. I've hardly passed urine today."
+			},
+			"results": {
+				"bloods": "Lipase very high. White count 19,800. Creatinine raised. Calcium low."
+			},
+			"start": [
+				50,
+				60
+			],
+			"worsens": 8,
+			"vitals": {
+				"pulse": [
+					120,
+					130
+				],
+				"bp": [
+					92,
+					102
+				],
+				"spo2": [
+					92,
+					94
+				],
+				"breaths": [
+					24,
+					28
+				]
+			}
+		}
+	},
+	"perforated_ulcer": {
+		"name": "Perforated stomach ulcer",
+		"board": "Sudden belly pain, rigid belly",
+		"sex": "",
+		"age": [
+			30,
+			70
+		],
+		"triage": "red",
+		"start": [
+			45,
+			55
+		],
+		"worsens": 10,
+		"vitals": {
+			"pulse": [
+				110,
+				122
+			],
+			"bp": [
+				100,
+				112
+			],
+			"temp": [
+				37.4,
+				38.0
+			],
+			"spo2": [
+				95,
+				97
+			],
+			"breaths": [
+				22,
+				26
+			]
+		},
+		"answers": {
+			"pain": "It hit like a knife, right at the top of my stomach. Now it's everywhere. I can't move. Even breathing hurts.",
+			"when": "Two hours ago, suddenly, at lunch. One moment fine, next moment on the floor.",
+			"other": "I've been taking painkillers for my knees for months. Two or three a day, from the chemist. Acidity on and off."
+		},
+		"exam": "Lying very still. The belly is hard as a board and tender everywhere. Bowel sounds absent.",
+		"results": {
+			"xray": "Free air under the right side of the diaphragm. A hole in the gut.",
+			"bloods": "White count 16,900. Lipase normal."
+		},
+		"key": [
+			"xray"
+		],
+		"go": "theatre",
+		"plans": [
+			{
+				"text": "Nothing by mouth, a drip, antibiotics, pain relief and a stomach tube, and the surgeons for theatre now",
+				"why": "Sudden severe pain, a board-hard belly, months of painkillers and free air under the diaphragm: a burst stomach ulcer. It needs closing in theatre.",
+				"right": true
+			},
+			{
+				"text": "Antacid gel and watch",
+				"why": "A board-hard belly with free air is a hole in the gut. Antacid can't close it.",
+				"effect": "harm"
+			},
+			{
+				"text": "A barium swallow to see the ulcer",
+				"why": "Barium leaking out of a hole into the belly is a disaster. The X-ray already showed what we need.",
+				"effect": "harm"
+			},
+			{
+				"text": "Admit and watch till the morning round",
+				"why": "Gut contents are leaking into the belly. Every hour of waiting makes the infection worse.",
+				"effect": "worse"
+			}
+		],
+		"weight": 1,
+		"from_day": 11,
+		"plain": "the ulcer"
+	},
+	"bowel_obstruction": {
+		"name": "Bowel obstruction",
+		"board": "Swollen belly, vomiting, no motion",
+		"sex": "",
+		"age": [
+			35,
+			80
+		],
+		"triage": "yellow",
+		"start": [
+			35,
+			45
+		],
+		"worsens": 5,
+		"vitals": {
+			"pulse": [
+				104,
+				114
+			],
+			"bp": [
+				108,
+				120
+			],
+			"temp": [
+				37.2,
+				37.8
+			],
+			"spo2": [
+				96,
+				98
+			],
+			"breaths": [
+				18,
+				22
+			]
+		},
+		"answers": {
+			"pain": "Cramps that come and go, all over the belly. And it's swelling up like a football.",
+			"when": "Two days. No motion and no gas since yesterday. Vomiting green stuff since this morning.",
+			"other": "They took out my appendix ten years ago. The scar's here. I took a laxative last night. Nothing happened."
+		},
+		"exam": "Swollen belly, tight like a drum. An old scar on the right. Tinkling, high-pitched bowel sounds. Dry tongue.",
+		"results": {
+			"xray": "Swollen loops of small bowel with fluid levels. No gas in the large bowel.",
+			"bloods": "Potassium low. Creatinine raised from the dehydration."
+		},
+		"key": [
+			"xray"
+		],
+		"go": "admit",
+		"plans": [
+			{
+				"text": "Nothing by mouth, a drip, a tube through the nose to drain the stomach, and the surgeons",
+				"why": "Cramps, vomiting, a swollen belly, no motion or gas, an old operation scar and swollen loops on the X-ray: the bowel is blocked, probably by scar tissue. Drip and drain, and the surgeons decide on an operation.",
+				"right": true
+			},
+			{
+				"text": "A strong laxative and an enema",
+				"why": "Pushing harder on a blocked bowel can burst it. It needs to be rested and drained.",
+				"effect": "harm"
+			},
+			{
+				"text": "Light food and home",
+				"why": "Green vomit and no gas means a blockage. Eating makes it worse.",
+				"effect": "back"
+			},
+			{
+				"text": "Pain relief and see what happens",
+				"why": "A blocked bowel can twist and lose its blood supply. It needs draining and the surgeons now.",
+				"effect": "worse"
+			}
+		],
+		"weight": 2,
+		"from_day": 11,
+		"plain": "the blocked gut",
+		"late": {
+			"chance": 0.3,
+			"answers": {
+				"when": "Four days. No motion and no gas for three. Now the pain doesn't go away between the cramps."
+			},
+			"exam": "Swollen, tight belly, tender in one spot near the old scar. Bowel sounds quiet. Dry tongue.",
+			"results": {
+				"bloods": "White count 18,100. Lactate raised. Potassium low."
+			},
+			"start": [
+				52,
+				62
+			],
+			"worsens": 7,
+			"vitals": {
+				"pulse": [
+					118,
+					128
+				],
+				"temp": [
+					38.0,
+					38.6
+				]
+			}
+		}
+	},
+	"strangulated_hernia": {
+		"name": "Strangulated hernia",
+		"board": "Painful groin lump that won't go back",
+		"sex": "m",
+		"age": [
+			40,
+			80
+		],
+		"triage": "red",
+		"start": [
+			40,
+			50
+		],
+		"worsens": 9,
+		"vitals": {
+			"pulse": [
+				104,
+				116
+			],
+			"bp": [
+				120,
+				134
+			],
+			"temp": [
+				37.4,
+				38.0
+			],
+			"spo2": [
+				96,
+				98
+			],
+			"breaths": [
+				18,
+				22
+			]
+		},
+		"answers": {
+			"pain": "This lump in my groin. It always went back when I lay down. Today it won't. And it hurts like anything.",
+			"when": "Since this morning, after I lifted a gas cylinder. Vomiting since an hour.",
+			"other": "I've had the lump for two years. The doctor said 'small operation'. I said 'small lump, no need'."
+		},
+		"exam": "A tense, tender, red lump in the right groin that can't be pushed back. Belly a little swollen.",
+		"results": {
+			"usg": "A loop of bowel trapped in the groin with poor blood flow.",
+			"bloods": "White count 13,900. Lactate a little raised."
+		},
+		"key": [],
+		"go": "theatre",
+		"plans": [
+			{
+				"text": "Don't force it back, nothing by mouth, a drip and pain relief, and the surgeons for theatre now",
+				"why": "A hernia that's tense, tender, red and stuck, with vomiting: the trapped bowel is losing its blood supply. It needs an operation within hours.",
+				"right": true
+			},
+			{
+				"text": "Push it back hard and send him home",
+				"why": "Forcing back a strangulated hernia can push dead bowel into the belly. It needs theatre.",
+				"effect": "harm"
+			},
+			{
+				"text": "A hernia belt and home",
+				"why": "The bowel in that lump is dying. A belt squeezes it more.",
+				"effect": "back"
+			},
+			{
+				"text": "Pain relief, and a clinic appointment next week",
+				"why": "Next week, that piece of bowel is dead. This is tonight's operation.",
+				"effect": "worse"
+			}
+		],
+		"weight": 2,
+		"from_day": 8,
+		"plain": "the hernia"
+	},
+	"testicular_torsion": {
+		"name": "Testicular torsion",
+		"board": "Sudden pain down below",
+		"sex": "m",
+		"age": [
+			12,
+			25
+		],
+		"triage": "red",
+		"start": [
+			35,
+			45
+		],
+		"worsens": 10,
+		"vitals": {
+			"pulse": [
+				104,
+				116
+			],
+			"bp": [
+				118,
+				130
+			],
+			"temp": [
+				36.8,
+				37.2
+			],
+			"spo2": [
+				98,
+				99
+			],
+			"breaths": [
+				18,
+				22
+			]
+		},
+		"answers": {
+			"pain": "Down there. On the left. It woke me up. Please don't make me say it louder.",
+			"when": "Two hours ago. Suddenly. I've vomited once.",
+			"other": "No injury. Nothing like this before. Can we please be quick? My father is outside asking everyone what's wrong."
+		},
+		"exam": "The left testicle is high, swollen and very tender, and lies sideways. Lifting it doesn't ease the pain.",
+		"results": {
+			"usg": "No blood flow to the left testicle.",
+			"urine": "Clear."
+		},
+		"key": [],
+		"go": "theatre",
+		"plans": [
+			{
+				"text": "Call the urologist for theatre now, without waiting for a scan",
+				"why": "Sudden testicular pain that wakes a teenager, with vomiting and a high-riding testicle: torsion. The testicle can be saved only within about six hours, so it goes to theatre now.",
+				"right": true
+			},
+			{
+				"text": "Antibiotics for an infection",
+				"why": "Infection builds up over days. Sudden pain like this is a twist until proven otherwise.",
+				"effect": "worse"
+			},
+			{
+				"text": "An ice pack and home",
+				"why": "A twisted testicle dies within hours without an operation.",
+				"effect": "back"
+			},
+			{
+				"text": "Book a scan for the morning",
+				"why": "By the morning it's too late to save. Theatre now.",
+				"effect": "worse"
+			}
+		],
+		"weight": 1,
+		"from_day": 11,
+		"plain": "",
+		"late": {
+			"chance": 0.25,
+			"answers": {
+				"when": "Since last night. I was too embarrassed to tell anyone. I've vomited twice."
+			},
+			"start": [
+				55,
+				65
+			],
+			"worsens": 10
+		}
+	},
+	"variceal_bleed": {
+		"name": "Bleeding from swollen veins in the food pipe",
+		"board": "Vomiting blood",
+		"sex": "m",
+		"age": [
+			40,
+			65
+		],
+		"triage": "red",
+		"start": [
+			45,
+			55
+		],
+		"worsens": 12,
+		"vitals": {
+			"pulse": [
+				118,
+				130
+			],
+			"bp": [
+				88,
+				100
+			],
+			"temp": [
+				36.4,
+				37.0
+			],
+			"spo2": [
+				95,
+				97
+			],
+			"breaths": [
+				20,
+				24
+			]
+		},
+		"answers": {
+			"pain": "I vomited blood. A lot. Bright red, and then dark bits like coffee powder.",
+			"when": "An hour ago. My stools have been black since yesterday.",
+			"other": "The doctor said my liver is damaged. From drinking. I stopped. Mostly. Two months ago. Mostly."
+		},
+		"exam": "Pale and sweaty. Yellow eyes. A swollen belly with fluid. Red spider marks on the chest. Black stool on the glove.",
+		"results": {
+			"bloods": "Haemoglobin 6.9. Platelets 62,000. Clotting slow, INR 1.8. Bilirubin raised."
+		},
+		"key": [
+			"bloods"
+		],
+		"go": "icu",
+		"plans": [
+			{
+				"text": "Two big drips, blood cross-matched, terlipressin and antibiotics, and an urgent endoscopy to band the veins",
+				"why": "Vomiting blood in someone with a damaged liver: bleeding swollen veins in the food pipe. Terlipressin, antibiotics and blood, then the endoscopy to band them.",
+				"right": true
+			},
+			{
+				"text": "Antacid tablets and home",
+				"why": "He's lost a lot of blood from swollen veins. This kills at home.",
+				"effect": "back"
+			},
+			{
+				"text": "Saline only, and wait for the morning endoscopy list",
+				"why": "Varices can bleed again within hours. Blood, drugs and the endoscopy can't wait for the morning.",
+				"effect": "worse"
+			},
+			{
+				"text": "A blood pressure tablet and observation on the ward",
+				"why": "With this much bleeding the pressure is already falling. He needs blood and the endoscopy.",
+				"effect": "worse"
+			}
+		],
+		"weight": 1,
+		"from_day": 11,
+		"plain": ""
+	},
+	"hip_fracture": {
+		"name": "Broken hip",
+		"board": "Fell at home, can't stand",
+		"sex": "",
+		"age": [
+			65,
+			90
+		],
+		"triage": "yellow",
+		"start": [
+			25,
+			35
+		],
+		"worsens": 3,
+		"vitals": {
+			"pulse": [
+				92,
+				102
+			],
+			"bp": [
+				128,
+				144
+			],
+			"temp": [
+				36.6,
+				37.0
+			],
+			"spo2": [
+				95,
+				97
+			],
+			"breaths": [
+				16,
+				20
+			]
+		},
+		"answers": {
+			"pain": "My hip. The right one. I slipped in the bathroom and now I can't stand on it at all.",
+			"when": "This morning. I lay on the floor until my grandson came home from tuition.",
+			"other": "BP tablets and a calcium tablet. I didn't faint, I just slipped. The tiles are new. Very shiny. Very stupid."
+		},
+		"exam": "The right leg is shorter and turned out. Can't lift it. Pain on any movement of the hip. Foot warm, pulses there.",
+		"results": {
+			"xray": "A break through the neck of the right thigh bone.",
+			"ecg": "Normal rhythm.",
+			"bloods": "Haemoglobin 11.2. Kidneys fine.",
+			"sugar": "Sugar 128 mg/dL."
+		},
+		"key": [
+			"xray"
+		],
+		"go": "admit",
+		"plans": [
+			{
+				"text": "Good pain relief with a nerve block, admit to the bone ward, and an operation within a day or two",
+				"why": "An older person who fell, with a short, turned-out leg and a break at the top of the thigh bone. Pain relief now, and surgery soon gets them walking again.",
+				"right": true
+			},
+			{
+				"text": "A painkiller and home, try walking on it tomorrow",
+				"why": "A broken hip can't take weight. Sent home, they can't even get to the bathroom.",
+				"effect": "back"
+			},
+			{
+				"text": "Six weeks of bed rest at home",
+				"why": "Weeks in bed at this age bring pneumonia, clots and bed sores. The operation is the safer path.",
+				"effect": "worse"
+			},
+			{
+				"text": "Massage with warm oil to settle the swelling",
+				"why": "Rubbing a broken hip moves the break and hurts. It needs holding still and an operation.",
+				"effect": "harm"
+			}
+		],
+		"with": "grandson",
+		"weight": 3,
+		"from_day": 8,
+		"plain": "the hip",
+		"late": {
+			"chance": 0.3,
+			"answers": {
+				"when": "Yesterday evening. I lay on the floor all night. Nobody heard me until the milkman came."
+			},
+			"results": {
+				"bloods": "Haemoglobin 10.6. Creatinine raised from the dehydration. Muscle enzyme high from lying on the floor."
+			},
+			"start": [
+				38,
+				46
+			],
+			"worsens": 4,
+			"vitals": {
+				"pulse": [
+					104,
+					114
+				],
+				"bp": [
+					104,
+					116
+				]
+			}
+		}
+	},
+	"shoulder_dislocation": {
+		"name": "Dislocated shoulder",
+		"board": "Shoulder popped out",
+		"sex": "",
+		"age": [
+			16,
+			40
+		],
+		"triage": "green",
+		"start": [
+			15,
+			20
+		],
+		"worsens": 1,
+		"vitals": {
+			"pulse": [
+				96,
+				106
+			],
+			"bp": [
+				120,
+				134
+			],
+			"temp": [
+				36.6,
+				37.0
+			],
+			"spo2": [
+				98,
+				99
+			],
+			"breaths": [
+				16,
+				20
+			]
+		},
+		"answers": {
+			"pain": "My shoulder. It popped out. I'm holding the arm like this because anything else is death.",
+			"when": "An hour ago. Gully cricket. I dived for a catch. I took the catch, by the way.",
+			"other": "No numbness. Well, a little near the shoulder. First time it's happened."
+		},
+		"exam": "The shoulder looks square, with a hollow under the bony point. Holding the arm out from the body. Fingers pink, pulse there, a small numb patch on the outer shoulder.",
+		"results": {
+			"xray": "The shoulder has come out of its socket, forwards. No break seen."
+		},
+		"key": [
+			"xray"
+		],
+		"go": "home",
+		"plans": [
+			{
+				"text": "X-ray first, then pain relief and sedation, put it back, check the nerves, X-ray again and a sling",
+				"why": "A square shoulder after a fall onto an outstretched arm: dislocated forwards. X-ray for a break first, then put it back gently and check it.",
+				"right": true
+			},
+			{
+				"text": "A sling only, it'll settle back by itself",
+				"why": "A dislocated shoulder doesn't go back by itself. The longer it stays out, the harder it is to put back.",
+				"effect": "back"
+			},
+			{
+				"text": "Pull it back in straight away, no X-ray",
+				"why": "If there's a break near the joint, pulling without an X-ray can make it much worse.",
+				"effect": "harm"
+			},
+			{
+				"text": "A full arm plaster",
+				"why": "Plastering a joint that's still out of its socket helps nothing.",
+				"effect": "worse"
+			}
+		],
+		"jobs": [
+			"college student",
+			"software tester",
+			"delivery rider",
+			"call-centre worker",
+			"gym trainer"
+		],
+		"weight": 2,
+		"from_day": 6,
+		"plain": "the shoulder"
+	},
+	"head_injury": {
+		"name": "Head injury",
+		"board": "Fell off a bike, vomited",
+		"sex": "",
+		"age": [
+			16,
+			75
+		],
+		"triage": "yellow",
+		"start": [
+			25,
+			35
+		],
+		"worsens": 4,
+		"vitals": {
+			"pulse": [
+				84,
+				96
+			],
+			"bp": [
+				124,
+				138
+			],
+			"temp": [
+				36.6,
+				37.0
+			],
+			"spo2": [
+				97,
+				99
+			],
+			"breaths": [
+				14,
+				18
+			]
+		},
+		"answers": {
+			"pain": "My head. I came off the scooter. A dog ran out. The dog is fine, thank you for asking.",
+			"when": "About two hours ago. I didn't have a helmet. I know. Everybody has already told me.",
+			"other": "I've vomited twice since. And I can't remember the bit just after I fell."
+		},
+		"exam": "A bump on the right side of the head. Awake and talking sense. Pupils equal. Moves everything. Can't remember the minutes after the fall.",
+		"results": {
+			"ct": "No bleed and no fracture. Brain normal."
+		},
+		"key": [
+			"ct"
+		],
+		"go": "home",
+		"plans": [
+			{
+				"text": "CT head now, and if it's clear, watch for four hours, then home with head-injury advice and someone to stay the night",
+				"why": "Vomiting twice and lost memory after a head injury: that needs a CT. It's clear, so watching and good advice are enough.",
+				"right": true
+			},
+			{
+				"text": "Home now, they're talking fine",
+				"why": "Vomiting more than once after a head injury means a scan first. Bleeds can talk for an hour before they don't.",
+				"effect": "back"
+			},
+			{
+				"text": "A sleeping tablet for the headache and a bed",
+				"why": "Sedation hides the drowsiness that tells you a bleed is growing.",
+				"effect": "harm"
+			},
+			{
+				"text": "Admit for a week of observation",
+				"why": "With a clear scan and a normal examination, a week in bed helps nobody.",
+				"effect": "lucky"
+			}
+		],
+		"weight": 4,
+		"from_day": 6,
+		"plain": "the head injury"
+	},
+	"burns": {
+		"name": "Burns",
+		"board": "Burnt arm and chest",
+		"sex": "",
+		"age": [
+			16,
+			60
+		],
+		"triage": "yellow",
+		"start": [
+			30,
+			40
+		],
+		"worsens": 5,
+		"vitals": {
+			"pulse": [
+				108,
+				118
+			],
+			"bp": [
+				118,
+				130
+			],
+			"temp": [
+				36.8,
+				37.4
+			],
+			"spo2": [
+				97,
+				99
+			],
+			"breaths": [
+				20,
+				24
+			]
+		},
+		"answers": {
+			"pain": "My arm and my chest. It burns like fire. Sorry, that's literally what it is.",
+			"when": "An hour ago. The pressure cooker lid blew off. Dal everywhere. On the ceiling too.",
+			"other": "My neighbour put toothpaste on it. Then someone said ice. Then someone said butter. I left before the butter."
+		},
+		"exam": "Red, blistered, wet burns over the right forearm and the front of the chest, about one tenth of the body. Face and breathing fine. Toothpaste on the arm.",
+		"results": {
+			"bloods": "Normal counts. Kidneys fine."
+		},
+		"key": [],
+		"go": "burns",
+		"plans": [
+			{
+				"text": "Wash off the toothpaste, cool under running tap water for twenty minutes, cling film, a drip, strong pain relief and a tetanus shot",
+				"why": "Partial-thickness scald burns over about a tenth of the body. Cool running water still helps up to three hours later. Then cover, fluids, pain relief and tetanus.",
+				"right": true
+			},
+			{
+				"text": "Ice packs on the burns",
+				"why": "Ice damages burnt skin further and can chill the patient. Cool, not ice-cold, running water.",
+				"effect": "harm"
+			},
+			{
+				"text": "Butter and more toothpaste, and home",
+				"why": "Home remedies trap heat and dirt in the burn and make infection likely.",
+				"effect": "harm"
+			},
+			{
+				"text": "Burst the blisters, dress it and home",
+				"why": "Bursting blisters opens the burn to infection, and burns this size need fluids and the burns team.",
+				"effect": "back"
+			}
+		],
+		"weight": 3,
+		"from_day": 6,
+		"plain": "the burns"
+	},
+	"dog_bite": {
+		"name": "Dog bite",
+		"board": "Bitten by a street dog",
+		"sex": "",
+		"age": [
+			12,
+			70
+		],
+		"triage": "green",
+		"start": [
+			15,
+			20
+		],
+		"worsens": 1,
+		"vitals": {
+			"pulse": [
+				92,
+				102
+			],
+			"bp": [
+				118,
+				130
+			],
+			"temp": [
+				36.6,
+				37.0
+			],
+			"spo2": [
+				98,
+				99
+			],
+			"breaths": [
+				16,
+				20
+			]
+		},
+		"answers": {
+			"pain": "A street dog bit my leg. Here. Deep. Two holes, bleeding. It just came out of nowhere.",
+			"when": "Forty minutes ago, near the bus stop. The dog's still there, looking proud of itself.",
+			"other": "Never had rabies injections before. My aunty says to wait ten days and see if the dog dies first."
+		},
+		"exam": "Two deep puncture wounds on the right calf, oozing blood. Muscle and tendons fine. No bone involved.",
+		"results": {},
+		"key": [],
+		"go": "home",
+		"plans": [
+			{
+				"text": "Wash the wound with soap and running water for fifteen minutes, rabies immunoglobulin into and around the wound, the first rabies vaccine, a tetanus shot, and don't stitch it tight",
+				"why": "Deep bleeding bites from a street dog: the highest-risk category. Washing, immunoglobulin in the wound and the vaccine course today. Rabies, once it starts, can't be cured.",
+				"right": true
+			},
+			{
+				"text": "Wait ten days to see if the dog dies, then decide",
+				"why": "Never wait. Start the vaccine today; you can stop it later if the dog stays healthy for ten days.",
+				"effect": "harm"
+			},
+			{
+				"text": "Stitch it up tight and antibiotics only",
+				"why": "Tight stitches trap the virus and germs in a bite. And antibiotics don't stop rabies.",
+				"effect": "worse"
+			},
+			{
+				"text": "Turmeric and chilli powder on the wound, and home",
+				"why": "Powders don't kill the rabies virus. Soap and running water, then the injections.",
+				"effect": "harm"
+			}
+		],
+		"weight": 4,
+		"from_day": 6,
+		"plain": "the dog bite"
+	},
+	"scorpion_sting": {
+		"name": "Scorpion sting",
+		"board": "Stung by a scorpion, sweating",
+		"sex": "",
+		"age": [
+			16,
+			65
+		],
+		"triage": "red",
+		"start": [
+			35,
+			45
+		],
+		"worsens": 9,
+		"vitals": {
+			"pulse": [
+				118,
+				130
+			],
+			"bp": [
+				160,
+				174
+			],
+			"temp": [
+				36.8,
+				37.4
+			],
+			"spo2": [
+				95,
+				97
+			],
+			"breaths": [
+				22,
+				26
+			]
+		},
+		"answers": {
+			"pain": "A scorpion. Red one. In my shoe. The pain went up my leg like electricity.",
+			"when": "Two hours ago. I put my foot in my shoe without checking. My mother told me to check. For thirty years.",
+			"other": "I'm sweating like a tap. My heart is racing. I vomited once."
+		},
+		"exam": "Pouring sweat, cold hands and feet, drooling a little. Heart racing. A small sting mark on the foot. Chest clear for now.",
+		"results": {
+			"ecg": "Fast heart rate, 128. Some strain changes.",
+			"bloods": "Sugar a little high. Troponin slightly raised.",
+			"xray": "Lungs clear for now."
+		},
+		"key": [
+			"ecg"
+		],
+		"go": "admit",
+		"plans": [
+			{
+				"text": "Prazosin by mouth, a local anaesthetic at the sting for the pain, and admit to watch the heart, blood pressure and breathing",
+				"why": "A red scorpion sting with sweating, cold limbs, a racing heart and high blood pressure: the venom is stirring up the nervous system. Prazosin settles it and protects the heart.",
+				"right": true
+			},
+			{
+				"text": "A painkiller injection and home",
+				"why": "Sweating, vomiting and a racing heart mean the venom is spreading. The heart and lungs can fail within hours.",
+				"effect": "back"
+			},
+			{
+				"text": "Cut the sting and suck out the venom",
+				"why": "Cutting and sucking doesn't remove venom. It only adds a wound.",
+				"effect": "harm"
+			},
+			{
+				"text": "Atropine to dry up the sweating",
+				"why": "Atropine makes the racing heart and high blood pressure worse in a scorpion sting.",
+				"effect": "harm"
+			}
+		],
+		"jobs": [
+			"farmer",
+			"farm labourer",
+			"watchman",
+			"construction worker",
+			"shopkeeper"
+		],
+		"weight": 2,
+		"from_day": 8,
+		"plain": "the scorpion sting"
+	},
+	"krait_bite": {
+		"name": "Krait bite",
+		"board": "Woke up weak with drooping eyes",
+		"sex": "",
+		"age": [
+			16,
+			65
+		],
+		"triage": "red",
+		"start": [
+			45,
+			55
+		],
+		"worsens": 12,
+		"vitals": {
+			"pulse": [
+				96,
+				108
+			],
+			"bp": [
+				118,
+				130
+			],
+			"temp": [
+				36.6,
+				37.0
+			],
+			"spo2": [
+				93,
+				95
+			],
+			"breaths": [
+				22,
+				26
+			]
+		},
+		"answers": {
+			"pain": "My stomach hurts. And my eyes won't stay open. My arms feel heavy.",
+			"when": "I woke up like this at four in the morning. We sleep on the floor in summer, it's cooler.",
+			"other": "No bite that I felt. My brother found a thin black snake with white bands under the mat. He killed it."
+		},
+		"exam": "Drooping eyelids, double vision, a thick voice and weak neck muscles. Breathing shallow. A tiny pair of marks on the hand, no swelling.",
+		"results": {
+			"clot": "Clotted within 20 minutes. Normal. Krait venom doesn't stop clotting.",
+			"gas": "Carbon dioxide creeping up. The breathing muscles are tiring."
+		},
+		"key": [
+			"clot"
+		],
+		"go": "icu",
+		"plans": [
+			{
+				"text": "Anti-snake venom now, watch the breathing closely, and intensive care ready to put on a breathing machine",
+				"why": "Waking with drooping eyes, weakness and belly pain after sleeping on the floor, with a banded black snake found: a krait bite. The clotting test is normal with krait, so don't be fooled. Venom and breathing support save lives.",
+				"right": true
+			},
+			{
+				"text": "The clotting test is normal, so no venom: home",
+				"why": "Krait venom paralyses but doesn't stop clotting. A normal clotting test means nothing here. This one stops breathing.",
+				"effect": "harm"
+			},
+			{
+				"text": "Tie a tight rope above the bite",
+				"why": "A rope doesn't help, hours later, and can kill the limb.",
+				"effect": "harm"
+			},
+			{
+				"text": "Wait and see if the weakness spreads",
+				"why": "By the time the weakness spreads, the breathing muscles fail. Venom now.",
+				"effect": "worse"
+			}
+		],
+		"weight": 1,
+		"from_day": 11,
+		"plain": "the snake bite"
+	},
+	"pneumothorax": {
+		"name": "Collapsed lung",
+		"board": "Sudden chest pain, breathless",
+		"sex": "m",
+		"age": [
+			18,
+			32
+		],
+		"triage": "yellow",
+		"start": [
+			30,
+			40
+		],
+		"worsens": 5,
+		"vitals": {
+			"pulse": [
+				108,
+				118
+			],
+			"bp": [
+				118,
+				130
+			],
+			"temp": [
+				36.6,
+				37.0
+			],
+			"spo2": [
+				92,
+				94
+			],
+			"breaths": [
+				24,
+				28
+			]
+		},
+		"answers": {
+			"pain": "A sharp pain on the right side of my chest. Breathing in makes it worse. I feel like I can't fill my lungs.",
+			"when": "This morning, just sitting at my desk. Not even doing anything. Not even working.",
+			"other": "I smoke a little. Five a day. Okay, ten. I'm tall, if that matters. People always tell me I'm tall."
+		},
+		"exam": "Tall and thin. Breath sounds very quiet on the right. Windpipe in the middle. Breathing fast.",
+		"results": {
+			"xray": "The right lung has collapsed down, with a big rim of air around it. Windpipe in the middle."
+		},
+		"key": [
+			"xray"
+		],
+		"go": "admit",
+		"plans": [
+			{
+				"text": "Oxygen, then let the air out with a needle, or a chest drain if that doesn't work, and admit",
+				"why": "Sudden one-sided chest pain and breathlessness in a tall young smoker, quiet breath sounds and a collapsed lung on the X-ray. Let the air out and the lung comes back up.",
+				"right": true
+			},
+			{
+				"text": "A painkiller and home, it's a pulled muscle",
+				"why": "The X-ray shows a collapsed lung. Sent home, it can get bigger and press on the heart.",
+				"effect": "back"
+			},
+			{
+				"text": "Nebulisers for asthma",
+				"why": "There's no wheeze. The lung has collapsed; nebulisers don't fix that.",
+				"effect": "worse"
+			},
+			{
+				"text": "Home, and fly to Delhi for the cousin's wedding tomorrow as planned",
+				"why": "Flying with a collapsed lung can make it much bigger in the air. Treat it first.",
+				"effect": "harm"
+			}
+		],
+		"jobs": [
+			"software engineer",
+			"college student",
+			"call-centre worker",
+			"accountant",
+			"bank clerk"
+		],
+		"weight": 2,
+		"from_day": 8,
+		"plain": "the lung"
+	},
+	"stroke": {
+		"name": "Stroke",
+		"board": "Face drooping, arm weak",
+		"sex": "m",
+		"age": [
+			50,
+			80
+		],
+		"triage": "red",
+		"start": [
+			40,
+			50
+		],
+		"worsens": 12,
+		"vitals": {
+			"pulse": [
+				84,
+				96
+			],
+			"bp": [
+				164,
+				178
+			],
+			"temp": [
+				36.6,
+				37.0
+			],
+			"spo2": [
+				96,
+				98
+			],
+			"breaths": [
+				16,
+				20
+			]
+		},
+		"answers": {
+			"pain": "My right hand... won't do... what I tell it. My words are coming out wrong.",
+			"when": "One hour. At breakfast. The cup fell. Then the... the paper. My wife saw my face.",
+			"other": "BP tablets. Sometimes I forget. Sugar, a little. No blood thinners."
+		},
+		"exam": "The right side of the face droops. The right arm and leg are weak. Speech is slurred and words come out muddled.",
+		"results": {
+			"sugar": "Sugar 134 mg/dL. Not a low sugar.",
+			"ct": "No bleed. Early changes on the left side of the brain. A clot, not a bleed.",
+			"ecg": "Normal rhythm."
+		},
+		"key": [
+			"sugar",
+			"ct"
+		],
+		"go": "icu",
+		"plans": [
+			{
+				"text": "The scan shows no bleed and it's inside the time window: the clot-busting drug now, then the stroke unit",
+				"why": "Sudden weakness on one side with muddled speech, an hour ago, a normal sugar and no bleed on the scan: a stroke from a clot. Inside four and a half hours, the clot-busting drug can give back the arm and the words.",
+				"right": true
+			},
+			{
+				"text": "Aspirin straight away, before the scan",
+				"why": "Until a scan rules out a bleed, aspirin can make a bleeding stroke much worse.",
+				"effect": "harm"
+			},
+			{
+				"text": "Admit and see how it looks in the morning",
+				"why": "Brain dies every minute a clot blocks it. By the morning the time window has closed.",
+				"effect": "worse"
+			},
+			{
+				"text": "Bring the blood pressure down hard and fast",
+				"why": "Dropping the pressure fast starves the brain around the clot. It's brought down gently, and only if very high.",
+				"effect": "harm"
+			}
+		],
+		"with": "wife",
+		"weight": 2,
+		"from_day": 11,
+		"plain": "the stroke"
+	},
+	"hypoglycaemia": {
+		"name": "Low sugar",
+		"board": "Diabetic, confused and sweaty",
+		"sex": "",
+		"age": [
+			40,
+			75
+		],
+		"triage": "red",
+		"start": [
+			40,
+			50
+		],
+		"worsens": 12,
+		"vitals": {
+			"pulse": [
+				104,
+				116
+			],
+			"bp": [
+				128,
+				140
+			],
+			"temp": [
+				36.2,
+				36.8
+			],
+			"spo2": [
+				97,
+				99
+			],
+			"breaths": [
+				16,
+				20
+			]
+		},
+		"answers": {
+			"pain": "I feel... shaky. Everything's swimming. Why is everyone looking at me?",
+			"when": "Since an hour. I took my insulin and then the lunch got late. The cook was on leave.",
+			"other": "Sugar for twelve years. Insulin twice a day. My son says I was talking to the fridge."
+		},
+		"exam": "Pale, sweaty and trembling. Confused about where they are. No weakness on one side. Pupils normal.",
+		"results": {
+			"sugar": "Sugar 38 mg/dL, dangerously low."
+		},
+		"key": [
+			"sugar"
+		],
+		"go": "home",
+		"plans": [
+			{
+				"text": "Dextrose through the drip now, then a proper meal once awake, recheck the sugar, and sort out the insulin dose",
+				"why": "A diabetic on insulin who missed a meal, sweaty and confused, with a sugar of 38. Sugar through the drip wakes them up in minutes. Then food, and work out why.",
+				"right": true
+			},
+			{
+				"text": "An insulin injection for the confusion",
+				"why": "Insulin lowers sugar further. With a sugar of 38, that can kill.",
+				"effect": "harm"
+			},
+			{
+				"text": "A CT scan first, to rule out a stroke",
+				"why": "Always check the sugar first in anyone confused. This is a low sugar, and every minute matters.",
+				"effect": "worse"
+			},
+			{
+				"text": "Pour sweet tea into the mouth while they're drowsy",
+				"why": "A drowsy person can choke on fluids. Through the drip is safer and faster.",
+				"effect": "harm"
+			}
+		],
+		"with": "son",
+		"weight": 3,
+		"from_day": 6,
+		"plain": "the low sugar"
+	},
+	"hyperkalaemia": {
+		"name": "High potassium",
+		"board": "Kidney patient, weak and slow pulse",
+		"sex": "",
+		"age": [
+			35,
+			70
+		],
+		"triage": "red",
+		"start": [
+			45,
+			55
+		],
+		"worsens": 12,
+		"vitals": {
+			"pulse": [
+				48,
+				56
+			],
+			"bp": [
+				138,
+				150
+			],
+			"temp": [
+				36.4,
+				37.0
+			],
+			"spo2": [
+				95,
+				97
+			],
+			"breaths": [
+				18,
+				22
+			]
+		},
+		"answers": {
+			"pain": "So weak. My legs feel like cotton. My heart is doing something strange.",
+			"when": "Since this morning. I missed two dialysis sessions this week. The auto drivers were on strike.",
+			"other": "My kidneys failed three years ago. Dialysis three times a week. I had coconut water yesterday because it's 'healthy'."
+		},
+		"exam": "A dialysis fistula on the left arm with a buzz over it. Weak all over. Slow pulse. Ankles a little puffy.",
+		"results": {
+			"ecg": "Tall peaked T waves and widening of the complexes. A dangerous potassium.",
+			"bloods": "Potassium 7.4, dangerously high. Creatinine very high."
+		},
+		"key": [
+			"ecg",
+			"bloods"
+		],
+		"go": "icu",
+		"plans": [
+			{
+				"text": "Calcium gluconate to protect the heart, insulin with dextrose and salbutamol nebulisers to push the potassium down, and urgent dialysis",
+				"why": "Missed dialysis, coconut water, weakness, a slow pulse and a potassium of 7.4 with ECG changes. Protect the heart first, push the potassium into the cells, then dialysis to take it out.",
+				"right": true
+			},
+			{
+				"text": "Wait for the next dialysis day",
+				"why": "A potassium of 7.4 with ECG changes can stop the heart within minutes to hours.",
+				"effect": "worse"
+			},
+			{
+				"text": "A banana and coconut water for the weakness",
+				"why": "Both are full of potassium, the very thing that's too high.",
+				"effect": "harm"
+			},
+			{
+				"text": "Atropine for the slow pulse and home",
+				"why": "Atropine doesn't fix the potassium causing the slow pulse, and home is no place for this.",
+				"effect": "back"
+			}
+		],
+		"weight": 1,
+		"from_day": 11,
+		"plain": ""
+	},
+	"heart_failure": {
+		"name": "Fluid on the lungs",
+		"board": "Breathless, can't lie flat",
+		"sex": "",
+		"age": [
+			55,
+			85
+		],
+		"triage": "red",
+		"start": [
+			40,
+			50
+		],
+		"worsens": 10,
+		"vitals": {
+			"pulse": [
+				110,
+				122
+			],
+			"bp": [
+				158,
+				172
+			],
+			"temp": [
+				36.6,
+				37.0
+			],
+			"spo2": [
+				87,
+				90
+			],
+			"breaths": [
+				28,
+				32
+			]
+		},
+		"answers": {
+			"pain": "I can't breathe. When I lie down, I drown. I've slept sitting in a chair for three nights.",
+			"when": "Worse since last night. The cough brings up pink froth. That can't be good.",
+			"other": "Heart attack five years ago. I'm supposed to take the water tablet. It makes me run to the toilet. At my age, who has time?"
+		},
+		"exam": "Sitting bolt upright, breathless and sweaty. Crackles up to the middle of both lungs. Swollen ankles. Neck veins full.",
+		"results": {
+			"xray": "Fluid in both lungs. The heart is enlarged.",
+			"ecg": "Fast rhythm. Old heart attack changes. No new heart attack.",
+			"bloods": "Troponin a little raised, flat. Kidneys a little strained."
+		},
+		"key": [
+			"xray",
+			"ecg"
+		],
+		"go": "admit",
+		"plans": [
+			{
+				"text": "Sit them up, oxygen, the water injection (furosemide) through the drip, a nitrate under the tongue for the blood pressure, and admit",
+				"why": "Breathless lying flat, pink froth, crackles and fluid on the X-ray, after stopping the water tablet: fluid on the lungs from a weak heart. Sit up, oxygen, the water injection and a nitrate.",
+				"right": true
+			},
+			{
+				"text": "A fast saline drip",
+				"why": "Their lungs are already full of fluid. More fluid drowns them.",
+				"effect": "harm"
+			},
+			{
+				"text": "Lie them flat to rest",
+				"why": "Lying flat pushes more fluid into the lungs.",
+				"effect": "harm"
+			},
+			{
+				"text": "Nebulisers for asthma and home",
+				"why": "The crackles and the X-ray show fluid, not asthma. This is a heart that needs help tonight.",
+				"effect": "back"
+			}
+		],
+		"weight": 2,
+		"from_day": 8,
+		"plain": "the breathing"
+	},
+	"copd": {
+		"name": "Lung disease flare-up",
+		"board": "Old cough, now very breathless",
+		"sex": "",
+		"age": [
+			55,
+			85
+		],
+		"triage": "red",
+		"start": [
+			40,
+			50
+		],
+		"worsens": 9,
+		"vitals": {
+			"pulse": [
+				104,
+				114
+			],
+			"bp": [
+				130,
+				144
+			],
+			"temp": [
+				37.6,
+				38.2
+			],
+			"spo2": [
+				84,
+				87
+			],
+			"breaths": [
+				26,
+				30
+			]
+		},
+		"answers": {
+			"pain": "Breathless. Worse than ever. The inhaler isn't working. The phlegm has gone green.",
+			"when": "Three days. Since the cold weather started. And the smoke from the factory next door.",
+			"other": "I smoked bidis for forty years. Stopped five years ago. Cooking on the wood chulha all my life too."
+		},
+		"exam": "Breathing through pursed lips. Wheezes all over. Barrel-shaped chest. Drowsy between sentences.",
+		"results": {
+			"gas": "Oxygen low. Carbon dioxide high and the blood acidic. They're tiring.",
+			"xray": "Over-inflated lungs. No collapsed lung. A little patch at the right base."
+		},
+		"key": [
+			"gas"
+		],
+		"go": "admit",
+		"plans": [
+			{
+				"text": "Controlled oxygen aiming for 88 to 92 percent, nebulisers, steroids and antibiotics, and the breathing mask machine (BiPAP) for the high carbon dioxide",
+				"why": "A flare-up of long-standing lung disease, with green phlegm, low oxygen and a rising carbon dioxide. Controlled oxygen, nebulisers, steroids, antibiotics and BiPAP to help them blow off the carbon dioxide.",
+				"right": true
+			},
+			{
+				"text": "Full-blast oxygen to get the saturation to 100",
+				"why": "In these lungs, too much oxygen makes the carbon dioxide climb until they stop breathing. Aim for 88 to 92.",
+				"effect": "harm"
+			},
+			{
+				"text": "A sedative to calm the breathlessness",
+				"why": "Sedating someone whose carbon dioxide is already rising can stop their breathing.",
+				"effect": "harm"
+			},
+			{
+				"text": "A new inhaler and home",
+				"why": "They're drowsy with a high carbon dioxide. This needs a hospital bed and a breathing machine.",
+				"effect": "back"
+			}
+		],
+		"weight": 2,
+		"from_day": 8,
+		"plain": "the breathing"
+	},
+	"anaphylaxis": {
+		"name": "Severe allergic reaction",
+		"board": "Swollen lips, rash, wheezing",
+		"sex": "",
+		"age": [
+			16,
+			55
+		],
+		"triage": "red",
+		"start": [
+			45,
+			55
+		],
+		"worsens": 15,
+		"vitals": {
+			"pulse": [
+				124,
+				136
+			],
+			"bp": [
+				80,
+				90
+			],
+			"temp": [
+				36.8,
+				37.2
+			],
+			"spo2": [
+				90,
+				93
+			],
+			"breaths": [
+				26,
+				30
+			]
+		},
+		"answers": {
+			"pain": "My lips are swelling. My throat feels tight. I'm itching everywhere.",
+			"when": "Twenty minutes ago. Prawn curry at a party. The host said it was 'only a little prawn'.",
+			"other": "I swelled up once before with prawns. A small one. I thought it was a one-time thing."
+		},
+		"exam": "Swollen lips and eyelids. Hives all over. Wheeze in both lungs. Blood pressure low. A hoarse voice.",
+		"results": {},
+		"key": [],
+		"go": "admit",
+		"plans": [
+			{
+				"text": "Adrenaline injection into the thigh muscle now, oxygen, a fast drip, then an antihistamine and a steroid, and watch for hours",
+				"why": "Swelling, hives, wheeze and low blood pressure minutes after prawns: anaphylaxis. Adrenaline into the muscle is the treatment, now. Everything else comes after.",
+				"right": true
+			},
+			{
+				"text": "An antihistamine tablet and wait",
+				"why": "Antihistamines help the itch but don't open airways or raise blood pressure. Without adrenaline, people die.",
+				"effect": "worse"
+			},
+			{
+				"text": "Adrenaline straight into the vein, full strength",
+				"why": "Undiluted adrenaline into a vein can cause a heart attack. Into the thigh muscle is the safe way.",
+				"effect": "harm"
+			},
+			{
+				"text": "Home as soon as the swelling settles",
+				"why": "Anaphylaxis can come back hours later. Watch them, and send them home with an adrenaline pen.",
+				"effect": "back"
+			}
+		],
+		"weight": 2,
+		"from_day": 8,
+		"plain": "the allergy"
+	},
+	"organophosphate": {
+		"name": "Pesticide poisoning",
+		"board": "Collapsed after spraying the fields",
+		"sex": "m",
+		"age": [
+			18,
+			60
+		],
+		"triage": "red",
+		"start": [
+			45,
+			55
+		],
+		"worsens": 12,
+		"vitals": {
+			"pulse": [
+				46,
+				54
+			],
+			"bp": [
+				96,
+				108
+			],
+			"temp": [
+				36.6,
+				37.2
+			],
+			"spo2": [
+				89,
+				92
+			],
+			"breaths": [
+				26,
+				30
+			]
+		},
+		"answers": {
+			"pain": "I can't stop sweating. My chest is tight. My eyes... everything is blurry.",
+			"when": "This afternoon. I was spraying the cotton without a mask. It was too hot for the mask.",
+			"other": "Vomiting, loose motions, and my mouth won't stop watering. My clothes are still wet with the spray."
+		},
+		"exam": "Tiny pinpoint pupils. Drooling and pouring sweat. Wheezes and wet sounds in the chest. Slow pulse. Muscles twitching. Clothes soaked and smelling of pesticide.",
+		"results": {
+			"bloods": "Cholinesterase very low. Pesticide poisoning confirmed.",
+			"gas": "Oxygen low."
+		},
+		"key": [],
+		"go": "icu",
+		"plans": [
+			{
+				"text": "Gloves on, strip off the sprayed clothes and wash the skin, oxygen, and atropine doubled every few minutes until the chest is dry, then intensive care",
+				"why": "Pinpoint pupils, drooling, sweating, a wet chest and a slow pulse after spraying without a mask: organophosphate poisoning. Wash it off, and give atropine until the chest is dry, however much it takes.",
+				"right": true
+			},
+			{
+				"text": "Make him vomit to get the poison out",
+				"why": "It came through the skin and lungs, not the stomach, and a drowsy person who vomits can choke.",
+				"effect": "harm"
+			},
+			{
+				"text": "One small dose of atropine and see",
+				"why": "Organophosphate poisoning needs atropine doubled again and again until the chest is dry. One small dose isn't enough.",
+				"effect": "worse"
+			},
+			{
+				"text": "Oxygen only and wait for the pupils to come back",
+				"why": "The chest is filling with fluid. Without atropine he drowns.",
+				"effect": "worse"
+			}
+		],
+		"jobs": [
+			"farmer",
+			"farm labourer"
+		],
+		"weight": 1,
+		"from_day": 11,
+		"plain": "the spray poisoning"
+	},
+	"heat_stroke": {
+		"name": "Heat stroke",
+		"board": "Collapsed in the afternoon sun",
+		"sex": "m",
+		"age": [
+			18,
+			70
+		],
+		"triage": "red",
+		"start": [
+			45,
+			55
+		],
+		"worsens": 12,
+		"vitals": {
+			"pulse": [
+				124,
+				136
+			],
+			"bp": [
+				96,
+				108
+			],
+			"temp": [
+				40.8,
+				41.6
+			],
+			"spo2": [
+				95,
+				97
+			],
+			"breaths": [
+				26,
+				30
+			]
+		},
+		"answers": {
+			"pain": "He's burning hot and talking nonsense. He asked me who I am. We've worked together six years.",
+			"when": "He fell down at the site at two in the afternoon. Forty-four degrees today, the radio said.",
+			"other": "No medicines. He drank only one bottle of water all morning. The tanker didn't come."
+		},
+		"exam": "Burning hot, dry skin. Confused and restless. Muscles tense. No neck stiffness.",
+		"results": {
+			"sugar": "Sugar 96 mg/dL.",
+			"bloods": "Sodium high. Creatinine raised. Muscle enzyme very high. Liver tests raised."
+		},
+		"key": [
+			"sugar"
+		],
+		"go": "icu",
+		"plans": [
+			{
+				"text": "Cool them fast: strip, soak with cold water and fan, ice packs in the armpits and groin, cool fluids through the drip, and intensive care",
+				"why": "A temperature of 41, confusion and hot dry skin after hours in the sun: heat stroke. Cooling, fast, is the treatment. Every minute above 40 damages the brain and organs.",
+				"right": true
+			},
+			{
+				"text": "Paracetamol to bring the temperature down",
+				"why": "Paracetamol works on fever from infection, not on heat stroke. Only cooling does.",
+				"effect": "worse"
+			},
+			{
+				"text": "Wrap them up warm to stop the shivering",
+				"why": "Wrapping traps the heat that's cooking them.",
+				"effect": "harm"
+			},
+			{
+				"text": "A seat in the waiting area with a glass of water",
+				"why": "Confused with a temperature of 41, this person can die in the waiting area.",
+				"effect": "worse"
+			}
+		],
+		"told_by": "colleague",
+		"jobs": [
+			"construction worker",
+			"traffic constable",
+			"delivery rider",
+			"farm labourer"
+		],
+		"weight": 2,
+		"from_day": 8,
+		"plain": "the heat stroke"
+	},
+	"eclampsia": {
+		"name": "Eclampsia",
+		"board": "Pregnant, had a fit",
+		"sex": "f",
+		"age": [
+			18,
+			35
+		],
+		"triage": "red",
+		"start": [
+			45,
+			55
+		],
+		"worsens": 12,
+		"vitals": {
+			"pulse": [
+				100,
+				110
+			],
+			"bp": [
+				166,
+				178
+			],
+			"temp": [
+				36.8,
+				37.2
+			],
+			"spo2": [
+				95,
+				97
+			],
+			"breaths": [
+				20,
+				24
+			]
+		},
+		"answers": {
+			"pain": "My head. Such a headache. And I see flashing lights.",
+			"when": "An hour ago. My husband says I had a fit at home, shaking all over. I don't remember any of it.",
+			"other": "My feet and face have been swelling for a week. I missed my last two check-ups. The clinic is far."
+		},
+		"exam": "Pregnant, about thirty-four weeks. Swollen face and legs. Very brisk reflexes. Baby's heartbeat present.",
+		"results": {
+			"urine": "Lots of protein in the urine.",
+			"bloods": "Platelets 96,000. Liver tests raised."
+		},
+		"key": [
+			"urine"
+		],
+		"go": "labour",
+		"plans": [
+			{
+				"text": "Magnesium sulphate to stop more fits, labetalol for the blood pressure, lie her on her left side, and the obstetricians to plan delivery",
+				"why": "A fit in late pregnancy with very high blood pressure and protein in the urine: eclampsia. Magnesium prevents more fits, the pressure comes down, and delivering the baby is the cure.",
+				"right": true
+			},
+			{
+				"text": "Treat it as epilepsy: phenytoin and home",
+				"why": "This isn't epilepsy. Eclampsia needs magnesium, and it can kill mother and baby.",
+				"effect": "harm"
+			},
+			{
+				"text": "Wait for the blood pressure to settle on its own",
+				"why": "It won't. More fits, a stroke or the placenta tearing away can come any minute.",
+				"effect": "worse"
+			},
+			{
+				"text": "A diazepam injection only, and the ward",
+				"why": "Magnesium is far better than diazepam at stopping eclamptic fits, and the pressure and the delivery need planning now.",
+				"effect": "worse"
+			}
+		],
+		"weight": 1,
+		"from_day": 11,
+		"plain": ""
+	},
+	"panic_attack": {
+		"name": "Panic attack",
+		"board": "Can't breathe, tingling hands",
+		"sex": "",
+		"age": [
+			18,
+			35
+		],
+		"triage": "yellow",
+		"start": [
+			15,
+			20
+		],
+		"worsens": 1,
+		"vitals": {
+			"pulse": [
+				108,
+				118
+			],
+			"bp": [
+				126,
+				136
+			],
+			"temp": [
+				36.6,
+				37.0
+			],
+			"spo2": [
+				99,
+				100
+			],
+			"breaths": [
+				26,
+				30
+			]
+		},
+		"answers": {
+			"pain": "I can't breathe. My chest is tight, my hands are tingling, my lips are numb. I think I'm dying.",
+			"when": "Twenty minutes ago. In the middle of my appraisal meeting. My manager said 'let's talk about growth'.",
+			"other": "It happened once before, during exams. No medicines. Three coffees today. Okay, five."
+		},
+		"exam": "Breathing fast, frightened. Hands cramped. Chest clear. Heart sounds normal. Oxygen 100 percent.",
+		"results": {
+			"ecg": "Fast normal rhythm. Nothing else.",
+			"sugar": "Sugar 108 mg/dL."
+		},
+		"key": [
+			"ecg"
+		],
+		"go": "home",
+		"plans": [
+			{
+				"text": "Check the ECG and sugar, then sit with them, slow the breathing down together, explain what's happening, and arrange a follow-up to talk about it",
+				"why": "Fast breathing, tingling hands and numb lips during stress, with full oxygen and a normal ECG: a panic attack. Rule out the serious things, then calm breathing and a kind explanation work.",
+				"right": true
+			},
+			{
+				"text": "Breathe into a paper bag",
+				"why": "Paper-bag breathing can drop the oxygen and is no longer advised. Slow breathing with someone calm is better.",
+				"effect": "harm"
+			},
+			{
+				"text": "Admit to cardiac care",
+				"why": "The ECG is normal and the story fits. A cardiac bed scares them more and helps nobody.",
+				"effect": "lucky"
+			},
+			{
+				"text": "Tell them it's nothing and send them home",
+				"why": "It isn't nothing to them, and it'll come back. Explain it, and arrange help.",
+				"effect": "back"
+			}
+		],
+		"jobs": [
+			"software engineer",
+			"college student",
+			"call-centre worker",
+			"accountant",
+			"sales executive",
+			"bank clerk"
+		],
+		"weight": 3,
+		"from_day": 6,
+		"plain": "the panic"
+	},
+	"sickle_crisis": {
+		"name": "Sickle cell pain crisis",
+		"board": "Known sickle cell, severe pain",
+		"sex": "",
+		"age": [
+			14,
+			35
+		],
+		"triage": "yellow",
+		"start": [
+			30,
+			40
+		],
+		"worsens": 4,
+		"vitals": {
+			"pulse": [
+				108,
+				118
+			],
+			"bp": [
+				116,
+				128
+			],
+			"temp": [
+				37.4,
+				38.0
+			],
+			"spo2": [
+				94,
+				96
+			],
+			"breaths": [
+				20,
+				24
+			]
+		},
+		"answers": {
+			"pain": "My legs and my back. The deep bone pain. A crisis. I know my body, I've had these since I was small.",
+			"when": "Since last night. It got cold, and I didn't drink enough water at the wedding.",
+			"other": "Sickle cell. I take folic acid and the hydroxyurea. Please don't make me wait, the last hospital thought I wanted drugs."
+		},
+		"exam": "In obvious pain, can't get comfortable. Tender over the shins and lower back. Yellow tinge in the eyes. Chest clear for now.",
+		"results": {
+			"bloods": "Haemoglobin 7.8, their usual. Reticulocytes raised. White count 13,000.",
+			"xray": "Lungs clear."
+		},
+		"key": [
+			"bloods"
+		],
+		"go": "admit",
+		"plans": [
+			{
+				"text": "Strong pain relief within thirty minutes, fluids, keep them warm, oxygen if low, look for infection, and admit",
+				"why": "A known sickle cell patient in a pain crisis after cold and dehydration. Fast, strong pain relief is the first job, then fluids, warmth and watching the chest.",
+				"right": true
+			},
+			{
+				"text": "Make them wait, it's probably drug-seeking",
+				"why": "Sickle cell pain is real and severe, and delay makes crises worse. Believe them.",
+				"effect": "worse"
+			},
+			{
+				"text": "Painkiller tablets and home",
+				"why": "A crisis this bad needs strong pain relief and fluids in hospital, and a watch for a chest crisis.",
+				"effect": "back"
+			},
+			{
+				"text": "A blood transfusion straight away",
+				"why": "Their haemoglobin is at their usual level. Transfusion isn't for an ordinary pain crisis.",
+				"effect": "lucky"
+			}
+		],
+		"weight": 1,
+		"from_day": 8,
+		"plain": "the pain crisis"
+	},
+	"nosebleed": {
+		"name": "Nosebleed",
+		"board": "Nose bleeding, won't stop",
+		"sex": "m",
+		"age": [
+			45,
+			80
+		],
+		"triage": "yellow",
+		"start": [
+			20,
+			25
+		],
+		"worsens": 2,
+		"vitals": {
+			"pulse": [
+				92,
+				102
+			],
+			"bp": [
+				168,
+				182
+			],
+			"temp": [
+				36.6,
+				37.0
+			],
+			"spo2": [
+				97,
+				99
+			],
+			"breaths": [
+				16,
+				20
+			]
+		},
+		"answers": {
+			"pain": "My nose won't stop bleeding. I've used two towels. Good ones. My wife's going to be furious.",
+			"when": "Forty minutes ago. I was just reading the newspaper. The news wasn't that upsetting.",
+			"other": "BP, yes. Tablets, yes. Taken them this week? Hmm. Define 'this week'."
+		},
+		"exam": "Blood trickling from the left nostril and down the back of the throat. A bleeding spot at the front of the left nostril. Blood pressure high.",
+		"results": {
+			"bloods": "Haemoglobin 12.8. Clotting normal."
+		},
+		"key": [],
+		"go": "home",
+		"plans": [
+			{
+				"text": "Sit up and lean forward, pinch the soft part of the nose for fifteen minutes, ice on the bridge, then cautery or a nasal pack if it keeps going, and restart the BP tablets",
+				"why": "A nosebleed from the front of the nose in someone with high blood pressure. Pinching the soft part, leaning forward, does most of the work. Then seal the spot and sort out the tablets.",
+				"right": true
+			},
+			{
+				"text": "Tilt the head back to stop the blood",
+				"why": "Tilting back sends blood down the throat to be swallowed or breathed in. Lean forward.",
+				"effect": "harm"
+			},
+			{
+				"text": "Pinch the bony top of the nose for a minute and home",
+				"why": "The bleeding point is in the soft front part, and a minute isn't long enough. It starts again on the way home.",
+				"effect": "back"
+			},
+			{
+				"text": "An injection to drop the blood pressure fast",
+				"why": "Crashing the pressure isn't the way. Stop the bleed, then restart the usual tablets.",
+				"effect": "harm"
+			}
+		],
+		"weight": 3,
+		"from_day": 6,
+		"plain": "the nosebleed"
+	},
+	"swallowed_coin": {
+		"name": "Swallowed coin",
+		"board": "Child swallowed a coin",
+		"sex": "",
+		"age": [
+			2,
+			6
+		],
+		"triage": "green",
+		"start": [
+			10,
+			15
+		],
+		"worsens": 0,
+		"vitals": {
+			"pulse": [
+				108,
+				120
+			],
+			"bp": [
+				92,
+				100
+			],
+			"temp": [
+				36.6,
+				37.0
+			],
+			"spo2": [
+				98,
+				99
+			],
+			"breaths": [
+				22,
+				26
+			]
+		},
+		"answers": {
+			"pain": "Swallowed a one-rupee coin. Right in front of me. Then laughed. I didn't laugh.",
+			"when": "About an hour ago, while I was counting change for the vegetable man.",
+			"other": "No choking, no drooling. Eating a biscuit right now, as you can see. Another biscuit, actually."
+		},
+		"exam": "Happy, eating, breathing easily. No drooling. Belly soft, not tender.",
+		"results": {
+			"xray": "A round coin in the stomach. Not stuck in the food pipe."
+		},
+		"key": [
+			"xray"
+		],
+		"go": "home",
+		"plans": [
+			{
+				"text": "An X-ray to find it, and since it's in the stomach, home with normal food, and back at once if there's pain, vomiting or blood",
+				"why": "A coin in a happy child who's eating, and the X-ray shows it's already in the stomach. Coins that reach the stomach almost always pass by themselves.",
+				"right": true
+			},
+			{
+				"text": "Make the child vomit it up",
+				"why": "Vomiting can bring the coin back up into the food pipe or the windpipe. Never.",
+				"effect": "harm"
+			},
+			{
+				"text": "An endoscopy tonight to take it out",
+				"why": "A coin in the stomach of a well child passes by itself. An endoscopy and anaesthetic aren't needed.",
+				"effect": "lucky"
+			},
+			{
+				"text": "Home without an X-ray",
+				"why": "A coin stuck in the food pipe can look like this at first and cause serious damage. Find where it is first.",
+				"effect": "back"
+			}
+		],
+		"told_by": "parent",
+		"weight": 2,
+		"from_day": 6,
+		"plain": "the coin"
+	},
+	"dvt": {
+		"name": "Clot in the leg",
+		"board": "Swollen painful calf",
+		"sex": "",
+		"age": [
+			35,
+			75
+		],
+		"triage": "yellow",
+		"start": [
+			20,
+			30
+		],
+		"worsens": 2,
+		"vitals": {
+			"pulse": [
+				92,
+				102
+			],
+			"bp": [
+				124,
+				136
+			],
+			"temp": [
+				37.0,
+				37.6
+			],
+			"spo2": [
+				96,
+				98
+			],
+			"breaths": [
+				16,
+				20
+			]
+		},
+		"answers": {
+			"pain": "My left calf. Swollen, tight, hurts when I walk. It looks like someone else's leg.",
+			"when": "Since two days. After a twenty-hour bus journey to my cousin's place. Sleeper bus, very sleepy, very still.",
+			"other": "No breathlessness. No chest pain. I had a knee operation a month ago. Is that related?"
+		},
+		"exam": "The left calf is swollen, warm and tender, four centimetres bigger than the right. Chest clear. Breathing normally.",
+		"results": {
+			"usg": "A clot in the deep veins of the left leg, up to behind the knee.",
+			"bloods": "D-dimer raised. Kidneys and platelets normal."
+		},
+		"key": [
+			"usg"
+		],
+		"go": "admit",
+		"plans": [
+			{
+				"text": "Start a blood thinner, heparin injections, and admit to plan the tablets for three months",
+				"why": "A swollen, tender calf after a long bus ride and a recent operation, and the ultrasound shows a deep vein clot. Blood thinners stop it growing or travelling to the lungs.",
+				"right": true
+			},
+			{
+				"text": "Massage the calf to break it up",
+				"why": "Massaging a clot can push it to the lungs. That can kill.",
+				"effect": "harm"
+			},
+			{
+				"text": "A water tablet to bring the swelling down",
+				"why": "The swelling comes from a blocked vein, not extra water. The clot needs a blood thinner.",
+				"effect": "worse"
+			},
+			{
+				"text": "A painkiller and rest at home",
+				"why": "Without a blood thinner the clot can grow and travel to the lungs.",
+				"effect": "back"
+			}
+		],
+		"weight": 2,
+		"from_day": 8,
+		"plain": "the leg clot"
+	},
+	"urinary_retention": {
+		"name": "Can't pass urine",
+		"board": "Can't pee, belly bursting",
+		"sex": "m",
+		"age": [
+			60,
+			85
+		],
+		"triage": "yellow",
+		"start": [
+			25,
+			30
+		],
+		"worsens": 4,
+		"vitals": {
+			"pulse": [
+				96,
+				106
+			],
+			"bp": [
+				148,
+				162
+			],
+			"temp": [
+				36.6,
+				37.0
+			],
+			"spo2": [
+				97,
+				99
+			],
+			"breaths": [
+				16,
+				20
+			]
+		},
+		"answers": {
+			"pain": "I can't pass urine. Not a drop. My belly feels like a balloon about to burst.",
+			"when": "Since last night. For years the stream has been slow. Last night it just gave up.",
+			"other": "I took a cold medicine for my runny nose yesterday. The chemist said 'very strong'. He wasn't joking."
+		},
+		"exam": "A tender swelling in the lower belly reaching up to the belly button, dull when tapped. Prostate enlarged and smooth.",
+		"results": {
+			"usg": "Bladder holding 950 ml. Kidneys not swollen.",
+			"bloods": "Creatinine normal.",
+			"urine": "No infection."
+		},
+		"key": [
+			"usg"
+		],
+		"go": "home",
+		"plans": [
+			{
+				"text": "A catheter to drain the bladder, stop the cold medicine, start a prostate tablet, and the urology clinic",
+				"why": "An older man with a slow stream for years who can't pass urine after a strong cold medicine, a big prostate and a full bladder on the scan. The catheter brings instant relief.",
+				"right": true
+			},
+			{
+				"text": "A water tablet to make him pee",
+				"why": "More urine into a bladder that can't empty makes it worse and hurts more.",
+				"effect": "harm"
+			},
+			{
+				"text": "Wait and let him try again in a warm bath",
+				"why": "With 950 ml in the bladder, waiting only stretches it further.",
+				"effect": "worse"
+			},
+			{
+				"text": "A painkiller and home",
+				"why": "The bladder stays full and the pain comes back worse, and the kidneys can suffer.",
+				"effect": "back"
+			}
+		],
+		"weight": 2,
+		"from_day": 6,
+		"plain": ""
 	}
 }

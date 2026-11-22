@@ -16,6 +16,7 @@ extends RefCounted
 const WEIGHTS := {
 	"marathi": 18, "hindi": 18, "muslim": 10, "punjabi": 6, "gujarati": 6, "bengali": 6,
 	"tamil": 6, "malayali": 6, "telugu": 4, "kannada": 3, "goan": 3, "northeast": 2, "parsi": 1,
+	"bihari": 5, "rajasthani": 4, "odia": 3, "sindhi": 2,
 }
 ## Names that can never be used for a stranger, on top of the cast's.
 const BLOCKED := ["Asha", "Verma", "Varun", "Khanna", "Suresh", "Babu"]
@@ -136,7 +137,43 @@ const COMMUNITIES := {
 		"m": ["Cyrus", "Darius", "Jehangir^", "Rustom^", "Farokh", "Behram^", "Zubin*"],
 		"f": ["Perizad", "Roshan", "Shirin^", "Zarine", "Dilnaz", "Freny^", "Anahita*"],
 		"last": ["Irani", "Mistry", "Engineer", "Contractor", "Wadia", "Batliwala", "Daruwala", "Lalkaka"],
-		"home": ["Mumbai", "Navsari", "Udvada", "Pune"],
+		"home": ["Mumbai", "Navsari", "Udvada", "Pune", "Surat"],
+	},
+	"bihari": {
+		"m": ["Ranjeet", "Sanjeev", "Chandan", "Mukesh", "Kundan", "Ritesh", "Niraj", "Vikas", "Pappu", "Bablu",
+			"Shatrughan^", "Lalan^", "Satyendra^", "Ramashray^", "Abhishek*", "Shivam*", "Aman*", "Prince*"],
+		"f": ["Rinki", "Sudha", "Chanda", "Reena", "Priti", "Babita", "Sangeeta", "Archana", "Kanti^", "Shobha^",
+			"Sumitra^", "Nandini*", "Khushboo*", "Muskan*"],
+		"last": ["Kumar", "Jha", "Mandal", "Paswan", "Mahto", "Ojha", "Pathak", "Rai", "Choudhary", "Sahni", "Thakur",
+			"Mishra"],
+		"home": ["Patna", "Gaya", "Muzaffarpur", "Bhagalpur", "Darbhanga", "Siwan", "Begusarai"],
+	},
+	"rajasthani": {
+		"m": ["Govind", "Jitendra", "Lokesh", "Rajendra", "Yogesh", "Devendra", "Pratap", "Mahendra^", "Bhanwar^",
+			"Hanuman^", "Narpat^", "Shankar^", "Lakshya*", "Dhruv*", "Kartik*"],
+		"f": ["Mamta", "Manju", "Pinky", "Suman", "Dimple", "Bhawna", "Jyoti", "Kamla^", "Bhanwari^", "Sushila^",
+			"Lalita^", "Payal*", "Kanak*", "Riya*"],
+		"last": ["Shekhawat", "Choudhary", "Meena", "Purohit", "Bishnoi", "Rajpurohit", "Saini", "Bhati", "Parihar",
+			"Solanki", "Charan", "Sankhla"],
+		"home": ["Jaipur", "Jodhpur", "Udaipur", "Bikaner", "Ajmer", "Kota", "Sikar"],
+	},
+	"odia": {
+		"m": ["Debasis", "Prasanta", "Manas", "Biswajit", "Subrat", "Satyajit", "Ashutosh", "Bibhuti^", "Sarat^",
+			"Jagannath^", "Pradyumna^", "Ansuman*", "Abinash*", "Sidharth*"],
+		"f": ["Sasmita", "Itishree", "Mamata", "Lopamudra", "Sangita", "Subhashree", "Jyotirmayee", "Rashmita",
+			"Pratima^", "Annapurna^", "Kuni^", "Swagatika*", "Ipsita*", "Ananya*"],
+		"last": ["Mohanty", "Pattnaik", "Das", "Behera", "Sahu", "Nayak", "Pradhan", "Swain", "Rout", "Jena",
+			"Mahapatra", "Samal", "Barik"],
+		"home": ["Bhubaneswar", "Cuttack", "Puri", "Berhampur", "Sambalpur", "Balasore", "Rourkela"],
+	},
+	"sindhi": {
+		"m": ["Kishore", "Naresh", "Sunil", "Dilip", "Jitesh", "Haresh", "Vicky", "Jairam^", "Manohar^", "Vashdev^",
+			"Prem^", "Gul^", "Karan*", "Jatin*", "Yuvraj*"],
+		"f": ["Bharti", "Hema", "Jyoti", "Meena", "Roshni", "Tina", "Champa^", "Kamla^", "Pushpa^", "Sheela^",
+			"Simran*", "Divya*", "Mahek*"],
+		"last": ["Advani", "Chandiramani", "Hemnani", "Jagtiani", "Kripalani", "Lalwani", "Mirchandani", "Motwani",
+			"Ramchandani", "Sadhwani", "Tolani", "Vaswani", "Wadhwani"],
+		"home": ["Ulhasnagar", "Ahmedabad", "Indore", "Pune", "Gandhidham", "Ajmer"],
 	},
 }
 

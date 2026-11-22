@@ -26,16 +26,11 @@ const TESTS := {
 }
 ## The order tests are offered in: quick and cheap first.
 const ORDER := ["sugar", "ecg", "urine", "gas", "clot", "rapid", "bloods", "xray", "usg", "ct"]
-## How often each condition walks in, out of the total.
-const WEIGHTS := {
-	"gastro": 10, "renal_colic": 8, "wrist_fracture": 7, "chest_wall": 7, "dengue": 7, "pneumonia": 6,
-	"appendicitis": 6, "malaria": 5, "asthma": 5, "heart_attack": 5, "dka": 3, "viper_bite": 3, "brain_bleed": 3,
-	"ectopic": 3,
-}
 ## Where a patient goes after the right plan, as the board says it.
 const DESTINATIONS := {
 	"theatre": "to theatre", "admit": "admitted to the ward", "home": "home", "icu": "to intensive care",
-	"cath": "to the cath lab", "refer": "to neurosurgery",
+	"cath": "to the cath lab", "refer": "to neurosurgery", "tb_clinic": "to the TB clinic",
+	"labour": "to the labour room", "burns": "to the burns unit", "isolation": "to the isolation ward",
 }
 const TRIAGE := ["red", "yellow", "green"]
 
@@ -72,17 +67,47 @@ static func useful(condition: Dictionary, test: String) -> bool:
 	return (condition.get("results", {}) as Dictionary).has(test) or test in (condition.get("key", []) as Array)
 
 
-## A condition id, picked by WEIGHTS, never one of `avoid`.
-static func pick(rng: SeededRandom, avoid: Array = []) -> String:
+## How often a condition walks in, next to the others (its "weight").
+static func weight(id: String) -> int:
+	return int(get_condition(id).get("weight", 0))
+
+
+## True when a condition can walk in on this day, for someone this age and
+## sex (age -1 and sex "" mean anyone).
+static func can_walk_in(id: String, day: int, age: int = -1, sex: String = "") -> bool:
+	var condition := get_condition(id)
+	if condition.is_empty() or weight(id) <= 0 or day < int(condition.get("from_day", 0)):
+		return false
+	var ages: Array = condition.get("age", [0, 120])
+	if age >= 0 and (age < int(ages[0]) or age > int(ages[1])):
+		return false
+	var only := str(condition.get("sex", ""))
+	return sex.is_empty() or only.is_empty() or only == sex
+
+
+## A condition id picked by weight, never one of `avoid`: only ones that can
+## walk in on the day (rarer and harder ones join as the career goes on),
+## for someone this age and sex when given. extra adds ids with weights of
+## their own (an invented outbreak).
+static func pick(rng: SeededRandom, avoid: Array = [], day: int = 9999, extra: Dictionary = {}, age: int = -1,
+		sex: String = "") -> String:
+	var options := []
+	for id: String in ids():
+		if id not in avoid and can_walk_in(id, day, age, sex):
+			options.append([id, weight(id)])
+	var added := extra.keys()
+	added.sort()
+	for id: String in added:
+		if id not in avoid and int(extra[id]) > 0:
+			options.append([id, int(extra[id])])
 	var total := 0
-	for id: String in WEIGHTS:
-		if id not in avoid:
-			total += int(WEIGHTS[id])
-	var roll := rng.next_int(maxi(1, total))
-	for id: String in WEIGHTS:
-		if id in avoid:
-			continue
-		roll -= int(WEIGHTS[id])
+	for option: Array in options:
+		total += int(option[1])
+	if total <= 0:
+		return "gastro"
+	var roll := rng.next_int(total)
+	for option: Array in options:
+		roll -= int(option[1])
 		if roll < 0:
-			return id
+			return str(option[0])
 	return "gastro"

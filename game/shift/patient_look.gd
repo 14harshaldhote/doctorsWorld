@@ -17,11 +17,13 @@ const GREY := 5
 const WHITE := 6
 ## Skin tones by index in AvatarConfig.SKIN_TONES: the town's range.
 const SKIN := [2, 3, 4, 5, 6, 7, 8]
+## How many different looks there are: a look seed is read modulo this.
+const SEEDS := 1000003
 
 
 ## {"config": AvatarConfig, "outfit": String, "mood": AvatarConfig.Mood}
 static func make(person: Dictionary, age: int, look_seed: int, triage: String = "green") -> Dictionary:
-	var rng := SeededRandom.new(absi(look_seed) % 1000003 + 1)
+	var rng := SeededRandom.new(absi(look_seed) % SEEDS + 1)
 	var config := AvatarConfig.random(rng)
 	var woman := str(person.get("sex", "m")) == "f"
 	var community := str(person.get("community", ""))

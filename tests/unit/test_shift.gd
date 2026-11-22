@@ -99,7 +99,7 @@ func test_how_staff_address_people() -> void:
 
 func test_every_illness_is_complete_and_has_one_right_plan() -> void:
 	var ids := Conditions.ids()
-	expect(ids.size() >= 14, "at least fourteen illnesses: %d" % ids.size())
+	expect(ids.size() >= 55, "a library of illnesses: %d" % ids.size())
 	for id: String in ids:
 		var condition := Conditions.get_condition(id)
 		for key: String in ["name", "board", "triage", "start", "worsens", "vitals", "answers", "exam", "key", "go", "plans"]:
@@ -130,9 +130,7 @@ func test_every_illness_is_complete_and_has_one_right_plan() -> void:
 			else:
 				expect(str(plan.get("effect", "")) in ["worse", "harm", "back", "lucky"], "%s wrong plan's effect" % id)
 		expect_equal(right, 1, "%s has exactly one right plan" % id)
-		expect(Conditions.WEIGHTS.has(id), "%s walks in sometimes" % id)
-	for id: String in Conditions.WEIGHTS:
-		expect(id in ids, "weighted %s exists" % id)
+		expect(Conditions.weight(id) > 0, "%s walks in sometimes" % id)
 
 
 func test_illnesses_are_no_dialogue_and_keep_real_names_out() -> void:
@@ -158,7 +156,7 @@ func test_illnesses_are_picked_by_weight_and_never_from_the_avoid_list() -> void
 		expect(id != "gastro", "avoided")
 		counts[id] = int(counts.get(id, 0)) + 1
 	expect(int(counts.get("renal_colic", 0)) > int(counts.get("dka", 0)), "common things are common")
-	expect(counts.size() == Conditions.WEIGHTS.size() - 1, "everything else turns up")
+	expect(counts.size() == Conditions.ids().size() - 1, "everything else turns up (%d)" % counts.size())
 
 
 # --- The shift -------------------------------------------------------------------

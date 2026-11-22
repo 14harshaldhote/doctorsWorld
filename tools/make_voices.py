@@ -8,7 +8,11 @@ the game sound like people instead of the phone's reading voice:
   * the story's lines and replies, read straight from story/*.json;
   * the coaching in the skills lab and theatre, and the patients' answers,
     listed by tools/voice_lines.gd (which runs the game) in
-    tools/voice_lines.json, plus every answer in story/cases.json.
+    tools/voice_lines.json, plus every answer in story/cases.json;
+  * everything a made-up casualty patient can say, in each of the ten
+    patient voices that could say it, listed by tools/patient_lines.gd in
+    tools/patient_lines.json (the game joins a hello, an opening line and
+    an answer from these clips).
 
 Each character has their own voice, made by blending Kokoro's voices (so
 nobody else's game sounds like this). A line's mood sets its pace, calls
@@ -118,6 +122,19 @@ VOICES = {
     "gurdeep": {"mix": {"hm_omega": 0.6, "am_onyx": 0.4}, "speed": 0.98},
     "anwar": {"mix": {"hm_psi": 0.55, "bm_george": 0.45}, "speed": 0.9},
     "kavita": {"mix": {"hf_beta": 0.6, "af_nova": 0.4}, "speed": 1.05},
+    # The people casualty makes up (PatientVoices, story/patients.json): a
+    # young, a middle-aged and an old voice for men and for women, a warmer
+    # and a sharper one where there's room, so a temper sounds like itself.
+    "pm_young": {"mix": {"hm_psi": 0.5, "am_puck": 0.3, "am_echo": 0.2}, "speed": 1.05},
+    "pm_mid_warm": {"mix": {"hm_omega": 0.55, "am_michael": 0.25, "bm_daniel": 0.2}, "speed": 0.98},
+    "pm_mid_sharp": {"mix": {"hm_psi": 0.55, "am_onyx": 0.25, "bm_lewis": 0.2}, "speed": 1.04},
+    "pm_old_gruff": {"mix": {"hm_omega": 0.6, "bm_george": 0.25, "am_onyx": 0.15}, "speed": 0.9},
+    "pm_old_soft": {"mix": {"hm_omega": 0.5, "bm_fable": 0.3, "am_santa": 0.2}, "speed": 0.87},
+    "pf_young": {"mix": {"hf_beta": 0.5, "af_sky": 0.25, "af_nova": 0.25}, "speed": 1.06},
+    "pf_mid_warm": {"mix": {"hf_alpha": 0.55, "af_heart": 0.25, "bf_lily": 0.2}, "speed": 0.98},
+    "pf_mid_sharp": {"mix": {"hf_beta": 0.55, "af_kore": 0.25, "bf_isabella": 0.2}, "speed": 1.04},
+    "pf_old_soft": {"mix": {"hf_alpha": 0.5, "bf_alice": 0.3, "af_aoede": 0.2}, "speed": 0.88},
+    "pf_old_firm": {"mix": {"hf_alpha": 0.5, "bf_isabella": 0.25, "af_sarah": 0.25}, "speed": 0.93},
 }
 # The player's doctor: never voiced.
 PLAYER = "you"
@@ -218,7 +235,7 @@ def story_lines():
                     walk(value, phone_call)
 
     for name in sorted(os.listdir(os.path.join(ROOT, "story"))):
-        if name.endswith(".json") and name not in ("cast.json", "cases.json"):
+        if name.endswith(".json") and name not in ("cast.json", "cases.json", "patients.json"):
             with open(os.path.join(ROOT, "story", name)) as file:
                 walk(json.load(file), False)
     return found
@@ -324,6 +341,16 @@ def fact_lines():
     for station, facts in book.get("facts", {}).items():
         found += [(TRAINERS.get(station, "iyer"), text) for text in facts]
     return found
+
+
+def patient_lines():
+    """(who, text, mood) for every line a made-up casualty patient can say
+    (tools/patient_lines.json, written by tools/patient_lines.gd)."""
+    path = os.path.join(ROOT, "tools", "patient_lines.json")
+    if not os.path.exists(path):
+        return []
+    with open(path) as file:
+        return [(entry["who"], entry["text"], entry.get("mood", "")) for entry in json.load(file)]
 
 
 def catalogue_lines(story):
@@ -718,6 +745,8 @@ def plan(model_dir, only):
         add(who, text, "", True)
     for who, text in fact_lines():
         add(who, text, "", False)
+    for who, text, mood in patient_lines():
+        add(who, text, mood, False, acted=True)
     unique = {}
     for who, key, specs in lines:
         unique.setdefault((who, key), (who, key, specs))

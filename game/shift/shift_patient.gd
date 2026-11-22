@@ -47,6 +47,32 @@ var returning := false
 ## Severity marks already paged (75: looks worse).
 var paged := {}
 var look_seed := 0
+## "early", or "late": the illness further along and worse (PatientMaker).
+var stage := "early"
+## A mix or twist that changes the right plan (PatientParts.extras()), or "".
+var extra := ""
+## True when it isn't on the card and has to be caught.
+var extra_hidden := false
+## Who came in with them: {relation, first, full, sex, age}, or {} alone.
+var company := {}
+## Who answers the questions: "self", "parent" (a small child's) or
+## "colleague" (the workmate who brought them in).
+var speaker := "self"
+## Their temper (PatientParts.personalities()) and the recorded voice the
+## answers are said in (PatientVoices).
+var personality := "calm"
+var voice := ""
+## How long they'll wait before walking out, as a share of the usual.
+var patience := 1.0
+var job := ""
+## An invented illness from an outbreak, labelled as made up.
+var invented := false
+## Met on an earlier day: their record's id, the day, and what it was for.
+var known_id := ""
+var known_day := 0
+var known_what := ""
+## Back with the same trouble because it went wrong last time.
+var complication := false
 
 
 func full_name() -> String:
@@ -91,7 +117,65 @@ func decided() -> bool:
 ## The board's line: "Mr. Patil, 54 · Back pain going down to the groin".
 func board_line() -> String:
 	var line := "%s, %d · %s" % [called(), age, str(condition.get("board", ""))]
-	return ("Back · " + line) if returning else line
+	if returning:
+		return "Back · " + line
+	if known_day > 0:
+		return "Seen on Day %d · %s" % [known_day, line]
+	return line
+
+
+## "his", "her".
+func their() -> String:
+	return "her" if sex() == "f" else "his"
+
+
+## Who they are, under their name: "Auto driver from Satara · with his
+## wife, Pallavi".
+func about_line() -> String:
+	var parts := PackedStringArray()
+	var home := str(person.get("home", ""))
+	if not job.is_empty():
+		parts.append("%s from %s" % [job.substr(0, 1).to_upper() + job.substr(1), home] if not home.is_empty() else job)
+	elif not home.is_empty():
+		parts.append("From %s" % home)
+	if not company.is_empty():
+		parts.append("with %s %s, %s" % [their(), str(company.get("relation", "")), str(company.get("first", ""))])
+	return " · ".join(parts)
+
+
+## What the card says up front: a mix that's known ("Known: on warfarin
+## for a heart valve"), and a patient met before.
+func known_line() -> String:
+	var parts := PackedStringArray()
+	var known := str(condition.get("known", ""))
+	if not known.is_empty():
+		parts.append("Known: " + known.substr(0, 1).to_lower() + known.substr(1) + ".")
+	if known_day > 0:
+		var what := (", for " + known_what) if not known_what.is_empty() else ""
+		parts.append("You saw them on Day %d%s." % [known_day, what])
+		if complication:
+			parts.append("It never really settled.")
+	return " ".join(parts)
+
+
+## Who answers for them, when it isn't them: "His mother, Sana, answers."
+func answered_by() -> String:
+	if speaker == "self" or company.is_empty():
+		return ""
+	var who := "%s %s, %s" % [their(), str(company.get("relation", "")), str(company.get("first", ""))]
+	return who.substr(0, 1).to_upper() + who.substr(1) + ", answers."
+
+
+## A copy that comes back later the same day (sent home wrongly): the same
+## person, illness and words.
+func copy_for_return() -> ShiftPatient:
+	var back := ShiftPatient.new()
+	for key: String in ["person", "age", "condition_id", "condition", "vitals", "look_seed", "plan_order", "stage",
+			"extra", "extra_hidden", "company", "speaker", "personality", "voice", "patience", "job", "invented",
+			"known_id", "known_day", "known_what", "complication"]:
+		var value: Variant = get(key)
+		back.set(key, value.duplicate(true) if value is Dictionary or value is Array else value)
+	return back
 
 
 ## Results still to come, as test ids.

@@ -534,6 +534,9 @@ func _ward_shots() -> void:
 	# Stage 23: the doctor's phone.
 	await _phone_shots()
 
+	# Stage 24: patients that never run out.
+	await _patient_shots()
+
 
 ## The career map over the ward: the road and the race, a Chief's road,
 ## the wall of letters, one letter open, and the end card with the post.
@@ -864,6 +867,74 @@ func _phone_shots() -> void:
 		banner.hud._process(1.0)
 		banner.settle_camera()
 		banner.set_process(false))
+
+
+## A made patient seen in a cubicle, with some questions asked.
+static func _see_made(ward: Ward, patient: ShiftPatient, questions: Array) -> void:
+	ward.shift.patients.append(patient)
+	ward.see_patient(patient)
+	for frame in 600:
+		if ward.panel != null:
+			break
+		ward.update(1.0 / 30.0)
+	if ward.panel == null:
+		push_error("The patient card never opened")
+		return
+	for question: String in questions:
+		ward.panel.button("Ask_" + str(question)).pressed.emit()
+	Speech.stop()
+	ward._toasts.clear()
+	ward.settle_camera()
+
+
+## A patient made until they're the kind wanted (a mix, a hidden twist).
+static func _made_until(ward: Ward, condition: String, wanted: Callable) -> ShiftPatient:
+	for attempt in 400:
+		var patient := ward.shift.make_patient(condition)
+		if bool(wanted.call(patient)):
+			return patient
+	push_error("No %s patient of the kind wanted" % condition)
+	return ward.shift.make_patient(condition)
+
+
+func _patient_shots() -> void:
+	# A head injury on warfarin: the mix on the card, in amber, changes the plan.
+	var mix := _casualty_ward(15)
+	await _shot("183-patient-mix", mix, func() -> void:
+		_into_casualty(mix)
+		var patient := _made_until(mix, "head_injury", func(made: ShiftPatient) -> bool:
+			return made.extra == "warfarin" and not made.extra_hidden and not made.company.is_empty())
+		_see_made(mix, patient, ["pain", "other"])
+		mix.set_process(false))
+	_check_card(mix, "183-patient-mix")
+	# A toddler with croup, and the parent who answers for them.
+	var child := _casualty_ward(15)
+	await _shot("184-patient-child", child, func() -> void:
+		_into_casualty(child)
+		_see_made(child, child.shift.make_patient("croup"), ["pain", "when"])
+		child.set_process(false))
+	_check_card(child, "184-patient-child")
+	# Someone from Day 9, back because the kidney stone never settled.
+	var back := _casualty_ward(16)
+	await _shot("185-patient-returning", back, func() -> void:
+		_into_casualty(back)
+		var entry := {"id": "d9_4", "day": 9, "first": "Prashant", "last": "Jadhav", "full": "Prashant Jadhav",
+			"community": "marathi", "sex": "m", "home": "Satara", "age": 46, "look": 4321, "voice": "pm_mid_warm",
+			"personality": "chatty", "job": "auto driver", "condition": "renal_colic", "outcome": "back", "back": 0,
+			"worse": true}
+		_see_made(back, back.shift.make_patient("renal_colic", entry), ["pain"])
+		back.set_process(false))
+	_check_card(back, "185-patient-returning")
+	# The invented outbreak: the card never lets it pass for real.
+	var fever := _casualty_ward(10)
+	await _shot("186-patient-outbreak", fever, func() -> void:
+		_into_casualty(fever)
+		_see_made(fever, fever.shift.make_patient(Outbreak.ID), ["pain", "when"])
+		fever.set_process(false))
+	_check_card(fever, "186-patient-outbreak")
+	# And the district's notice on the phone's feed, labelled invented too.
+	await _phone_shot("187-outbreak-news", 10, 9 * 60 + 10, [], func(_w: Ward, p: PhonePanel) -> void:
+		p.open_app("feed"))
 
 
 ## The crises on their story days: [shot, day, step on show, answers given].

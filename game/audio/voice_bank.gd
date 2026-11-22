@@ -12,6 +12,10 @@ extends RefCounted
 ## number and are put together from clips: the words around the numbers,
 ## and each number said on its own by the same person.
 ##
+## A line made of several recorded lines (a made-up patient's answer is a
+## hello, their opening words and the answer itself) is put together from
+## those clips, sentence by sentence.
+##
 ## A line with no clip is read by the device's own voice instead (Speech).
 
 const FOLDER := "res://assets/voices/"
@@ -25,6 +29,7 @@ static var _patterns := {}
 ## who to {number: part}.
 static var _numbers := {}
 static var _cleaner: RegEx
+static var _ender: RegEx
 
 
 ## Forgets what was loaded; the manifest is read again when next needed.
@@ -80,7 +85,55 @@ static func find(who: String, text: String) -> Array:
 		var parts := _resolve(who, pattern["parts"], values)
 		if not parts.is_empty():
 			return parts
-	return []
+	return _cover(who, text)
+
+
+## A line put together from recorded lines: split at the ends of sentences
+## and covered from the start, each time by the longest run of sentences
+## that has a clip. Empty unless every sentence is covered.
+static func _cover(who: String, text: String) -> Array:
+	var pieces := PackedStringArray()
+	for sentence in sentences(text):
+		var plain := normalize(sentence)
+		if not plain.is_empty():
+			pieces.append(plain)
+	if pieces.size() < 2:
+		return []
+	var parts := []
+	var start := 0
+	while start < pieces.size():
+		var found := false
+		for stop in range(pieces.size(), start, -1):
+			var key := who + "|" + " ".join(pieces.slice(start, stop))
+			if _lines.has(key):
+				var more := _resolve(who, _lines[key], [])
+				if more.is_empty():
+					return []
+				parts.append_array(more)
+				start = stop
+				found = true
+				break
+		if not found:
+			return []
+	return parts
+
+
+## A line cut into sentences, each with its own stop: "Two days. Since the
+## fest!" is ["Two days.", "Since the fest!"].
+static func sentences(text: String) -> PackedStringArray:
+	if _ender == null:
+		_ender = RegEx.create_from_string("[.?!][\"')]*\\s+")
+	var found := PackedStringArray()
+	var start := 0
+	for ending in _ender.search_all(text):
+		var piece := text.substr(start, ending.get_end() - start).strip_edges()
+		if not piece.is_empty():
+			found.append(piece)
+		start = ending.get_end()
+	var rest := text.substr(start).strip_edges()
+	if not rest.is_empty():
+		found.append(rest)
+	return found
 
 
 static func _load() -> void:

@@ -116,15 +116,6 @@ const NEWS_POSTS := [
 	"Riverside City Hospital named 'most improved' in the state's hospital survey. The lift was not inspected.",
 ]
 
-## A family's own words for what casualty treated ("" for things a thank-you
-## message would be wrong for).
-const PLAIN_WORDS := {
-	"appendicitis": "the appendix", "dengue": "the dengue", "renal_colic": "the kidney stone",
-	"asthma": "the asthma attack", "heart_attack": "the heart attack", "dka": "the sugar trouble",
-	"gastro": "the food poisoning", "viper_bite": "the snake bite", "wrist_fracture": "the broken wrist",
-	"malaria": "the malaria", "pneumonia": "the chest infection", "chest_wall": "the chest pain that wasn't the heart",
-	"ectopic": "", "brain_bleed": "",
-}
 const THANKS_HOME := [
 	"Doctor, this is {sender}, {called}'s {relation}. {He} is home and eating like nothing happened. The nurse gave me your number. Sorry. Thank you.",
 	"Hello Doctor, {called}'s {relation} here. {He} keeps telling everyone the young doctor 'didn't panic'. We didn't know doctors could panic. Thank you.",
@@ -161,6 +152,8 @@ static func items(profile: PlayerProfile) -> Array:
 			found.append(hospital_post(profile, day))
 		if day > DayHooks.LAST_STORY_DAY and day % 9 == 4:
 			found.append(news_post(profile, day))
+		if Outbreak.starts_on(profile.count("hospital_seed"), day):
+			found.append(outbreak_post(profile, day))
 	return found
 
 
@@ -246,6 +239,16 @@ static func news_post(profile: PlayerProfile, day: int) -> Dictionary:
 	return post
 
 
+## The district health office's notice on the morning an invented fever
+## starts going round (Outbreak), saying it's made up.
+static func outbreak_post(profile: PlayerProfile, day: int) -> Dictionary:
+	var roll := _roll(profile, "outbreak", day)
+	var text := Outbreak.news(profile.count("hospital_seed"), day)
+	var post := _make("gen_outbreak_%d" % day, "feed", "", "news", text, "news", day, 7 * 60 + 30 + roll % 60)
+	post["likes"] = 500 + roll % 2500
+	return post
+
+
 ## A thank-you from someone casualty treated well today (a kept item for
 ## PhoneBook, arriving tonight), or {} (nobody, or not today).
 static func thanks(profile: PlayerProfile, day: int, sim: ShiftSim) -> Dictionary:
@@ -253,7 +256,7 @@ static func thanks(profile: PlayerProfile, day: int, sim: ShiftSim) -> Dictionar
 		return {}
 	var well: Array = []
 	for patient: ShiftPatient in sim.patients:
-		if patient.decided() and patient.outcome == "better" and not str(PLAIN_WORDS.get(patient.condition_id, "x")).is_empty():
+		if patient.decided() and patient.outcome == "better" and not str(patient.condition.get("plain", "")).is_empty():
 			well.append(patient)
 	if well.is_empty():
 		return {}
@@ -265,30 +268,32 @@ static func thanks(profile: PlayerProfile, day: int, sim: ShiftSim) -> Dictionar
 	var male := patient.sex() == "m"
 	var words := {"He": "He" if male else "She", "he": "he" if male else "she", "himself": "himself" if male else "herself",
 		"called": patient.called()}
-	var what := str(PLAIN_WORDS.get(patient.condition_id, "the trouble"))
-	if what == "x":
-		what = "the trouble"
+	var what := str(patient.condition.get("plain", "the trouble"))
 	words["what"] = what.substr(0, 1).to_upper() + what.substr(1)
 	words["what_low"] = what
-	var relation := ""
-	if patient.age < 18:
-		relation = "mother" if rng.chance(0.6) else "father"
-	elif patient.age >= 60:
-		relation = "daughter" if rng.chance(0.5) else "son"
-	elif patient.age >= 25 and rng.chance(0.6):
-		relation = "wife" if male else "husband"
-	var templates: Array
+	var templates: Array = THANKS_HOME if str(patient.condition.get("go", "")) == "home" else THANKS_WARD
 	var sender := ""
-	if relation.is_empty():
-		sender = str(person.get("full", patient.called()))
-		templates = THANKS_SELF
+	if not patient.company.is_empty():
+		# Whoever came in with them writes.
+		sender = str(patient.company.get("full", "A relative"))
+		words["relation"] = str(patient.company.get("relation", "family"))
 	else:
-		var sex := "f" if relation in ["mother", "daughter", "wife"] else "m"
-		var age := patient.age + 28 if relation in ["mother", "father"] else (patient.age - 30 if relation in ["daughter", "son"] else patient.age)
-		var family := NameMaker.make(rng, sex, clampi(age, 20, 80), str(person.get("community", "")), str(person.get("last", "")))
-		sender = str(family.get("full", "A relative"))
-		words["relation"] = relation
-		templates = THANKS_HOME if str(patient.condition.get("go", "")) == "home" else THANKS_WARD
+		var relation := ""
+		if patient.age < 18:
+			relation = "mother" if rng.chance(0.6) else "father"
+		elif patient.age >= 60:
+			relation = "daughter" if rng.chance(0.5) else "son"
+		elif patient.age >= 25 and rng.chance(0.6):
+			relation = "wife" if male else "husband"
+		if relation.is_empty():
+			sender = str(person.get("full", patient.called()))
+			templates = THANKS_SELF
+		else:
+			var sex := "f" if relation in ["mother", "daughter", "wife"] else "m"
+			var age := patient.age + 28 if relation in ["mother", "father"] else (patient.age - 30 if relation in ["daughter", "son"] else patient.age)
+			var family := NameMaker.make(rng, sex, clampi(age, 20, 80), str(person.get("community", "")), str(person.get("last", "")))
+			sender = str(family.get("full", "A relative"))
+			words["relation"] = relation
 	words["sender"] = sender
 	var text := str(rng.pick(templates)).format(words)
 	var id := "k%d_%d" % [day, patient.id]

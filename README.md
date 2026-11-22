@@ -470,6 +470,19 @@ Here's everything, in order, so you can decide how much of your life to give it:
   it. Lab reports land on it. People casualty sent home text to say thank
   you. Your mother calls at exactly the wrong moment, because that is her
   gift. The hospital doesn't stop while you scroll. Neither does your mother.
+- Patients that never run out. Fifty-seven real illnesses now, the kind
+  India actually gets: heat stroke, scrub typhus, a swallowed coin, a dog
+  bite, a scooter versus a stray. Some show up late because they tried Eno
+  first (four times). Some are on blood thinners. Some are pregnant and
+  haven't mentioned it. Some are "only drinking at weddings" and smell like
+  the whole baraat. A toddler's mother answers for the toddler, a Googler
+  has read three websites, a bargainer wants only the tests that are really
+  needed, and a teenager is sarcastic at you while actively unwell. Ten new
+  voices, names from every corner of the country, and people you treated
+  weeks ago walk back in: with something new, worse because you got it
+  wrong, or with a box of kaju katli because you didn't. Every so often a
+  mystery fever goes round town. It is made up for the game and the game
+  says so, loudly. What you do about it is not.
 
 Screenshots of every screen are rebuilt automatically after each change, on
 the [`screenshots` branch](../../tree/screenshots).

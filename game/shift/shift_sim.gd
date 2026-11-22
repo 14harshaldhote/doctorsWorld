@@ -12,7 +12,10 @@ extends RefCounted
 ##
 ## Events come back from advance_to() as dictionaries for the ward to show:
 ##   {"kind": "arrived" | "result" | "worse" | "crashed" | "left" | "back" |
-##    "diverted" | "gone", "patient": ShiftPatient (or null), "text": String}
+##    "diverted" | "gone" | "visit", "patient": ShiftPatient (or null),
+##    "text": String}
+## A "visit" is a cured patient from an earlier day dropping in with sweets;
+## it carries their record ("entry") and the experience it's worth ("xp").
 ##
 ## Two random streams: one decides who walks in and when, the other
 ## everything the doctor's choices touch. So a day started again brings the
@@ -45,6 +48,8 @@ const POINTS_EXAM := 10
 const POINTS_TIME := 10
 ## No two arrivals in a row share an illness, nor any of the last few.
 const RECENT := 3
+## Experience for a cured patient who drops in with sweets.
+const SWEETS_XP := 5
 
 ## Who walks in, when, and what they have.
 var arrivals: SeededRandom
@@ -62,7 +67,15 @@ var first_arrivals: Array = []
 ## Patients due back (sent home wrongly): [minute, patient].
 var returns: Array = []
 var recent: Array = []
+## The hospital day (rarer illnesses join as the career goes on; 9999 lets
+## everything walk in), the career's hospital seed (0: no outbreaks), and
+## patients met on earlier days who may come back (ShiftDay.past()).
+var day := 9999
+var hospital := 0
+var past: Array = []
 var _start_minute := 0
+## Records that have come back today, by id.
+var _came_back := {}
 
 
 func _init(seed_value: int = 1, start_minute: int = 8 * 60, shift_load: float = 1.0) -> void:
@@ -112,7 +125,15 @@ func _step_minute(events: Array[Dictionary]) -> void:
 	elif arrivals.chance(rate_at(minute) / 60.0):
 		# The patient is made even when casualty's full, so the day's
 		# arrivals stay the same whatever the doctor does.
-		var patient := make_patient("")
+		var coming := _returner()
+		if bool(coming.get("sweets", false)):
+			events.append(_sweets_visit(coming["entry"]))
+			return
+		var known: Dictionary = coming.get("entry", {})
+		if bool(coming.get("worse", false)):
+			known = known.duplicate()
+			known["worse"] = true
+		var patient := make_patient(str(known.get("condition", "")) if known.has("worse") else "", known)
 		if waiting().size() >= MAX_WAITING:
 			diverted += 1
 			events.append({"kind": "diverted", "patient": null, "text": "Casualty's full. An ambulance went to CarePlus."})
@@ -148,7 +169,7 @@ func _tick_patient(patient: ShiftPatient, events: Array[Dictionary]) -> void:
 		events.append({"kind": "crashed", "patient": patient,
 			"text": "%s crashed %s. The crash team took them to intensive care." % [patient.called(), where_text(patient)]})
 		return
-	if patient.state == "waiting" and patient.triage() == "green" and patient.waited(minute) >= LEAVE_AFTER \
+	if patient.state == "waiting" and patient.triage() == "green" and patient.waited(minute) >= LEAVE_AFTER * patient.patience \
 			and rng.chance(1.0 / 60.0):
 		patient.state = "gone"
 		patient.outcome = "left"
@@ -175,30 +196,97 @@ func _add(events: Array[Dictionary], patient: ShiftPatient) -> ShiftPatient:
 	return patient
 
 
-func make_patient(condition_id: String = "") -> ShiftPatient:
-	var id := condition_id if not Conditions.get_condition(condition_id).is_empty() else Conditions.pick(arrivals, recent)
+## A new patient (condition "" picks one for the day). known: someone met on
+## an earlier day (ShiftDay.past()), who keeps their name, face, temper and
+## voice; with "worse" they're back with the same trouble, further along.
+func make_patient(condition_id: String = "", known: Dictionary = {}) -> ShiftPatient:
+	var known_age := int(known.get("age", -1))
+	var known_sex := str(known.get("sex", ""))
+	var outbreak := Outbreak.kind_on(hospital, day)
+	var id := condition_id
+	if not (Conditions.can_walk_in(id, 9999, known_age, known_sex) or (id == Outbreak.ID and not outbreak.is_empty())):
+		var extra := {Outbreak.ID: Outbreak.weight()} if not outbreak.is_empty() and known.is_empty() else {}
+		id = Conditions.pick(arrivals, recent, day, extra, known_age, known_sex)
 	recent.append(id)
 	while recent.size() > RECENT:
 		recent.pop_front()
-	var condition := Conditions.get_condition(id)
+	# One draw seeds everything about who they are and what they say, so the
+	# day's arrivals and their times never depend on it.
+	var detail := SeededRandom.new(absi(arrivals.next()) % 1000003 + 1)
+	var base := Outbreak.condition(outbreak, detail) if id == Outbreak.ID else Conditions.get_condition(id)
 	var patient := ShiftPatient.new()
 	patient.id = next_id
 	next_id += 1
 	patient.condition_id = id
-	patient.condition = condition
-	var ages: Array = condition.get("age", [20, 60])
-	patient.age = arrivals.next_int_in(int(ages[0]), int(ages[1]))
-	var sex := str(condition.get("sex", ""))
-	patient.person = NameMaker.make(arrivals, sex, patient.age)
-	var starts: Array = condition.get("start", [20, 30])
+	var ages: Array = base.get("age", [20, 60])
+	var rolled_age := arrivals.next_int_in(int(ages[0]), int(ages[1]))
+	var rolled_person := NameMaker.make(arrivals, str(base.get("sex", "")), rolled_age)
+	if known.is_empty():
+		patient.age = rolled_age
+		patient.person = rolled_person
+	else:
+		patient.age = known_age
+		patient.person = {}
+		for key: String in ["first", "last", "full", "community", "sex", "home"]:
+			patient.person[key] = str(known.get(key, ""))
+		patient.known_id = str(known.get("id", ""))
+		patient.known_day = int(known.get("day", 0))
+		patient.known_what = str(Conditions.get_condition(str(known.get("condition", ""))).get("plain", ""))
+		patient.complication = bool(known.get("worse", false))
+	PatientMaker.build(patient, base, detail, known)
+	var case := patient.condition
+	var starts: Array = case.get("start", [20, 30])
 	patient.severity = float(arrivals.next_int_in(int(starts[0]), int(starts[1])))
-	patient.worsens = float(condition.get("worsens", 4)) * arrivals.range_float(0.8, 1.2)
-	patient.vitals = _roll_vitals(condition.get("vitals", {}))
+	if patient.complication:
+		patient.severity = minf(WORSE_AT - 5.0, patient.severity + 10.0)
+	patient.worsens = float(case.get("worsens", 4)) * arrivals.range_float(0.8, 1.2)
+	patient.vitals = _roll_vitals(case.get("vitals", {}))
 	patient.arrived_at = minute
-	patient.look_seed = arrivals.next()
+	var look := arrivals.next()
+	patient.look_seed = int(known.get("look", look)) if not known.is_empty() else look
 	var order := [0, 1, 2, 3]
-	patient.plan_order = arrivals.shuffled(order.slice(0, (condition.get("plans", []) as Array).size()))
+	patient.plan_order = arrivals.shuffled(order.slice(0, (case.get("plans", []) as Array).size()))
 	return patient
+
+
+## Sometimes a patient from an earlier day comes back instead of a
+## stranger: {} (nobody), {"entry"} (a new problem), {"entry", "worse"}
+## (the old trouble, because it went wrong) or {"entry", "sweets"} (cured,
+## and grateful).
+func _returner() -> Dictionary:
+	if past.is_empty():
+		return {}
+	var rules := PatientParts.returns()
+	if not arrivals.chance(float(rules.get("chance", 0.0))):
+		return {}
+	var choices := []
+	for entry: Dictionary in past:
+		if not _came_back.has(str(entry.get("id", ""))):
+			choices.append(entry)
+	if choices.is_empty():
+		return {}
+	var entry: Dictionary = arrivals.pick(choices)
+	_came_back[str(entry.get("id", ""))] = true
+	var outcome := str(entry.get("outcome", ""))
+	var condition := str(entry.get("condition", ""))
+	if outcome in ["harmed", "worse", "back"] and Conditions.can_walk_in(condition, 9999, int(entry.get("age", -1)),
+			str(entry.get("sex", ""))):
+		return {"entry": entry, "worse": true}
+	if outcome == "better" and arrivals.chance(float(rules.get("sweets_share", 0.0))):
+		return {"entry": entry, "sweets": true}
+	return {"entry": entry}
+
+
+## A cured patient drops in with sweets for casualty.
+func _sweets_visit(entry: Dictionary) -> Dictionary:
+	var sweets: Array = PatientParts.returns().get("sweets", ["a box of sweets"])
+	var person := {"first": entry.get("first", ""), "last": entry.get("last", ""), "sex": entry.get("sex", "m")}
+	var what := str(Conditions.get_condition(str(entry.get("condition", ""))).get("plain", ""))
+	var text := "%s, from Day %d, dropped in with %s for casualty." % [NameMaker.called(person, int(entry.get("age", 40))),
+		int(entry.get("day", 0)), str(arrivals.pick(sweets))]
+	if not what.is_empty():
+		text += " %s is long gone, apparently." % (what.substr(0, 1).to_upper() + what.substr(1))
+	return {"kind": "visit", "patient": null, "text": text, "entry": entry, "xp": SWEETS_XP}
 
 
 func _roll_vitals(ranges: Dictionary) -> Dictionary:
@@ -325,19 +413,12 @@ func decide(patient: ShiftPatient, position: int) -> Dictionary:
 ## Sent home wrongly: they come back later in the shift, worse, if there's
 ## shift left for it.
 func _send_back(patient: ShiftPatient) -> void:
-	var back := ShiftPatient.new()
+	var back := patient.copy_for_return()
 	back.id = next_id
 	next_id += 1
-	back.person = patient.person
-	back.age = patient.age
-	back.condition_id = patient.condition_id
-	back.condition = patient.condition
-	back.vitals = patient.vitals.duplicate()
 	back.severity = minf(90.0, patient.severity + 25.0)
 	back.worsens = patient.worsens * 1.2
 	back.returning = true
-	back.look_seed = patient.look_seed
-	back.plan_order = patient.plan_order.duplicate()
 	returns.append([minute + rng.next_int_in(90, 150), back])
 
 

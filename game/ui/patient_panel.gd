@@ -112,6 +112,7 @@ func refresh(now: int = -1) -> void:
 	if not _result.is_empty():
 		_fill_result()
 		return
+	_fill_known()
 	_fill_questions()
 	_fill_exam()
 	_fill_tests()
@@ -139,14 +140,49 @@ func _fill_header() -> void:
 	name_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_header.add_child(name_label)
 	var said := ("Back again: " if patient.returning else "") + str(patient.condition.get("board", ""))
-	_header.add_child(_wrapped(said, 14, UiKit.TEXT_SOFT))
+	if patient.invented:
+		# An outbreak's fever is made up, and the card never lets it pass for real.
+		said = "Invented illness: " + said
+	var said_label := _wrapped(said, 14, UiKit.CORAL if patient.invented else UiKit.TEXT_SOFT)
+	said_label.name = "Said"
+	_header.add_child(said_label)
 	var vitals := _wrapped(patient.vitals_line(), 13, UiKit.MINT, UiKit.heavy_font())
 	vitals.name = "Vitals"
 	_header.add_child(vitals)
 
 
+## The top of the card's words: an invented illness said plainly, who they
+## are and who came with them, and in amber what's known up front (a mix
+## that changes the plan, like warfarin or a pregnancy, and a patient met on
+## an earlier day). The header above stays short, so the questions and plans
+## keep most of the card.
+func _fill_known() -> void:
+	if patient.invented:
+		var made_up := UiKit.kicker(str(patient.condition.get("label", "Invented illness")), 11)
+		made_up.name = "Invented"
+		made_up.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		made_up.add_theme_color_override("font_color", UiKit.CORAL)
+		_body.add_child(made_up)
+	var about := patient.about_line()
+	if not about.is_empty():
+		var who := _wrapped(about, 13, UiKit.TEXT_KICKER)
+		who.name = "About"
+		_body.add_child(who)
+	var known := patient.known_line()
+	if known.is_empty():
+		return
+	var note := _wrapped(known, 14, UiKit.AMBER, UiKit.heavy_font())
+	note.name = "Known"
+	_body.add_child(note)
+
+
 func _fill_questions() -> void:
 	_body.add_child(UiKit.kicker("Ask · %d min each" % ShiftSim.ASK_MINUTES, 11))
+	var answering := patient.answered_by()
+	if not answering.is_empty():
+		var who := _wrapped(answering, 13, UiKit.TEXT_SOFT)
+		who.name = "AnsweredBy"
+		_body.add_child(who)
 	for question: String in ShiftPatient.QUESTIONS:
 		var text := str(ShiftPatient.QUESTION_TEXT[question])
 		if patient.asked.has(question):

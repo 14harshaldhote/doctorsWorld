@@ -35,6 +35,7 @@ plan"). This file covers how to build, run and test the game.
 | 21. Lines that sound like people, and a share card | junior, senior, surgeon, hod and the Chief's days (`tools/chief_story.py`, which writes `story/chief.json`: edit the script, never the JSON) rewritten in a spoken voice, about 1,300 lines; the young characters (Zoya, Ira Saxena, Dev, Arif, Ananya) talk Gen Z and the seniors get more sarcastic; the 60-second case can be shared (`Share`: a wa.me link plus the clipboard, swappable `Share.opener` / `Share.copier` for tests; `DailyCase.share_text` from the counters `daily_case_marks`, `daily_case_seconds`, `daily_case_slow`; case numbers from `DailyCase.FIRST_DATE`); screenshots 167-169. 1.11.1: no emoji anywhere in the game (the share card's marks are words, `DailyCase.MARK_WORDS`), checked by `test_nothing_in_the_game_uses_emoji` | Done |
 | 22. Casualty and the clock | `game/shift/`: `ShiftSim` (arrivals by the hour, four cubicles, six seats, worse/crash/leave, tests coming back), `ShiftDay` (load by day and tier, the career's `hospital_seed`), `ShiftPatient`, `Conditions` (`story/conditions.json`), `NameMaker`, `PatientLook`, `ShiftBot`; `CasualtyRoom` behind the ward's door, `PatientPanel` (the card); the free clock (`Ward.CLOCK_RATE`), late beats, the `sign_off` beat; sealed saves (`SaveStore` v3: HMAC over the body, `.install` secret, three backups, `save.tampered.json`), `ClockGuard` on the daily XP, case and mystery, check codes on shared results (`DailyCase.check_code`, `check_shared`), `FrameBudget`; the macOS preset and CI job; screenshots 170-174 | Done |
 | 23. The doctor's phone | `PhonePanel` over the game (Phone button, a swipe up from the bottom, P on a Mac; the clock keeps running, 30 fps while it's up): Chats with two-reply answers, Calls (`ring`, answer, decline, rang out; lines spoken in the caller's voice, the doctor's replies only shown), Lab results (the story's reports and casualty's live ones), the Pager (today's pages), the Feed and Photos (`PhotoCard`, pictures drawn in code). `PhoneBook` reads `story/phone.json` (contacts, 144 messages, calls, posts, photos, reports, each on a day and time with a story condition) and keeps what was read, answered and picked up in `profile.phone`, checked on load (`PhoneBook.clean`). `PhoneWriter` writes the game's own: Varun's reels, the family's evenings (gentler after a death), the batch group on the race, the hospital page and the paper after Day 28, and a thank-you from someone casualty sent home. New messages show as a banner and a number on the Phone button; the end-of-day card says who is about to text. Screenshots 175-182 | Done |
+| 24. Patients that never run out | `story/conditions.json` grows to 57 illnesses common in India (each with a `weight`, the `from_day` it opens on, a family's `plain` words, optional `jobs`, `with`, `told_by` a parent or colleague, and a `late` stage); `story/patients.json` holds the parts (`PatientParts`): ten patient voices (`PatientVoices`), twelve tempers, jobs, who comes with them, the mixes and twists (`extras`), the invented outbreak (`Outbreak`) and coming back (`returns`); `PatientMaker` builds each case from one seed; returning patients from `profile.patients` (`ShiftDay.remember`, `past`, `clean_patients`); answers read aloud from clips joined sentence by sentence (`VoiceBank.sentences`); four more communities in `NameMaker`; the card shows who they are, what's known and who answers; toasts sit beside the card; screenshots 183-187 | Done |
 
 The earlier SwiftUI and SpriteKit prototype is kept on the git branch
 `swift-prototype`.
@@ -635,12 +636,17 @@ never voiced.
   says them and the line's words (lower case, no punctuation, `{called}` and
   `#` for numbers); exports include it through the preset's include filter.
 - Names the model says wrongly are spelt as they are said in `RESPELL`.
+- Casualty's made-up patients speak in ten voices of their own (`pm_*` and
+  `pf_*` in `VOICES`): every line in `tools/patient_lines.json` (written by
+  `tools/patient_lines.gd` from `PatientVoices.catalogue()`) is acted in
+  each voice that could say it, and the game joins an answer from them.
 
 ```sh
 pip install kokoro-onnx scipy          # and ffmpeg
 # kokoro-v1.0.onnx and voices-v1.0.bin from
 # https://github.com/thewh1teagle/kokoro-onnx/releases (model-files-v1.0)
 godot --headless --path . -s res://tools/voice_lines.gd -- tools/voice_lines.json   # after new code lines
+godot --headless --path . -s res://tools/patient_lines.gd   # after changing conditions.json or patients.json
 python3 tools/make_voices.py --model DIR                # everything, one worker a core
 python3 tools/make_voices.py --model DIR --only iyer   # one character again
 python3 tools/make_voices.py --model DIR --sample iyer "A line to try."
@@ -715,6 +721,64 @@ costs `Ward.LATE_XP`. `CasualtyRoom.sync()` builds at most one body a frame;
 people already waiting sit down, newcomers walk in from the door. The HUD's
 crowded tags (`LobbyHud.start_crowd`, `set_tag(..., crowded)`) make way for
 each other, sickest first, and keep off the doctor.
+
+## Patients that never run out
+
+Every casualty patient is made on the spot from parts, and the medicine is
+never made up at run time: every answer, finding, result and plan comes from
+the checked library. `ShiftSim.make_patient()` takes one draw from the
+arrivals stream to seed a `SeededRandom` for everything about who the
+patient is, so the day's arrivals and their times never depend on it, and
+`PatientMaker.build()` does the rest in about a tenth of a millisecond:
+
+- The illness (`Conditions.pick`, by `weight`, only those whose `from_day`
+  has come and that fit a returning patient's age and sex) and its stage:
+  some arrive `late`, further along and worse (a burst appendix, cerebral
+  malaria, DKA that waited two days), with their own answers, findings,
+  results, start and pace.
+- A mix or twist (`extras` in `story/patients.json`, 40 percent of those
+  that fit): warfarin, a pregnancy, years of steroids, weak kidneys, the
+  drinking, a penicillin allergy. A known one is on the card in amber; a
+  hidden one has to be caught by asking, examining or testing. Each fit
+  brings its own checked right plan and the usual right plan becomes the
+  trap, with two of the usual wrong ones.
+- Who they are: a job for their age and sex (the illness's own list when
+  it has one), who came in with them (a relative shares their surname), a
+  temper (`personalities`: how they open, a last word after "Anything
+  else?", patience) and a voice that fits the speaker's age and sex and
+  shares a tone with the temper. A small child's illness is told by a
+  parent, heat stroke by the colleague who brought them in.
+- Names (`NameMaker`) come from 17 communities, each with its own first
+  names (some only for the young or the old), surnames and home towns, and
+  never a name from the cast.
+
+`PatientVoices.catalogue()` lists every line a patient can say in every
+voice that could say it; `tools/patient_lines.gd` writes it to
+`tools/patient_lines.json` and `make_voices.py` records it. An answer is a
+hello, an opening line and the illness's answer joined together, and
+`VoiceBank.find()` plays it from those clips: it splits the line at the ends
+of sentences and covers it from the start with the longest run that has a
+clip. `test_patients.gd` makes 1,500 patients and checks every word of
+every answer is in the catalogue for that voice, and that every catalogue
+line has a clip.
+
+Patients come back. A decision records the patient in `profile.patients`
+(`ShiftDay.remember`: name, community, home, age, look, voice, temper, job,
+illness, outcome; the newest 40). On a later day (within
+`ShiftDay.RECALL_DAYS`) an arrival is sometimes one of them instead
+(`returns.chance`): with something new, back with the same trouble further
+along if it went wrong (`complication`), or, if cured, dropping in with
+sweets for a little XP (a "visit" event). Each comes back at most once until
+seen anew (`note_return`). The records are in the morning snapshot and are
+checked field by field on load (`clean_patients`).
+
+Every `outbreak.every` days from `outbreak.first_day` an invented fever goes
+round for `outbreak.lasts` days (`Outbreak.kind_on`, in an order set by the
+career's hospital seed). It is labelled invented everywhere: its name, the
+line under the patient's name, a coral label on the card, every
+explanation, and the district health office's post on the phone's feed.
+What the doctor does about it is real: isolate, support, sample and report
+the cluster. Outbreak patients are never remembered.
 
 ## The phone
 

@@ -1,0 +1,1165 @@
+{
+	"voices": {
+		"pm_young": {
+			"sex": "m",
+			"ages": [
+				12,
+				29
+			],
+			"tones": [
+				"nervous",
+				"bubbly",
+				"brisk",
+				"warm"
+			],
+			"voice": 0.95
+		},
+		"pm_mid_warm": {
+			"sex": "m",
+			"ages": [
+				30,
+				59
+			],
+			"tones": [
+				"warm",
+				"hearty",
+				"soft",
+				"weary",
+				"nervous"
+			],
+			"voice": 0.88
+		},
+		"pm_mid_sharp": {
+			"sex": "m",
+			"ages": [
+				30,
+				59
+			],
+			"tones": [
+				"harsh",
+				"brisk",
+				"firm",
+				"gruff"
+			],
+			"voice": 0.84
+		},
+		"pm_old_gruff": {
+			"sex": "m",
+			"ages": [
+				60,
+				99
+			],
+			"tones": [
+				"gruff",
+				"weary",
+				"firm",
+				"harsh"
+			],
+			"voice": 0.78
+		},
+		"pm_old_soft": {
+			"sex": "m",
+			"ages": [
+				60,
+				99
+			],
+			"tones": [
+				"warm",
+				"frail",
+				"soft",
+				"sweet",
+				"nervous"
+			],
+			"voice": 0.82
+		},
+		"pf_young": {
+			"sex": "f",
+			"ages": [
+				12,
+				29
+			],
+			"tones": [
+				"bubbly",
+				"nervous",
+				"brisk",
+				"warm"
+			],
+			"voice": 1.2
+		},
+		"pf_mid_warm": {
+			"sex": "f",
+			"ages": [
+				30,
+				59
+			],
+			"tones": [
+				"warm",
+				"sweet",
+				"soft",
+				"nervous",
+				"hearty"
+			],
+			"voice": 1.12
+		},
+		"pf_mid_sharp": {
+			"sex": "f",
+			"ages": [
+				30,
+				59
+			],
+			"tones": [
+				"firm",
+				"brisk",
+				"harsh",
+				"weary"
+			],
+			"voice": 1.06
+		},
+		"pf_old_soft": {
+			"sex": "f",
+			"ages": [
+				60,
+				99
+			],
+			"tones": [
+				"frail",
+				"sweet",
+				"warm",
+				"soft",
+				"nervous"
+			],
+			"voice": 1.1
+		},
+		"pf_old_firm": {
+			"sex": "f",
+			"ages": [
+				60,
+				99
+			],
+			"tones": [
+				"firm",
+				"harsh",
+				"gruff",
+				"weary"
+			],
+			"voice": 1.0
+		}
+	},
+	"personalities": {
+		"calm": {
+			"weight": 30,
+			"ages": [
+				1,
+				99
+			],
+			"speakers": [
+				"self",
+				"parent",
+				"colleague"
+			],
+			"tones": [
+				"warm",
+				"soft",
+				"firm",
+				"weary",
+				"sweet",
+				"brisk"
+			],
+			"openers": [],
+			"afters": []
+		},
+		"downplays": {
+			"weight": 7,
+			"ages": [
+				40,
+				99
+			],
+			"speakers": [
+				"self"
+			],
+			"tones": [
+				"gruff",
+				"firm",
+				"weary"
+			],
+			"openers": [
+				"It's nothing much, Doctor. My family made me come.",
+				"I'm fine, really. It's a small thing."
+			],
+			"afters": [
+				"Can I go home now?"
+			],
+			"mood": "calm"
+		},
+		"googler": {
+			"weight": 6,
+			"ages": [
+				16,
+				32
+			],
+			"speakers": [
+				"self"
+			],
+			"tones": [
+				"nervous",
+				"bubbly"
+			],
+			"openers": [
+				"Before you say anything, I've read three websites.",
+				"I googled it, so it's either gas or something terrible."
+			],
+			"afters": [
+				"Google says it could be serious. Is Google right?"
+			],
+			"mood": "worried"
+		},
+		"dramatic": {
+			"weight": 5,
+			"ages": [
+				18,
+				75
+			],
+			"speakers": [
+				"self"
+			],
+			"tones": [
+				"hearty",
+				"harsh",
+				"bubbly"
+			],
+			"openers": [
+				"Doctor, I'm dying. Write it down somewhere.",
+				"This is the worst day of my whole life. Again."
+			],
+			"afters": [
+				"Tell my family I was brave."
+			],
+			"mood": "worried"
+		},
+		"scared": {
+			"weight": 7,
+			"ages": [
+				14,
+				99
+			],
+			"speakers": [
+				"self"
+			],
+			"tones": [
+				"nervous",
+				"soft",
+				"frail"
+			],
+			"openers": [
+				"Doctor, is it serious? Just tell me straight.",
+				"Sorry, I'm shaking. I hate hospitals."
+			],
+			"afters": [
+				"Will I be okay?"
+			],
+			"mood": "worried"
+		},
+		"chatty": {
+			"weight": 6,
+			"ages": [
+				30,
+				85
+			],
+			"speakers": [
+				"self"
+			],
+			"tones": [
+				"hearty",
+				"warm",
+				"sweet"
+			],
+			"openers": [
+				"First of all, very nice hospital. The parking is a disaster, but nice.",
+				"You look very young, Doctor. Not a complaint. Just saying."
+			],
+			"afters": [
+				"My neighbour's cousin had the same thing. He's fine. Mostly."
+			],
+			"mood": "happy"
+		},
+		"polite_elder": {
+			"weight": 6,
+			"ages": [
+				60,
+				99
+			],
+			"speakers": [
+				"self"
+			],
+			"tones": [
+				"warm",
+				"sweet",
+				"frail",
+				"soft"
+			],
+			"openers": [
+				"Take your time, beta. I'm not going anywhere, clearly.",
+				"Namaste, Doctor. Sorry to trouble you."
+			],
+			"afters": [
+				"God bless you, beta."
+			],
+			"mood": "calm"
+		},
+		"impatient": {
+			"weight": 5,
+			"ages": [
+				25,
+				60
+			],
+			"speakers": [
+				"self"
+			],
+			"tones": [
+				"harsh",
+				"brisk",
+				"firm"
+			],
+			"openers": [
+				"Can we make this quick? I have a meeting at four.",
+				"I've been waiting forever. Fine. Go on."
+			],
+			"afters": [
+				"Are we done?"
+			],
+			"mood": "angry",
+			"patience": 0.66
+		},
+		"stoic": {
+			"weight": 5,
+			"ages": [
+				30,
+				85
+			],
+			"speakers": [
+				"self"
+			],
+			"tones": [
+				"weary",
+				"gruff",
+				"firm"
+			],
+			"openers": [
+				"Hmm. Ask.",
+				"Okay. Ask."
+			],
+			"afters": [],
+			"mood": "tired"
+		},
+		"bargainer": {
+			"weight": 4,
+			"ages": [
+				30,
+				70
+			],
+			"speakers": [
+				"self"
+			],
+			"tones": [
+				"firm",
+				"weary",
+				"warm"
+			],
+			"openers": [
+				"Doctor, only the tests that are really needed, haan? Everything costs."
+			],
+			"afters": [
+				"How much will all this come to?"
+			],
+			"mood": "calm"
+		},
+		"sarcastic": {
+			"weight": 5,
+			"ages": [
+				16,
+				28
+			],
+			"speakers": [
+				"self"
+			],
+			"tones": [
+				"bubbly",
+				"brisk",
+				"nervous"
+			],
+			"openers": [
+				"Love that for me. Anyway, it hurts.",
+				"Great week so far, as you can see."
+			],
+			"afters": [
+				"Ten out of ten experience. Would not recommend."
+			],
+			"mood": "tired"
+		},
+		"worried_parent": {
+			"weight": 10,
+			"ages": [
+				18,
+				50
+			],
+			"speakers": [
+				"parent"
+			],
+			"tones": [
+				"nervous",
+				"warm",
+				"soft"
+			],
+			"openers": [
+				"Doctor, please, see my baby first.",
+				"Sorry, we came straight from home. I didn't even change."
+			],
+			"afters": [
+				"Is it serious? Please tell me."
+			],
+			"mood": "worried"
+		}
+	},
+	"jobs": [
+		[
+			"school student",
+			"",
+			12,
+			17
+		],
+		[
+			"college student",
+			"",
+			17,
+			23
+		],
+		[
+			"delivery rider",
+			"m",
+			18,
+			35
+		],
+		[
+			"call-centre worker",
+			"",
+			19,
+			32
+		],
+		[
+			"software tester",
+			"",
+			21,
+			32
+		],
+		[
+			"nursing student",
+			"f",
+			18,
+			23
+		],
+		[
+			"salon assistant",
+			"",
+			18,
+			30
+		],
+		[
+			"mobile shop salesman",
+			"m",
+			18,
+			35
+		],
+		[
+			"gym trainer",
+			"",
+			20,
+			35
+		],
+		[
+			"junior accountant",
+			"",
+			21,
+			30
+		],
+		[
+			"auto driver",
+			"m",
+			25,
+			62
+		],
+		[
+			"shopkeeper",
+			"",
+			28,
+			70
+		],
+		[
+			"schoolteacher",
+			"",
+			26,
+			58
+		],
+		[
+			"homemaker",
+			"f",
+			22,
+			80
+		],
+		[
+			"security guard",
+			"m",
+			22,
+			62
+		],
+		[
+			"bank clerk",
+			"",
+			24,
+			58
+		],
+		[
+			"tailor",
+			"",
+			25,
+			70
+		],
+		[
+			"vegetable seller",
+			"",
+			22,
+			70
+		],
+		[
+			"police constable",
+			"",
+			22,
+			55
+		],
+		[
+			"electrician",
+			"m",
+			22,
+			60
+		],
+		[
+			"plumber",
+			"m",
+			22,
+			60
+		],
+		[
+			"construction worker",
+			"m",
+			18,
+			55
+		],
+		[
+			"software engineer",
+			"",
+			23,
+			45
+		],
+		[
+			"cook",
+			"",
+			22,
+			65
+		],
+		[
+			"bus conductor",
+			"m",
+			25,
+			58
+		],
+		[
+			"office peon",
+			"m",
+			25,
+			58
+		],
+		[
+			"insurance agent",
+			"",
+			28,
+			60
+		],
+		[
+			"government clerk",
+			"",
+			25,
+			58
+		],
+		[
+			"tempo driver",
+			"m",
+			25,
+			60
+		],
+		[
+			"farmer",
+			"",
+			20,
+			75
+		],
+		[
+			"accountant",
+			"",
+			25,
+			58
+		],
+		[
+			"sales executive",
+			"",
+			22,
+			40
+		],
+		[
+			"kirana shop owner",
+			"",
+			35,
+			75
+		],
+		[
+			"retired bank manager",
+			"",
+			60,
+			90
+		],
+		[
+			"retired schoolteacher",
+			"",
+			60,
+			90
+		],
+		[
+			"retired bus conductor",
+			"m",
+			60,
+			90
+		],
+		[
+			"retired railway clerk",
+			"",
+			60,
+			90
+		],
+		[
+			"temple priest",
+			"m",
+			40,
+			85
+		],
+		[
+			"retired army havildar",
+			"m",
+			55,
+			85
+		],
+		[
+			"pensioner",
+			"",
+			62,
+			95
+		]
+	],
+	"extra_jobs": [
+		[
+			"site supervisor",
+			"m",
+			28,
+			58
+		],
+		[
+			"truck driver",
+			"m",
+			24,
+			60
+		],
+		[
+			"sanitation worker",
+			"",
+			22,
+			58
+		],
+		[
+			"gardener",
+			"",
+			22,
+			70
+		],
+		[
+			"forest guard",
+			"m",
+			24,
+			58
+		],
+		[
+			"farm labourer",
+			"",
+			18,
+			65
+		],
+		[
+			"watchman",
+			"m",
+			30,
+			70
+		],
+		[
+			"traffic constable",
+			"",
+			22,
+			55
+		]
+	],
+	"company": {
+		"child": [
+			[
+				"mother",
+				65
+			],
+			[
+				"father",
+				35
+			]
+		],
+		"teen": [
+			[
+				"mother",
+				55
+			],
+			[
+				"father",
+				35
+			],
+			[
+				"elder brother",
+				10
+			]
+		],
+		"young": [
+			[
+				"",
+				30
+			],
+			[
+				"friend",
+				25
+			],
+			[
+				"roommate",
+				15
+			],
+			[
+				"brother",
+				10
+			],
+			[
+				"sister",
+				10
+			],
+			[
+				"mother",
+				10
+			]
+		],
+		"adult": [
+			[
+				"",
+				25
+			],
+			[
+				"spouse",
+				45
+			],
+			[
+				"brother",
+				10
+			],
+			[
+				"colleague",
+				10
+			],
+			[
+				"friend",
+				10
+			]
+		],
+		"old": [
+			[
+				"son",
+				30
+			],
+			[
+				"daughter-in-law",
+				20
+			],
+			[
+				"daughter",
+				15
+			],
+			[
+				"spouse",
+				20
+			],
+			[
+				"grandson",
+				15
+			]
+		]
+	},
+	"same_name": [
+		"mother",
+		"father",
+		"elder brother",
+		"brother",
+		"sister",
+		"spouse",
+		"son",
+		"daughter-in-law",
+		"grandson",
+		"wife",
+		"husband",
+		"cousin"
+	],
+	"extras": {
+		"warfarin": {
+			"known": "On warfarin for a heart valve",
+			"say": "I take warfarin for my heart valve. The blood thinner.",
+			"ages": [
+				45,
+				85
+			],
+			"sex": "",
+			"results": {
+				"bloods": "INR 3.6. The blood is thinner than it should be, even for a valve."
+			},
+			"key": [
+				"bloods"
+			],
+			"fits": {
+				"brain_bleed": {
+					"right": "CT now, reverse the warfarin at once with vitamin K and prothrombin complex, keep the blood pressure down, and call neurosurgery",
+					"why": "A bleed around the brain in someone on warfarin keeps growing until the blood can clot again. Reversing the warfarin comes first, then neurosurgery.",
+					"trap_effect": "worse",
+					"trap_why": "Right for a bleed, but on warfarin the blood can't clot. Without reversing it, the bleed keeps growing."
+				},
+				"head_injury": {
+					"right": "CT head now, check the INR, and admit to watch overnight even though the scan is clear",
+					"why": "A head injury on warfarin can bleed slowly, hours later. A clear first scan isn't enough: check how thin the blood is and watch overnight.",
+					"trap_effect": "back",
+					"trap_why": "On warfarin, a bleed can show up hours after a clear scan. Sent home tonight, they can come back unconscious.",
+					"go": "admit"
+				},
+				"nosebleed": {
+					"right": "Lean forward and pinch the soft part of the nose, check the INR, pack the nose if it keeps going, and ask the heart team before touching the warfarin",
+					"why": "On warfarin, a nosebleed that seems to stop starts again at home. Find out how thin the blood is, pack it if needed, and never stop a valve patient's warfarin without the heart team.",
+					"trap_effect": "back",
+					"trap_why": "On warfarin, the bleeding starts again on the way home. Check the INR and be ready to pack the nose.",
+					"results": {
+						"bloods": "Haemoglobin 12.4. INR 3.9, far too thin."
+					}
+				}
+			}
+		},
+		"pregnant": {
+			"known": "Pregnant, about twenty weeks",
+			"say": "I'm five months pregnant. First baby.",
+			"hidden": {
+				"say": "Nothing else. My period's a bit late, but that's just stress.",
+				"key": [
+					"urine"
+				]
+			},
+			"ages": [
+				21,
+				38
+			],
+			"sex": "f",
+			"results": {
+				"urine": "Pregnancy test positive."
+			},
+			"key": [],
+			"fits": {
+				"renal_colic": {
+					"right": "Paracetamol and, if needed, a small dose of morphine instead of diclofenac, an anti-sickness that's safe in pregnancy, an ultrasound rather than a CT, admit, and tell the obstetrician",
+					"why": "A kidney stone in pregnancy: diclofenac-type painkillers are avoided because of the baby, and an ultrasound replaces a CT. The obstetrician should know.",
+					"trap": "A diclofenac injection and an anti-sickness one, then home with tablets, plenty of water and a urology check",
+					"trap_effect": "harm",
+					"trap_why": "She's pregnant. Diclofenac-type painkillers can harm the baby. Paracetamol, a small dose of morphine if needed, and the obstetrician told.",
+					"results": {
+						"urine": "Blood in the urine, no infection. Pregnancy test positive."
+					},
+					"go": "admit"
+				},
+				"scrub_typhus": {
+					"right": "Azithromycin instead of doxycycline, paracetamol and fluids, admit, and tell the obstetrician",
+					"why": "Scrub typhus in pregnancy is treated with azithromycin, which is safe for the baby. Doxycycline is avoided.",
+					"trap_effect": "harm",
+					"trap_why": "She's pregnant. Doxycycline is avoided in pregnancy; azithromycin treats scrub typhus safely."
+				},
+				"hepatitis": {
+					"right": "Admit, check the clotting and the sugar every few hours, and get the obstetricians in",
+					"why": "Hepatitis E is mild for most people, but in pregnancy it can turn into liver failure, quickly. She needs watching in hospital.",
+					"trap_effect": "back",
+					"trap_why": "In pregnancy, hepatitis E can turn into liver failure within days. Home is the wrong place for her.",
+					"go": "admit"
+				}
+			}
+		},
+		"steroids": {
+			"known": "On steroid tablets for years, for arthritis",
+			"say": "I take steroid tablets every day for my joints. Prednisolone. For years.",
+			"ages": [
+				40,
+				80
+			],
+			"sex": "",
+			"results": {},
+			"key": [],
+			"fits": {
+				"gastro": {
+					"right": "The drip and the anti-sickness injection, plus hydrocortisone through the drip until they keep their steroid tablets down, and admit overnight",
+					"why": "After years on steroids the body can't make its own. Vomiting the tablets up can tip them into a crisis with falling blood pressure, so the steroid goes in through the drip.",
+					"trap_effect": "back",
+					"trap_why": "They've been vomiting up their steroid tablets. After years on them, the body can't cope without; they can come back in shock tonight.",
+					"go": "admit"
+				},
+				"perforated_ulcer": {
+					"right": "Nothing by mouth, a drip, antibiotics, pain relief, a stomach tube and extra hydrocortisone to cover the operation, and the surgeons for theatre now",
+					"why": "A burst ulcer in someone on long-term steroids, which may have helped cause it. The operation needs extra hydrocortisone, or the blood pressure can crash.",
+					"trap_effect": "worse",
+					"trap_why": "After years of steroids, going into a big operation without extra hydrocortisone can make the blood pressure crash."
+				}
+			}
+		},
+		"ckd": {
+			"known": "Kidney disease, not yet on dialysis",
+			"say": "My kidneys are weak. The kidney doctor checks me every three months.",
+			"ages": [
+				40,
+				75
+			],
+			"sex": "",
+			"results": {
+				"bloods": "Creatinine 3.2, about their usual. Potassium 5.1."
+			},
+			"key": [
+				"bloods"
+			],
+			"fits": {
+				"renal_colic": {
+					"right": "Paracetamol and a small dose of morphine instead of diclofenac, an anti-sickness injection, an ultrasound, and the kidney team told",
+					"why": "Weak kidneys and a stone: diclofenac-type painkillers can push weak kidneys into failure. Pain relief that spares them, and the kidney team in the loop.",
+					"trap": "A diclofenac injection and an anti-sickness one, then home with tablets, plenty of water and a urology check",
+					"trap_effect": "harm",
+					"trap_why": "Their kidneys are already weak. Diclofenac can tip them into failure.",
+					"results": {
+						"bloods": "Creatinine 3.3, about their usual. White count normal."
+					}
+				}
+			}
+		},
+		"alcohol": {
+			"known": "Drinks every day",
+			"say": "I drink. Every day. A quarter, sometimes a half.",
+			"hidden": {
+				"say": "Drink? No, no. Only at weddings. Small one."
+			},
+			"exam": "Smells of alcohol. A fine tremor in the hands. The liver edge can be felt.",
+			"ages": [
+				30,
+				70
+			],
+			"sex": "m",
+			"results": {},
+			"key": [],
+			"fits": {
+				"hypoglycaemia": {
+					"right": "Thiamine with the dextrose through the drip, then a meal, recheck the sugar, sort out the insulin, and a talk about the drinking",
+					"why": "Low sugar in someone who drinks every day: sugar alone can bring on Wernicke's, a brain injury from too little thiamine. Give thiamine with the dextrose.",
+					"trap_effect": "harm",
+					"trap_why": "In someone who drinks every day, dextrose without thiamine can bring on Wernicke's, a lasting brain injury."
+				},
+				"head_injury": {
+					"right": "CT head now, and admit to watch overnight even if it's clear, without putting any drowsiness down to the drink",
+					"why": "Drink hides the warning signs of a bleed, and people who drink every day bleed more easily. Scan, and watch overnight.",
+					"trap_effect": "back",
+					"trap_why": "In a heavy drinker, a bleed can hide behind 'he's just drunk'. Sent home, he can come back unconscious.",
+					"go": "admit"
+				},
+				"pancreatitis": {
+					"right": "Admit, plenty of fluids through the drip, strong pain relief, thiamine, and a plan for alcohol withdrawal",
+					"why": "Pancreatitis in someone who drinks every day: as well as fluids and pain relief, he needs thiamine and a withdrawal plan, or he'll be shaking and seeing things by tomorrow night.",
+					"trap_effect": "worse",
+					"trap_why": "He drinks every day. Without thiamine and a withdrawal plan, he'll be shaking and seeing things within a day or two."
+				}
+			}
+		},
+		"penicillin": {
+			"known": "",
+			"say": "Oh, and penicillin. Last time my whole face swelled up.",
+			"ages": [
+				16,
+				95
+			],
+			"sex": "",
+			"results": {},
+			"key": [],
+			"fits": {
+				"pneumonia": {
+					"right": "Oxygen, a non-penicillin antibiotic through the drip because of the allergy, fluids, and admit",
+					"why": "Pneumonia in someone whose face swelled up with penicillin: the antibiotic comes from another family. Asking about allergies is never optional.",
+					"trap": "Oxygen, co-amoxiclav through the drip, fluids, and admit",
+					"trap_effect": "harm",
+					"trap_why": "They told you: penicillin swells their face up. Co-amoxiclav is a penicillin."
+				},
+				"diabetic_foot": {
+					"right": "Admit, a non-penicillin antibiotic through the drip because of the allergy, insulin for the sugar, and the surgeons to clean the wound",
+					"why": "An infected diabetic foot in someone allergic to penicillin: the antibiotic comes from another family. Always ask before you write the drip chart.",
+					"trap": "Admit, co-amoxiclav through the drip, insulin for the sugar, and the surgeons to clean the wound",
+					"trap_effect": "harm",
+					"trap_why": "They told you: penicillin swells their face up. Co-amoxiclav is a penicillin."
+				}
+			}
+		}
+	},
+	"outbreak": {
+		"first_day": 10,
+		"every": 12,
+		"lasts": 4,
+		"weight": 9,
+		"age": [
+			16,
+			45
+		],
+		"triage": "yellow",
+		"start": [
+			20,
+			30
+		],
+		"worsens": 3,
+		"vitals": {
+			"pulse": [
+				100,
+				110
+			],
+			"bp": [
+				108,
+				120
+			],
+			"temp": [
+				38.4,
+				39.2
+			],
+			"spo2": [
+				96,
+				98
+			],
+			"breaths": [
+				18,
+				22
+			]
+		},
+		"kinds": {
+			"palm_rash": {
+				"name": "palm-rash fever",
+				"board": "Fever with a rash on the palms",
+				"pain": [
+					"Fever and a rash on my palms and soles. Itchy, like ants walking.",
+					"Fever, and these pink spots on my hands and feet. They itch like mad."
+				],
+				"exam": "Pink spots on the palms and soles. Glands up in the neck. Throat a little red.",
+				"bloods": "White count low, 3,200. Liver enzymes a little raised. Nothing else stands out."
+			},
+			"tin_mouth": {
+				"name": "tin-mouth fever",
+				"board": "Fever with red eyes and a metal taste",
+				"pain": [
+					"Fever, and my eyes are red and watery. Everything tastes like metal. Even chai.",
+					"High fever, red eyes, and my food tastes like I'm chewing coins."
+				],
+				"exam": "Red eyes without discharge. A coated tongue. Small glands behind the ears.",
+				"bloods": "White count low, 2,900. Platelets a little low, 118,000. Nothing else stands out."
+			},
+			"pen_drop": {
+				"name": "pen-drop fever",
+				"board": "Fever with stiff, puffy fingers",
+				"pain": [
+					"Fever, and my fingers are so stiff I can't hold a pen. Toes too.",
+					"High fever, and every small joint in my hands is stiff and puffy."
+				],
+				"exam": "Puffy, tender finger joints. A faint lacy rash on the arms. Glands up in the armpits.",
+				"bloods": "White count low, 3,400. CRP a little raised. Nothing else stands out."
+			},
+			"hiccup": {
+				"name": "hiccup fever",
+				"board": "Fever with hiccups that won't stop",
+				"pain": [
+					"Fever, and I can't stop hiccuping. Two days of hiccups. My family is losing its mind.",
+					"High fever and hiccups every few seconds. I can't sleep, I can't eat, I can't talk properly."
+				],
+				"exam": "Hiccuping every few seconds. A red throat with small blisters at the back. Glands up in the neck.",
+				"bloods": "White count low, 3,100. Sodium a little low. Nothing else stands out."
+			}
+		},
+		"when": [
+			"Two days. Half my hostel has the same thing.",
+			"Since yesterday. Four people in my office are off with it.",
+			"Three days. It started after the college fest. Everyone who went is sick.",
+			"Two days. My whole building has it. The watchman too."
+		],
+		"other": [
+			"No travel. No pets. Just the mess food, which is a crime anyway.",
+			"I'm usually fit. I play cricket every Sunday. Well, I watch cricket every Sunday.",
+			"No medicines. The chemist says it's the new fever going around."
+		],
+		"label": "Invented illness, made up for the game",
+		"plans": [
+			{
+				"text": "Isolate them, fluids and paracetamol, take samples for the lab, and report the cluster to the public health team",
+				"right": true,
+				"why": "This illness is invented for the game, but the way it's handled is real: a cluster of the same new fever is isolated, supported with fluids and paracetamol, sampled, and reported to the public health surveillance team, who track down the cause."
+			},
+			{
+				"text": "Antibiotics for everyone who has it",
+				"effect": "worse",
+				"why": "Invented illness, real lesson: guessing antibiotics for an unknown fever cluster doesn't treat a virus, breeds resistance and hides the cause."
+			},
+			{
+				"text": "Steroids to bring the fever down",
+				"effect": "harm",
+				"why": "Invented illness, real lesson: steroids for an unknown fever can let an infection run riot."
+			},
+			{
+				"text": "Paracetamol and home, it's just a viral fever",
+				"effect": "back",
+				"why": "Invented illness, real lesson: one viral fever goes home, but the fifth patient with the same new fever this week is a cluster. Clusters get isolated and reported."
+			}
+		],
+		"go": "isolation",
+		"plain": "",
+		"news": "District health office: a cluster of {board_low} is going round town. Hospitals are isolating and reporting cases. This illness is invented, made up for the game."
+	},
+	"returns": {
+		"chance": 0.06,
+		"keep": 40,
+		"sweets_share": 0.45,
+		"hello": [
+			"Remember me, Doctor? You saw me the other day.",
+			"Hello again, Doctor. Something new this time."
+		],
+		"again": [
+			"It's me again, Doctor. It never really got better."
+		],
+		"sweets": [
+			"a box of kaju katli",
+			"a box of pedas",
+			"a tin of laddoos",
+			"a box of mysore pak",
+			"a packet of soan papdi",
+			"a box of jalebis, still warm",
+			"a box of rasgullas"
+		]
+	}
+}
