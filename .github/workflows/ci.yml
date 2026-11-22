@@ -189,8 +189,13 @@ jobs:
           APP=$(ls -d *.app | head -1)
           echo "App: $APP"
           BIN="$APP/Contents/MacOS/$(defaults read "$PWD/$APP/Contents/Info" CFBundleExecutable)"
-          lipo -info "$BIN" | tee /dev/stderr | grep -q "x86_64" && lipo -info "$BIN" | grep -q "arm64"
-          codesign -dv "$APP" 2>&1 | tee /dev/stderr | grep -q "Signature=adhoc"
+          # Read each tool's whole output first: grep -q stops at the first
+          # match, and under pipefail the writer it leaves behind fails.
+          ARCHS=$(lipo -info "$BIN"); echo "$ARCHS"
+          grep -q "x86_64" <<<"$ARCHS"
+          grep -q "arm64" <<<"$ARCHS"
+          SIGN=$(codesign -dv "$APP" 2>&1); echo "$SIGN"
+          grep -q "Signature=adhoc" <<<"$SIGN"
           test -f "$APP/Contents/Resources/"*.pck || ls "$APP/Contents/Resources"
           # It starts, loads the title screen and quits cleanly.
           "$BIN" --headless --quit-after 240 2>&1 | tee run-mac.log
