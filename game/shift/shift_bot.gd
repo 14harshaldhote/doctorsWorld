@@ -7,14 +7,27 @@ extends RefCounted
 ## step() does one piece of work and returns the hospital minutes it took
 ## (1 when it only waited); the caller passes those minutes on the sim.
 
-## right: choose the right plan (false: a wrong one, to test what follows).
+## right: choose the right plan, correct a wrong read-back and repeat a lab
+## result that doesn't fit (false: the wrong thing each time, to test what
+## follows).
 static func step(sim: ShiftSim, right: bool = true) -> int:
+	# A nurse's read-back first: a careful doctor corrects a wrong one.
+	for id: int in sim.readbacks.keys():
+		sim.answer_readback(sim.by_id(id), right)
+		return 1
 	var seeing: Array[ShiftPatient] = []
 	for patient in sim.patients:
 		if patient.state == "seeing":
 			seeing.append(patient)
 	seeing.sort_custom(func(a: ShiftPatient, b: ShiftPatient) -> bool: return a.severity > b.severity)
 	for patient in seeing:
+		# The lab rang: repeat a result that doesn't fit, treat a real one.
+		if patient.alert_open():
+			if right and not str(patient.alert.get("error", "")).is_empty():
+				sim.repeat_test(patient)
+			else:
+				sim.treat_alert(patient)
+			return ShiftSim.ORDER_MINUTES
 		for question: String in ShiftPatient.QUESTIONS:
 			if not patient.asked.has(question):
 				sim.ask(patient, question)

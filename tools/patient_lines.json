@@ -7858,5 +7858,655 @@
 		"mood": "calm",
 		"text": "It's me again, Doctor. It never really got better.",
 		"who": "pm_young"
+	},
+	{
+		"mood": "shocked",
+		"text": "Doctor? Tell me. Just tell me straight.",
+		"who": "pf_mid_sharp"
+	},
+	{
+		"mood": "shocked",
+		"text": "Doctor? Tell me. Just tell me straight.",
+		"who": "pf_mid_warm"
+	},
+	{
+		"mood": "shocked",
+		"text": "Doctor? Tell me. Just tell me straight.",
+		"who": "pf_old_firm"
+	},
+	{
+		"mood": "shocked",
+		"text": "Doctor? Tell me. Just tell me straight.",
+		"who": "pf_old_soft"
+	},
+	{
+		"mood": "shocked",
+		"text": "Doctor? Tell me. Just tell me straight.",
+		"who": "pf_young"
+	},
+	{
+		"mood": "shocked",
+		"text": "Doctor? Tell me. Just tell me straight.",
+		"who": "pm_mid_sharp"
+	},
+	{
+		"mood": "shocked",
+		"text": "Doctor? Tell me. Just tell me straight.",
+		"who": "pm_mid_warm"
+	},
+	{
+		"mood": "shocked",
+		"text": "Doctor? Tell me. Just tell me straight.",
+		"who": "pm_old_gruff"
+	},
+	{
+		"mood": "shocked",
+		"text": "Doctor? Tell me. Just tell me straight.",
+		"who": "pm_old_soft"
+	},
+	{
+		"mood": "shocked",
+		"text": "Doctor? Tell me. Just tell me straight.",
+		"who": "pm_young"
+	},
+	{
+		"mood": "shocked",
+		"text": "We only went down for tea. Ten minutes. What happened?",
+		"who": "pf_mid_sharp"
+	},
+	{
+		"mood": "shocked",
+		"text": "We only went down for tea. Ten minutes. What happened?",
+		"who": "pf_mid_warm"
+	},
+	{
+		"mood": "shocked",
+		"text": "We only went down for tea. Ten minutes. What happened?",
+		"who": "pf_old_firm"
+	},
+	{
+		"mood": "shocked",
+		"text": "We only went down for tea. Ten minutes. What happened?",
+		"who": "pf_old_soft"
+	},
+	{
+		"mood": "shocked",
+		"text": "We only went down for tea. Ten minutes. What happened?",
+		"who": "pf_young"
+	},
+	{
+		"mood": "shocked",
+		"text": "We only went down for tea. Ten minutes. What happened?",
+		"who": "pm_mid_sharp"
+	},
+	{
+		"mood": "shocked",
+		"text": "We only went down for tea. Ten minutes. What happened?",
+		"who": "pm_mid_warm"
+	},
+	{
+		"mood": "shocked",
+		"text": "We only went down for tea. Ten minutes. What happened?",
+		"who": "pm_old_gruff"
+	},
+	{
+		"mood": "shocked",
+		"text": "We only went down for tea. Ten minutes. What happened?",
+		"who": "pm_old_soft"
+	},
+	{
+		"mood": "shocked",
+		"text": "We only went down for tea. Ten minutes. What happened?",
+		"who": "pm_young"
+	},
+	{
+		"mood": "shocked",
+		"text": "Your face is saying it. Don't let your face say it. You say it.",
+		"who": "pf_mid_sharp"
+	},
+	{
+		"mood": "shocked",
+		"text": "Your face is saying it. Don't let your face say it. You say it.",
+		"who": "pf_mid_warm"
+	},
+	{
+		"mood": "shocked",
+		"text": "Your face is saying it. Don't let your face say it. You say it.",
+		"who": "pf_old_firm"
+	},
+	{
+		"mood": "shocked",
+		"text": "Your face is saying it. Don't let your face say it. You say it.",
+		"who": "pf_old_soft"
+	},
+	{
+		"mood": "shocked",
+		"text": "Your face is saying it. Don't let your face say it. You say it.",
+		"who": "pf_young"
+	},
+	{
+		"mood": "shocked",
+		"text": "Your face is saying it. Don't let your face say it. You say it.",
+		"who": "pm_mid_sharp"
+	},
+	{
+		"mood": "shocked",
+		"text": "Your face is saying it. Don't let your face say it. You say it.",
+		"who": "pm_mid_warm"
+	},
+	{
+		"mood": "shocked",
+		"text": "Your face is saying it. Don't let your face say it. You say it.",
+		"who": "pm_old_gruff"
+	},
+	{
+		"mood": "shocked",
+		"text": "Your face is saying it. Don't let your face say it. You say it.",
+		"who": "pm_old_soft"
+	},
+	{
+		"mood": "shocked",
+		"text": "Your face is saying it. Don't let your face say it. You say it.",
+		"who": "pm_young"
+	},
+	{
+		"mood": "shocked",
+		"text": "They called us back up. Nobody calls you back up for good news, na?",
+		"who": "pf_mid_sharp"
+	},
+	{
+		"mood": "shocked",
+		"text": "They called us back up. Nobody calls you back up for good news, na?",
+		"who": "pf_mid_warm"
+	},
+	{
+		"mood": "shocked",
+		"text": "They called us back up. Nobody calls you back up for good news, na?",
+		"who": "pf_old_firm"
+	},
+	{
+		"mood": "shocked",
+		"text": "They called us back up. Nobody calls you back up for good news, na?",
+		"who": "pf_old_soft"
+	},
+	{
+		"mood": "shocked",
+		"text": "They called us back up. Nobody calls you back up for good news, na?",
+		"who": "pf_young"
+	},
+	{
+		"mood": "shocked",
+		"text": "They called us back up. Nobody calls you back up for good news, na?",
+		"who": "pm_mid_sharp"
+	},
+	{
+		"mood": "shocked",
+		"text": "They called us back up. Nobody calls you back up for good news, na?",
+		"who": "pm_mid_warm"
+	},
+	{
+		"mood": "shocked",
+		"text": "They called us back up. Nobody calls you back up for good news, na?",
+		"who": "pm_old_gruff"
+	},
+	{
+		"mood": "shocked",
+		"text": "They called us back up. Nobody calls you back up for good news, na?",
+		"who": "pm_old_soft"
+	},
+	{
+		"mood": "shocked",
+		"text": "They called us back up. Nobody calls you back up for good news, na?",
+		"who": "pm_young"
+	},
+	{
+		"mood": "tired",
+		"text": "Okay. Okay. Was there pain at the end?",
+		"who": "pf_mid_sharp"
+	},
+	{
+		"mood": "tired",
+		"text": "Okay. Okay. Was there pain at the end?",
+		"who": "pf_mid_warm"
+	},
+	{
+		"mood": "tired",
+		"text": "Okay. Okay. Was there pain at the end?",
+		"who": "pf_old_firm"
+	},
+	{
+		"mood": "tired",
+		"text": "Okay. Okay. Was there pain at the end?",
+		"who": "pf_old_soft"
+	},
+	{
+		"mood": "tired",
+		"text": "Okay. Okay. Was there pain at the end?",
+		"who": "pf_young"
+	},
+	{
+		"mood": "tired",
+		"text": "Okay. Okay. Was there pain at the end?",
+		"who": "pm_mid_sharp"
+	},
+	{
+		"mood": "tired",
+		"text": "Okay. Okay. Was there pain at the end?",
+		"who": "pm_mid_warm"
+	},
+	{
+		"mood": "tired",
+		"text": "Okay. Okay. Was there pain at the end?",
+		"who": "pm_old_gruff"
+	},
+	{
+		"mood": "tired",
+		"text": "Okay. Okay. Was there pain at the end?",
+		"who": "pm_old_soft"
+	},
+	{
+		"mood": "tired",
+		"text": "Okay. Okay. Was there pain at the end?",
+		"who": "pm_young"
+	},
+	{
+		"mood": "tired",
+		"text": "Thank you for not making me guess. Can I see them?",
+		"who": "pf_mid_sharp"
+	},
+	{
+		"mood": "tired",
+		"text": "Thank you for not making me guess. Can I see them?",
+		"who": "pf_mid_warm"
+	},
+	{
+		"mood": "tired",
+		"text": "Thank you for not making me guess. Can I see them?",
+		"who": "pf_old_firm"
+	},
+	{
+		"mood": "tired",
+		"text": "Thank you for not making me guess. Can I see them?",
+		"who": "pf_old_soft"
+	},
+	{
+		"mood": "tired",
+		"text": "Thank you for not making me guess. Can I see them?",
+		"who": "pf_young"
+	},
+	{
+		"mood": "tired",
+		"text": "Thank you for not making me guess. Can I see them?",
+		"who": "pm_mid_sharp"
+	},
+	{
+		"mood": "tired",
+		"text": "Thank you for not making me guess. Can I see them?",
+		"who": "pm_mid_warm"
+	},
+	{
+		"mood": "tired",
+		"text": "Thank you for not making me guess. Can I see them?",
+		"who": "pm_old_gruff"
+	},
+	{
+		"mood": "tired",
+		"text": "Thank you for not making me guess. Can I see them?",
+		"who": "pm_old_soft"
+	},
+	{
+		"mood": "tired",
+		"text": "Thank you for not making me guess. Can I see them?",
+		"who": "pm_young"
+	},
+	{
+		"mood": "tired",
+		"text": "I have to call everyone. How do I even say this on the phone?",
+		"who": "pf_mid_sharp"
+	},
+	{
+		"mood": "tired",
+		"text": "I have to call everyone. How do I even say this on the phone?",
+		"who": "pf_mid_warm"
+	},
+	{
+		"mood": "tired",
+		"text": "I have to call everyone. How do I even say this on the phone?",
+		"who": "pf_old_firm"
+	},
+	{
+		"mood": "tired",
+		"text": "I have to call everyone. How do I even say this on the phone?",
+		"who": "pf_old_soft"
+	},
+	{
+		"mood": "tired",
+		"text": "I have to call everyone. How do I even say this on the phone?",
+		"who": "pf_young"
+	},
+	{
+		"mood": "tired",
+		"text": "I have to call everyone. How do I even say this on the phone?",
+		"who": "pm_mid_sharp"
+	},
+	{
+		"mood": "tired",
+		"text": "I have to call everyone. How do I even say this on the phone?",
+		"who": "pm_mid_warm"
+	},
+	{
+		"mood": "tired",
+		"text": "I have to call everyone. How do I even say this on the phone?",
+		"who": "pm_old_gruff"
+	},
+	{
+		"mood": "tired",
+		"text": "I have to call everyone. How do I even say this on the phone?",
+		"who": "pm_old_soft"
+	},
+	{
+		"mood": "tired",
+		"text": "I have to call everyone. How do I even say this on the phone?",
+		"who": "pm_young"
+	},
+	{
+		"mood": "tired",
+		"text": "This morning we were arguing about the TV remote. This morning.",
+		"who": "pf_mid_sharp"
+	},
+	{
+		"mood": "tired",
+		"text": "This morning we were arguing about the TV remote. This morning.",
+		"who": "pf_mid_warm"
+	},
+	{
+		"mood": "tired",
+		"text": "This morning we were arguing about the TV remote. This morning.",
+		"who": "pf_old_firm"
+	},
+	{
+		"mood": "tired",
+		"text": "This morning we were arguing about the TV remote. This morning.",
+		"who": "pf_old_soft"
+	},
+	{
+		"mood": "tired",
+		"text": "This morning we were arguing about the TV remote. This morning.",
+		"who": "pf_young"
+	},
+	{
+		"mood": "tired",
+		"text": "This morning we were arguing about the TV remote. This morning.",
+		"who": "pm_mid_sharp"
+	},
+	{
+		"mood": "tired",
+		"text": "This morning we were arguing about the TV remote. This morning.",
+		"who": "pm_mid_warm"
+	},
+	{
+		"mood": "tired",
+		"text": "This morning we were arguing about the TV remote. This morning.",
+		"who": "pm_old_gruff"
+	},
+	{
+		"mood": "tired",
+		"text": "This morning we were arguing about the TV remote. This morning.",
+		"who": "pm_old_soft"
+	},
+	{
+		"mood": "tired",
+		"text": "This morning we were arguing about the TV remote. This morning.",
+		"who": "pm_young"
+	},
+	{
+		"mood": "tired",
+		"text": "I don't understand any of that. Is that bad? Is someone alive or not?",
+		"who": "pf_mid_sharp"
+	},
+	{
+		"mood": "tired",
+		"text": "I don't understand any of that. Is that bad? Is someone alive or not?",
+		"who": "pf_mid_warm"
+	},
+	{
+		"mood": "tired",
+		"text": "I don't understand any of that. Is that bad? Is someone alive or not?",
+		"who": "pf_old_firm"
+	},
+	{
+		"mood": "tired",
+		"text": "I don't understand any of that. Is that bad? Is someone alive or not?",
+		"who": "pf_old_soft"
+	},
+	{
+		"mood": "tired",
+		"text": "I don't understand any of that. Is that bad? Is someone alive or not?",
+		"who": "pf_young"
+	},
+	{
+		"mood": "tired",
+		"text": "I don't understand any of that. Is that bad? Is someone alive or not?",
+		"who": "pm_mid_sharp"
+	},
+	{
+		"mood": "tired",
+		"text": "I don't understand any of that. Is that bad? Is someone alive or not?",
+		"who": "pm_mid_warm"
+	},
+	{
+		"mood": "tired",
+		"text": "I don't understand any of that. Is that bad? Is someone alive or not?",
+		"who": "pm_old_gruff"
+	},
+	{
+		"mood": "tired",
+		"text": "I don't understand any of that. Is that bad? Is someone alive or not?",
+		"who": "pm_old_soft"
+	},
+	{
+		"mood": "tired",
+		"text": "I don't understand any of that. Is that bad? Is someone alive or not?",
+		"who": "pm_young"
+	},
+	{
+		"mood": "tired",
+		"text": "Speak normally, please. I'm not a doctor. I'm just family.",
+		"who": "pf_mid_sharp"
+	},
+	{
+		"mood": "tired",
+		"text": "Speak normally, please. I'm not a doctor. I'm just family.",
+		"who": "pf_mid_warm"
+	},
+	{
+		"mood": "tired",
+		"text": "Speak normally, please. I'm not a doctor. I'm just family.",
+		"who": "pf_old_firm"
+	},
+	{
+		"mood": "tired",
+		"text": "Speak normally, please. I'm not a doctor. I'm just family.",
+		"who": "pf_old_soft"
+	},
+	{
+		"mood": "tired",
+		"text": "Speak normally, please. I'm not a doctor. I'm just family.",
+		"who": "pf_young"
+	},
+	{
+		"mood": "tired",
+		"text": "Speak normally, please. I'm not a doctor. I'm just family.",
+		"who": "pm_mid_sharp"
+	},
+	{
+		"mood": "tired",
+		"text": "Speak normally, please. I'm not a doctor. I'm just family.",
+		"who": "pm_mid_warm"
+	},
+	{
+		"mood": "tired",
+		"text": "Speak normally, please. I'm not a doctor. I'm just family.",
+		"who": "pm_old_gruff"
+	},
+	{
+		"mood": "tired",
+		"text": "Speak normally, please. I'm not a doctor. I'm just family.",
+		"who": "pm_old_soft"
+	},
+	{
+		"mood": "tired",
+		"text": "Speak normally, please. I'm not a doctor. I'm just family.",
+		"who": "pm_young"
+	},
+	{
+		"mood": "tired",
+		"text": "You're saying words. I'm asking you one thing.",
+		"who": "pf_mid_sharp"
+	},
+	{
+		"mood": "tired",
+		"text": "You're saying words. I'm asking you one thing.",
+		"who": "pf_mid_warm"
+	},
+	{
+		"mood": "tired",
+		"text": "You're saying words. I'm asking you one thing.",
+		"who": "pf_old_firm"
+	},
+	{
+		"mood": "tired",
+		"text": "You're saying words. I'm asking you one thing.",
+		"who": "pf_old_soft"
+	},
+	{
+		"mood": "tired",
+		"text": "You're saying words. I'm asking you one thing.",
+		"who": "pf_young"
+	},
+	{
+		"mood": "tired",
+		"text": "You're saying words. I'm asking you one thing.",
+		"who": "pm_mid_sharp"
+	},
+	{
+		"mood": "tired",
+		"text": "You're saying words. I'm asking you one thing.",
+		"who": "pm_mid_warm"
+	},
+	{
+		"mood": "tired",
+		"text": "You're saying words. I'm asking you one thing.",
+		"who": "pm_old_gruff"
+	},
+	{
+		"mood": "tired",
+		"text": "You're saying words. I'm asking you one thing.",
+		"who": "pm_old_soft"
+	},
+	{
+		"mood": "tired",
+		"text": "You're saying words. I'm asking you one thing.",
+		"who": "pm_young"
+	},
+	{
+		"mood": "tired",
+		"text": "The nurse told me. She held my hand. Where were you?",
+		"who": "pf_mid_sharp"
+	},
+	{
+		"mood": "tired",
+		"text": "The nurse told me. She held my hand. Where were you?",
+		"who": "pf_mid_warm"
+	},
+	{
+		"mood": "tired",
+		"text": "The nurse told me. She held my hand. Where were you?",
+		"who": "pf_old_firm"
+	},
+	{
+		"mood": "tired",
+		"text": "The nurse told me. She held my hand. Where were you?",
+		"who": "pf_old_soft"
+	},
+	{
+		"mood": "tired",
+		"text": "The nurse told me. She held my hand. Where were you?",
+		"who": "pf_young"
+	},
+	{
+		"mood": "tired",
+		"text": "The nurse told me. She held my hand. Where were you?",
+		"who": "pm_mid_sharp"
+	},
+	{
+		"mood": "tired",
+		"text": "The nurse told me. She held my hand. Where were you?",
+		"who": "pm_mid_warm"
+	},
+	{
+		"mood": "tired",
+		"text": "The nurse told me. She held my hand. Where were you?",
+		"who": "pm_old_gruff"
+	},
+	{
+		"mood": "tired",
+		"text": "The nurse told me. She held my hand. Where were you?",
+		"who": "pm_old_soft"
+	},
+	{
+		"mood": "tired",
+		"text": "The nurse told me. She held my hand. Where were you?",
+		"who": "pm_young"
+	},
+	{
+		"mood": "tired",
+		"text": "She sat with me. You were busy, I suppose. Everyone's busy.",
+		"who": "pf_mid_sharp"
+	},
+	{
+		"mood": "tired",
+		"text": "She sat with me. You were busy, I suppose. Everyone's busy.",
+		"who": "pf_mid_warm"
+	},
+	{
+		"mood": "tired",
+		"text": "She sat with me. You were busy, I suppose. Everyone's busy.",
+		"who": "pf_old_firm"
+	},
+	{
+		"mood": "tired",
+		"text": "She sat with me. You were busy, I suppose. Everyone's busy.",
+		"who": "pf_old_soft"
+	},
+	{
+		"mood": "tired",
+		"text": "She sat with me. You were busy, I suppose. Everyone's busy.",
+		"who": "pf_young"
+	},
+	{
+		"mood": "tired",
+		"text": "She sat with me. You were busy, I suppose. Everyone's busy.",
+		"who": "pm_mid_sharp"
+	},
+	{
+		"mood": "tired",
+		"text": "She sat with me. You were busy, I suppose. Everyone's busy.",
+		"who": "pm_mid_warm"
+	},
+	{
+		"mood": "tired",
+		"text": "She sat with me. You were busy, I suppose. Everyone's busy.",
+		"who": "pm_old_gruff"
+	},
+	{
+		"mood": "tired",
+		"text": "She sat with me. You were busy, I suppose. Everyone's busy.",
+		"who": "pm_old_soft"
+	},
+	{
+		"mood": "tired",
+		"text": "She sat with me. You were busy, I suppose. Everyone's busy.",
+		"who": "pm_young"
 	}
 ]

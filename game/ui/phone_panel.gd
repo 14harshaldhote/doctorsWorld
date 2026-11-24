@@ -16,7 +16,19 @@ signal closed
 signal call_ended(call_id: String)
 
 const APPS := [["chats", "Chats", "chat"], ["calls", "Calls", "call"], ["lab", "Lab results", "flask"],
-	["pager", "Pager", "pager"], ["feed", "Feed", "feed"], ["photos", "Photos", "photo"]]
+	["pager", "Pager", "pager"], ["feed", "Feed", "feed"], ["photos", "Photos", "photo"], ["maps", "Maps", "map"]]
+## The hospital on the Maps app: [id, name, what it's like, x, y, w, h] on a
+## 100 x 100 plan, ground floor and the basement strip along the bottom.
+const PLACES := [
+	["ward", "Ward 4", "Six beds, one desk, and the wall of names by it.", 4, 6, 40, 30],
+	["casualty", "Casualty", "Four cubicles and a waiting area that never empties.", 52, 6, 44, 30],
+	["theatre", "Theatre", "Scrub sink on the left. Dr. Sethi's music on the right.", 52, 42, 44, 22],
+	["skills", "Skills lab", "Mannequins that never complain. Enjoy it while it lasts.", 4, 42, 22, 22],
+	["seminar", "Seminar room", "Slides, chai, and someone's laptop that won't connect.", 28, 42, 20, 22],
+	["lobby", "Lobby", "Reception, the coffee machine and every rumour in the building.", 4, 68, 44, 14],
+	["canteen", "Canteen", "Dal of the day. Same as yesterday's dal.", 52, 68, 44, 14],
+	["morgue", "Morgue", "Basement. Service lift. Nobody takes the service lift for fun.", 4, 86, 92, 10],
+]
 const BODY_COLOUR := Color("#060F11")
 const SCREEN_COLOUR := Color("#0B2328")
 const ROW_COLOUR := Color(1, 1, 1, 0.05)
@@ -36,6 +48,9 @@ var profile: PlayerProfile
 var pager_log: Array = []
 ## Today's results from casualty, as PhoneBook lab items (set by the ward).
 var live_lab: Callable = Callable()
+## Where the doctor is and where the story wants them: {"here": a PLACES
+## id or "", "next": the task list's open row or ""}.
+var live_place: Callable = Callable()
 var page := "home"
 var page_arg := ""
 
@@ -331,6 +346,8 @@ func _show(to: String, arg: String = "", clear_history: bool = true) -> void:
 			PhoneBook.mark_seen(profile, "photos")
 		"photo":
 			built = _photo_page(arg)
+		"maps":
+			built = _maps_page()
 		_:
 			page = "home"
 			built = _home_page()
@@ -612,7 +629,7 @@ func _app_button(app: String, title: String, icon: String, live: Array) -> Contr
 	button.custom_minimum_size = Vector2(UiKit.px(44), UiKit.px(44))
 	button.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	var colour: Color = {"chats": Color("#2E9E6B"), "calls": Color("#3B8F5A"), "lab": Color("#5B6FD8"),
-		"pager": Color("#C98A1E"), "feed": Color("#C2457A"), "photos": Color("#E07A3C")}.get(app, UiKit.TEAL)
+		"pager": Color("#C98A1E"), "feed": Color("#C2457A"), "photos": Color("#E07A3C"), "maps": Color("#3E7CB1")}.get(app, UiKit.TEAL)
 	button.add_theme_stylebox_override("normal", UiKit.box(colour, 12))
 	button.add_theme_stylebox_override("hover", UiKit.box(colour, 12))
 	button.add_theme_stylebox_override("focus", UiKit.box(colour, 12))
@@ -1158,6 +1175,37 @@ func _lab_page() -> Control:
 		words.add_child(_wrapped(str(item.get("test", "")) + ("  ·  Look at this" if high else ""), 8.5,
 			UiKit.AMBER if high else UiKit.MINT, _inner_width() - UiKit.px(16), UiKit.heavy_font()))
 		words.add_child(_wrapped(str(item.get("result", "")), 9.5, UiKit.TEXT_LABEL, _inner_width() - UiKit.px(16)))
+		list.add_child(row)
+	return made[0]
+
+
+## Where the doctor is now, and where the story wants them next.
+func place_now() -> Dictionary:
+	var found: Variant = live_place.call() if live_place.is_valid() else {}
+	return found if found is Dictionary else {}
+
+
+func _maps_page() -> Control:
+	var made := _page("Maps", "Riverside City Hospital")
+	var list: VBoxContainer = made[1]
+	var now := place_now()
+	var here := str(now.get("here", ""))
+	var plan := HospitalMap.new()
+	plan.name = "Plan"
+	plan.places = PLACES
+	plan.here = here
+	plan.custom_minimum_size = Vector2(_inner_width(), _inner_width() * 0.82)
+	list.add_child(plan)
+	var next := str(now.get("next", ""))
+	if not next.is_empty():
+		list.add_child(_wrapped("Next: " + next, 9.5, UiKit.AMBER, _inner_width(), UiKit.heavy_font()))
+	for place: Array in PLACES:
+		var row := _row("Place_" + str(place[0]))
+		var words := UiKit.vbox(2)
+		row.add_child(words)
+		var title := str(place[1]) + ("  ·  You are here" if str(place[0]) == here else "")
+		words.add_child(UiKit.label(title, 9.5, UiKit.MINT if str(place[0]) == here else UiKit.TEXT, UiKit.heavy_font()))
+		words.add_child(_wrapped(str(place[2]), 8.5, UiKit.TEXT_LABEL, _inner_width() - UiKit.px(16)))
 		list.add_child(row)
 	return made[0]
 

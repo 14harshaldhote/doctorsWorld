@@ -70,6 +70,7 @@ static func make(profile: PlayerProfile, day: int, start_minute: int) -> ShiftSi
 	sim.past = past(profile, day)
 	if day == FIRST_DAY:
 		sim.first_arrivals = FIRST_ARRIVALS.duplicate(true)
+	sim.plan_fates()
 	return sim
 
 
@@ -118,6 +119,19 @@ static func remember(profile: PlayerProfile, patient: ShiftPatient) -> void:
 	profile.patients = kept
 
 
+## A patient has died: their name goes on the wall, their record says so
+## (so they never walk back in), and the career counts it by fault.
+static func note_death(profile: PlayerProfile, patient: ShiftPatient) -> void:
+	Fates.add_to_wall(profile.wall, Fates.wall_entry(patient, profile.day))
+	var id := "d%d_%d" % [profile.day, patient.id]
+	for entry: Dictionary in profile.patients:
+		if str(entry.get("id", "")) == id or (str(entry.get("full", "")) == patient.full_name()
+				and int(entry.get("day", 0)) == profile.day):
+			entry["outcome"] = "died"
+	profile.add_count("deaths", 1)
+	profile.add_count("deaths_" + patient.fault, 1)
+
+
 ## Notes that a patient from an earlier day came back today, so they don't
 ## come back again until they're seen anew.
 static func note_return(profile: PlayerProfile, id: String) -> void:
@@ -134,7 +148,7 @@ static func past(profile: PlayerProfile, day: int) -> Array:
 	for entry: Dictionary in profile.patients:
 		var seen := int(entry.get("day", 0))
 		if seen < day and seen >= day - RECALL_DAYS and int(entry.get("back", 0)) == 0 \
-				and str(entry.get("condition", "")) != Outbreak.ID:
+				and str(entry.get("condition", "")) != Outbreak.ID and str(entry.get("outcome", "")) != "died":
 			found.append(entry.duplicate(true))
 	return found
 
@@ -196,4 +210,6 @@ static func summary_line(sim: ShiftSim, xp: int) -> String:
 	var line := "Casualty: %d seen, %d right" % [int(tally["seen"]), int(tally["right"])]
 	if int(tally["crashed"]) > 0:
 		line += ", %d to intensive care" % int(tally["crashed"])
+	if int(tally["died"]) > 0:
+		line += ", %d died" % int(tally["died"])
 	return line + ", +%d XP" % xp

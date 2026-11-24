@@ -35,7 +35,7 @@ var rank_held := Rank.INTERN
 ## hospital's standing (see Standing).
 var counters := {}
 ## How the career stood when today began: {"day", "total_xp", "minutes",
-## "relationships", "flags", "skills", "rank", "counters", "patients"}. A day that is
+## "relationships", "flags", "skills", "rank", "counters", "patients", "wall"}. A day that is
 ## started again from its first beat (the game was closed halfway) goes
 ## back to it, so nothing is earned, promoted or decided twice.
 var morning := {}
@@ -48,10 +48,14 @@ var phone := {}
 ## People the player has treated lately, so some can walk back in (see
 ## ShiftDay.remember): a short list of plain records, newest last.
 var patients: Array = []
+## The names on the wall in the doctors' room: everyone who died on the
+## player's watch (see Fates.wall_entry), newest last.
+var wall: Array = []
 
 const DAY_START := 7 * 60
 ## What a day keeps in the morning snapshot.
-const MORNING_KEYS := ["total_xp", "minutes", "relationships", "flags", "skills", "rank", "counters", "patients"]
+const MORNING_KEYS := ["total_xp", "minutes", "relationships", "flags", "skills", "rank", "counters", "patients",
+	"wall"]
 
 
 ## Trims spaces, collapses runs of spaces and cuts overly long names.
@@ -187,6 +191,7 @@ func to_dict() -> Dictionary:
 		"last_played": last_played,
 		"phone": phone.duplicate(true),
 		"patients": patients.duplicate(true),
+		"wall": wall.duplicate(true),
 	}
 
 
@@ -248,6 +253,7 @@ static func from_dict(data: Variant) -> PlayerProfile:
 	if data.has("phone"):
 		profile.phone = PhoneBook.clean(data["phone"])
 	profile.patients = ShiftDay.clean_patients(data.get("patients"))
+	profile.wall = Fates.clean_wall(data.get("wall"))
 	return profile
 
 
@@ -270,6 +276,7 @@ func begin_day() -> bool:
 		rank_held = back.rank_held
 		counters = back.counters
 		patients = back.patients
+		wall = back.wall
 		return true
 	morning = {"day": day}
 	var now := to_dict()

@@ -48,6 +48,9 @@ var _xp_tween: Tween
 
 ## Today's casualty results for the phone's Lab app (the ward sets it).
 var live_lab: Callable = Callable()
+## Where the doctor is and where the story wants them, for the phone's Maps
+## app (PhonePanel.live_place; the ward and the lobby set it).
+var live_place: Callable = Callable()
 ## Today's pages, oldest first: [{"stamp", "text"}].
 var pager_log: Array = []
 var _phone: PhonePanel
@@ -862,6 +865,7 @@ func open_phone(app: String = "", chat: String = "") -> PhonePanel:
 	_pager.visible = false
 	_phone.pager_log = pager_log
 	_phone.live_lab = live_lab
+	_phone.live_place = live_place
 	_phone.closed.connect(func() -> void:
 		_phone = null
 		_pager.visible = _pager_shown()

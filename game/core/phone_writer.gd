@@ -299,3 +299,19 @@ static func thanks(profile: PlayerProfile, day: int, sim: ShiftSim) -> Dictionar
 	var id := "k%d_%d" % [day, patient.id]
 	return {"id": id, "chat": id, "from": id, "name": sender, "text": text, "day": day,
 		"at": maxi(profile.minutes, 21 * 60) + rng.next_int_in(5, 50)}
+
+
+## Dr. Iyer's message about M&M on a day a patient died of a mistake (the
+## doctor's, the lab's or the team's), or {}. Nobody's-fault deaths get no
+## meeting, only the wall.
+static func mortality(profile: PlayerProfile, day: int, sim: ShiftSim) -> Dictionary:
+	if sim == null:
+		return {}
+	var lines: Dictionary = Fates.data().get("mm", {})
+	for patient: ShiftPatient in sim.patients:
+		if patient.outcome == "died" and lines.has(patient.fault):
+			var rng := SeededRandom.new(_roll(profile, "mm", day))
+			var text := str(rng.pick(lines[patient.fault])).replace("{patient}", patient.called())
+			return {"id": "mm%d_%d" % [day, patient.id], "chat": "iyer", "from": "iyer", "name": "", "text": text,
+				"day": day, "at": maxi(profile.minutes, 21 * 60) + rng.next_int_in(55, 90)}
+	return {}

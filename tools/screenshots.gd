@@ -537,6 +537,9 @@ func _ward_shots() -> void:
 	# Stage 24: patients that never run out.
 	await _patient_shots()
 
+	# Stage 25: mistakes, deaths, the family and the wall.
+	await _mistake_shots()
+
 
 ## The career map over the ward: the road and the race, a Chief's road,
 ## the wall of letters, one letter open, and the end card with the post.
@@ -935,6 +938,116 @@ func _patient_shots() -> void:
 	# And the district's notice on the phone's feed, labelled invented too.
 	await _phone_shot("187-outbreak-news", 10, 9 * 60 + 10, [], func(_w: Ward, p: PhonePanel) -> void:
 		p.open_app("feed"))
+
+
+## The mistake rules with some chances changed; returns the rules to put back.
+static func _with_chances(changed: Dictionary) -> Variant:
+	var before: Variant = StoryBook._cache.get("mistakes")
+	var rules: Dictionary = Fates.data().duplicate(true)
+	for key: String in changed:
+		rules["chances"][key] = changed[key]
+	StoryBook._cache["mistakes"] = rules
+	return before
+
+
+static func _put_chances_back(before: Variant) -> void:
+	if before == null:
+		StoryBook._cache.erase("mistakes")
+	else:
+		StoryBook._cache["mistakes"] = before
+
+
+## A patient the doctor saw dies in casualty and the family is waiting.
+static func _family_waiting(ward: Ward) -> FamilyCard:
+	_into_casualty(ward)
+	var patient := _made_until(ward, "heart_attack", func(made: ShiftPatient) -> bool:
+		return made.age >= 50 and not made.company.is_empty())
+	ward.shift.patients.append(patient)
+	patient.asked["pain"] = true
+	patient.examined = true
+	patient.doomed = true
+	patient.fault = "nobody"
+	var went := str(Conditions.DESTINATIONS.get(str(patient.condition.get("go", "")), "upstairs"))
+	ward._on_shift_event({"kind": "died", "patient": patient, "fault": "nobody",
+		"text": "%s, who you sent %s, has died. %s" % [patient.called(), went, Fates.doomed_why("heart_attack")]})
+	for frame in 30:
+		ward.update(1.0 / 30.0)
+	Speech.stop()
+	ward._toasts.clear()
+	ward.settle_camera()
+	if ward.family_card() == null:
+		push_error("The family card never opened")
+	return ward.family_card()
+
+
+func _mistake_shots() -> void:
+	# The relatives' room: how will the doctor say it?
+	var told := _casualty_ward(12)
+	await _shot("188-family-room", told, func() -> void:
+		_family_waiting(told)
+		told.set_process(false))
+	# Said plainly, and whose fault it was.
+	var after := _casualty_ward(12)
+	await _shot("189-family-told", after, func() -> void:
+		var card := _family_waiting(after)
+		if card != null:
+			card.button("Tell_plain").pressed.emit()
+		Speech.stop()
+		after.set_process(false))
+	# The wall by the desk, a few weeks in.
+	var wall := _casualty_ward(16)
+	await _shot("190-the-wall", wall, func() -> void:
+		wall.play_until(func() -> bool: return wall.mode == "walk", Ward.pick_tones(["Patient first", "Honest", "Calm"]))
+		wall._toasts.clear()
+		var saroja: Dictionary = Ward.STORY_DEATH.duplicate()
+		saroja["day"] = 5
+		Fates.add_to_wall(wall.profile.wall, saroja)
+		var deaths := [["heart_attack", 9, "wait"], ["asthma", 12, "you"], ["sepsis", 14, "lab"], ["meningitis", 15, "nobody"]]
+		for death: Array in deaths:
+			var patient := wall.shift.make_patient(str(death[0]))
+			patient.fault = str(death[2])
+			Fates.add_to_wall(wall.profile.wall, Fates.wall_entry(patient, int(death[1])))
+		wall.open_wall()
+		wall.settle_camera()
+		wall.set_process(false))
+	# The lab rings with a critical result that may not be real.
+	var ring := _casualty_ward(15)
+	await _shot("191-lab-call", ring, func() -> void:
+		var before: Variant = _with_chances({"lab_error": 1.0})
+		_into_casualty(ring)
+		var patient := ring.shift.make_patient("appendicitis")
+		_see_made(ring, patient, ["pain"])
+		if ring.panel != null:
+			ring.panel.button("Test_bloods").pressed.emit()
+			ring.profile.minutes += 30
+			ring._catch_up()
+			ring.panel.refresh(ring.profile.minutes)
+			if ring.panel.button("Repeat") == null:
+				push_error("191-lab-call: the lab never rang")
+		_put_chances_back(before)
+		ring._toasts.clear()
+		ring.set_process(false))
+	_check_card(ring, "191-lab-call")
+	# Sister Priya reads a drug back for the wrong cubicle.
+	var back := _casualty_ward(15)
+	await _shot("192-read-back", back, func() -> void:
+		var before: Variant = _with_chances({"readback_error": 1.0, "lab_error": 0.0})
+		_into_casualty(back)
+		var patient := back.shift.make_patient("renal_colic")
+		_see_made(back, patient, ["pain", "when"])
+		if back.panel != null:
+			back.panel.button("Examine").pressed.emit()
+			back.panel.button("Plan%d" % (ShiftBot.position_of(patient, true) + 1)).pressed.emit()
+			back.panel.confirm_button.pressed.emit()
+			if back.panel.button("Nod") == null:
+				push_error("192-read-back: Priya never read it back")
+		_put_chances_back(before)
+		back._toasts.clear()
+		back.set_process(false))
+	_check_card(back, "192-read-back")
+	# The phone's map: where you are, and where the story wants you.
+	await _phone_shot("193-phone-maps", 12, 10 * 60 + 5, [], func(_w: Ward, p: PhonePanel) -> void:
+		p.open_app("maps"))
 
 
 ## The crises on their story days: [shot, day, step on show, answers given].

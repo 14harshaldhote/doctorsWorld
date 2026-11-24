@@ -483,6 +483,22 @@ Here's everything, in order, so you can decide how much of your life to give it:
   wrong, or with a box of kaju katli because you didn't. Every so often a
   mystery fever goes round town. It is made up for the game and the game
   says so, loudly. What you do about it is not.
+- And sometimes they die. Not often, and usually not for no reason: you sat
+  on someone until they crashed, you treated a number instead of a person,
+  you nodded while Sister Priya read a drug back for the wrong cubicle. The
+  lab rings with critical results now, and now and then the result is
+  wrong: a burst sample, somebody else's sticker, a sodium of 13 typed by a
+  finger that was busy elsewhere. Repeat it or treat it. Some mornings the
+  night team's handover forgets a bed. And some patients come in already
+  past saving, which is nobody's fault and helps less than you'd think.
+  After a death you go to the relatives' room and choose how to say it:
+  plainly, in medical words, or by sending the nurse. They'll remember
+  which. Then the name goes up on the wall by the desk, and nobody takes it
+  down. If it was your fault, Dr. Iyer texts you about Friday's M&M. Bring
+  the notes, not excuses. The first name goes up on Day 5, and there is
+  nothing you can do about it, which is the point.
+- The phone has a map of the hospital now, so "I got lost" is no longer a
+  medical excuse.
 
 Screenshots of every screen are rebuilt automatically after each change, on
 the [`screenshots` branch](../../tree/screenshots).

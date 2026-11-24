@@ -118,6 +118,7 @@ func _ready() -> void:
 	layer.name = "HudLayer"
 	add_child(layer)
 	hud = LobbyHud.new(profile)
+	hud.live_place = func() -> Dictionary: return {"here": "lobby"}
 	hud.name = "Hud"
 	layer.add_child(hud)
 	hud.menu_choice.connect(_on_menu_choice)

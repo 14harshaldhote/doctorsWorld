@@ -159,6 +159,12 @@ static func catalogue() -> Array:
 	for text: Variant in PatientParts.returns().get("hello", []) + PatientParts.returns().get("again", []):
 		for who: String in ids():
 			add.call(who, str(text), "calm")
+	# The family after a death (Fates), in any voice: the first words in
+	# shock, the rest worn out.
+	for kind: String in ["open"] + Fates.TELLINGS:
+		for text: Variant in Fates.family_lines(kind):
+			for who: String in ids():
+				add.call(who, str(text), "shocked" if kind == "open" else "tired")
 	return lines
 
 

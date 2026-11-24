@@ -38,8 +38,20 @@ var results := {}
 ## The order the four plans are shown in (indexes into the condition's plans).
 var plan_order: Array = []
 var plan := -1
-## "better", "worse", "harmed", "back", "fine", "crashed", "left" or "" (still here).
+## "better", "worse", "harmed", "back", "fine", "crashed" (to intensive
+## care), "died", "left" or "" (still here).
 var outcome := ""
+## Whose fault a death was (Fates.FAULTS), once outcome is "died".
+var fault := ""
+## Beyond saving whatever is done (Fates.doomed()): nobody's fault.
+var doomed := false
+## Waiting since before the shift, and left out of the handover.
+var forgotten := false
+## A result the lab rang about: {test, error (a Fates lab error kind, or ""
+## for a real one), answer ("", "repeat" or "treat")}, or {}.
+var alert := {}
+## A wrong result caught by repeating it.
+var caught := false
 var score := 0
 var leave_at := -1
 ## Back after being sent home wrongly.
@@ -117,6 +129,8 @@ func decided() -> bool:
 ## The board's line: "Mr. Patil, 54 · Back pain going down to the groin".
 func board_line() -> String:
 	var line := "%s, %d · %s" % [called(), age, str(condition.get("board", ""))]
+	if forgotten and not examined and asked.is_empty():
+		return Fates.forgotten_line("board") + " · " + line
 	if returning:
 		return "Back · " + line
 	if known_day > 0:
@@ -127,6 +141,11 @@ func board_line() -> String:
 ## "his", "her".
 func their() -> String:
 	return "her" if sex() == "f" else "his"
+
+
+## "him", "her".
+func them() -> String:
+	return "her" if sex() == "f" else "him"
 
 
 ## Who they are, under their name: "Auto driver from Satara · with his
@@ -176,6 +195,11 @@ func copy_for_return() -> ShiftPatient:
 		var value: Variant = get(key)
 		back.set(key, value.duplicate(true) if value is Dictionary or value is Array else value)
 	return back
+
+
+## A lab call still waiting for the doctor's answer.
+func alert_open() -> bool:
+	return not alert.is_empty() and str(alert.get("answer", "")).is_empty()
 
 
 ## Results still to come, as test ids.

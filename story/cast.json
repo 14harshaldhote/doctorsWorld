@@ -59,5 +59,7 @@
 	"rosy": {"name": "Mrs. Rosy Pereira", "role": "Patient · 83, retired piano teacher", "voice": 1.06, "trust": 45, "gender": "female", "pace": 0.94},
 	"gurdeep": {"name": "Gurdeep Sandhu", "role": "Patient · 45, lorry driver", "voice": 0.86, "trust": 45, "gender": "male", "pace": 1.0},
 	"anwar": {"name": "Anwar Hussain", "role": "Patient · 67, retired tailor", "voice": 0.9, "trust": 45, "gender": "male", "pace": 0.94},
-	"kavita": {"name": "Kavita Bhave", "role": "Patient · 44, bus conductor", "voice": 1.02, "trust": 40, "gender": "female", "pace": 1.05}
+	"kavita": {"name": "Kavita Bhave", "role": "Patient · 44, bus conductor", "voice": 1.02, "trust": 40, "gender": "female", "pace": 1.05},
+	"saroja": {"name": "Mrs. Saroja Raman", "role": "Patient · 78, a tired heart", "voice": 1.08, "trust": 55, "gender": "female", "pace": 0.86},
+	"venkat": {"name": "Venkat Raman", "role": "Her son", "voice": 0.96, "trust": 45, "gender": "male"}
 }

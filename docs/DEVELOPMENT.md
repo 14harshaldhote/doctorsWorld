@@ -36,6 +36,7 @@ plan"). This file covers how to build, run and test the game.
 | 22. Casualty and the clock | `game/shift/`: `ShiftSim` (arrivals by the hour, four cubicles, six seats, worse/crash/leave, tests coming back), `ShiftDay` (load by day and tier, the career's `hospital_seed`), `ShiftPatient`, `Conditions` (`story/conditions.json`), `NameMaker`, `PatientLook`, `ShiftBot`; `CasualtyRoom` behind the ward's door, `PatientPanel` (the card); the free clock (`Ward.CLOCK_RATE`), late beats, the `sign_off` beat; sealed saves (`SaveStore` v3: HMAC over the body, `.install` secret, three backups, `save.tampered.json`), `ClockGuard` on the daily XP, case and mystery, check codes on shared results (`DailyCase.check_code`, `check_shared`), `FrameBudget`; the macOS preset and CI job; screenshots 170-174 | Done |
 | 23. The doctor's phone | `PhonePanel` over the game (Phone button, a swipe up from the bottom, P on a Mac; the clock keeps running, 30 fps while it's up): Chats with two-reply answers, Calls (`ring`, answer, decline, rang out; lines spoken in the caller's voice, the doctor's replies only shown), Lab results (the story's reports and casualty's live ones), the Pager (today's pages), the Feed and Photos (`PhotoCard`, pictures drawn in code). `PhoneBook` reads `story/phone.json` (contacts, 144 messages, calls, posts, photos, reports, each on a day and time with a story condition) and keeps what was read, answered and picked up in `profile.phone`, checked on load (`PhoneBook.clean`). `PhoneWriter` writes the game's own: Varun's reels, the family's evenings (gentler after a death), the batch group on the race, the hospital page and the paper after Day 28, and a thank-you from someone casualty sent home. New messages show as a banner and a number on the Phone button; the end-of-day card says who is about to text. Screenshots 175-182 | Done |
 | 24. Patients that never run out | `story/conditions.json` grows to 57 illnesses common in India (each with a `weight`, the `from_day` it opens on, a family's `plain` words, optional `jobs`, `with`, `told_by` a parent or colleague, and a `late` stage); `story/patients.json` holds the parts (`PatientParts`): ten patient voices (`PatientVoices`), twelve tempers, jobs, who comes with them, the mixes and twists (`extras`), the invented outbreak (`Outbreak`) and coming back (`returns`); `PatientMaker` builds each case from one seed; returning patients from `profile.patients` (`ShiftDay.remember`, `past`, `clean_patients`); answers read aloud from clips joined sentence by sentence (`VoiceBank.sentences`); four more communities in `NameMaker`; the card shows who they are, what's known and who answers; toasts sit beside the card; screenshots 183-187 | Done |
+| 25. Mistakes and deaths | `story/mistakes.json` read by `Fates` (game/shift/fates.gd): the chances, whose fault a death is (`Fates.FAULTS`), the conditions that can come in beyond saving, the lab's critical calls and wrong results, the read-back, the forgotten bed, the family's lines and Iyer's M&M messages. `ShiftSim` rolls them from its own `fate` stream (`plan_fates`, `_harm`, `_die`, `_result_back`, `repeat_test`, `treat_alert`, `answer_readback`, `_hold_over`); the card gets the lab's call and the read-back (`PatientPanel`); a death opens the relatives' room (`FamilyCard`) for a patient the doctor saw, and every death goes on the wall (`profile.wall`, `WallPanel`, the "The wall" tag by the desk). Day 5 loses Mrs. Saroja Raman whatever is done (`saroja_round`, `saroja_son`, `saroja_wall`). The phone gets Maps (`HospitalMap`). Screenshots 188-193 | Done |
 
 The earlier SwiftUI and SpriteKit prototype is kept on the git branch
 `swift-prototype`.
@@ -792,6 +793,72 @@ line under the patient's name, a coral label on the card, every
 explanation, and the district health office's post on the phone's feed.
 What the doctor does about it is real: isolate, support, sample and report
 the cluster. Outbreak patients are never remembered.
+
+## Mistakes and deaths
+
+`story/mistakes.json` holds the rules and every line; `Fates` reads it once
+and keeps it, and `ShiftSim` rolls the dice from its own `fate` stream, so
+who walks in on a day (the `arrivals` stream) never depends on a mistake.
+Patients made for a mistake (the doomed one, the forgotten bed) are made by
+`ShiftSim._make_aside`, which borrows a seed from `fate` and leaves the
+arrivals stream and `recent` as they were.
+
+Every death has a fault, which the wall shows and the family scene says:
+`you` (a plan that did harm), `wait` (crashed before a doctor got there),
+`lab` (a wrong result, treated), `team` (a drug nodded through to the wrong
+cubicle) and `nobody` (beyond saving whatever was done). How it happens:
+
+- A crash kills with `chances.crash_death`, otherwise the patient goes up
+  to intensive care as before.
+- A harmful plan, a wrong result treated or a nodded read-back makes the
+  patient 25 points sicker (`ShiftSim._harm`), and with
+  `chances.harm_death` they die 30 to 90 minutes later.
+- From `doomed_from_day`, `doomed_shift` of shifts bring someone in beyond
+  saving (one of `doomed`'s conditions, very sick). The right plan still
+  ends in a death 40 to 120 minutes later, at fault `nobody`.
+- A test whose real result is critical for the illness (`critical`) makes
+  the lab ring. Otherwise, with `lab_error`, a blood test or a gas comes
+  back wrong (`lab_errors`: a burst sample, someone else's tube, a typo) and
+  the lab rings about that. The card offers Repeat (the true result comes
+  back after the test's minutes; a caught error is worth
+  `ShiftSim.POINTS_CAUGHT`) or Treat (right for a real result, harm for a
+  wrong one). Deciding without answering counts as ignoring it.
+- After a right plan, with `readback_error`, Sister Priya reads it back for
+  another occupied cubicle. Correct her and nothing happens; nod and the
+  other patient is harmed (fault `team`) and this one waits.
+- From `forgotten_from_day`, `forgotten_bed` of shifts start with a yellow
+  patient the night's handover left out: already waiting an hour or two,
+  shown as "No notes" on the board until seen.
+
+At about half a day in casualty, a careful doctor loses about one patient
+in twenty shifts (nobody's fault), an average one about one in four or five
+and a careless one about one in three; `test_how_often_patients_die` checks
+those bounds with the seeded bot.
+
+A death is noted by `ShiftDay.note_death`: the name goes on `profile.wall`
+(`Fates.wall_entry`; at most `Fates.WALL_KEEP`, in the morning snapshot, so a
+restarted day takes its deaths back down; checked field by field on load by
+`Fates.clean_wall`), the patient's record becomes "died" and never walks back
+in, and the day counts `deaths` and `deaths_<fault>`. If the doctor saw the
+patient, `Ward` opens a `FamilyCard` (at most two waiting) once the doctor is
+free: the relative is whoever came in with them or a relation picked by age
+(`FamilyCard.family_of`), speaking in a recorded patient voice
+(`PatientVoices.catalogue` records the family lines for every voice). How the
+doctor tells them is counted (`told_plain`, `told_jargon`, `told_nurse`) and
+moves Sister Priya's trust. A death of someone nobody saw is only a toast.
+The wall is the "The wall" tag by Ward 4's desk (`Ward.WALL_SPOT`), which
+opens `WallPanel`. For a death at fault `you`, `lab` or `team`, Dr. Iyer
+sends an M&M message that evening (`PhoneWriter.mortality`, lines in `mm`).
+
+Day 5 has the first death on purpose: Mrs. Saroja Raman, 78, in bed 6, with
+her son Venkat (`saroja_round`, `saroja_son`, `saroja_wall` in
+`story/ward.json`). She dies whatever is done; how the son is told sets
+`saroja_told_plain`, `_jargon` or `_priya`, and `Ward.STORY_DEATH` puts her
+on the wall.
+
+The phone's Maps app (`PhonePanel.PLACES`, drawn by `HospitalMap`) shows
+the hospital's places and lights where the doctor is (`LobbyHud.live_place`,
+set by each place) and where the story wants them next.
 
 ## The phone
 

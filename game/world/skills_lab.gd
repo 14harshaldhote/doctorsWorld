@@ -123,6 +123,7 @@ func _ready() -> void:
 	_layer.name = "HudLayer"
 	add_child(_layer)
 	hud = LobbyHud.new(profile)
+	hud.live_place = func() -> Dictionary: return {"here": "skills"}
 	hud.name = "Hud"
 	_layer.add_child(hud)
 	hud.menu_choice.connect(_on_menu_choice)

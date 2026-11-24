@@ -31,6 +31,13 @@ var _body: VBoxContainer
 var _scroll: ScrollContainer
 var _header: VBoxContainer
 var _result := {}
+## What acting on a lab call did, shown at the top of the card, and whether
+## it went wrong.
+var note := ""
+var _note_bad := false
+## The lab's call has been put in front of the doctor once (the card
+## scrolls up to it the first time).
+var _lab_call_shown := false
 
 
 func _init(for_patient: ShiftPatient = null, now: int = 0) -> void:
@@ -112,6 +119,15 @@ func refresh(now: int = -1) -> void:
 	if not _result.is_empty():
 		_fill_result()
 		return
+	if not note.is_empty():
+		var said := _wrapped(note, 14, UiKit.CORAL if _note_bad else UiKit.MINT, UiKit.heavy_font())
+		said.name = "Note"
+		_body.add_child(said)
+	# The lab's call goes first, where it can't be missed.
+	_fill_lab_call()
+	if patient.alert_open() and not _lab_call_shown:
+		_lab_call_shown = true
+		keep_scroll = 0
 	_fill_known()
 	_fill_questions()
 	_fill_exam()
@@ -240,6 +256,42 @@ func _fill_tests() -> void:
 		_body.add_child(row)
 
 
+## The lab rang about a result: repeat it, or treat it now. Then, while a
+## repeat is on its way, when it's back.
+func _fill_lab_call() -> void:
+	var test := str(patient.alert.get("test", ""))
+	if test.is_empty() or patient.decided():
+		return
+	if not patient.alert_open():
+		if str(patient.alert.get("answer", "")) == "repeat" and not patient.results.has(test):
+			_body.add_child(_wrapped("Repeat %s sent · back %s." % [str(Conditions.TESTS[test]["name"]).to_lower(),
+				_clock(int(patient.ordered.get(test, minute)))], 13, UiKit.TEXT_SOFT))
+		return
+	var box := UiKit.vbox(6)
+	box.name = "LabCall"
+	box.add_child(UiKit.label("The lab rang · %s" % str(Conditions.TESTS[test]["name"]), 12, UiKit.AMBER, UiKit.heavy_font()))
+	var rang := _wrapped(str(patient.results.get(test, "")), 15, UiKit.TEXT, UiKit.heavy_font())
+	rang.name = "LabResult"
+	box.add_child(rang)
+	box.add_child(_wrapped("Does it fit the patient in front of you? Repeat it, or treat it now.", 13, UiKit.TEXT_SOFT))
+	var repeat := _wide_button("Repeat the test", "%d min" % int(Conditions.TESTS[test]["minutes"]))
+	repeat.name = "Repeat"
+	repeat.pressed.connect(func() -> void: acted.emit("repeat", ""))
+	box.add_child(repeat)
+	var treat := _wide_button("Treat the result now", "%d min" % ShiftSim.ORDER_MINUTES)
+	treat.name = "TreatResult"
+	treat.pressed.connect(func() -> void: acted.emit("treat_alert", ""))
+	box.add_child(treat)
+	_body.add_child(box)
+
+
+## What treating a lab result did, at the top of the card.
+func set_note(text: String, bad: bool) -> void:
+	note = text
+	_note_bad = bad
+	refresh()
+
+
 func _fill_plans() -> void:
 	_body.add_child(UiKit.kicker("Plan · %d min" % ShiftSim.DECIDE_MINUTES, 11))
 	if not patient.pending_tests().is_empty():
@@ -265,6 +317,8 @@ func show_result(result: Dictionary, xp: int) -> void:
 	_result["xp"] = xp
 	picked = -1
 	refresh()
+	# The verdict starts at the top, wherever the plans were scrolled to.
+	_scroll.set_deferred("scroll_vertical", 0)
 
 
 func showing_result() -> bool:
@@ -277,6 +331,8 @@ func _fill_result() -> void:
 	headline.name = "Verdict"
 	headline.add_theme_color_override("font_color", UiKit.MINT if right else UiKit.CORAL)
 	_body.add_child(headline)
+	# A read-back waiting for an answer comes straight under the verdict.
+	_fill_readback()
 	_body.add_child(_wrapped(str(_result.get("plan", "")), 15, UiKit.TEXT, UiKit.heavy_font()))
 	var why := _wrapped(str(_result.get("why", "")), 15, UiKit.TEXT_SOFT)
 	why.name = "Why"
@@ -292,7 +348,42 @@ func _fill_result() -> void:
 	_body.add_child(score)
 	confirm_button.visible = false
 	close_button.visible = false
-	done_button.visible = true
+	done_button.visible = not _readback_waiting()
+
+
+## The nurse reading the plan back for the wrong cubicle: the doctor has to
+## answer before the card can close.
+func _fill_readback() -> void:
+	var asked := str(_result.get("readback", ""))
+	if asked.is_empty():
+		return
+	var line := _wrapped(asked, 15, UiKit.AMBER, UiKit.heavy_font())
+	line.name = "Readback"
+	_body.add_child(line)
+	var heard := str(_result.get("readback_heard", ""))
+	if not heard.is_empty():
+		var said := _wrapped(heard, 15, UiKit.TEXT)
+		said.name = "ReadbackHeard"
+		_body.add_child(said)
+		return
+	var correct := _wide_button("Correct her, and have it said back", "")
+	correct.name = "Correct"
+	correct.pressed.connect(func() -> void: acted.emit("readback", "correct"))
+	_body.add_child(correct)
+	var nod := _wide_button("Nod. She knows what she's doing", "")
+	nod.name = "Nod"
+	nod.pressed.connect(func() -> void: acted.emit("readback", "nod"))
+	_body.add_child(nod)
+
+
+func _readback_waiting() -> bool:
+	return not str(_result.get("readback", "")).is_empty() and str(_result.get("readback_heard", "")).is_empty()
+
+
+## What came of the read-back.
+func readback_answered(text: String) -> void:
+	_result["readback_heard"] = text
+	refresh()
 
 
 ## A full-width button whose words wrap, with what it costs on the right.
@@ -348,7 +439,7 @@ func _minutes_text(amount: int) -> String:
 	return "%dh %02dm" % [amount / 60, amount % 60]
 
 
-## Button by its name (Ask_pain, Examine, Test_ecg, Plan1, Confirm, Done,
-## StepAway), for tests.
+## Button by its name (Ask_pain, Examine, Test_ecg, Repeat, TreatResult,
+## Plan1, Confirm, Correct, Nod, Done, StepAway), for tests.
 func button(button_name: String) -> Button:
 	return find_child(button_name, true, false) as Button

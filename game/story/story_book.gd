@@ -36,7 +36,7 @@ static func chapter_names() -> PackedStringArray:
 	for file in DirAccess.get_files_at(FOLDER):
 		# Exported games list "file.json.remap" style names for some files.
 		var plain := file.trim_suffix(".remap")
-		if plain.ends_with(".json") and plain not in ["cast.json", "phone.json", "patients.json"]:
+		if plain.ends_with(".json") and plain not in ["cast.json", "phone.json", "patients.json", "mistakes.json"]:
 			names.append(plain.get_basename())
 	names.sort()
 	return names

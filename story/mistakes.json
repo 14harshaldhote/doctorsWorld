@@ -1,0 +1,131 @@
+{
+	"chances": {
+		"crash_death": 0.35,
+		"harm_death": 0.18,
+		"doomed_shift": 0.12,
+		"doomed_from_day": 10,
+		"lab_error": 0.08,
+		"readback_error": 0.04,
+		"forgotten_bed": 0.2,
+		"forgotten_from_day": 10
+	},
+	"faults": {
+		"you": "Your call",
+		"wait": "Waited too long",
+		"lab": "A wrong lab result, treated",
+		"team": "A drug in the wrong cubicle",
+		"nobody": "Nobody's fault"
+	},
+	"doomed": {
+		"heart_attack": "The artery was opened in time. The heart had already lost too much muscle.",
+		"brain_bleed": "The bleed was too big. Neurosurgery said so before anyone scrubbed.",
+		"stroke": "The clot was too big for the drug. The brain swelled in the night.",
+		"variceal_bleed": "The bleeding never stopped. Not with blood, not with the scope.",
+		"meningitis": "The antibiotics went in on time. The infection had a day's head start.",
+		"organophosphate": "Too much poison, swallowed hours before anyone found out."
+	},
+	"critical": {
+		"hyperkalaemia": "bloods",
+		"dka": "gas",
+		"krait_bite": "gas",
+		"variceal_bleed": "bloods",
+		"organophosphate": "bloods"
+	},
+	"lab_errors": {
+		"haemolysed": {
+			"tests": [
+				"bloods"
+			],
+			"result": "Potassium 7.2, dangerously high. Lab note: sample slightly haemolysed.",
+			"call": "Lab here. Potassium of 7.2 on {patient}. Sample's a bit haemolysed, but we have to ring it through.",
+			"treat": "Calcium, insulin and dextrose went in for a potassium that was never high. A burst sample. The repeat would have said 4.1. The sugar dropped instead.",
+			"repeat": "The repeat potassium is 4.1. The first sample burst on the way. You didn't treat a number. Good."
+		},
+		"wrong_patient": {
+			"tests": [
+				"bloods"
+			],
+			"result": "Haemoglobin 5.8, very low. Blood group B positive.",
+			"call": "Lab here. Haemoglobin of 5.8 on {patient}. Shall we cross-match?",
+			"treat": "Two units went in for a haemoglobin that belonged to someone else. The label was wrong. So was the blood group.",
+			"repeat": "The repeat haemoglobin is normal. The first tube was another patient's, labelled with the wrong sticker. Nobody got the wrong blood. Good catch."
+		},
+		"typo": {
+			"tests": [
+				"bloods",
+				"gas"
+			],
+			"result": "Sodium 13. Flagged critical.",
+			"call": "Lab here. Sodium of 13 on {patient}. It's flagged, so I'm ringing.",
+			"treat": "Strong salt water went in to fix a sodium of 13. Nobody alive has a sodium of 13. It was 131, typed with a finger missing.",
+			"repeat": "The lab checked: it was 131, typed wrong. Nobody alive has a sodium of 13. You noticed. Good."
+		}
+	},
+	"real_critical": {
+		"call": "Lab here. Critical result on {patient}. You'll want to see it now.",
+		"treat": "You treated it straight away. It was real, and it fit the patient.",
+		"repeat": "The repeat says the same thing, twenty minutes later. It fit the patient the first time. Those twenty minutes were theirs."
+	},
+	"readback": {
+		"ask": "Priya reads it back: \"For cubicle {wrong}, Doctor?\" {patient} is in cubicle {right}.",
+		"correct": "\"Cubicle {right}. Say it back.\" She does. The right drug goes to the right patient. Boring. Perfect.",
+		"nod": "You nodded. The drug went to cubicle {wrong}. {other} got something meant for someone else, and {patient} waited for theirs."
+	},
+	"forgotten": {
+		"handover": "Night team's handover: \"Casualty's quiet.\" The board disagrees.",
+		"board": "No notes"
+	},
+	"family": {
+		"open": [
+			"Doctor? Tell me. Just tell me straight.",
+			"We only went down for tea. Ten minutes. What happened?",
+			"Your face is saying it. Don't let your face say it. You say it.",
+			"They called us back up. Nobody calls you back up for good news, na?"
+		],
+		"plain": [
+			"Okay. Okay. Was there pain at the end?",
+			"Thank you for not making me guess. Can I see them?",
+			"I have to call everyone. How do I even say this on the phone?",
+			"This morning we were arguing about the TV remote. This morning."
+		],
+		"jargon": [
+			"I don't understand any of that. Is that bad? Is someone alive or not?",
+			"Speak normally, please. I'm not a doctor. I'm just family.",
+			"You're saying words. I'm asking you one thing."
+		],
+		"nurse": [
+			"The nurse told me. She held my hand. Where were you?",
+			"She sat with me. You were busy, I suppose. Everyone's busy."
+		],
+		"choices": {
+			"plain": "Sit with them and say it plainly",
+			"jargon": "Explain it in medical terms",
+			"nurse": "Ask Sister Priya to tell them"
+		},
+		"after": {
+			"plain": "You stay until the rest of the family comes. It's the worst ten minutes of the shift, and the right ones.",
+			"jargon": "They nod at words they don't understand. Priya takes over, and gives you a look you'll remember.",
+			"nurse": "Priya does it well. It should have been you."
+		},
+		"fault": {
+			"you": "Later, you read your own notes twice. They say the same thing both times.",
+			"wait": "They waited too long for a doctor. Today, that doctor was you.",
+			"lab": "The result didn't fit the patient. You treated it anyway.",
+			"team": "The drug went to the wrong cubicle, and you nodded it through.",
+			"nobody": "Nobody could have stopped this. You'll still think about it tonight."
+		},
+		"morgue": "The porters take {patient} to the morgue. By the time you look up, the name is on the wall by the desk."
+	},
+	"mm": {
+		"you": [
+			"M&M on Friday. {patient}, from today's casualty, is on the list. Bring the notes, not excuses. Nobody's hanging you. We're learning.",
+			"Saw today's casualty list. {patient}. M&M, Friday, eight sharp. I'll be there. So will the chai. You'll be fine. Not today, but you will."
+		],
+		"lab": [
+			"M&M on Friday: {patient}. The lab sent a wrong result and we treated it. Both halves of that sentence are on the agenda."
+		],
+		"team": [
+			"M&M on Friday: {patient}. A drug went to the wrong cubicle. Read-backs exist for a reason. Bring Priya, she'll want to be there."
+		]
+	}
+}

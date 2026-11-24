@@ -28,7 +28,7 @@ const TESTS := {
 const ORDER := ["sugar", "ecg", "urine", "gas", "clot", "rapid", "bloods", "xray", "usg", "ct"]
 ## Where a patient goes after the right plan, as the board says it.
 const DESTINATIONS := {
-	"theatre": "to theatre", "admit": "admitted to the ward", "home": "home", "icu": "to intensive care",
+	"theatre": "to theatre", "admit": "up to the ward", "home": "home", "icu": "to intensive care",
 	"cath": "to the cath lab", "refer": "to neurosurgery", "tb_clinic": "to the TB clinic",
 	"labour": "to the labour room", "burns": "to the burns unit", "isolation": "to the isolation ward",
 }

@@ -1074,6 +1074,232 @@
 			]
 		}
 	],
+	"saroja_round": [
+		{
+			"say": "saroja",
+			"text": "You're the new one. Dr. Iyer said you'd come. She said you're good. She also said you're slow, but I think she meant careful.",
+			"mood": "calm",
+			"to": "you"
+		},
+		{
+			"say": "venkat",
+			"text": "Amma, rest. Don't make the doctor stand there listening to your reviews.",
+			"mood": "worried",
+			"gesture": "open_hands"
+		},
+		{
+			"say": "saroja",
+			"text": "I've been resting since four in the morning. Sit, Doctor. Have you eaten? You look like you haven't eaten.",
+			"mood": "happy",
+			"to": "you"
+		},
+		{
+			"choose": [
+				{
+					"tone": "Honest",
+					"text": "Not yet. Dr. Iyer says breakfast is a rumour.",
+					"trust": {
+						"saroja": 3
+					},
+					"then": [
+						{
+							"say": "saroja",
+							"text": "Venkat, give the doctor one of my idlis. Mine, not the canteen ones. The canteen ones are a punishment.",
+							"mood": "happy"
+						}
+					]
+				},
+				{
+					"tone": "Gentle",
+					"text": "I'm fine. How are you feeling, Mrs. Raman?",
+					"trust": {
+						"saroja": 2
+					},
+					"then": [
+						{
+							"say": "saroja",
+							"text": "Tired. Like after a wedding, but nobody got married. My heart is old, Doctor. It did its job. Seventy-eight years of job.",
+							"mood": "tired"
+						}
+					]
+				}
+			]
+		},
+		{
+			"say": "venkat",
+			"text": "Cardiology came at six. They said the machines won't help her now. She signed the paper last year: no tubes, no machines. I was angry about it then.",
+			"mood": "tired",
+			"to": "you"
+		},
+		{
+			"say": "saroja",
+			"text": "He's still angry. He just has better manners in the morning.",
+			"mood": "calm"
+		},
+		{
+			"say": "saroja",
+			"text": "Go, go. You have other patients. Come back after and tell me who's been naughty on the ward.",
+			"mood": "happy",
+			"to": "you"
+		}
+	],
+	"saroja_son": [
+		{
+			"say": "priya",
+			"text": "She went at twenty past. Very quietly. Her son had gone down for tea. He's coming back up now.",
+			"mood": "tired",
+			"to": "you"
+		},
+		{
+			"say": "venkat",
+			"text": "Doctor? Priya said to wait for you. Tell me. Just tell me.",
+			"mood": "shocked",
+			"to": "you"
+		},
+		{
+			"choose": [
+				{
+					"tone": "Plainly",
+					"text": "Mr. Raman, I'm so sorry. Your mother died twenty minutes ago. It was peaceful. She wasn't in pain.",
+					"trust": {
+						"venkat": 4,
+						"priya": 2
+					},
+					"then": [
+						{
+							"flag": "saroja_told_plain"
+						},
+						{
+							"say": "venkat",
+							"text": "Twenty minutes. I was buying tea. Twenty minutes, and I was buying tea.",
+							"mood": "tired"
+						},
+						{
+							"say": "venkat",
+							"text": "Thank you for saying it straight. She hated it when people talked around things.",
+							"mood": "tired",
+							"to": "you"
+						}
+					]
+				},
+				{
+					"tone": "Clinical",
+					"text": "Mr. Raman, there was a cardiac arrest secondary to cardiogenic shock, and as per her advance directive we did not resuscitate.",
+					"trust": {
+						"venkat": -3,
+						"priya": -2
+					},
+					"then": [
+						{
+							"flag": "saroja_told_jargon"
+						},
+						{
+							"say": "venkat",
+							"text": "I don't understand half of that. Is she... is my mother dead?",
+							"mood": "shocked",
+							"to": "you"
+						},
+						{
+							"say": "priya",
+							"text": "Yes. I'm so sorry, Venkat. She went peacefully. Come, sit with me.",
+							"mood": "tired"
+						}
+					]
+				},
+				{
+					"tone": "Leave it",
+					"text": "Priya, could you...?",
+					"trust": {
+						"venkat": -1,
+						"priya": -3
+					},
+					"then": [
+						{
+							"flag": "saroja_told_priya"
+						},
+						{
+							"say": "priya",
+							"text": "Venkat, come and sit with me. Your amma went peacefully, twenty minutes ago.",
+							"mood": "tired"
+						},
+						{
+							"say": "venkat",
+							"text": "The doctor couldn't say it? Okay. Okay. Everyone's busy.",
+							"mood": "tired"
+						}
+					]
+				}
+			]
+		},
+		{
+			"say": "venkat",
+			"text": "She packed idlis for the nurses before we left home. Four in the morning, chest pain, and she's packing idlis. Please. Someone eat them.",
+			"mood": "tired"
+		},
+		{
+			"flag": "saroja_died"
+		}
+	],
+	"saroja_wall": [
+		{
+			"say": "iyer",
+			"text": "Sit down a minute. No, sit. The ward can manage five minutes without you. It managed thirty years without you.",
+			"mood": "calm",
+			"to": "you"
+		},
+		{
+			"say": "iyer",
+			"text": "There was nothing to change. Not the drugs, not the timing, not you. Her heart had done seventy-eight years, and it was finished.",
+			"mood": "tired",
+			"to": "you"
+		},
+		{
+			"say": "iyer",
+			"text": "Every doctor keeps a wall of names in their head. Ours is also on the actual wall, by this desk. Hers is the first on yours.",
+			"mood": "calm",
+			"gesture": "point"
+		},
+		{
+			"choose": [
+				{
+					"tone": "Honest",
+					"text": "It feels like I should have done something.",
+					"trust": {
+						"iyer": 3
+					},
+					"then": [
+						{
+							"say": "iyer",
+							"text": "You did. You sat with her, and you were there for her son. That's the job too. It's not in the textbook because it doesn't fit in a box.",
+							"mood": "calm",
+							"to": "you"
+						}
+					]
+				},
+				{
+					"tone": "Fine",
+					"text": "I'm fine. Really.",
+					"trust": {
+						"iyer": 1
+					},
+					"then": [
+						{
+							"say": "iyer",
+							"text": "You're not, and that's correct. The day you're fine with this, take a holiday. A long one.",
+							"mood": "calm",
+							"to": "you"
+						}
+					]
+				}
+			]
+		},
+		{
+			"say": "iyer",
+			"text": "Some names on that wall will be your fault. Most won't. Learn the difference, or you'll carry all of them. Now eat one of her idlis. That's an order.",
+			"mood": "calm",
+			"to": "you"
+		}
+	],
 	"night_start": [
 		{
 			"say": "sethi",

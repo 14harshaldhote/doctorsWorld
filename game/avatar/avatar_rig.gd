@@ -667,7 +667,8 @@ func _build_facial_hair(head: Node3D) -> void:
 	var shape: Vector3 = FACE_SCALES[config.face]
 	var moustache_y := 0.097
 	var moustache_z := maxf(_face_depth(0, moustache_y) + 0.01, _beard_front(moustache_y - 0.004) + 0.004)
-	var moustache := LowPoly.box(Vector3(0.085, 0.02, 0.03), colour)
+	# Made only for the styles that wear it: a mesh never added is never freed.
+	var moustache: MeshInstance3D = null if config.facial_hair == 1 else LowPoly.box(Vector3(0.085, 0.02, 0.03), colour)
 	match config.facial_hair:
 		1:
 			var stubble := config.skin_colour().lerp(colour, 0.35)

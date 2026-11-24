@@ -128,6 +128,9 @@ VOICES = {
     "gurdeep": {"mix": {"hm_omega": 0.6, "am_onyx": 0.4}, "speed": 0.98},
     "anwar": {"mix": {"hm_psi": 0.55, "bm_george": 0.45}, "speed": 0.9},
     "kavita": {"mix": {"hf_beta": 0.6, "af_nova": 0.4}, "speed": 1.05},
+    # Day 5: the first name on the wall, a tired old heart, and her son.
+    "saroja": {"mix": {"hf_alpha": 0.55, "bf_lily": 0.25, "af_heart": 0.2}, "speed": 0.85},
+    "venkat": {"mix": {"hm_psi": 0.5, "bm_fable": 0.3, "am_eric": 0.2}, "speed": 0.95},
     # The people casualty makes up (PatientVoices, story/patients.json): a
     # young, a middle-aged and an old voice for men and for women, a warmer
     # and a sharper one where there's room, so a temper sounds like itself.
@@ -241,7 +244,7 @@ def story_lines():
                     walk(value, phone_call)
 
     for name in sorted(os.listdir(os.path.join(ROOT, "story"))):
-        if name.endswith(".json") and name not in ("cast.json", "cases.json", "patients.json"):
+        if name.endswith(".json") and name not in ("cast.json", "cases.json", "patients.json", "mistakes.json"):
             with open(os.path.join(ROOT, "story", name)) as file:
                 walk(json.load(file), False)
     return found

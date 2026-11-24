@@ -11,15 +11,19 @@ extends RefCounted
 ## minutes; the ward passes them on the clock and the sim catches up.
 ##
 ## Events come back from advance_to() as dictionaries for the ward to show:
-##   {"kind": "arrived" | "result" | "worse" | "crashed" | "left" | "back" |
-##    "diverted" | "gone" | "visit", "patient": ShiftPatient (or null),
-##    "text": String}
+##   {"kind": "arrived" | "result" | "worse" | "crashed" | "died" | "critical" |
+##    "left" | "back" | "diverted" | "gone" | "visit", "patient": ShiftPatient
+##    (or null), "text": String}
 ## A "visit" is a cured patient from an earlier day dropping in with sweets;
 ## it carries their record ("entry") and the experience it's worth ("xp").
 ##
-## Two random streams: one decides who walks in and when, the other
-## everything the doctor's choices touch. So a day started again brings the
-## same people at the same times, whatever was done differently.
+## A "died" event carries the death's "fault" (Fates.FAULTS); a "critical"
+## one is the lab ringing about a result (ShiftPatient.alert).
+##
+## Three random streams: one decides who walks in and when, one everything
+## the doctor's choices touch, and one the mistakes and deaths (Fates). So a
+## day started again brings the same people at the same times, whatever was
+## done differently, and the mistakes never shift the day's arrivals.
 
 ## Cubicles you see patients in, and how many can wait before the
 ## ambulances go elsewhere.
@@ -50,12 +54,24 @@ const POINTS_TIME := 10
 const RECENT := 3
 ## Experience for a cured patient who drops in with sweets.
 const SWEETS_XP := 5
+## Points for catching a wrong lab result by repeating it.
+const POINTS_CAUGHT := 5
 
 ## Who walks in, when, and what they have.
 var arrivals: SeededRandom
 ## Everything else: how long people stay, when the wrongly sent home come
 ## back, who gives up waiting.
 var rng: SeededRandom
+## Mistakes and deaths: who dies of a crash or a harmful plan, the lab's
+## wrong results, the nurse's read-back, the patient nobody can save.
+var fate: SeededRandom
+## Deaths still to come: [minute, patient, fault, why].
+var deaths_due: Array = []
+## The minute the shift's patient beyond saving comes in (-1: none).
+var doomed_at := -1
+## Read-backs waiting for the doctor's answer, by patient id:
+## {wrong, right (cubicle indexes), other (the patient in the wrong one)}.
+var readbacks := {}
 var minute := 0
 var load := 1.0
 var patients: Array[ShiftPatient] = []
@@ -81,9 +97,19 @@ var _came_back := {}
 func _init(seed_value: int = 1, start_minute: int = 8 * 60, shift_load: float = 1.0) -> void:
 	arrivals = SeededRandom.new(seed_value)
 	rng = SeededRandom.new(absi(hash("shift|%d" % seed_value)) % 1000003 + 1)
+	fate = SeededRandom.new(absi(hash("fate|%d" % seed_value)) % 1000003 + 1)
 	minute = start_minute
 	_start_minute = start_minute
 	load = shift_load
+
+
+## The day's own mistakes, once the day is set (ShiftDay.make): maybe a
+## patient beyond saving later on, maybe a bed the handover forgot.
+func plan_fates() -> void:
+	if day >= Fates.from_day("doomed_from_day") and fate.chance(Fates.chance("doomed_shift")):
+		doomed_at = _start_minute + fate.next_int_in(60, 360)
+	if day >= Fates.from_day("forgotten_from_day") and fate.chance(Fates.chance("forgotten_bed")):
+		_hold_over()
 
 
 ## How busy casualty is in this hour: arrivals expected per hospital hour.
@@ -106,6 +132,14 @@ func advance_to(target: int) -> Array[Dictionary]:
 
 
 func _step_minute(events: Array[Dictionary]) -> void:
+	for index in range(deaths_due.size() - 1, -1, -1):
+		var due: Array = deaths_due[index]
+		if int(due[0]) <= minute:
+			deaths_due.remove_at(index)
+			_die(due[1], str(due[2]), events, str(due[3]))
+	if doomed_at >= 0 and minute >= doomed_at:
+		doomed_at = -1
+		_bring_doomed(events)
 	# People who come back first (a full waiting area makes them wait
 	# outside a little longer), then new arrivals.
 	for index in range(returns.size() - 1, -1, -1):
@@ -156,13 +190,16 @@ func _tick_patient(patient: ShiftPatient, events: Array[Dictionary]) -> void:
 	patient.severity = minf(CRASH_AT, patient.severity + patient.worsens / 60.0)
 	for test: String in patient.ordered:
 		if not patient.results.has(test) and minute >= int(patient.ordered[test]):
-			patient.results[test] = Conditions.result(patient.condition, test, patient.sex())
-			events.append({"kind": "result", "patient": patient,
-				"text": "%s's %s is back." % [patient.called(), str(Conditions.TESTS[test]["name"]).to_lower()]})
+			_result_back(patient, test, events)
 	if patient.severity >= WORSE_AT and not patient.paged.has("worse"):
 		patient.paged["worse"] = true
 		events.append({"kind": "worse", "patient": patient, "text": "%s %s looks worse." % [patient.called(), where_text(patient)]})
 	if patient.severity >= CRASH_AT:
+		if patient.doomed or fate.chance(Fates.chance("crash_death")):
+			_die(patient, "nobody" if patient.doomed else "wait", events,
+				"%s crashed %s. The crash team worked for forty minutes and couldn't bring %s back." % [
+					patient.called(), where_text(patient), patient.them()])
+			return
 		patient.state = "gone"
 		patient.cubicle = -1
 		patient.outcome = "crashed"
@@ -383,8 +420,11 @@ func decide(patient: ShiftPatient, position: int) -> Dictionary:
 	var chosen := patient.shown_plan(position)
 	if chosen.is_empty() or patient.decided():
 		return {}
+	var was_in := patient.cubicle
 	patient.plan = int(patient.plan_order[position])
 	var right := bool(chosen.get("right", false))
+	if patient.alert_open():
+		patient.alert["answer"] = "ignored"
 	var effect := "better" if right else str(chosen.get("effect", "worse"))
 	patient.score = score_for(patient, right)
 	patient.state = "done"
@@ -400,14 +440,214 @@ func decide(patient: ShiftPatient, position: int) -> Dictionary:
 			patient.outcome = "fine"
 		"harm":
 			patient.outcome = "harmed"
-			patient.severity = minf(CRASH_AT - 1.0, patient.severity + 25.0)
+			_harm(patient, "you", str(chosen.get("why", "")))
 		"back":
 			patient.outcome = "back"
 			_send_back(patient)
 		_:
 			patient.outcome = "worse"
-	return {"right": right, "why": str(chosen.get("why", "")), "effect": effect, "score": patient.score,
+	var result := {"right": right, "why": str(chosen.get("why", "")), "effect": effect, "score": patient.score,
 		"plan": str(chosen.get("text", ""))}
+	if patient.doomed:
+		var go := str(Conditions.DESTINATIONS.get(str(patient.condition.get("go", "")), "upstairs"))
+		_schedule_death(patient, minute + fate.next_int_in(40, 120), "nobody",
+			"%s, who you sent %s, has died. %s" % [patient.called(), go, Fates.doomed_why(patient.condition_id)])
+	elif right and was_in >= 0:
+		_maybe_readback(patient, was_in, result)
+	return result
+
+
+## The nurse reads a right plan back, sometimes for the wrong cubicle (only
+## when someone else is in that one). The doctor must answer it
+## (answer_readback); result gets the line that asks.
+func _maybe_readback(patient: ShiftPatient, was_in: int, result: Dictionary) -> void:
+	if not fate.chance(Fates.chance("readback_error")):
+		return
+	var others := []
+	for index in CUBICLES:
+		var other := in_cubicle(index)
+		if other != null and other != patient and not other.decided():
+			others.append(index)
+	if others.is_empty():
+		return
+	var wrong := int(fate.pick(others))
+	readbacks[patient.id] = {"wrong": wrong, "right": was_in, "other": in_cubicle(wrong).id}
+	result["readback"] = Fates.readback_line("ask", _readback_values(patient))
+
+
+func _readback_values(patient: ShiftPatient) -> Dictionary:
+	var pending: Dictionary = readbacks.get(patient.id, {})
+	var other := by_id(int(pending.get("other", -1)))
+	return {"wrong": int(pending.get("wrong", 0)) + 1, "right": int(pending.get("right", 0)) + 1,
+		"patient": patient.called(), "other": other.called() if other != null else "Someone"}
+
+
+## A read-back waiting for the doctor's answer.
+func readback_open(patient: ShiftPatient) -> bool:
+	return patient != null and readbacks.has(patient.id)
+
+
+## The doctor's answer to a wrong read-back: correct it (true), or nod it
+## through, and the drug goes to the patient in the other cubicle while this
+## one waits for theirs. Returns what happened.
+func answer_readback(patient: ShiftPatient, correct: bool) -> String:
+	if not readback_open(patient):
+		return ""
+	var values := _readback_values(patient)
+	var pending: Dictionary = readbacks[patient.id]
+	readbacks.erase(patient.id)
+	if correct:
+		return Fates.readback_line("correct", values)
+	var other := by_id(int(pending["other"]))
+	if other != null and other.is_here():
+		_harm(other, "team", "%s got a drug meant for someone else." % other.called())
+	patient.severity = minf(CRASH_AT - 1.0, patient.severity + 15.0)
+	return Fates.readback_line("nod", values)
+
+
+## A lab result comes back: the real one, or the lab ringing about a
+## critical result (real for the condition, or now and then a wrong one).
+func _result_back(patient: ShiftPatient, test: String, events: Array[Dictionary]) -> void:
+	var text := Conditions.result(patient.condition, test, patient.sex())
+	var named := str(Conditions.TESTS[test]["name"]).to_lower()
+	if str(patient.alert.get("test", "")) == test and str(patient.alert.get("answer", "")) == "repeat":
+		var kind := str(patient.alert.get("error", ""))
+		patient.results[test] = text
+		if not kind.is_empty():
+			patient.caught = true
+		events.append({"kind": "result", "patient": patient, "text": Fates.lab_line(kind, "repeat", patient.called())})
+		return
+	if patient.alert.is_empty():
+		var kinds := Fates.errors_for(test)
+		if Fates.critical_test(patient.condition_id) == test:
+			patient.alert = {"test": test, "error": "", "answer": ""}
+			patient.results[test] = text
+			events.append({"kind": "critical", "patient": patient, "text": Fates.lab_line("", "call", patient.called())})
+			return
+		if not kinds.is_empty() and not patient.doomed and fate.chance(Fates.chance("lab_error")):
+			var kind := str(fate.pick(kinds))
+			patient.alert = {"test": test, "error": kind, "answer": ""}
+			patient.results[test] = Fates.lab_line(kind, "result", patient.called())
+			events.append({"kind": "critical", "patient": patient, "text": Fates.lab_line(kind, "call", patient.called())})
+			return
+	patient.results[test] = text
+	events.append({"kind": "result", "patient": patient, "text": "%s's %s is back." % [patient.called(), named]})
+
+
+## Sends the result the lab rang about off again. Its true result comes back
+## after the test's minutes. Costs ORDER_MINUTES.
+func repeat_test(patient: ShiftPatient) -> bool:
+	if patient == null or not patient.alert_open() or patient.decided():
+		return false
+	var test := str(patient.alert["test"])
+	patient.alert["answer"] = "repeat"
+	patient.results.erase(test)
+	patient.ordered[test] = minute + int(Conditions.TESTS[test]["minutes"])
+	return true
+
+
+## Acts on the result the lab rang about straight away: right for a real
+## one, harm for a wrong one. Returns what happened. Costs ORDER_MINUTES.
+func treat_alert(patient: ShiftPatient) -> String:
+	if patient == null or not patient.alert_open() or patient.decided():
+		return ""
+	patient.alert["answer"] = "treat"
+	var kind := str(patient.alert.get("error", ""))
+	var said := Fates.lab_line(kind, "treat", patient.called())
+	if kind.is_empty():
+		patient.severity = maxf(0.0, patient.severity - 10.0)
+	else:
+		_harm(patient, "lab", said)
+	return said
+
+
+## Harm done (a plan, a wrong result treated, a nodded read-back): they get
+## sicker, and some die of it later in the shift.
+func _harm(patient: ShiftPatient, fault: String, why: String) -> void:
+	patient.severity = minf(CRASH_AT - 1.0, patient.severity + 25.0)
+	if patient.doomed or _death_due(patient):
+		return
+	if fate.chance(Fates.chance("harm_death")):
+		_schedule_death(patient, minute + fate.next_int_in(30, 90), fault,
+			"%s, who you saw earlier, has died. %s" % [patient.called(), why])
+
+
+func _schedule_death(patient: ShiftPatient, at_minute: int, fault: String, why: String) -> void:
+	if _death_due(patient):
+		return
+	deaths_due.append([at_minute, patient, fault, why])
+
+
+func _death_due(patient: ShiftPatient) -> bool:
+	for due: Array in deaths_due:
+		if due[1] == patient:
+			return true
+	return false
+
+
+func _die(patient: ShiftPatient, fault: String, events: Array[Dictionary], text: String) -> void:
+	if patient.outcome == "died":
+		return
+	patient.state = "gone"
+	patient.cubicle = -1
+	patient.outcome = "died"
+	patient.fault = fault
+	returns = returns.filter(func(entry: Array) -> bool: return entry[1] != patient)
+	events.append({"kind": "died", "patient": patient, "fault": fault, "text": text})
+
+
+## The shift's patient beyond saving comes in by ambulance: a red illness
+## that can kill whatever is done, made aside so the day's arrivals stay the
+## same.
+func _bring_doomed(events: Array[Dictionary]) -> void:
+	var options := []
+	for id: String in Fates.doomed():
+		if Conditions.can_walk_in(id, day):
+			options.append(id)
+	options.sort()
+	if options.is_empty():
+		return
+	var patient := _make_aside(str(fate.pick(options)))
+	patient.doomed = true
+	patient.severity = maxf(patient.severity, float(fate.next_int_in(62, 72)))
+	_add(events, patient)
+
+
+## A patient who came in before the shift and was left out of the handover:
+## on the board, unseen, getting worse.
+func _hold_over() -> void:
+	var options := []
+	for id: String in Conditions.ids():
+		if Conditions.get_condition(id).get("triage", "") == "yellow" and Conditions.can_walk_in(id, day):
+			options.append(id)
+	if options.is_empty():
+		return
+	var patient := _make_aside(str(fate.pick(options)))
+	patient.forgotten = true
+	patient.arrived_at = minute - fate.next_int_in(60, 120)
+	patient.severity = float(fate.next_int_in(58, 66))
+	patient.worsens = maxf(patient.worsens, 6.0) * 1.3
+	patients.append(patient)
+
+
+## The bed the handover forgot, while nobody has looked at it yet.
+func forgotten_patient() -> ShiftPatient:
+	for patient in patients:
+		if patient.forgotten and patient.is_here():
+			return patient
+	return null
+
+
+## A patient made from the fate stream, so who walks in today (and the
+## illnesses they avoid repeating) stays the same.
+func _make_aside(condition_id: String) -> ShiftPatient:
+	var saved := arrivals
+	var saved_recent := recent.duplicate()
+	arrivals = SeededRandom.new(absi(fate.next()) % 1000003 + 1)
+	var patient := make_patient(condition_id)
+	arrivals = saved
+	recent = saved_recent
+	return patient
 
 
 ## Sent home wrongly: they come back later in the shift, worse, if there's
@@ -446,18 +686,24 @@ func score_for(patient: ShiftPatient, right: bool) -> int:
 	for test: String in patient.ordered:
 		if not Conditions.useful(patient.condition, test):
 			waste += int(Conditions.TESTS[test]["cost"])
+	if patient.caught:
+		points += POINTS_CAUGHT
 	return clampi(points - mini(10, waste), 0, 100)
 
 
 ## The shift's tally for the handover card.
 func summary() -> Dictionary:
-	var tally := {"seen": 0, "right": 0, "wrong": 0, "crashed": 0, "left": 0, "waiting": 0, "points": 0,
-		"diverted": diverted}
+	var tally := {"seen": 0, "right": 0, "wrong": 0, "crashed": 0, "died": 0, "caught": 0, "left": 0, "waiting": 0,
+		"points": 0, "diverted": diverted}
 	for patient in patients:
+		if patient.outcome == "died":
+			tally["died"] += 1
+		if patient.caught:
+			tally["caught"] += 1
 		if patient.decided():
 			tally["seen"] += 1
 			tally["points"] += patient.score
-			if patient.outcome in ["better"]:
+			if bool((patient.plans()[patient.plan] as Dictionary).get("right", false)):
 				tally["right"] += 1
 			else:
 				tally["wrong"] += 1

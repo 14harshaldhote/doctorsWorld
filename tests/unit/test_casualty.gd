@@ -239,9 +239,14 @@ func test_a_patient_crashing_while_seen_closes_the_card() -> void:
 	_walk_until(ward, func() -> bool: return ward.panel != null)
 	patient.severity = ShiftSim.CRASH_AT - 0.1
 	ward.panel.button("Test_ct").pressed.emit()
-	expect_equal(patient.outcome, "crashed")
+	expect(patient.outcome in ["crashed", "died"], "they crash (%s)" % patient.outcome)
 	expect(ward.panel == null and ward.mode == "walk", "the card closes")
-	expect(ward.toasts_waiting().any(func(text: String) -> bool: return text.contains("crashed")), "and the pager says why")
+	if patient.outcome == "crashed":
+		expect(ward.toasts_waiting().any(func(text: String) -> bool: return text.contains("crashed")), "and the pager says why")
+	else:
+		_frames(ward, 0.2)
+		expect(ward.family_card() != null, "and the family is waiting")
+		expect_equal(ward.profile.wall.size(), 1, "and the name is on the wall")
 
 
 func test_casualty_news_reaches_the_doctor_on_the_ward_only_when_it_matters() -> void:

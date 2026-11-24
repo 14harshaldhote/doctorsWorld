@@ -645,7 +645,8 @@ static func note_day(profile: PlayerProfile, day: int, sim: ShiftSim = null) -> 
 	var started := int(profile.morning.get("total_xp", profile.total_xp)) if int(profile.morning.get("day", -1)) == day \
 		else profile.total_xp
 	phone["days"][str(day)] = {
-		"lost": profile.count("op_streak_ended_day") == day and profile.count("op_lost") == 1,
+		"lost": (profile.count("op_streak_ended_day") == day and profile.count("op_lost") == 1)
+			or int(tally.get("died", 0)) > 0,
 		"xp": profile.total_xp - started,
 		"seen": int(tally.get("seen", 0)),
 		"right": int(tally.get("right", 0)),
@@ -655,10 +656,11 @@ static func note_day(profile: PlayerProfile, day: int, sim: ShiftSim = null) -> 
 	var thanks := PhoneWriter.thanks(profile, day, sim)
 	var kept: Array = phone["kept"]
 	kept.assign(kept.filter(func(entry: Dictionary) -> bool: return int(entry.get("day", 0)) != day))
-	if not thanks.is_empty():
-		kept.append(thanks)
-		while kept.size() > KEPT_MAX:
-			kept.pop_front()
+	for written: Dictionary in [thanks, PhoneWriter.mortality(profile, day, sim)]:
+		if not written.is_empty():
+			kept.append(written)
+	while kept.size() > KEPT_MAX:
+		kept.pop_front()
 	forget()
 
 

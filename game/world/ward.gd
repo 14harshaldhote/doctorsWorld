@@ -92,6 +92,10 @@ const LIGHTBOX := Vector3(-8.8, 0, -0.35)
 const ROOM_MIN_X := -8.8
 const ROOM_MAX_X := 9.2
 const DOOR := Vector3(8.7, 0, 1.0)
+## Mrs. Raman on the wall (Day 5).
+const STORY_DEATH := {"full": "Saroja Raman", "age": 78, "what": "Heart failure after a heart attack", "fault": "nobody"}
+## Where the wall of names hangs, by the desk (its tag sits here).
+const WALL_SPOT := Vector3(0.4, 1.9, 1.45)
 const FAMILY := Vector3(6.9, 0, 2.7)
 
 ## The days. A beat can have:
@@ -120,12 +124,20 @@ const DAYS := {
 	],
 	5: [
 		{"id": "morning", "talk": "day5_morning", "with": "iyer"},
+		{"id": "saroja", "row": "Bed 6: Mrs. Raman", "go": "bed6", "talk": "saroja_round", "with": "saroja",
+			"page": "Dr. Iyer: Bed six came in at four. Mrs. Raman. Go and sit with her a minute. Just sit."},
 		{"id": "kunal", "row": "A VIP in admissions", "go": "trolley", "talk": "kunal_arrive", "with": "kunal",
 			"tasks": [["exam", "kunal_exam"]], "after": "kunal_room",
 			"page": "Priya: Admissions. He says his uncle is a minister."},
 		{"id": "aarav", "row": "Read Aarav's X-ray", "go": "lightbox", "talk": "aarav_arrive", "with": "leela",
 			"tasks": [["scan", "aarav_scan"]], "after": "aarav_after",
 			"page": "Dr. Iyer: Lightbox. Leela Thomas is back, with Aarav."},
+		# The week's first death: nobody could have stopped it (stage 25).
+		{"id": "saroja_end", "row": "Bed 6. Now.", "go": "bed6", "talk": "saroja_son", "with": "venkat",
+			"put": [["priya", "bed6:other"]], "put_end": [["saroja", "off"], ["venkat", "off"], ["priya", "off"]],
+			"page": "Priya: Bed six. Now. Please."},
+		{"id": "saroja_wall", "row": "Dr. Iyer, at the desk", "go": "desk", "talk": "saroja_wall", "with": "iyer",
+			"put": [["iyer", "desk:left"]], "page": "Dr. Iyer: Desk. Five minutes. Bring nothing."},
 	],
 	6: [
 		{"id": "night", "talk": "night_start", "with": "sethi"},
@@ -165,7 +177,8 @@ const QUIET := [
 const DAY_FLAGS := {
 	4: ["lakshmi_privacy", "lakshmi_told", "lakshmi_asked", "beds_agreed", "beds_refused", "beds_checked",
 		"rohit_honest"],
-	5: ["kunal_room", "banerjee_room", "kunal_home", "aarav_battery_found"],
+	5: ["kunal_room", "banerjee_room", "kunal_home", "aarav_battery_found", "saroja_died", "saroja_told_plain",
+		"saroja_told_jargon", "saroja_told_priya"],
 	6: ["banerjee_sat", "rider_treated", "rider_waited", "rider_called_sethi", "rider_named", "pooja_answered"],
 	7: ["joseph_asked", "joseph_surgery", "joseph_home", "beds_saved", "rao_neutral", "rao_malhotra"],
 	8: [],
@@ -195,7 +208,7 @@ var story: StoryPlayer
 var people := {}
 ## The beds (by id) and the X-ray viewer ("scan").
 var stations := {}
-## "story", "walk", "approach", "task" or "end".
+## "story", "walk", "approach", "task", "patient", "family" or "end".
 var mode := "story"
 var night := false
 ## Today's beats, the one under way and the ids of those done.
@@ -238,6 +251,12 @@ var late_beats := 0
 var casualty_xp := 0
 ## The patient's answer being read aloud (Speech's line number), or 0.
 var _answer_line := 0
+## Deaths today waiting for the family scene: [{patient, text}].
+var _deaths: Array[Dictionary] = []
+## The family after a death, while it's open.
+var family: FamilyCard
+## The wall of names, while it's open.
+var wall: WallPanel
 var _clock_carry := 0.0
 var _paged_at := -1
 var _toasts: Array[Dictionary] = []
@@ -294,6 +313,11 @@ func _ready() -> void:
 	hud.menu_choice.connect(_on_menu_choice)
 	# Casualty's results show up in the phone's Lab app as they come back.
 	hud.live_lab = func() -> Array: return PhoneBook.casualty_lab(profile, shift)
+	hud.live_place = func() -> Dictionary:
+		var next := ""
+		if mode != "end" and beat_index >= 0 and beat_index < beats.size():
+			next = str(beats[beat_index].get("row", ""))
+		return {"here": place if place in ["ward", "casualty", "theatre", "seminar"] else "", "next": next}
 	talk_ui = ConversationUi.new()
 	talk_ui.name = "Conversation"
 	talk_ui.mode = ConversationUi.Mode.TALK
@@ -586,6 +610,10 @@ func _build_people() -> void:
 		"glasses": 3, "brows": 4, "coat": false, "stethoscope": false}, AvatarConfig.Mood.TIRED, "patient")
 	_person("kavita", {"skin": 4, "face": 2, "body": 1, "height": 2, "hair_style": 6, "hair_colour": 0, "eyes": 4, "brows": 1,
 		"coat": false, "stethoscope": false}, AvatarConfig.Mood.TIRED, "patient")
+	_person("saroja", {"skin": 5, "face": 1, "body": 1, "height": 0, "hair_style": 7, "hair_colour": 6, "brows": 3,
+		"glasses": 2, "coat": false, "stethoscope": false}, AvatarConfig.Mood.TIRED, "patient")
+	_person("venkat", {"skin": 5, "face": 3, "body": 1, "height": 3, "hair_style": 0, "hair_colour": 1, "facial_hair": 1,
+		"glasses": 1, "brows": 2, "coat": false, "stethoscope": false}, AvatarConfig.Mood.WORRIED, "casual")
 	# Patients who sleep through the week, so the ward is full.
 	_person("bg1", {"skin": 8, "face": 5, "body": 2, "hair_style": 1, "hair_colour": 5, "facial_hair": 5,
 		"coat": false, "stethoscope": false}, AvatarConfig.Mood.TIRED, "patient")
@@ -844,7 +872,10 @@ func _stage_day() -> void:
 				put("bg1", "bed3:lie")
 			put("bg2", "bed4:lie")
 			put("banerjee", "bed5:lie")
-			put("bg3", "bed6:lie")
+			# Mrs. Raman came in at four this morning (stage 25), until she dies.
+			if not profile.has_flag("saroja_died"):
+				put("saroja", "bed6:lie")
+				put("venkat", "bed6:chair")
 			put("grace", "desk:behind")
 			put("iyer", "desk:left")
 			put("you", "desk")
@@ -1109,9 +1140,25 @@ func _pass_card_time(entry: Dictionary) -> void:
 func _finish_beat() -> void:
 	var current := beat()
 	done_beats.append(str(current.get("id", "")))
+	_note_story_death(str(current.get("id", "")))
 	profile.pass_minutes(int(current.get("minutes", 25)))
 	save_requested.emit()
 	_next_beat()
+
+
+## A death in the story goes on the wall like any other: Mrs. Raman, the
+## first week's patient nobody could save.
+func _note_story_death(beat_id: String) -> void:
+	if beat_id != "saroja_end" or not profile.has_flag("saroja_died"):
+		return
+	for entry: Dictionary in profile.wall:
+		if str(entry.get("full", "")) == STORY_DEATH["full"]:
+			return
+	var entry := STORY_DEATH.duplicate()
+	entry["day"] = profile.day
+	Fates.add_to_wall(profile.wall, entry)
+	profile.add_count("deaths", 1)
+	profile.add_count("deaths_nobody", 1)
 
 
 func _refresh_hud() -> void:
@@ -1381,6 +1428,9 @@ func tap(screen_point: Vector2) -> void:
 		return
 	if _door_tapped(screen_point):
 		_walk_to_door()
+		return
+	if not profile.wall.is_empty() and hud.tag_hit("place_wall", screen_point):
+		open_wall()
 		return
 	var found := place_at(screen_point)
 	if not found.is_empty():
@@ -2273,6 +2323,10 @@ func _start_shift() -> void:
 	_board_text = ""
 	_shift_over_said = false
 	_diverted_hour = -1
+	_deaths.clear()
+	_close_family()
+	if shift != null and shift.forgotten_patient() != null:
+		_queue_toast(Fates.forgotten_line("handover"), 2, false)
 
 
 ## The free clock, casualty catching up with it, its bodies and messages.
@@ -2305,6 +2359,67 @@ func _tick_shift(delta: float) -> void:
 		if place == "casualty" and mode in ["walk", "approach"]:
 			_refresh_casualty_hud()
 	_tick_toasts(delta)
+	_open_family()
+
+
+## True once the doctor has done anything for a patient.
+func _was_seen(patient: ShiftPatient) -> bool:
+	return patient.decided() or patient.examined or not patient.asked.is_empty() or not patient.ordered.is_empty()
+
+
+## The family scene for the next death, once the doctor is free to go (not
+## in a conversation, a task or a patient's card).
+func _open_family() -> void:
+	if family != null or _deaths.is_empty() or mode not in ["walk", "approach"]:
+		return
+	var next: Dictionary = _deaths.pop_front()
+	_stop_answer()
+	mode = "family"
+	player.moving = 0.0
+	hud.set_talking(true)
+	family = FamilyCard.new(next["patient"], str(next["text"]))
+	family.finished.connect(_on_family_done)
+	_layer.add_child(family)
+	_layer.move_child(family, overlay.get_index())
+
+
+func _on_family_done(telling: String) -> void:
+	profile.add_count("told_" + telling, 1)
+	if telling == "plain":
+		profile.change_trust("priya", 2)
+	elif telling == "nurse":
+		profile.change_trust("priya", -2)
+	_close_family()
+	_back_to_walking()
+
+
+func _close_family() -> void:
+	if family != null:
+		_layer.remove_child(family)
+		family.queue_free()
+		family = null
+
+
+## The wall of names, over the ward, until Done.
+func open_wall() -> void:
+	if wall != null:
+		return
+	mode = "family"
+	player.moving = 0.0
+	hud.set_talking(true)
+	wall = WallPanel.new(profile.wall)
+	wall.closed.connect(func() -> void:
+		_layer.remove_child(wall)
+		wall.queue_free()
+		wall = null
+		_back_to_walking())
+	_layer.add_child(wall)
+	_layer.move_child(wall, overlay.get_index())
+
+
+## The family scene open now, for tests.
+func family_card() -> FamilyCard:
+	return family
 
 
 ## Steps casualty on to the clock and says what happened.
@@ -2347,6 +2462,19 @@ func _on_shift_event(event: Dictionary) -> void:
 			_queue_toast(text, 3, true)
 		"crashed":
 			_queue_toast(text, 4, true)
+		"died":
+			# Heard about anywhere: the name goes on the wall now. The family
+			# of someone the doctor saw is waiting when the doctor is free
+			# (two at most: a long jump of the clock can't stack a queue of
+			# grief); someone nobody got to is a page.
+			if patient != null:
+				ShiftDay.note_death(profile, patient)
+				if _was_seen(patient) and _deaths.size() < 2:
+					_deaths.append({"patient": patient, "text": text})
+				else:
+					_queue_toast(text, 4, true)
+		"critical":
+			_queue_toast(text, 3, true)
 		"back":
 			_queue_toast(text, 2, false)
 		"left":
@@ -2588,6 +2716,21 @@ func _on_panel(kind: String, value: String) -> void:
 		"order":
 			if shift.order(seeing, value):
 				_spend(ShiftSim.ORDER_MINUTES)
+		"repeat":
+			if shift.repeat_test(seeing):
+				_spend(ShiftSim.ORDER_MINUTES)
+		"treat_alert":
+			var wrong := not str(seeing.alert.get("error", "")).is_empty()
+			var said := shift.treat_alert(seeing)
+			if not said.is_empty():
+				Sfx.play(self, "buzz" if wrong else "chime", -8.0)
+				panel.set_note(said, wrong)
+				_spend(ShiftSim.ORDER_MINUTES)
+		"readback":
+			var heard := shift.answer_readback(seeing, value == "correct")
+			if not heard.is_empty():
+				Sfx.play(self, "chime" if value == "correct" else "buzz", -8.0)
+				panel.readback_answered(heard)
 		"decide":
 			var result := shift.decide(seeing, int(value))
 			if result.is_empty():
@@ -2671,6 +2814,9 @@ func _update_casualty_tags(walking: bool) -> void:
 	var red := waiting.any(func(patient: ShiftPatient) -> bool: return patient.triage() == "red")
 	var door := DOOR + Vector3(0.3, 1.6, 0)
 	hud.set_tag("place_casualty", "Casualty · %d waiting" % waiting.size(), _screen_of(door), walking and in_ward, red)
+	var names := profile.wall.size()
+	hud.set_tag("place_wall", "The wall · %d" % names, _screen_of(WALL_SPOT),
+		walking and place == "ward" and names > 0)
 	var story_waits := str(beat().get("id", "sign_off")) != "sign_off"
 	# People sit close on the benches: the tags make way for each other, the
 	# door's and the cubicles' first, then the waiting, sickest first.
