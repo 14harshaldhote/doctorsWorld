@@ -3,11 +3,13 @@ extends RefCounted
 ## Sound effects made in code: applause, a knock at the door, an ambulance
 ## siren, the pager, button taps, a chime for a job well done, a buzz for a
 ## mistake, the monitor's beep, gas hissing into a keyhole port and a
-## level-up flourish, and the phone ringing and pinging. No sound files to
-## ship or license. Effects play on the Effects bus, so the Sound effects
+## level-up flourish, the phone ringing and pinging, a goat that wandered
+## into casualty, and a wedding band of a ringtone. No sound files to ship
+## or license. Effects play on the Effects bus, so the Sound effects
 ## setting controls them.
 
-const NAMES := ["applause", "knock", "siren", "pager", "tap", "chime", "buzz", "beep", "hiss", "levelup", "ring", "message"]
+const NAMES := ["applause", "knock", "siren", "pager", "tap", "chime", "buzz", "beep", "hiss", "levelup", "ring", "message",
+	"bleat", "ringtone"]
 
 ## A node that outlives screen changes (Main), for sounds like button taps
 ## that should keep playing when the screen that made them goes away.
@@ -140,6 +142,36 @@ static func _samples(sound: String) -> PackedFloat32Array:
 			out.resize(int(rate * 0.5))
 			_tone(out, 0, 1568.0, 0.4, 0.45, 10.0, 2)
 			_tone(out, int(rate * 0.09), 2349.3, 0.4, 0.4, 9.0, 2)
+		"bleat":
+			# Meh-eh-eh: a reedy voice that wobbles in pitch and loudness,
+			# rounded at the start (the "m") and trailing off.
+			out.resize(int(rate * 0.95))
+			var phase := 0.0
+			for index in out.size():
+				var time := index / rate
+				var frequency := 300.0 + 26.0 * time + 34.0 * sin(TAU * 6.5 * time)
+				phase += TAU * frequency / rate
+				var value := 0.0
+				for harmonic in 7:
+					value += sin(phase * (harmonic + 1)) / (harmonic + 1) * (1.4 if harmonic in [2, 3] else 1.0)
+				var trill := 0.62 + 0.38 * sin(TAU * 12.0 * time)
+				var shape := minf(1.0, time / 0.07) * pow(maxf(0.0, 1.0 - time / 0.95), 0.7)
+				out[index] = value * 0.32 * trill * shape
+		"ringtone":
+			# A wedding band on a phone's speaker: a bright reedy tune over a
+			# dhol, twice round.
+			out.resize(int(rate * 2.6))
+			var tune := [523.3, 587.3, 659.3, 784.0, 659.3, 587.3, 523.3, 587.3, 659.3, 784.0, 880.0, 784.0]
+			for step in tune.size():
+				_tone(out, int(rate * step * 0.18), tune[step], 0.2, 0.34, 6.0, 6)
+				_tone(out, int(rate * step * 0.18), tune[step] * 1.5, 0.18, 0.08, 9.0, 2)
+			for hit in 9:
+				var at := int(rate * hit * 0.27)
+				var low := hit % 2 == 0
+				for index in mini(int(rate * 0.18), out.size() - at):
+					var time := index / rate
+					var drum := sin(TAU * (90.0 if low else 180.0) * time * (1.0 + 0.6 * exp(-time * 30.0)))
+					out[at + index] += (drum * 0.55 + rng.randf_range(-0.15, 0.15)) * exp(-time * (14.0 if low else 26.0))
 		_:
 			push_error("Unknown sound: %s" % sound)
 			out.resize(1)

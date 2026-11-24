@@ -499,6 +499,30 @@ Here's everything, in order, so you can decide how much of your life to give it:
   nothing you can do about it, which is the point.
 - The phone has a map of the hospital now, so "I got lost" is no longer a
   medical excuse.
+- The shift has a sense of drama now, like a TV show that knows when to
+  cut to an advert. After a hard stretch the hospital lets you breathe:
+  Sister Grace puts chai in your hand, Dr. Sethi tells a joke so bad the
+  patient in cubicle four laughs, the hospital radio takes a request. After
+  a long quiet stretch an ambulance remembers you exist. And in the middle
+  of the worst moments something stupid happens, because it always does: a
+  goat walks through casualty, an uncle films the crash call for the family
+  group, a man in a very white kurta announces that he knows the local MLA.
+  The defibrillator does not care.
+- A few times a week something gets to you instead. An old man with a photo
+  of his wife propped against the water jug. A child who watches you wash
+  your hands for a long time and then asks, very quietly. Sister Priya in
+  the sluice, rinsing a bedpan that is already clean. You choose what to do,
+  and sometimes, days later, someone texts to say what it meant.
+- Your colleagues have lives, apparently. Needs, goals, rotas, mothers,
+  weddings. Every so often one of them walks up on the ward and asks you for
+  something: cover for an interview, a reference, a quiz before an exam. What
+  you say gets remembered, and they text you how it went. Badly, sometimes.
+- There are songs. The night nurses have one about the night shift, the
+  canteen has a jingle about its dal, and Riverside FM, the hospital radio
+  broadcasting from a broom cupboard on the second floor, has RJ Bunty and a
+  roast called "Doctor, Doctor". The words run along the bottom of the screen
+  like a music video, so you can sing along, which nobody asked you to do.
+  The phone has a Radio app now, with a new request most days.
 
 Screenshots of every screen are rebuilt automatically after each change, on
 the [`screenshots` branch](../../tree/screenshots).

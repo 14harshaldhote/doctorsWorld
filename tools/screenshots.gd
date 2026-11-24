@@ -41,6 +41,9 @@ func _initialize() -> void:
 	DirAccess.make_dir_recursive_absolute(_out)
 	# The shots are taken on story time, without waiting for voices.
 	Speech.enabled = false
+	# Nothing of the director's comes round by itself except where a shot
+	# asks for it (stage 26's own shots).
+	WardFeelings.hold = true
 	_run.call_deferred()
 
 
@@ -539,6 +542,9 @@ func _ward_shots() -> void:
 
 	# Stage 25: mistakes, deaths, the family and the wall.
 	await _mistake_shots()
+
+	# Stage 26: the director and feelings.
+	await _feelings_shots()
 
 
 ## The career map over the ward: the road and the race, a Chief's road,
@@ -1048,6 +1054,97 @@ func _mistake_shots() -> void:
 	# The phone's map: where you are, and where the story wants you.
 	await _phone_shot("193-phone-maps", 12, 10 * 60 + 5, [], func(_w: Ward, p: PhonePanel) -> void:
 		p.open_app("maps"))
+
+
+func _feelings_shots() -> void:
+	# An old man in a cubicle with a photo of his wife.
+	var photo := _casualty_ward(14)
+	await _shot("194-moment", photo, func() -> void:
+		_moment_waiting(photo)
+		photo.set_process(false))
+	# The doctor listens.
+	var listened := _casualty_ward(14)
+	await _shot("195-moment-listened", listened, func() -> void:
+		var card := _moment_waiting(listened)
+		if card != null:
+			card.button("Choose_listen").pressed.emit()
+		listened.set_process(false))
+	# Sister Priya walks up on Ward 4 to ask about a course.
+	var asks := Ward.new(sample_profile_on_ward(10, ["beds_checked", "casualty_intro"]))
+	asks.profile.set_count("hospital_seed", 2026)
+	await _shot("196-colleague-asks", asks, func() -> void:
+		asks.play_until(func() -> bool: return asks.mode == "walk" and asks.place == "ward",
+			Ward.pick_tones(["Patient first", "Honest", "Calm"]))
+		asks._toasts.clear()
+		asks.feelings.start_side("priya_course")
+		if not asks.play_until(func() -> bool: return asks.talk_ui.is_choosing(), Callable(), null, 30.0):
+			push_error("196-colleague-asks: Priya never asked")
+		asks.settle_camera()
+		asks.set_process(false))
+	# The canteen's dal jingle at lunch, the words along the bottom.
+	var lunch := Ward.new(sample_profile_on_ward(12, ["beds_checked", "casualty_intro"]))
+	lunch.profile.set_count("hospital_seed", 2026)
+	await _shot("197-song-lyrics", lunch, func() -> void:
+		lunch.play_until(func() -> bool: return lunch.mode == "walk" and lunch.place == "ward",
+			Ward.pick_tones(["Patient first", "Honest", "Calm"]))
+		lunch.profile.minutes = 13 * 60
+		lunch._catch_up()
+		lunch._toasts.clear()
+		lunch._refresh_hud()
+		WardFeelings.hold = false
+		lunch.feelings.play_song("dal")
+		WardFeelings.hold = true
+		while lunch.feelings.songs.playing() and lunch.feelings.songs.line < 2:
+			lunch.feelings.songs.tick(0.1)
+		if lunch.feelings.banner == null:
+			push_error("197-song-lyrics: no words on screen")
+		else:
+			lunch.feelings.banner.refresh()
+		lunch.settle_camera()
+		lunch.set_process(false))
+	# The hospital radio on the phone, the roast on air.
+	await _phone_shot("198-phone-radio", 12, 16 * 60 + 10, [], func(_w: Ward, p: PhonePanel) -> void:
+		p.open_app("radio")
+		p.play_radio("roast")
+		p.radio.time = Songs.line_start("roast", 1) + 0.2
+		p.radio.tick(0.01)
+		p._process(0.0))
+	# A goat crossing casualty in the middle of a crash call.
+	var goat := _casualty_ward(12)
+	await _shot("199-goat", goat, func() -> void:
+		_into_casualty(goat)
+		var serious := goat.shift.make_patient("heart_attack")
+		goat.shift.patients.append(serious)
+		WardFeelings.hold = false
+		goat.feelings.on_event({"kind": "silly", "silly": "goat", "patient": serious, "text": ""})
+		WardFeelings.hold = true
+		for frame in 150:
+			goat.update(1.0 / 30.0)
+		if goat.feelings.goat == null:
+			push_error("199-goat: no goat")
+		Speech.stop()
+		goat.settle_camera()
+		goat.set_process(false))
+
+
+## An old man in casualty, in a cubicle, and the moment open with him.
+static func _moment_waiting(ward: Ward) -> MomentCard:
+	_into_casualty(ward)
+	var patient := _made_until(ward, "pneumonia", func(made: ShiftPatient) -> bool:
+		return made.sex() == "m" and made.age >= 66 and made.triage() != "red")
+	ward.shift.patients.append(patient)
+	ward.shift.take(patient)
+	WardFeelings.hold = false
+	ward.feelings.on_event({"kind": "moment", "moment": "photo", "patient": patient, "text": ""})
+	WardFeelings.hold = true
+	for frame in 30:
+		ward.update(1.0 / 30.0)
+	Speech.stop()
+	ward._toasts.clear()
+	ward.settle_camera()
+	if ward.feelings.moment_card() == null:
+		push_error("The moment never opened")
+	return ward.feelings.moment_card()
 
 
 ## The crises on their story days: [shot, day, step on show, answers given].

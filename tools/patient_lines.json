@@ -8508,5 +8508,565 @@
 		"mood": "tired",
 		"text": "She sat with me. You were busy, I suppose. Everyone's busy.",
 		"who": "pm_young"
+	},
+	{
+		"mood": "tired",
+		"text": "My wife. Twelve years gone. One look at you and she'd have sent for a tiffin.",
+		"who": "pm_old_gruff"
+	},
+	{
+		"mood": "tired",
+		"text": "My wife. Twelve years gone. One look at you and she'd have sent for a tiffin.",
+		"who": "pm_old_soft"
+	},
+	{
+		"mood": "calm",
+		"text": "Nobody asks about her any more. They think it will upset me. The not asking is what upsets me.",
+		"who": "pm_old_gruff"
+	},
+	{
+		"mood": "calm",
+		"text": "Nobody asks about her any more. They think it will upset me. The not asking is what upsets me.",
+		"who": "pm_old_soft"
+	},
+	{
+		"mood": "calm",
+		"text": "Go, go. She was a nurse. She'd say the same thing.",
+		"who": "pm_old_gruff"
+	},
+	{
+		"mood": "calm",
+		"text": "Go, go. She was a nurse. She'd say the same thing.",
+		"who": "pm_old_soft"
+	},
+	{
+		"mood": "worried",
+		"text": "Can you dial her for me? My hands won't stop shaking. Just tell her I'm okay. Even if I'm not, tell her I'm okay.",
+		"who": "pf_mid_sharp"
+	},
+	{
+		"mood": "worried",
+		"text": "Can you dial her for me? My hands won't stop shaking. Just tell her I'm okay. Even if I'm not, tell her I'm okay.",
+		"who": "pf_mid_warm"
+	},
+	{
+		"mood": "worried",
+		"text": "Can you dial her for me? My hands won't stop shaking. Just tell her I'm okay. Even if I'm not, tell her I'm okay.",
+		"who": "pf_young"
+	},
+	{
+		"mood": "worried",
+		"text": "Can you dial her for me? My hands won't stop shaking. Just tell her I'm okay. Even if I'm not, tell her I'm okay.",
+		"who": "pm_mid_sharp"
+	},
+	{
+		"mood": "worried",
+		"text": "Can you dial her for me? My hands won't stop shaking. Just tell her I'm okay. Even if I'm not, tell her I'm okay.",
+		"who": "pm_mid_warm"
+	},
+	{
+		"mood": "worried",
+		"text": "Can you dial her for me? My hands won't stop shaking. Just tell her I'm okay. Even if I'm not, tell her I'm okay.",
+		"who": "pm_young"
+	},
+	{
+		"mood": "calm",
+		"text": "Thank you. She thinks I'm at work. Let's keep it that way, please.",
+		"who": "pf_mid_sharp"
+	},
+	{
+		"mood": "calm",
+		"text": "Thank you. She thinks I'm at work. Let's keep it that way, please.",
+		"who": "pf_mid_warm"
+	},
+	{
+		"mood": "calm",
+		"text": "Thank you. She thinks I'm at work. Let's keep it that way, please.",
+		"who": "pf_young"
+	},
+	{
+		"mood": "calm",
+		"text": "Thank you. She thinks I'm at work. Let's keep it that way, please.",
+		"who": "pm_mid_sharp"
+	},
+	{
+		"mood": "calm",
+		"text": "Thank you. She thinks I'm at work. Let's keep it that way, please.",
+		"who": "pm_mid_warm"
+	},
+	{
+		"mood": "calm",
+		"text": "Thank you. She thinks I'm at work. Let's keep it that way, please.",
+		"who": "pm_young"
+	},
+	{
+		"mood": "worried",
+		"text": "Okay. Okay. Sorry. You're busy. Of course you're busy.",
+		"who": "pf_mid_sharp"
+	},
+	{
+		"mood": "worried",
+		"text": "Okay. Okay. Sorry. You're busy. Of course you're busy.",
+		"who": "pf_mid_warm"
+	},
+	{
+		"mood": "worried",
+		"text": "Okay. Okay. Sorry. You're busy. Of course you're busy.",
+		"who": "pf_young"
+	},
+	{
+		"mood": "worried",
+		"text": "Okay. Okay. Sorry. You're busy. Of course you're busy.",
+		"who": "pm_mid_sharp"
+	},
+	{
+		"mood": "worried",
+		"text": "Okay. Okay. Sorry. You're busy. Of course you're busy.",
+		"who": "pm_mid_warm"
+	},
+	{
+		"mood": "worried",
+		"text": "Okay. Okay. Sorry. You're busy. Of course you're busy.",
+		"who": "pm_young"
+	},
+	{
+		"mood": "tired",
+		"text": "Thirty years at the same job. I take my first day off, and I spend it here. God has jokes.",
+		"who": "pf_mid_sharp"
+	},
+	{
+		"mood": "tired",
+		"text": "Thirty years at the same job. I take my first day off, and I spend it here. God has jokes.",
+		"who": "pf_mid_warm"
+	},
+	{
+		"mood": "tired",
+		"text": "Thirty years at the same job. I take my first day off, and I spend it here. God has jokes.",
+		"who": "pf_old_firm"
+	},
+	{
+		"mood": "tired",
+		"text": "Thirty years at the same job. I take my first day off, and I spend it here. God has jokes.",
+		"who": "pf_old_soft"
+	},
+	{
+		"mood": "tired",
+		"text": "Thirty years at the same job. I take my first day off, and I spend it here. God has jokes.",
+		"who": "pm_mid_sharp"
+	},
+	{
+		"mood": "tired",
+		"text": "Thirty years at the same job. I take my first day off, and I spend it here. God has jokes.",
+		"who": "pm_mid_warm"
+	},
+	{
+		"mood": "tired",
+		"text": "Thirty years at the same job. I take my first day off, and I spend it here. God has jokes.",
+		"who": "pm_old_gruff"
+	},
+	{
+		"mood": "tired",
+		"text": "Thirty years at the same job. I take my first day off, and I spend it here. God has jokes.",
+		"who": "pm_old_soft"
+	},
+	{
+		"mood": "happy",
+		"text": "Make it short and I'll bring sweets. Not for you. For the nurse. She smiled at me.",
+		"who": "pf_mid_sharp"
+	},
+	{
+		"mood": "happy",
+		"text": "Make it short and I'll bring sweets. Not for you. For the nurse. She smiled at me.",
+		"who": "pf_mid_warm"
+	},
+	{
+		"mood": "happy",
+		"text": "Make it short and I'll bring sweets. Not for you. For the nurse. She smiled at me.",
+		"who": "pf_old_firm"
+	},
+	{
+		"mood": "happy",
+		"text": "Make it short and I'll bring sweets. Not for you. For the nurse. She smiled at me.",
+		"who": "pf_old_soft"
+	},
+	{
+		"mood": "happy",
+		"text": "Make it short and I'll bring sweets. Not for you. For the nurse. She smiled at me.",
+		"who": "pm_mid_sharp"
+	},
+	{
+		"mood": "happy",
+		"text": "Make it short and I'll bring sweets. Not for you. For the nurse. She smiled at me.",
+		"who": "pm_mid_warm"
+	},
+	{
+		"mood": "happy",
+		"text": "Make it short and I'll bring sweets. Not for you. For the nurse. She smiled at me.",
+		"who": "pm_old_gruff"
+	},
+	{
+		"mood": "happy",
+		"text": "Make it short and I'll bring sweets. Not for you. For the nurse. She smiled at me.",
+		"who": "pm_old_soft"
+	},
+	{
+		"mood": "happy",
+		"text": "Free AC, free food, free insults from the doctor. Five stars.",
+		"who": "pf_mid_sharp"
+	},
+	{
+		"mood": "happy",
+		"text": "Free AC, free food, free insults from the doctor. Five stars.",
+		"who": "pf_mid_warm"
+	},
+	{
+		"mood": "happy",
+		"text": "Free AC, free food, free insults from the doctor. Five stars.",
+		"who": "pf_old_firm"
+	},
+	{
+		"mood": "happy",
+		"text": "Free AC, free food, free insults from the doctor. Five stars.",
+		"who": "pf_old_soft"
+	},
+	{
+		"mood": "happy",
+		"text": "Free AC, free food, free insults from the doctor. Five stars.",
+		"who": "pm_mid_sharp"
+	},
+	{
+		"mood": "happy",
+		"text": "Free AC, free food, free insults from the doctor. Five stars.",
+		"who": "pm_mid_warm"
+	},
+	{
+		"mood": "happy",
+		"text": "Free AC, free food, free insults from the doctor. Five stars.",
+		"who": "pm_old_gruff"
+	},
+	{
+		"mood": "happy",
+		"text": "Free AC, free food, free insults from the doctor. Five stars.",
+		"who": "pm_old_soft"
+	},
+	{
+		"mood": "tired",
+		"text": "My son is in Canada. He sends money. Money doesn't hold your hand, but okay, it pays for the auto.",
+		"who": "pf_old_firm"
+	},
+	{
+		"mood": "tired",
+		"text": "My son is in Canada. He sends money. Money doesn't hold your hand, but okay, it pays for the auto.",
+		"who": "pf_old_soft"
+	},
+	{
+		"mood": "calm",
+		"text": "Cold hands. Doctors always have cold hands. Warm heart, cold hands, my mother used to say.",
+		"who": "pf_old_firm"
+	},
+	{
+		"mood": "calm",
+		"text": "Cold hands. Doctors always have cold hands. Warm heart, cold hands, my mother used to say.",
+		"who": "pf_old_soft"
+	},
+	{
+		"mood": "calm",
+		"text": "It's three in the morning there. Let him sleep. Somebody in this family should.",
+		"who": "pf_old_firm"
+	},
+	{
+		"mood": "calm",
+		"text": "It's three in the morning there. Let him sleep. Somebody in this family should.",
+		"who": "pf_old_soft"
+	},
+	{
+		"mood": "worried",
+		"text": "Doctor, discharge him today itself. We'll manage at home. He's comfortable at home. Today, please. It's urgent.",
+		"who": "pm_mid_sharp"
+	},
+	{
+		"mood": "worried",
+		"text": "Doctor, discharge him today itself. We'll manage at home. He's comfortable at home. Today, please. It's urgent.",
+		"who": "pm_mid_warm"
+	},
+	{
+		"mood": "angry",
+		"text": "Fine. Fine. One more day. But tomorrow, first thing, we are going.",
+		"who": "pm_mid_sharp"
+	},
+	{
+		"mood": "angry",
+		"text": "Fine. Fine. One more day. But tomorrow, first thing, we are going.",
+		"who": "pm_mid_warm"
+	},
+	{
+		"mood": "happy",
+		"text": "Thank you, Doctor. Thank you. Where do we sign? Just here? Done. Done.",
+		"who": "pm_mid_sharp"
+	},
+	{
+		"mood": "happy",
+		"text": "Thank you, Doctor. Thank you. Where do we sign? Just here? Done. Done.",
+		"who": "pm_mid_warm"
+	},
+	{
+		"mood": "worried",
+		"text": "Social worker? Why social worker? It's a family matter. Small family matter.",
+		"who": "pm_mid_sharp"
+	},
+	{
+		"mood": "worried",
+		"text": "Social worker? Why social worker? It's a family matter. Small family matter.",
+		"who": "pm_mid_warm"
+	},
+	{
+		"mood": "calm",
+		"text": "Sorry, sorry, one quick question. What's the Wi-Fi password? Not for me. For my mother. She's live on Facebook.",
+		"who": "pf_mid_sharp"
+	},
+	{
+		"mood": "calm",
+		"text": "Sorry, sorry, one quick question. What's the Wi-Fi password? Not for me. For my mother. She's live on Facebook.",
+		"who": "pf_mid_warm"
+	},
+	{
+		"mood": "calm",
+		"text": "Sorry, sorry, one quick question. What's the Wi-Fi password? Not for me. For my mother. She's live on Facebook.",
+		"who": "pf_old_firm"
+	},
+	{
+		"mood": "calm",
+		"text": "Sorry, sorry, one quick question. What's the Wi-Fi password? Not for me. For my mother. She's live on Facebook.",
+		"who": "pf_old_soft"
+	},
+	{
+		"mood": "calm",
+		"text": "Sorry, sorry, one quick question. What's the Wi-Fi password? Not for me. For my mother. She's live on Facebook.",
+		"who": "pf_young"
+	},
+	{
+		"mood": "calm",
+		"text": "Sorry, sorry, one quick question. What's the Wi-Fi password? Not for me. For my mother. She's live on Facebook.",
+		"who": "pm_mid_sharp"
+	},
+	{
+		"mood": "calm",
+		"text": "Sorry, sorry, one quick question. What's the Wi-Fi password? Not for me. For my mother. She's live on Facebook.",
+		"who": "pm_mid_warm"
+	},
+	{
+		"mood": "calm",
+		"text": "Sorry, sorry, one quick question. What's the Wi-Fi password? Not for me. For my mother. She's live on Facebook.",
+		"who": "pm_old_gruff"
+	},
+	{
+		"mood": "calm",
+		"text": "Sorry, sorry, one quick question. What's the Wi-Fi password? Not for me. For my mother. She's live on Facebook.",
+		"who": "pm_old_soft"
+	},
+	{
+		"mood": "calm",
+		"text": "Sorry, sorry, one quick question. What's the Wi-Fi password? Not for me. For my mother. She's live on Facebook.",
+		"who": "pm_young"
+	},
+	{
+		"mood": "calm",
+		"text": "Beta, move a little to the left. Your head is blocking the machine.",
+		"who": "pf_mid_sharp"
+	},
+	{
+		"mood": "calm",
+		"text": "Beta, move a little to the left. Your head is blocking the machine.",
+		"who": "pf_mid_warm"
+	},
+	{
+		"mood": "calm",
+		"text": "Beta, move a little to the left. Your head is blocking the machine.",
+		"who": "pf_old_firm"
+	},
+	{
+		"mood": "calm",
+		"text": "Beta, move a little to the left. Your head is blocking the machine.",
+		"who": "pf_old_soft"
+	},
+	{
+		"mood": "calm",
+		"text": "Beta, move a little to the left. Your head is blocking the machine.",
+		"who": "pf_young"
+	},
+	{
+		"mood": "calm",
+		"text": "Beta, move a little to the left. Your head is blocking the machine.",
+		"who": "pm_mid_sharp"
+	},
+	{
+		"mood": "calm",
+		"text": "Beta, move a little to the left. Your head is blocking the machine.",
+		"who": "pm_mid_warm"
+	},
+	{
+		"mood": "calm",
+		"text": "Beta, move a little to the left. Your head is blocking the machine.",
+		"who": "pm_old_gruff"
+	},
+	{
+		"mood": "calm",
+		"text": "Beta, move a little to the left. Your head is blocking the machine.",
+		"who": "pm_old_soft"
+	},
+	{
+		"mood": "calm",
+		"text": "Beta, move a little to the left. Your head is blocking the machine.",
+		"who": "pm_young"
+	},
+	{
+		"mood": "calm",
+		"text": "Eat, eat. You're all so thin. If you faint, who will save my brother?",
+		"who": "pf_mid_sharp"
+	},
+	{
+		"mood": "calm",
+		"text": "Eat, eat. You're all so thin. If you faint, who will save my brother?",
+		"who": "pf_mid_warm"
+	},
+	{
+		"mood": "calm",
+		"text": "Eat, eat. You're all so thin. If you faint, who will save my brother?",
+		"who": "pf_old_firm"
+	},
+	{
+		"mood": "calm",
+		"text": "Eat, eat. You're all so thin. If you faint, who will save my brother?",
+		"who": "pf_old_soft"
+	},
+	{
+		"mood": "calm",
+		"text": "Eat, eat. You're all so thin. If you faint, who will save my brother?",
+		"who": "pf_young"
+	},
+	{
+		"mood": "calm",
+		"text": "Eat, eat. You're all so thin. If you faint, who will save my brother?",
+		"who": "pm_mid_sharp"
+	},
+	{
+		"mood": "calm",
+		"text": "Eat, eat. You're all so thin. If you faint, who will save my brother?",
+		"who": "pm_mid_warm"
+	},
+	{
+		"mood": "calm",
+		"text": "Eat, eat. You're all so thin. If you faint, who will save my brother?",
+		"who": "pm_old_gruff"
+	},
+	{
+		"mood": "calm",
+		"text": "Eat, eat. You're all so thin. If you faint, who will save my brother?",
+		"who": "pm_old_soft"
+	},
+	{
+		"mood": "calm",
+		"text": "Eat, eat. You're all so thin. If you faint, who will save my brother?",
+		"who": "pm_young"
+	},
+	{
+		"mood": "calm",
+		"text": "Do you know who I am? I know the MLA. Personally. We have met. Twice.",
+		"who": "pf_mid_sharp"
+	},
+	{
+		"mood": "calm",
+		"text": "Do you know who I am? I know the MLA. Personally. We have met. Twice.",
+		"who": "pf_mid_warm"
+	},
+	{
+		"mood": "calm",
+		"text": "Do you know who I am? I know the MLA. Personally. We have met. Twice.",
+		"who": "pf_old_firm"
+	},
+	{
+		"mood": "calm",
+		"text": "Do you know who I am? I know the MLA. Personally. We have met. Twice.",
+		"who": "pf_old_soft"
+	},
+	{
+		"mood": "calm",
+		"text": "Do you know who I am? I know the MLA. Personally. We have met. Twice.",
+		"who": "pf_young"
+	},
+	{
+		"mood": "calm",
+		"text": "Do you know who I am? I know the MLA. Personally. We have met. Twice.",
+		"who": "pm_mid_sharp"
+	},
+	{
+		"mood": "calm",
+		"text": "Do you know who I am? I know the MLA. Personally. We have met. Twice.",
+		"who": "pm_mid_warm"
+	},
+	{
+		"mood": "calm",
+		"text": "Do you know who I am? I know the MLA. Personally. We have met. Twice.",
+		"who": "pm_old_gruff"
+	},
+	{
+		"mood": "calm",
+		"text": "Do you know who I am? I know the MLA. Personally. We have met. Twice.",
+		"who": "pm_old_soft"
+	},
+	{
+		"mood": "calm",
+		"text": "Do you know who I am? I know the MLA. Personally. We have met. Twice.",
+		"who": "pm_young"
+	},
+	{
+		"mood": "calm",
+		"text": "Can we do it after four fifteen? Rahu kaal is till four fifteen. I checked the app.",
+		"who": "pf_mid_sharp"
+	},
+	{
+		"mood": "calm",
+		"text": "Can we do it after four fifteen? Rahu kaal is till four fifteen. I checked the app.",
+		"who": "pf_mid_warm"
+	},
+	{
+		"mood": "calm",
+		"text": "Can we do it after four fifteen? Rahu kaal is till four fifteen. I checked the app.",
+		"who": "pf_old_firm"
+	},
+	{
+		"mood": "calm",
+		"text": "Can we do it after four fifteen? Rahu kaal is till four fifteen. I checked the app.",
+		"who": "pf_old_soft"
+	},
+	{
+		"mood": "calm",
+		"text": "Can we do it after four fifteen? Rahu kaal is till four fifteen. I checked the app.",
+		"who": "pf_young"
+	},
+	{
+		"mood": "calm",
+		"text": "Can we do it after four fifteen? Rahu kaal is till four fifteen. I checked the app.",
+		"who": "pm_mid_sharp"
+	},
+	{
+		"mood": "calm",
+		"text": "Can we do it after four fifteen? Rahu kaal is till four fifteen. I checked the app.",
+		"who": "pm_mid_warm"
+	},
+	{
+		"mood": "calm",
+		"text": "Can we do it after four fifteen? Rahu kaal is till four fifteen. I checked the app.",
+		"who": "pm_old_gruff"
+	},
+	{
+		"mood": "calm",
+		"text": "Can we do it after four fifteen? Rahu kaal is till four fifteen. I checked the app.",
+		"who": "pm_old_soft"
+	},
+	{
+		"mood": "calm",
+		"text": "Can we do it after four fifteen? Rahu kaal is till four fifteen. I checked the app.",
+		"who": "pm_young"
 	}
 ]

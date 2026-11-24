@@ -131,6 +131,12 @@ VOICES = {
     # Day 5: the first name on the wall, a tired old heart, and her son.
     "saroja": {"mix": {"hf_alpha": 0.55, "bf_lily": 0.25, "af_heart": 0.2}, "speed": 0.85},
     "venkat": {"mix": {"hm_psi": 0.5, "bm_fable": 0.3, "am_eric": 0.2}, "speed": 0.95},
+    # Stage 26: the hospital radio's RJ (through a radio's small speaker), the
+    # canteen's Mani, and the children casualty makes up.
+    "rj": {"mix": {"hm_psi": 0.45, "am_puck": 0.55}, "speed": 1.1, "phone": True},
+    "mani": {"mix": {"hm_omega": 0.6, "am_michael": 0.4}, "speed": 1.04},
+    "boy": {"mix": {"af_sky": 0.55, "hf_beta": 0.3, "hm_psi": 0.15}, "speed": 1.05, "child": True},
+    "girl": {"mix": {"af_sky": 0.5, "hf_alpha": 0.5}, "speed": 1.06, "child": True},
     # The people casualty makes up (PatientVoices, story/patients.json): a
     # young, a middle-aged and an old voice for men and for women, a warmer
     # and a sharper one where there's room, so a temper sounds like itself.
@@ -205,9 +211,11 @@ RESPELL = {
     "Kadam": "Ka-dum", "Dalvi": "Dul-vee", "Kher": "Kair", "Bhalla": "Bhul-laa", "Bajaj": "Ba-jaaj", "Vaz": "Vaaz",
     "Kohli": "Koh-lee", "Thakur": "Thaa-koor", "Dutta": "Dut-taa", "Nashik": "Naa-shik", "beedis": "bee-dees",
     "Kunte": "Koon-tay", "Gurdeep": "Gur-deep",
+    "Mani": "Maa-nee", "Vellore": "Vel-lore", "Manipal": "Mani-paal", "nikah": "ni-kaah", "Ammi": "Um-mee",
+    "rishta": "rish-taa", "Rahu": "Raa-hoo", "thali": "thaa-lee",
 }
 TITLES = {"Dr.": "Doctor", "Mr.": "Mister", "Mrs.": "Missus", "Ms.": "Miz"}
-ACRONYMS = ["ICU", "VIP", "MBBS", "ECG", "CPR", "OPD", "MRI", "HIV", "IVF", "DNA", "CCTV", "ENT", "NICU", "HR", "INR", "CT", "MDT"]
+ACRONYMS = ["ICU", "VIP", "MBBS", "ECG", "CPR", "OPD", "MRI", "HIV", "IVF", "DNA", "CCTV", "ENT", "NICU", "HR", "INR", "CT", "MDT", "MLA", "FM"]
 # Test players' names, which turn back into {called} in the catalogue. (Not
 # "Rao" or "Joseph": the cast has a Dr. Rao and a Mr. Joseph.)
 TEST_NAMES = ["Verma", "Asha", "Kiran", "Mei", "Lin", "Kofi", "Mensah", "Ravi", "Das", "Nila"]
@@ -233,7 +241,14 @@ def story_lines():
                 walk(step, phone_call)
         elif isinstance(item, dict):
             if "say" in item and "text" in item:
-                found.append((str(item["say"]), str(item["text"]), str(item.get("mood", ""))))
+                if item["say"] in ("patient", "relative"):
+                    pass  # a made-up person: recorded in the patient voices (patient_lines)
+                elif item["say"] == "kid":
+                    # A made-up child (story/feelings.json): a boy's and a girl's voice.
+                    for kid in ("boy", "girl"):
+                        found.append((kid, str(item["text"]), str(item.get("mood", ""))))
+                else:
+                    found.append((str(item["say"]), str(item["text"]), str(item.get("mood", ""))))
             for key, value in item.items():
                 if key == "choose" and isinstance(value, list):
                     for option in value:

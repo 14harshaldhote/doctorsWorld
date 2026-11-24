@@ -1,0 +1,546 @@
+{
+	"_about": "Stage 26, the director and feelings. The director paces a shift the way good TV does: after a hard stretch a breather or a laugh, after a quiet one some trouble. It also picks the moments: an emotional one a few times a week, never on a schedule, and something silly in the middle of something serious, at most one per serious scene. Read by Director and Feelings. Lines with \"say\" are spoken: a cast member's id is their own recorded voice; \"patient\", \"relative\" and \"kid\" are the made-up patient's own voice, a relative's, or a child's. In text, {patient} is how the patient is called (Mr. Patil), {his}/{him}/{he} follow their sex, {where} is where they are.",
+	"director": {
+		"tension": {
+			"arrived_red": 12,
+			"arrived_yellow": 3,
+			"worse": 8,
+			"crashed": 25,
+			"died": 35,
+			"critical": 10,
+			"back": 6,
+			"diverted": 4
+		},
+		"decay": 0.35,
+		"busy_hold": 0.12,
+		"hard": 55,
+		"calm": 14,
+		"quiet_minutes": 85,
+		"trouble_from_day": 6,
+		"trouble_max": 2,
+		"trouble_gap": 150,
+		"breather_minutes": 90,
+		"silly_chance": 0.45,
+		"silly_gap": 110,
+		"silly_max": 2,
+		"silly_delay": [
+			2,
+			6
+		],
+		"lift_max": 2,
+		"lift_delay": [
+			6,
+			14
+		],
+		"moment_from_day": 5,
+		"moment_chance": 0.42,
+		"moment_window": [
+			80,
+			560
+		],
+		"moment_calm": 35
+	},
+	"moments": {
+		"photo": {
+			"kind": "patient",
+			"fit": {
+				"sex": "m",
+				"age": [
+					66,
+					99
+				]
+			},
+			"kicker": "{where}",
+			"title": "A photo by the water jug",
+			"text": "{patient} has propped a photo against the water jug. A woman in a green saree, laughing at whoever held the camera.",
+			"line": {
+				"say": "patient",
+				"text": "My wife. Twelve years gone. One look at you and she'd have sent for a tiffin.",
+				"mood": "tired"
+			},
+			"choices": [
+				{
+					"id": "listen",
+					"text": "Ask about her",
+					"count": "moments_listened",
+					"after": "He talks for four minutes. The wedding where it rained, the scooter she refused to sit on, the rasam nobody else could make. He's smiling by the end. So are you, which is very unprofessional.",
+					"line": {
+						"say": "patient",
+						"text": "Nobody asks about her any more. They think it will upset me. The not asking is what upsets me.",
+						"mood": "calm"
+					},
+					"payoff": {
+						"days": [
+							2,
+							4
+						],
+						"from": "relative",
+						"relation": "daughter",
+						"text": "Papa told us about the doctor who asked about Mummy. He hasn't talked about her like that in years. Thank you for the four minutes."
+					}
+				},
+				{
+					"id": "move_on",
+					"text": "Say it's a lovely photo and go",
+					"after": "You go. Behind you, he turns the photo a little, so she can see the door.",
+					"line": {
+						"say": "patient",
+						"text": "Go, go. She was a nurse. She'd say the same thing.",
+						"mood": "calm"
+					}
+				}
+			]
+		},
+		"scared": {
+			"kind": "patient",
+			"fit": {
+				"age": [
+					4,
+					11
+				]
+			},
+			"kicker": "{where}",
+			"title": "A question from the trolley",
+			"text": "{patient} watches you wash your hands for a long time. Then, very quietly:",
+			"line": {
+				"say": "kid",
+				"text": "Are you scared too? Of the blood and stuff?",
+				"mood": "worried"
+			},
+			"choices": [
+				{
+					"id": "honest",
+					"text": "Sometimes. So I check everything twice",
+					"count": "moments_honest",
+					"after": "For the next ten minutes {patient} watches every move you make, nodding like a hospital inspector. You have never been so thoroughly audited.",
+					"line": {
+						"say": "kid",
+						"text": "Okay. I'll check twice too. I'll check you.",
+						"mood": "happy"
+					},
+					"payoff": {
+						"days": [
+							1,
+							3
+						],
+						"from": "relative",
+						"relation": "mother",
+						"text": "My {son} says when {he} grows up {he} wants to be the doctor who checks twice. No pressure. {He}'s also checking my cooking twice now."
+					}
+				},
+				{
+					"id": "brave",
+					"text": "Doctors don't get scared",
+					"after": "You will be hearing about the cockroach for the rest of the shift.",
+					"line": {
+						"say": "kid",
+						"text": "My dad says that about cockroaches. Then he screams.",
+						"mood": "calm"
+					}
+				}
+			]
+		},
+		"sluice": {
+			"kind": "staff",
+			"who": "priya",
+			"kicker": "The sluice room",
+			"title": "Priya, at the sink",
+			"text": "The sluice room door is half open. Priya is rinsing a bedpan that is already clean. Her eyes are red.",
+			"line": {
+				"say": "priya",
+				"text": "It's nothing. It's the bleach. Bleach does this to everyone. Go, they need you outside.",
+				"mood": "tired"
+			},
+			"choices": [
+				{
+					"id": "stay",
+					"text": "Sit. Two minutes. I'll hold the fort",
+					"trust": {
+						"priya": 4
+					},
+					"count": "moments_stayed",
+					"after": "You stand guard at the sluice door like it's a VIP entrance. Nobody gets in. Not even Mr. Malhotra, who wanted gloves.",
+					"line": {
+						"say": "priya",
+						"text": "An uncle in casualty called me beta, the way my father does. I haven't been home in eight months. That's all. That's literally all.",
+						"mood": "tired"
+					},
+					"payoff": {
+						"days": [
+							1,
+							2
+						],
+						"from": "priya",
+						"text": "Thanks for yesterday. Tell anyone and I'll put your name on the bedpan rota. Laminated."
+					}
+				},
+				{
+					"id": "go",
+					"text": "Okay. Shout if you need me",
+					"after": "Five minutes later she's back on the floor, smiling at a patient like nothing happened. That's the job. That's also the worst part of the job.",
+					"line": {
+						"say": "priya",
+						"text": "I never shout. Shouting is for doctors.",
+						"mood": "calm"
+					}
+				},
+				{
+					"id": "grace",
+					"text": "Shall I get Grace?",
+					"after": "She flaps you out of the sluice with a wet glove. You go.",
+					"line": {
+						"say": "priya",
+						"text": "No. God, no. She'll make me drink Horlicks and talk about my feelings. Go.",
+						"mood": "shocked"
+					}
+				}
+			]
+		},
+		"call_home": {
+			"kind": "patient",
+			"fit": {
+				"age": [
+					28,
+					59
+				]
+			},
+			"kicker": "{where}",
+			"title": "Forty missed calls",
+			"text": "{patient}'s phone has a cracked screen and forty missed calls from someone saved as Pinky Beta.",
+			"line": {
+				"say": "patient",
+				"text": "Can you dial her for me? My hands won't stop shaking. Just tell her I'm okay. Even if I'm not, tell her I'm okay.",
+				"mood": "worried"
+			},
+			"choices": [
+				{
+					"id": "hold",
+					"text": "Dial, and hold the phone for {him}",
+					"count": "moments_called",
+					"after": "You hold the phone. {patient} talks in a voice you haven't heard all day, the soft one people keep for children. Nobody in the next cubicle pretends not to listen.",
+					"line": {
+						"say": "patient",
+						"text": "Thank you. She thinks I'm at work. Let's keep it that way, please.",
+						"mood": "calm"
+					}
+				},
+				{
+					"id": "nurse",
+					"text": "A nurse will help you with that",
+					"after": "Priya dials. From across casualty you hear someone small crying on speaker, and somehow it feels like your fault.",
+					"line": {
+						"say": "patient",
+						"text": "Okay. Okay. Sorry. You're busy. Of course you're busy.",
+						"mood": "worried"
+					}
+				}
+			]
+		},
+		"day_off": {
+			"kind": "patient",
+			"fit": {
+				"age": [
+					48,
+					66
+				]
+			},
+			"kicker": "{where}",
+			"title": "A first day off",
+			"text": "{patient} is still in {his} good clothes. Today was supposed to be a day off.",
+			"line": {
+				"say": "patient",
+				"text": "Thirty years at the same job. I take my first day off, and I spend it here. God has jokes.",
+				"mood": "tired"
+			},
+			"choices": [
+				{
+					"id": "short",
+					"text": "Then let's make it a short visit",
+					"count": "moments_cheered",
+					"after": "You promise nothing, which is the correct amount to promise. {patient} looks like {he} believes you anyway.",
+					"line": {
+						"say": "patient",
+						"text": "Make it short and I'll bring sweets. Not for you. For the nurse. She smiled at me.",
+						"mood": "happy"
+					}
+				},
+				{
+					"id": "ac",
+					"text": "Best place for a day off. Free AC",
+					"after": "{patient} laughs so hard the monitor gets briefly worried.",
+					"line": {
+						"say": "patient",
+						"text": "Free AC, free food, free insults from the doctor. Five stars.",
+						"mood": "happy"
+					}
+				}
+			]
+		},
+		"alone": {
+			"kind": "patient",
+			"fit": {
+				"sex": "f",
+				"age": [
+					70,
+					99
+				],
+				"alone": true
+			},
+			"kicker": "{where}",
+			"title": "Nobody came with her",
+			"text": "Every other trolley has a relative perched on the end of it. {patient}'s has a cloth bag and a steel tiffin, both hers.",
+			"line": {
+				"say": "patient",
+				"text": "My son is in Canada. He sends money. Money doesn't hold your hand, but okay, it pays for the auto.",
+				"mood": "tired"
+			},
+			"choices": [
+				{
+					"id": "hand",
+					"text": "Hold her hand for a minute",
+					"count": "moments_stayed",
+					"after": "Sixty seconds. The monitor's beeping slows down, and so do you.",
+					"line": {
+						"say": "patient",
+						"text": "Cold hands. Doctors always have cold hands. Warm heart, cold hands, my mother used to say.",
+						"mood": "calm"
+					},
+					"payoff": {
+						"days": [
+							1,
+							3
+						],
+						"from": "priya",
+						"text": "The lady with the steel tiffin asked for the doctor with cold hands. Twice. I said you were busy saving lives. She said, then tell the doctor to save one with warmer hands."
+					}
+				},
+				{
+					"id": "call",
+					"text": "Shall I call your son?",
+					"after": "She pats your arm instead, the way you'd settle a nervous dog. It works on you too.",
+					"line": {
+						"say": "patient",
+						"text": "It's three in the morning there. Let him sleep. Somebody in this family should.",
+						"mood": "calm"
+					}
+				}
+			]
+		},
+		"papers": {
+			"kind": "patient",
+			"fit": {
+				"sex": "m",
+				"age": [
+					68,
+					99
+				],
+				"admitted": true
+			},
+			"kicker": "{where}",
+			"title": "A son in a hurry",
+			"text": "{patient} is going up to the ward. His son is not having it. He's holding a cardboard folder against his chest like it's the patient.",
+			"line": {
+				"say": "relative",
+				"text": "Doctor, discharge him today itself. We'll manage at home. He's comfortable at home. Today, please. It's urgent.",
+				"mood": "worried",
+				"as": "{His} son"
+			},
+			"voices": {
+				"sex": [
+					"m"
+				],
+				"age": [
+					34,
+					59
+				]
+			},
+			"choices": [
+				{
+					"id": "stay",
+					"text": "He stays. He isn't safe at home yet",
+					"flag": "papers_kept",
+					"after": "The son argues, then phones somebody, then argues with them instead. {patient} goes up to the ward. The folder goes with the son.",
+					"line": {
+						"say": "relative",
+						"text": "Fine. Fine. One more day. But tomorrow, first thing, we are going.",
+						"mood": "angry",
+						"as": "{His} son"
+					},
+					"payoff": {
+						"days": [
+							2,
+							2
+						],
+						"from": "social",
+						"text": "The son from the other day came back with a lawyer and a box of sweets. The lawyer was for the property. The sweets were for the nurses. Your patient is eating idlis and asking for you."
+					}
+				},
+				{
+					"id": "sign",
+					"text": "If he signs, he can go against advice",
+					"flag": "papers_signed",
+					"after": "He signs the discharge form without reading it, which he will remember as the second worst thing he signed today.",
+					"line": {
+						"say": "relative",
+						"text": "Thank you, Doctor. Thank you. Where do we sign? Just here? Done. Done.",
+						"mood": "happy",
+						"as": "{His} son"
+					},
+					"payoff": {
+						"days": [
+							2,
+							2
+						],
+						"from": "social",
+						"text": "That father you discharged the other day? He signed the property papers in the auto on the way home. The son's selling the house. The father's at his daughter's now. He asked me to tell you he is not dead yet, tell that doctor."
+					}
+				},
+				{
+					"id": "social",
+					"text": "Ask the social worker to sit with them",
+					"flag": "papers_social",
+					"after": "Sister Elsy from social work arrives in four minutes, which is a hospital record. She takes one look at the folder and asks for tea.",
+					"line": {
+						"say": "relative",
+						"text": "Social worker? Why social worker? It's a family matter. Small family matter.",
+						"mood": "worried",
+						"as": "{His} son"
+					},
+					"payoff": {
+						"days": [
+							2,
+							2
+						],
+						"from": "social",
+						"text": "Your instinct was right. The son wanted him home to sign property papers. The father worked it out in my office. Now he wants a will, a lawyer, and a second opinion on his son."
+					}
+				}
+			]
+		}
+	},
+	"payoff_names": {
+		"social": "Sister Elsy (social work)"
+	},
+	"silly": {
+		"wifi": {
+			"text": "In the middle of it all, a relative taps your shoulder.",
+			"line": {
+				"say": "relative",
+				"text": "Sorry, sorry, one quick question. What's the Wi-Fi password? Not for me. For my mother. She's live on Facebook."
+			}
+		},
+		"goat": {
+			"text": "A goat has walked into casualty. Nobody knows whose it is. Security is on the way, they say.",
+			"line": {
+				"say": "priya",
+				"text": "Why is there a goat. Doctor, don't look at me. I'm a nurse, not a farmer."
+			},
+			"goat": true,
+			"if": "here"
+		},
+		"ringtone": {
+			"text": "Dr. Khan's phone goes off. Her ringtone is a wedding band at full volume.",
+			"line": {
+				"say": "khan",
+				"text": "Not now, Ammi. Not now. Yes, I know the caterer needs an answer. I'm intubating."
+			},
+			"sound": "ringtone",
+			"from_day": 11
+		},
+		"filming": {
+			"text": "An uncle is filming the whole thing for the family group.",
+			"line": {
+				"say": "relative",
+				"text": "Beta, move a little to the left. Your head is blocking the machine."
+			}
+		},
+		"laddoo": {
+			"text": "Someone's aunt is handing out laddoos to the crash team. For energy, she says. Nobody refuses.",
+			"line": {
+				"say": "relative",
+				"text": "Eat, eat. You're all so thin. If you faint, who will save my brother?"
+			}
+		},
+		"mla": {
+			"text": "A man in a very white kurta announces that he knows the local MLA. The defibrillator does not care.",
+			"line": {
+				"say": "relative",
+				"text": "Do you know who I am? I know the MLA. Personally. We have met. Twice."
+			}
+		},
+		"muhurat": {
+			"text": "A relative asks if it can wait for an auspicious time. The astrologer says Thursday. The patient says now.",
+			"line": {
+				"say": "relative",
+				"text": "Can we do it after four fifteen? Rahu kaal is till four fifteen. I checked the app."
+			}
+		},
+		"sethi_nap": {
+			"text": "Dr. Sethi has fallen asleep standing up against the drug cupboard, still holding a pen.",
+			"line": {
+				"say": "sethi",
+				"text": "I'm awake. I'm resting my eyes. Professionally."
+			},
+			"from_day": 6
+		}
+	},
+	"lifts": {
+		"chai": {
+			"text": "Grace puts a paper cup of chai in your hand without a word.",
+			"line": {
+				"say": "grace",
+				"text": "Drink. It's not a suggestion. You've been holding that pen like it owes you money."
+			}
+		},
+		"biscuits_cover": {
+			"if": "lv_priya_cover",
+			"text": "Priya slides a packet of glucose biscuits across the counter.",
+			"line": {
+				"say": "priya",
+				"text": "Biscuits. For the doctor who did my drug round and only spelt one drug wrong."
+			}
+		},
+		"biscuits_rota": {
+			"if": "lv_priya_no",
+			"text": "Priya puts exactly two biscuits on the counter. Not the packet. Two.",
+			"line": {
+				"say": "priya",
+				"text": "Rota says I have to share. Rota's the rota."
+			}
+		},
+		"biscuits": {
+			"text": "Priya slides a packet of glucose biscuits across the counter.",
+			"line": {
+				"say": "priya",
+				"text": "Emergency biscuits. Don't tell the patients, they'll want some."
+			},
+			"unless": "lv_priya_cover|lv_priya_no"
+		},
+		"joke": {
+			"text": "Dr. Sethi tells you a joke so bad the patient in cubicle four laughs.",
+			"line": {
+				"say": "sethi",
+				"text": "Why did the surgeon take a ladder to work? Because the patient was in a critical condition. Upstairs. I'll see myself out."
+			},
+			"from_day": 6
+		},
+		"shoulder": {
+			"text": "Dr. Iyer passes, stops, and squeezes your shoulder. That's it. That's the whole conversation.",
+			"line": {
+				"say": "iyer",
+				"text": "Breathe. In, out. Good. Now go and be brilliant again."
+			}
+		},
+		"radio": {
+			"text": "Riverside FM, the hospital radio, takes a request for casualty.",
+			"line": {
+				"say": "rj",
+				"text": "This one goes out to everybody in casualty at Riverside. You had a day. We heard. Here's a minute of not that."
+			},
+			"song": "roast"
+		},
+		"drawing": {
+			"text": "A child in the waiting area gives you a drawing: you, in a white coat, with a stethoscope the size of a python. It's going on the fridge in the doctors' room."
+		}
+	}
+}

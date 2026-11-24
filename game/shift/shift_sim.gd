@@ -20,6 +20,9 @@ extends RefCounted
 ## A "died" event carries the death's "fault" (Fates.FAULTS); a "critical"
 ## one is the lab ringing about a result (ShiftPatient.alert).
 ##
+## With a Director (stage 26, set by ShiftDay.make), the shift is paced too:
+## "lift", "silly" and "moment" events, and trouble after a quiet stretch.
+##
 ## Three random streams: one decides who walks in and when, one everything
 ## the doctor's choices touch, and one the mistakes and deaths (Fates). So a
 ## day started again brings the same people at the same times, whatever was
@@ -92,6 +95,8 @@ var past: Array = []
 var _start_minute := 0
 ## Records that have come back today, by id.
 var _came_back := {}
+## The shift's pacing (stage 26), or null for a shift without one (tests).
+var director: Director
 
 
 func _init(seed_value: int = 1, start_minute: int = 8 * 60, shift_load: float = 1.0) -> void:
@@ -110,6 +115,8 @@ func plan_fates() -> void:
 		doomed_at = _start_minute + fate.next_int_in(60, 360)
 	if day >= Fates.from_day("forgotten_from_day") and fate.chance(Fates.chance("forgotten_bed")):
 		_hold_over()
+	if director != null:
+		director.plan(day, _start_minute)
 
 
 ## How busy casualty is in this hour: arrivals expected per hospital hour.
@@ -132,6 +139,13 @@ func advance_to(target: int) -> Array[Dictionary]:
 
 
 func _step_minute(events: Array[Dictionary]) -> void:
+	var first := events.size()
+	_step_world(events)
+	if director != null:
+		director.step(self, events, first)
+
+
+func _step_world(events: Array[Dictionary]) -> void:
 	for index in range(deaths_due.size() - 1, -1, -1):
 		var due: Array = deaths_due[index]
 		if int(due[0]) <= minute:
@@ -222,6 +236,11 @@ func where_text(patient: ShiftPatient) -> String:
 ## A new patient walks in (condition "" picks one).
 func _arrive(events: Array[Dictionary], condition_id: String) -> ShiftPatient:
 	return _add(events, make_patient(condition_id))
+
+
+## Brings in a patient made elsewhere (the director's trouble).
+func add_patient(events: Array[Dictionary], patient: ShiftPatient) -> ShiftPatient:
+	return _add(events, patient)
 
 
 func _add(events: Array[Dictionary], patient: ShiftPatient) -> ShiftPatient:
@@ -641,9 +660,15 @@ func forgotten_patient() -> ShiftPatient:
 ## A patient made from the fate stream, so who walks in today (and the
 ## illnesses they avoid repeating) stays the same.
 func _make_aside(condition_id: String) -> ShiftPatient:
+	return make_aside_from(fate, condition_id)
+
+
+## A patient made from another stream (the fates, the director), so who
+## walks in today, and the illnesses they avoid repeating, stay the same.
+func make_aside_from(stream: SeededRandom, condition_id: String) -> ShiftPatient:
 	var saved := arrivals
 	var saved_recent := recent.duplicate()
-	arrivals = SeededRandom.new(absi(fate.next()) % 1000003 + 1)
+	arrivals = SeededRandom.new(absi(stream.next()) % 1000003 + 1)
 	var patient := make_patient(condition_id)
 	arrivals = saved
 	recent = saved_recent

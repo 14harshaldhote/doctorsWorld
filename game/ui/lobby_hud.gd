@@ -542,6 +542,25 @@ func _pager_shown() -> bool:
 	return not _pager_text.text.is_empty() and not _talking and not phone_open()
 
 
+## The corner buttons' rectangle on screen (a song's words keep clear of it).
+func buttons_rect() -> Rect2:
+	return _buttons.get_global_rect() if _buttons != null and _buttons.is_inside_tree() else Rect2()
+
+
+## Hides the line at the bottom left while something sits in its place (a
+## song's words), and brings it back.
+func set_hint_hidden(hidden: bool) -> void:
+	if _hint != null:
+		_hint.visible = not hidden
+
+
+## Puts a toast away early (a colleague who said they were coming has come).
+func hide_toast() -> void:
+	if _toast != null:
+		_toast.visible = false
+	_toast_time = 0.0
+
+
 ## The line at the bottom left that says how to move around.
 func set_hint(text: String) -> void:
 	(_hint.get_node("Text") as Label).text = text

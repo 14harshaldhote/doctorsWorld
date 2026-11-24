@@ -7,6 +7,8 @@ extends RefCounted
 ## conversation is a list of steps; see StoryRunner for what a step can be.
 
 const FOLDER := "res://story"
+## Story files that hold rules and data, not conversations.
+const RULE_BOOKS := ["cast.json", "phone.json", "patients.json", "mistakes.json", "feelings.json", "songs.json", "arcs.json"]
 
 static var _cache := {}
 
@@ -30,13 +32,14 @@ static func conversation(chapter_name: String, id: String) -> Array:
 
 
 ## Every chapter file in the story folder except the cast and the phone
-## (phone.json is messages and calls, read by PhoneBook, not conversations).
+## (phone.json is messages and calls, read by PhoneBook, not conversations),
+## and the rule books: patients, mistakes, feelings, songs and arcs.
 static func chapter_names() -> PackedStringArray:
 	var names := PackedStringArray()
 	for file in DirAccess.get_files_at(FOLDER):
 		# Exported games list "file.json.remap" style names for some files.
 		var plain := file.trim_suffix(".remap")
-		if plain.ends_with(".json") and plain not in ["cast.json", "phone.json", "patients.json", "mistakes.json"]:
+		if plain.ends_with(".json") and plain not in RULE_BOOKS:
 			names.append(plain.get_basename())
 	names.sort()
 	return names

@@ -257,6 +257,9 @@ var _deaths: Array[Dictionary] = []
 var family: FamilyCard
 ## The wall of names, while it's open.
 var wall: WallPanel
+## The director's moments, silliness and breathers, the colleagues who come
+## to ask, and the songs (stage 26).
+var feelings: WardFeelings
 var _clock_carry := 0.0
 var _paged_at := -1
 var _toasts: Array[Dictionary] = []
@@ -329,6 +332,8 @@ func _ready() -> void:
 	story = StoryPlayer.new(StoryRunner.new(profile), talk_ui, self)
 	story.actors = _actors()
 	story.finished.connect(_on_talk_finished)
+	feelings = WardFeelings.new(self)
+	feelings.setup()
 	_begin_day()
 	StaticBatch.optimise(self)
 	_place_camera(1.0)
@@ -1243,7 +1248,7 @@ func _tag_text(place: String) -> String:
 
 func _talk(key: String, partner: String) -> void:
 	var steps := StoryBook.conversation("ward", key)
-	for chapter: String in WardStory.CHAPTERS:
+	for chapter: String in WardStory.CHAPTERS + ["lives"]:
 		if steps.is_empty():
 			steps = StoryBook.conversation(chapter, key)
 	mode = "story"
@@ -1261,6 +1266,11 @@ func _on_talk_finished(_skipped: bool) -> void:
 	var finished := conversation
 	conversation = ""
 	talking_with = ""
+	if feelings != null and feelings.talk_finished(finished):
+		# A colleague's ask (stage 26): they go back to what they were doing.
+		_back_to_walking()
+		save_requested.emit()
+		return
 	var current := beat()
 	_after_talk(finished)
 	if finished == str(current.get("talk", "")):
@@ -2145,6 +2155,8 @@ func update(delta: float) -> void:
 			day_finished.emit()
 			return
 	_tick_shift(delta)
+	if feelings != null:
+		feelings.tick(delta)
 	if _answer_line != 0:
 		# A recorded answer keeps its own clock (the story's lines tick theirs).
 		if Speech.speaking(_answer_line):
@@ -2325,6 +2337,8 @@ func _start_shift() -> void:
 	_diverted_hour = -1
 	_deaths.clear()
 	_close_family()
+	if feelings != null:
+		feelings.reset()
 	if shift != null and shift.forgotten_patient() != null:
 		_queue_toast(Fates.forgotten_line("handover"), 2, false)
 
@@ -2494,11 +2508,15 @@ func _on_shift_event(event: Dictionary) -> void:
 			if here and hour != _diverted_hour:
 				_diverted_hour = hour
 				_queue_toast(text, 1, false)
+		"moment", "silly", "lift":
+			if feelings != null:
+				feelings.on_event(event)
 
 
 ## Queues a message: weight orders what's kept when too many come at once.
-func _queue_toast(text: String, weight: int, page: bool) -> void:
-	_toasts.append({"text": text, "weight": weight, "page": page})
+## say is [line, voice] to speak as it shows (a breather's chai, a goat).
+func _queue_toast(text: String, weight: int, page: bool, say: Array = []) -> void:
+	_toasts.append({"text": text, "weight": weight, "page": page, "say": say})
 	while _toasts.size() > TOAST_QUEUE:
 		var lightest := 0
 		for index in _toasts.size():
@@ -2515,6 +2533,10 @@ func _tick_toasts(delta: float) -> void:
 	hud.toast(str(next["text"]))
 	if bool(next["page"]):
 		Sfx.play(self, "pager", -8.0)
+	var say: Array = next.get("say", [])
+	if say.size() == 2 and not str(say[0]).is_empty() and not str(say[1]).is_empty() and _answer_line == 0 \
+			and (SongPlayer.active == null or not is_instance_valid(SongPlayer.active)):
+		Speech.say(str(say[0]), str(say[1]))
 	_toast_in = TOAST_GAP
 
 
@@ -2913,6 +2935,18 @@ func play_until(until: Callable, picker: Callable = Callable(), bot: AutoPlayer 
 				view.done_pressed.emit()
 			else:
 				player_bot.step(view, step)
+		elif family != null:
+			if family.telling.is_empty():
+				family.choose(str(Fates.TELLINGS[0]))
+			else:
+				family.done_button.pressed.emit()
+		elif feelings != null and feelings.card != null:
+			var card := feelings.card
+			var options: Array = card.entry.get("choices", [])
+			if card.choice.is_empty() and not options.is_empty():
+				card.choose(str((options[0] as Dictionary).get("id", "")))
+			else:
+				card.done_button.pressed.emit()
 		elif mode == "patient":
 			_on_panel("done" if panel != null and panel.done_button.visible else "close", "")
 		elif mode == "walk" and place == "casualty":

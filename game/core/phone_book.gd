@@ -31,7 +31,7 @@ const STAMP_DAY := 10000
 ## fall off the phone, as on a real one that clears old chats).
 const WINDOW := 7
 ## How many of the day-dependent messages, and day notes, are kept.
-const KEPT_MAX := 12
+const KEPT_MAX := 20
 const DAYS_MAX := 8
 ## The most a chat, the feed and the camera roll show.
 const CHAT_SHOWN := 60
@@ -655,10 +655,27 @@ static func note_day(profile: PlayerProfile, day: int, sim: ShiftSim = null) -> 
 	_trim_days(phone["days"])
 	var thanks := PhoneWriter.thanks(profile, day, sim)
 	var kept: Array = phone["kept"]
-	kept.assign(kept.filter(func(entry: Dictionary) -> bool: return int(entry.get("day", 0)) != day))
+	# Today's thank-you and M&M are written again; a moment's message (Feelings)
+	# that arrives today stays.
+	kept.assign(kept.filter(func(entry: Dictionary) -> bool:
+		var id := str(entry.get("id", ""))
+		return int(entry.get("day", 0)) != day or not (id.begins_with("k") or id.begins_with("mm"))))
 	for written: Dictionary in [thanks, PhoneWriter.mortality(profile, day, sim)]:
 		if not written.is_empty():
 			kept.append(written)
+	while kept.size() > KEPT_MAX:
+		kept.pop_front()
+	forget()
+
+
+## Keeps a message the game wrote from something that happened today, to
+## arrive on its own day and time (a moment's thank-you, Feelings): one per
+## id, the newest last.
+static func keep(profile: PlayerProfile, item: Dictionary) -> void:
+	var kept: Array = state(profile)["kept"]
+	var id := str(item.get("id", ""))
+	kept.assign(kept.filter(func(entry: Dictionary) -> bool: return str(entry.get("id", "")) != id))
+	kept.append(item)
 	while kept.size() > KEPT_MAX:
 		kept.pop_front()
 	forget()

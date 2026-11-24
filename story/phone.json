@@ -141,6 +141,21 @@
 			"short": "Kunal",
 			"handle": "kunal.unplugged",
 			"colour": "#F07C5A"
+		},
+		"tom": {
+			"name": "Tom D'Souza",
+			"short": "Tom",
+			"colour": "#9FD3C8"
+		},
+		"khan": {
+			"name": "Dr. Fatima Khan",
+			"short": "Dr. Khan",
+			"colour": "#E8A0B8"
+		},
+		"elsy": {
+			"name": "Sister Elsy (Social work)",
+			"short": "Sister Elsy",
+			"colour": "#C8B8E8"
 		}
 	},
 	"chats": [

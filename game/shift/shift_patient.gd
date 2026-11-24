@@ -85,6 +85,8 @@ var known_day := 0
 var known_what := ""
 ## Back with the same trouble because it went wrong last time.
 var complication := false
+## Brought by the director after a quiet stretch (stage 26).
+var trouble := false
 
 
 func full_name() -> String:

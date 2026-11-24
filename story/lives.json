@@ -1,0 +1,354 @@
+{
+	"lv_priya_ask": [
+		{
+			"say": "priya",
+			"text": "Got a minute? Okay, thirty seconds. Vellore called. The critical care nursing course. The interview is on Thursday.",
+			"mood": "worried"
+		},
+		{
+			"say": "priya",
+			"text": "Grace has me on nights all week. If I ask her to swap, she'll look at me like I asked for a kidney. Her kidney.",
+			"mood": "tired",
+			"gesture": "shrug"
+		},
+		{
+			"choose": [
+				{
+					"tone": "Help",
+					"text": "I'll talk to Grace for you.",
+					"trust": {
+						"priya": 4,
+						"grace": -1
+					},
+					"flag": "lv_priya_grace",
+					"then": [
+						{
+							"say": "priya",
+							"text": "You would? She'll make you fill a form. In triplicate. With a pencil she sharpened in 1998.",
+							"mood": "happy"
+						}
+					]
+				},
+				{
+					"tone": "Cover",
+					"text": "Go on Thursday. I'll do your drug round myself.",
+					"trust": {
+						"priya": 6
+					},
+					"flag": "lv_priya_cover",
+					"then": [
+						{
+							"say": "priya",
+							"text": "You. Doing a drug round. Okay. I'm writing everything on the chart in capital letters.",
+							"mood": "happy"
+						}
+					]
+				},
+				{
+					"tone": "Rules",
+					"text": "The rota's the rota. Sorry.",
+					"trust": {
+						"priya": -4
+					},
+					"flag": "lv_priya_no",
+					"then": [
+						{
+							"say": "priya",
+							"text": "Right. No, totally. It's only my whole career. Cool. Cool cool cool.",
+							"mood": "angry"
+						}
+					]
+				}
+			]
+		}
+	],
+	"lv_tom_ask": [
+		{
+			"say": "tom",
+			"text": "Doctor. Small favour. Not small. Medium.",
+			"mood": "calm"
+		},
+		{
+			"say": "tom",
+			"text": "A hospital in Dubai wants a scrub nurse. Four times the money. They want a reference from a doctor who's seen me work.",
+			"mood": "calm",
+			"gesture": "open_hands"
+		},
+		{
+			"say": "tom",
+			"text": "My daughter got engineering in Manipal. The fees have more zeroes than my salary.",
+			"mood": "tired"
+		},
+		{
+			"choose": [
+				{
+					"tone": "Glowing",
+					"text": "I'll write you a glowing one.",
+					"flag": "lv_tom_glowing",
+					"then": [
+						{
+							"say": "tom",
+							"text": "Glowing. Like a headlamp. Thank you, Doctor. I mean it.",
+							"mood": "happy"
+						}
+					]
+				},
+				{
+					"tone": "Honest",
+					"text": "An honest one. It'll still be good.",
+					"flag": "lv_tom_honest",
+					"then": [
+						{
+							"say": "tom",
+							"text": "Honest is fine. Just leave out the retractor I dropped. That was one time. One.",
+							"mood": "calm"
+						}
+					]
+				},
+				{
+					"tone": "Stay",
+					"text": "Don't go. Who'll scrub for Dr. Iyer?",
+					"flag": "lv_tom_stay",
+					"then": [
+						{
+							"say": "tom",
+							"text": "Dr. Iyer can scrub for herself. She scares the instruments into place anyway.",
+							"mood": "calm"
+						}
+					]
+				}
+			]
+		}
+	],
+	"lv_zoya_ask": [
+		{
+			"say": "zoya",
+			"text": "Quick question. Is it normal to forget whether you ate today? Asking for a friend. The friend is me.",
+			"mood": "tired",
+			"gesture": "think"
+		},
+		{
+			"say": "zoya",
+			"text": "I've been here since six. I had a biscuit at ten. Or I dreamt the biscuit. Unclear.",
+			"mood": "tired"
+		},
+		{
+			"choose": [
+				{
+					"tone": "Care",
+					"text": "Go and eat. Now. I'll hold your bleep.",
+					"trust": {
+						"zoya": 5
+					},
+					"flag": "lv_zoya_fed",
+					"then": [
+						{
+							"say": "zoya",
+							"text": "You're holding my bleep? That's the most iconic thing a senior has ever done. Okay. Bye. Eating.",
+							"mood": "happy"
+						}
+					]
+				},
+				{
+					"tone": "Tough",
+					"text": "Push through. That's how we all learnt.",
+					"trust": {
+						"zoya": -3
+					},
+					"flag": "lv_zoya_push",
+					"then": [
+						{
+							"say": "zoya",
+							"text": "Cool. Character development. Love that for me.",
+							"mood": "tired"
+						}
+					]
+				},
+				{
+					"tone": "Tell",
+					"text": "I'm telling Dr. Iyer you need a day off.",
+					"trust": {
+						"zoya": -1,
+						"iyer": 2
+					},
+					"flag": "lv_zoya_iyer",
+					"then": [
+						{
+							"say": "zoya",
+							"text": "Snitch. A caring snitch. But a snitch.",
+							"mood": "shocked"
+						}
+					]
+				}
+			]
+		}
+	],
+	"lv_khan_ask": [
+		{
+			"say": "khan",
+			"text": "Before you say anything about the ringtone. My cousin set it, and now it's tradition. I'm not allowed to change it.",
+			"mood": "focused"
+		},
+		{
+			"say": "khan",
+			"text": "Here. A card. The nikah is on the twentieth, the reception's after. You're invited. Bring an appetite, and a gift that isn't a pressure cooker.",
+			"mood": "happy",
+			"gesture": "offer"
+		},
+		{
+			"choose": [
+				{
+					"tone": "Promise",
+					"text": "I'll be there.",
+					"trust": {
+						"khan": 4
+					},
+					"flag": "lv_khan_yes",
+					"then": [
+						{
+							"say": "khan",
+							"text": "Good. Wear something that isn't scrubs. I've seen your other clothes. I'm worried.",
+							"mood": "happy"
+						}
+					]
+				},
+				{
+					"tone": "Honest",
+					"text": "I'll try. I'm on call that week.",
+					"trust": {
+						"khan": 1
+					},
+					"flag": "lv_khan_call",
+					"then": [
+						{
+							"say": "khan",
+							"text": "Everyone's on call. He's a cardiologist. He'll be on call at his own wedding.",
+							"mood": "calm"
+						}
+					]
+				},
+				{
+					"tone": "Priorities",
+					"text": "Is there biryani?",
+					"trust": {
+						"khan": 2
+					},
+					"flag": "lv_khan_yes",
+					"then": [
+						{
+							"say": "khan",
+							"text": "Three kinds. My mother is competing with his mother. You're welcome.",
+							"mood": "happy"
+						}
+					]
+				}
+			]
+		}
+	],
+	"lv_iyer_ask": [
+		{
+			"say": "iyer",
+			"text": "Can you take my clinic for an hour? My mother's care home rang. She's decided the nurses are spies again.",
+			"mood": "tired"
+		},
+		{
+			"say": "iyer",
+			"text": "She was a judge for thirty years. She's very good at accusing people. Less good at evidence.",
+			"mood": "calm",
+			"head": "tilt"
+		},
+		{
+			"choose": [
+				{
+					"tone": "Help",
+					"text": "Go. I'll take your clinic.",
+					"trust": {
+						"iyer": 5
+					},
+					"flag": "lv_iyer_clinic",
+					"then": [
+						{
+							"say": "iyer",
+							"text": "Thank you. It's mostly backs and knees. If anyone asks, I'm in theatre. It's a lie, but a kind one.",
+							"mood": "calm"
+						}
+					]
+				},
+				{
+					"tone": "Can't",
+					"text": "I can't. Casualty's full.",
+					"flag": "lv_iyer_no",
+					"then": [
+						{
+							"say": "iyer",
+							"text": "Of course. I'll ring her. She'll sentence me to something.",
+							"mood": "calm"
+						}
+					]
+				}
+			]
+		}
+	],
+	"lv_sethi_ask": [
+		{
+			"say": "sethi",
+			"text": "Don't laugh. I'm sitting the super-speciality entrance. Again. Third time.",
+			"mood": "tired"
+		},
+		{
+			"say": "sethi",
+			"text": "Quiz me. Anything. Ask something horrible and pretend I'm not sweating.",
+			"mood": "worried",
+			"gesture": "open_hands"
+		},
+		{
+			"choose": [
+				{
+					"tone": "Quiz",
+					"text": "Branches of the coeliac trunk. Go.",
+					"trust": {
+						"sethi": 4
+					},
+					"flag": "lv_sethi_quiz",
+					"then": [
+						{
+							"say": "sethi",
+							"text": "Left gastric, splenic, common hepatic. Ha. Okay, that was humiliating and helpful. Same thing, in medicine.",
+							"mood": "happy"
+						}
+					]
+				},
+				{
+					"tone": "Cheer",
+					"text": "Third time's the charm.",
+					"trust": {
+						"sethi": 1
+					},
+					"flag": "lv_sethi_cheer",
+					"then": [
+						{
+							"say": "sethi",
+							"text": "Charm. Yes. I'll hang a lemon and seven chillies on my admit card.",
+							"mood": "happy"
+						}
+					]
+				},
+				{
+					"tone": "Break",
+					"text": "Maybe take a break from it?",
+					"trust": {
+						"sethi": -3
+					},
+					"flag": "lv_sethi_break",
+					"then": [
+						{
+							"say": "sethi",
+							"text": "Take a break. Wow. Thank you, Mummy.",
+							"mood": "angry"
+						}
+					]
+				}
+			]
+		}
+	]
+}

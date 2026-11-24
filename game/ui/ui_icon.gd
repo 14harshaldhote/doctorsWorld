@@ -37,6 +37,16 @@ func _draw() -> void:
 				p.call(4, 18), p.call(4, 4)]), colour, width)
 			draw_polyline(PackedVector2Array([p.call(20, 4), p.call(14, 4), p.call(12, 6), p.call(12, 20), p.call(14, 18),
 				p.call(20, 18), p.call(20, 4)]), colour, width)
+		"radio":
+			draw_rect(Rect2(p.call(3, 9), p.call(21, 20) - p.call(3, 9)), colour, false, width)
+			draw_line(p.call(7, 9), p.call(17, 3), colour, width)
+			draw_arc(p.call(9, 14.5), s * 3.0 / 24.0, 0, TAU, 14, colour, width)
+			draw_line(p.call(15, 13), p.call(19, 13), colour, width)
+			draw_line(p.call(15, 16), p.call(19, 16), colour, width)
+		"play":
+			draw_colored_polygon(PackedVector2Array([p.call(7, 4), p.call(20, 12), p.call(7, 20)]), colour)
+		"stop":
+			draw_rect(Rect2(p.call(6, 6), p.call(18, 18) - p.call(6, 6)), colour, true)
 		"map":
 			draw_polyline(PackedVector2Array([p.call(3, 6), p.call(9, 4), p.call(15, 6), p.call(21, 4), p.call(21, 18),
 				p.call(15, 20), p.call(9, 18), p.call(3, 20), p.call(3, 6)]), colour, width)

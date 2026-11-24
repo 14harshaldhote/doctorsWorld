@@ -70,6 +70,9 @@ static func make(profile: PlayerProfile, day: int, start_minute: int) -> ShiftSi
 	sim.past = past(profile, day)
 	if day == FIRST_DAY:
 		sim.first_arrivals = FIRST_ARRIVALS.duplicate(true)
+	sim.director = Director.new(seed_for(profile, day))
+	sim.director.flags = profile.flags
+	sim.director.seen = Feelings.seen_moments(profile)
 	sim.plan_fates()
 	return sim
 

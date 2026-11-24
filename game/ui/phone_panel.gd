@@ -16,7 +16,8 @@ signal closed
 signal call_ended(call_id: String)
 
 const APPS := [["chats", "Chats", "chat"], ["calls", "Calls", "call"], ["lab", "Lab results", "flask"],
-	["pager", "Pager", "pager"], ["feed", "Feed", "feed"], ["photos", "Photos", "photo"], ["maps", "Maps", "map"]]
+	["pager", "Pager", "pager"], ["feed", "Feed", "feed"], ["photos", "Photos", "photo"], ["maps", "Maps", "map"],
+	["radio", "Radio", "radio"]]
 ## The hospital on the Maps app: [id, name, what it's like, x, y, w, h] on a
 ## 100 x 100 plan, ground floor and the basement strip along the bottom.
 const PLACES := [
@@ -85,6 +86,14 @@ var _call_choices: Container
 var _voice := SpokenLine.new()
 ## True while this phone is asking for fewer frames (FrameBudget).
 var _calm := false
+## The radio's song (Riverside FM), playing while the phone is out.
+var radio: SongPlayer
+var _radio_now: Label
+var _radio_next: Label
+var _radio_bar: ColorRect
+var _radio_back: ColorRect
+var _radio_line := -2
+var _radio_phase := ""
 ## True between a press on the shade and its release.
 var _shade_down := false
 
@@ -106,6 +115,8 @@ func _exit_tree() -> void:
 ## Back to full speed, and quiet (once, however the phone goes away).
 func _let_go() -> void:
 	_voice.stop()
+	if radio != null:
+		radio.stop()
 	if _calm:
 		_calm = false
 		FrameBudget.calm(false)
@@ -348,6 +359,8 @@ func _show(to: String, arg: String = "", clear_history: bool = true) -> void:
 			built = _photo_page(arg)
 		"maps":
 			built = _maps_page()
+		"radio":
+			built = _radio_page()
 		_:
 			page = "home"
 			built = _home_page()
@@ -367,12 +380,16 @@ func _page_signature() -> String:
 			return str(pager_log.size())
 		"lab":
 			return str(_lab_items().size())
+		"radio":
+			return "%s|%s|%s" % [radio.playing(), radio.song_id, str(radio.request.get("text", ""))] if radio != null else ""
 	return "%d|%d" % [PhoneBook.arrived(profile).size(), PhoneBook.badge(profile)]
 
 
 func _process(delta: float) -> void:
 	if page == "call":
 		_tick_call(delta)
+	elif page == "radio":
+		_tick_radio()
 	if _pin_bottom > 0.0:
 		_pin_bottom -= delta
 		_pin_scroll()
@@ -629,7 +646,8 @@ func _app_button(app: String, title: String, icon: String, live: Array) -> Contr
 	button.custom_minimum_size = Vector2(UiKit.px(44), UiKit.px(44))
 	button.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	var colour: Color = {"chats": Color("#2E9E6B"), "calls": Color("#3B8F5A"), "lab": Color("#5B6FD8"),
-		"pager": Color("#C98A1E"), "feed": Color("#C2457A"), "photos": Color("#E07A3C"), "maps": Color("#3E7CB1")}.get(app, UiKit.TEAL)
+		"pager": Color("#C98A1E"), "feed": Color("#C2457A"), "photos": Color("#E07A3C"), "maps": Color("#3E7CB1"),
+		"radio": Color("#B0482F")}.get(app, UiKit.TEAL)
 	button.add_theme_stylebox_override("normal", UiKit.box(colour, 12))
 	button.add_theme_stylebox_override("hover", UiKit.box(colour, 12))
 	button.add_theme_stylebox_override("focus", UiKit.box(colour, 12))
@@ -941,6 +959,8 @@ func _calls_page() -> Control:
 
 ## A call ringing on the phone: the doctor can answer or decline.
 func ring(item: Dictionary) -> void:
+	if radio != null:
+		radio.stop()
 	call_item = item
 	call_phase = "ringing"
 	_call_seconds = 0.0
@@ -1208,6 +1228,166 @@ func _maps_page() -> Control:
 		words.add_child(_wrapped(str(place[2]), 8.5, UiKit.TEXT_LABEL, _inner_width() - UiKit.px(16)))
 		list.add_child(row)
 	return made[0]
+
+
+# --- Radio ---------------------------------------------------------------------------
+
+func _radio_page() -> Control:
+	var station := Songs.station()
+	var made := _page("Radio", str(station.get("name", "Radio")))
+	var list: VBoxContainer = made[1]
+	var width := _inner_width()
+	_radio_now = null
+	_radio_next = null
+	_radio_bar = null
+	_radio_back = null
+	list.add_child(_wrapped(str(station.get("tagline", "")), 8.5, UiKit.TEXT_SOFT, width))
+	var on := radio != null and radio.playing()
+	if on:
+		list.add_child(_on_air())
+	var request := Songs.request_for(profile)
+	if not request.is_empty():
+		list.add_child(UiKit.label("TODAY'S REQUEST", 8, UiKit.TEXT_KICKER, UiKit.heavy_font()))
+		var song := Songs.song(str(request.get("song", "")))
+		var row := _radio_row("Request", str(request.get("text", "")).replace("{called}", "Doctor"),
+			"Then: " + str(song.get("title", "")), on and radio.request == request)
+		_tappable(row, _radio_pressed.bind(str(request.get("song", "")), request))
+		list.add_child(row)
+	list.add_child(UiKit.label("SONGS", 8, UiKit.TEXT_KICKER, UiKit.heavy_font()))
+	for id: String in Songs.ids():
+		var entry := Songs.song(id)
+		var seconds := int(Songs.length(id))
+		var row := _radio_row("Song_" + id, str(entry.get("title", "")),
+			"%s  ·  %d:%02d" % [str(entry.get("by", "")), seconds / 60, seconds % 60],
+			on and radio.request.is_empty() and radio.song_id == id, true)
+		_tappable(row, _radio_pressed.bind(id, {}))
+		list.add_child(row)
+	return made[0]
+
+
+## A row with a play button (a stop button while it is the one on air).
+func _radio_row(row_name: String, top: String, under: String, playing: bool, heavy: bool = false) -> Control:
+	var row := _row(row_name)
+	var line := UiKit.hbox(6)
+	row.add_child(line)
+	var words := UiKit.vbox(2)
+	words.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	line.add_child(words)
+	var width := _inner_width() - UiKit.px(16 + 30)
+	words.add_child(_wrapped(top, 9.5, UiKit.TEXT if heavy else UiKit.TEXT_LABEL, width, UiKit.heavy_font() if heavy else null))
+	words.add_child(_wrapped(under, 8, UiKit.MINT if not heavy else UiKit.TEXT_SOFT, width, UiKit.heavy_font() if not heavy else null))
+	var dot := Panel.new()
+	dot.name = "Stop" if playing else "Play"
+	dot.custom_minimum_size = Vector2(UiKit.px(24), UiKit.px(24))
+	dot.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	dot.add_theme_stylebox_override("panel", UiKit.box(UiKit.AMBER if playing else Color(1, 1, 1, 0.1), 12))
+	var glyph := UiIcon.make("stop" if playing else "play", 12, UiKit.AMBER_TEXT if playing else UiKit.MINT)
+	UiKit.fill(glyph)
+	for side: int in [SIDE_LEFT, SIDE_TOP]:
+		glyph.set_offset(side, UiKit.px(6))
+	for side: int in [SIDE_RIGHT, SIDE_BOTTOM]:
+		glyph.set_offset(side, -UiKit.px(6))
+	dot.add_child(glyph)
+	line.add_child(dot)
+	return row
+
+
+## What's on air: the song, the line being sung, the next one and how far
+## through it is.
+func _on_air() -> Control:
+	var card := PanelContainer.new()
+	card.name = "OnAir"
+	card.add_theme_stylebox_override("panel", UiKit.box(Color(UiKit.AMBER, 0.1), 12, Color(UiKit.AMBER, 0.55), 1, Vector2(8, 7)))
+	var column := UiKit.vbox(3)
+	card.add_child(column)
+	var top := UiKit.hbox(6)
+	column.add_child(top)
+	var kicker := UiKit.label("ON AIR", 8, UiKit.AMBER, UiKit.heavy_font())
+	kicker.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	kicker.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	top.add_child(kicker)
+	var stop := UiKit.ghost_button("Stop", 24, 9)
+	stop.name = "RadioStop"
+	stop.focus_mode = Control.FOCUS_NONE
+	stop.custom_minimum_size.x = UiKit.px(52)
+	stop.pressed.connect(stop_radio)
+	UiKit.respond_to_press(stop)
+	top.add_child(stop)
+	var width := _inner_width() - UiKit.px(16)
+	column.add_child(_clipped(UiKit.label(str(Songs.song(radio.song_id).get("title", "")), 10, UiKit.TEXT, UiKit.heavy_font())))
+	_radio_now = _wrapped("", 10.5, UiKit.TEXT, width, UiKit.heading_medium_font())
+	_radio_now.name = "Now"
+	column.add_child(_radio_now)
+	_radio_next = _wrapped("", 8.5, UiKit.TEXT_SOFT, width)
+	_radio_next.name = "Next"
+	column.add_child(_radio_next)
+	_radio_back = ColorRect.new()
+	_radio_back.color = Color(1, 1, 1, 0.12)
+	_radio_back.custom_minimum_size = Vector2(0, UiKit.px(3))
+	_radio_back.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	column.add_child(_radio_back)
+	_radio_bar = ColorRect.new()
+	_radio_bar.color = UiKit.AMBER
+	_radio_bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_radio_back.add_child(_radio_bar)
+	_radio_line = -2
+	_radio_phase = ""
+	_tick_radio()
+	return card
+
+
+## Keeps the words on air in step with the song.
+func _tick_radio() -> void:
+	if radio == null or _radio_now == null or not is_instance_valid(_radio_now):
+		return
+	if radio.line != _radio_line or radio.phase != _radio_phase:
+		_radio_line = radio.line
+		_radio_phase = radio.phase
+		if radio.phase == "request":
+			_radio_now.text = radio.request_text()
+			_radio_next.text = ""
+		else:
+			_radio_now.text = radio.line_text() if radio.line >= 0 else "..."
+			_radio_next.text = radio.next_text()
+		_radio_next.visible = not _radio_next.text.is_empty()
+	if _radio_back != null and is_instance_valid(_radio_back):
+		_radio_bar.size = Vector2(_radio_back.size.x * radio.progress(), _radio_back.size.y)
+
+
+## Plays a song on the radio (after a request when given), or stops it if
+## it is the one on air.
+func play_radio(id: String, request: Dictionary = {}) -> bool:
+	if call_phase in ["ringing", "talking", "choosing", "after"]:
+		return false
+	if radio == null:
+		radio = SongPlayer.new()
+		radio.name = "Radio"
+		add_child(radio)
+	if not radio.play(id, request):
+		return false
+	_rebuild_radio()
+	return true
+
+
+func stop_radio() -> void:
+	if radio != null:
+		radio.stop()
+	_rebuild_radio()
+
+
+func _radio_pressed(id: String, request: Dictionary) -> void:
+	if radio != null and radio.playing() and radio.song_id == id and radio.request == request:
+		stop_radio()
+	else:
+		play_radio(id, request)
+
+
+func _rebuild_radio() -> void:
+	if page != "radio":
+		return
+	var scroll := _scroll_position()
+	_show("radio", "", false)
+	_set_scroll(scroll)
 
 
 func _pager_page() -> Control:

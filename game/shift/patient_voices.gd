@@ -165,6 +165,10 @@ static func catalogue() -> Array:
 		for text: Variant in Fates.family_lines(kind):
 			for who: String in ids():
 				add.call(who, str(text), "shocked" if kind == "open" else "tired")
+	# The director's moments and silliness (stage 26): what a patient or a
+	# relative says, in each voice that could be theirs.
+	for line: Dictionary in Feelings.patient_lines():
+		add.call(str(line["who"]), str(line["text"]), str(line["mood"]))
 	return lines
 
 

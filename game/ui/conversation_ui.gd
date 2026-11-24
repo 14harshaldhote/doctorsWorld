@@ -287,6 +287,7 @@ func show_choices(options: Array, card: Dictionary = {}) -> void:
 	if appearing:
 		UiKit.pop_in(_choices, 0.24)
 	_skip.visible = false
+	_tap_hint.visible = false
 	if mode == Mode.CINEMA and _subtitle.visible:
 		# Move the question to the bottom left, clear of the replies.
 		_subtitle.visible = false
@@ -402,7 +403,8 @@ func finish_typing() -> void:
 	_typed = _line.length()
 	_reveal()
 	_typing = false
-	_tap_hint.visible = mode == Mode.TALK
+	# Nothing to tap through while the replies are up.
+	_tap_hint.visible = mode == Mode.TALK and not _choosing
 	typing_finished.emit()
 
 

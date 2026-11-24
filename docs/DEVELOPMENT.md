@@ -584,8 +584,10 @@ are left alone. The screenshot tool pretends to be a notched iPhone
 
 ## Music and sound
 
-The six music tracks (title, hospital, theatre, night, emergency, sad) and
-the fanfare are composed and synthesised by `tools/make_music.py` (Python
+The six music tracks (title, hospital, theatre, night, emergency, sad), the
+fanfare and the music of the three songs (`song_night`, `song_dal`,
+`song_roast`, timed by `story/songs.json`) are composed and synthesised by
+`tools/make_music.py` (Python
 with numpy, and ffmpeg for the Ogg Vorbis files), so there are no third-party
 recordings. Each loop is a minute or more, in stereo, with a reverb; anything
 that rings past the end of a loop wraps round to its start, so the loops join
@@ -859,6 +861,89 @@ on the wall.
 The phone's Maps app (`PhonePanel.PLACES`, drawn by `HospitalMap`) shows
 the hospital's places and lights where the doctor is (`LobbyHud.live_place`,
 set by each place) and where the story wants them next.
+
+## The director and feelings
+
+`story/feelings.json` holds the director's numbers (`director`), the
+emotional moments (`moments`), the silly ones (`silly`) and the breathers
+(`lifts`); `Feelings` reads it. `Director` (in `ShiftSim.director`, made by
+`ShiftDay.make`) is stepped once a hospital minute after the world and adds
+its own events to the minute's list. It keeps `tension` (0 to 100): each
+event pushes it by `director.tension` (a red arrival, someone worse, a crash,
+a death) and it settles by `decay` a minute, more slowly while people wait
+(`busy_hold`). From that:
+
+- A **breather**: once the shift has been `hard` and drops below half of it,
+  no trouble for `breather_minutes`, the patient nobody can save
+  (`ShiftSim.doomed_at`) held back until after it, and a `lift` event
+  (`lift_max` a day) some minutes later. A lift may remember the doctor's
+  choices with `if`/`unless` on the story flags (`Feelings.holds`: `a`, `!a`,
+  `a|b`, `a&b`); those that remember are `Feelings.MEMORY_WEIGHT` times as
+  likely. A lift with a `song` plays it, with its line as the radio's request.
+- **Trouble**: from `trouble_from_day`, after `quiet_minutes` calm with at
+  most one waiting, a yellow or red arrival (`trouble_max` a day,
+  `trouble_gap` apart), made by `ShiftSim.make_aside_from(director.rng, ...)`
+  so the day's own arrivals never change (`ShiftPatient.trouble` is true).
+- **Silliness**: a serious scene (a red arrival, a crash, a death) rolls
+  `silly_chance` once per patient, at most `silly_max` a day and `silly_gap`
+  apart, and the `silly` event follows a few minutes later. The ward shows it
+  only to a doctor in casualty: a toast, a line in someone's voice, a sound,
+  or the goat (`Goat`, which walks itself across the walkway and frees
+  itself).
+- A **moment**: `Director.plan` gives `moment_chance` of days from
+  `moment_from_day` a minute in `moment_window`. When it comes and the shift
+  is calm (`moment_calm`), `Feelings.pick_moment` picks one not had in the
+  last `Feelings.MOMENT_REST` days that fits someone here (`fit`: sex, ages,
+  `alone`, `admitted`) or a colleague's (`kind: staff`), preferring someone
+  in a cubicle; nobody fits and it looks again 20 minutes later. "papers"
+  comes early, for an old man going up to the ward.
+
+`WardFeelings` (made by `Ward`) shows it all. A moment opens a `MomentCard`
+once the doctor is free (a patient's only in casualty, dropped if they go);
+the clock stops while it's open. `Feelings.choose` counts it
+(`moment_<id>` is the day, so it rests; `moments`), moves trust, sets the
+choice's `flag`, and keeps a phone message for later (`payoff`: from a cast
+contact, the social worker, or a relative named by `NameMaker` whose chat is
+the message itself) with `PhoneBook.keep`. Lines say `patient`, `relative`
+(a voice chosen by `voices` or `Feelings.RELATIVE_VOICES`, whoever came with
+them if they fit) or `kid` (`boy` or `girl`); `{patient}`, `{where}`, `{his}`, `{His}`, `{him}` and `{he}`
+are filled by `Feelings.fill`. The patient and relative lines are
+recorded in every patient voice that could say them (`Feelings.patient_lines`,
+through `PatientVoices.catalogue`).
+
+**Colleagues' lives.** `story/arcs.json` gives each colleague needs (`people`)
+that drift every three days from the career's hospital seed, and arcs: who,
+the conversation (`talk`, in `story/lives.json`), the stretches of the story
+it can happen in (`chapters`), how it weighs the needs, how many days later
+the message comes (`after`) and what it says for each answer (`payoff` with
+`if`). `Lives.today` picks the arc whose colleague wants it most over
+`threshold`, from `first_day`, `gap_days` after the last, with time for its
+message before the story jumps ahead. Nothing about needs is stored; the
+counters `lv_<arc>` (the day they asked) and `lv_last` are, in the morning
+snapshot. On a day with one, `WardFeelings` waits for the doctor standing on
+Ward 4 with nothing on after `talk_from` (and not in a hard stretch); the
+colleague walks up (mode `side`, through the door if they weren't there),
+the conversation plays, and they go back. The message is written by
+`Lives.items`, through `PhoneWriter.items`.
+
+**Songs.** `story/songs.json` has the station, the songs (`title`, `by`,
+`track`, `bpm`, `intro`, `bars_per_line`, `outro`, and `lines` with who sings
+each) and the radio's `requests`. A line starts every `bars_per_line` bars
+after `intro` (`Songs.line_start`); the music (`assets/music/song_*.ogg`,
+made by `tools/make_music.py` from the same numbers) lasts `Songs.length`.
+`SongPlayer` plays one: the request first in RJ Bunty's voice, then the music
+with each line said in its singer's recorded voice on its bar. Only one plays
+anywhere (`SongPlayer.active`); the background music steps back
+(`Music.hold_for_song`) and stops ducking for lines while it plays.
+`LyricsBanner` shows the words along the bottom with a Stop button and takes
+no other taps. The night nurses sing after 23:30 on a night shift on the ward
+and the canteen's jingle plays at lunch one day in `WardFeelings.DAL_EVERY`
+(and the first time); a conversation, a task or a card stops a song. The
+phone's Radio app plays any of them and the day's request
+(`Songs.request_for`), and stops when the phone goes away or rings.
+
+The screenshot tool sets `WardFeelings.hold`, so nothing comes round by
+itself in the other shots.
 
 ## The phone
 

@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""Writes the game's background music to assets/music/ as looping Ogg files.
+"""Writes the game's background music to assets/music/ as looping Ogg files,
+and the music under the three sarcastic songs.
 
 Every track is composed and synthesised here, note by note, so there are no
 samples to license. Rendering the music once, ahead of time, keeps the game
@@ -22,8 +23,18 @@ Tracks:
   emergency  urgent strings and drums for a crash call (D minor)
   sad        slow piano and strings for bad news (A minor)
   fanfare    a short flourish for a promotion; it does not loop
+
+The songs (story/songs.json) play once, start to end, under lines half sung,
+half chanted by the characters. Each reads its tempo and bar plan from
+songs.json (intro bars, two bars a line, outro bars), so the music and the
+words keep time. They leave the middle of the sound to the voices: the
+tunes play in the intro, the outro and the gaps at the end of a line.
+  song_night  the night nurses' song: a tired lo-fi lullaby (E minor, 88)
+  song_dal    the canteen's dal jingle: bouncy and bright (G major, 112)
+  song_roast  Riverside FM's roast: a funk vamp with brass stabs (D minor, 100)
 """
 
+import json
 import os
 import subprocess
 import sys
@@ -39,6 +50,10 @@ OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "assets", "
 ## loops sit a little under the old ones so voices stay clear over them.
 LOOP_LOUDNESS = -27.5
 PEAK = 0.8
+## The songs sit a little above the loops: they are the thing playing, and
+## the game plays them 3 dB down with the background stepped right back.
+SONG_LOUDNESS = -25.0
+SONGS = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "story", "songs.json")
 
 NOTES = {"C": 0, "C#": 1, "Db": 1, "D": 2, "D#": 3, "Eb": 3, "E": 4, "F": 5, "F#": 6, "Gb": 6,
          "G": 7, "G#": 8, "Ab": 8, "A": 9, "A#": 10, "Bb": 10, "B": 11}
@@ -322,6 +337,27 @@ def shaker(vel=0.5, seed=0):
     t = _time(0.09)
     noise = lowpass(highpass(rng.standard_normal(len(t)), 3500, 2), 9000)
     return noise * np.minimum(1.0, t / 0.012) * np.exp(-t * 45.0) * 0.06 * vel
+
+
+def snare(vel=0.6, seed=0):
+    """A soft snare: a short tone under a burst of filtered noise."""
+    rng = np.random.default_rng(seed + 1100)
+    t = _time(0.25)
+    tone = np.sin(2 * np.pi * 185.0 * t) * np.exp(-t * 30.0) * 0.5
+    noise = lowpass(highpass(rng.standard_normal(len(t)), 1200, 2), 7000) * np.exp(-t * 18.0)
+    return (tone + noise * 0.8) * 0.16 * vel
+
+
+def clap(vel=0.6, seed=0):
+    """A hand clap: three quick bursts and a short tail."""
+    rng = np.random.default_rng(seed + 1300)
+    t = _time(0.3)
+    env = np.zeros_like(t)
+    for start in (0.0, 0.011, 0.022):
+        env += (t >= start) * np.exp(-np.maximum(0.0, t - start) * 160.0) * 0.6
+    env += (t >= 0.03) * np.exp(-np.maximum(0.0, t - 0.03) * 22.0) * 0.5
+    noise = lowpass(highpass(rng.standard_normal(len(t)), 900, 2), 5000)
+    return noise * env * 0.12 * vel
 
 
 def drum(low=62.0, high=150.0, vel=0.7, decay=7.0, seed=0):
@@ -750,8 +786,199 @@ def fanfare():
     }, reverb=0.3, loudness=-21.0)
 
 
+# --- The songs -----------------------------------------------------------------
+
+def song_shape(song_id):
+    """A song's tempo and bar plan from story/songs.json, the same numbers
+    the game times the lines by: (bpm, intro bars, bars a line, lines,
+    outro bars)."""
+    with open(SONGS, encoding="utf-8") as file:
+        entry = json.load(file)["songs"][song_id]
+    return (max(1.0, float(entry.get("bpm", 96))), int(entry.get("intro", 2)), int(entry.get("bars_per_line", 2)),
+            len(entry.get("lines", [])), int(entry.get("outro", 2)))
+
+
+def song_night():
+    """The night nurses' song: a tired lo-fi lullaby, a music box over a lazy
+    electric piano, brushed drums."""
+    bpm, intro, per_line, count, outro = song_shape("night")
+    verse = per_line * count
+    song = Song(bpm, intro + verse + outro, loop=False, seed=41)
+    chords = [("E3 G3 B3 D4 F#4", "E2"), ("C3 E3 G3 B3", "C2"), ("A2 E3 G3 C4", "A1"), ("B2 F#3 A3 D#4", "B1")]
+    home = voicing(chords[0][0])
+    motif = bars("B5:1 G5:1 F#5:1 E5:1", "D5:1.5 E5:0.5 B4:2")
+    for bar in range(intro):
+        song.chord("keys", epiano, home, bar * 4, 3.8, vel=0.42)
+        song.put("bass", bass(bass_note("E2"), 3.6 * song.beat, 0.5), bar * 4)
+    song.notes("box", bell, motif, pan=0.25, vel=0.55, offset=max(0, intro - 2) * 4)
+    for index in range(verse):
+        bar = intro + index
+        chord_text, root = chords[index % len(chords)]
+        chord = voicing(chord_text)
+        song.chord("keys", epiano, chord, bar * 4, 1.4, vel=0.4)
+        song.chord("keys", epiano, chord, bar * 4 + 2.5, 1.3, vel=0.32)
+        low = bass_note(root)
+        song.put("bass", bass(low, 1.4 * song.beat, 0.7), bar * 4)
+        song.put("bass", bass(low, 0.4 * song.beat, 0.45), bar * 4 + 1.5)
+        song.put("bass", bass(low + 7, 0.9 * song.beat, 0.55), bar * 4 + 2.5)
+        song.put("perc", drum(50, 110, 0.55, 8.0, bar), bar * 4)
+        song.put("perc", drum(50, 110, 0.35, 8.0, bar + 40), bar * 4 + 2.5)
+        song.put("perc", snare(0.42, bar), bar * 4 + 1, pan=0.05)
+        song.put("perc", snare(0.48, bar + 60), bar * 4 + 3, pan=0.05)
+        for step in range(8):
+            swing = 0.08 if step % 2 else 0.0
+            song.put("hats", hat(0.5 if step % 2 == 0 else 0.3, bar * 8 + step), bar * 4 + step * 0.5 + swing, pan=0.3)
+        # The music box answers at the end of a line, after the words.
+        if index % per_line == per_line - 1:
+            answer = [(3.0, chord[-1] + 12, 0.5), (3.5, chord[-2] + 12, 0.5)]
+            song.notes("box", bell, answer, pan=0.3, vel=0.32, offset=bar * 4)
+    end = intro + verse
+    ending = bars("B5:1 G5:1 F#5:1 D5:1", "E5:4")
+    for bar in range(outro):
+        last = bar == outro - 1
+        song.chord("keys", epiano, voicing("E3 B3 D4 G4") if last else home, (end + bar) * 4, 3.6, vel=0.38)
+        song.put("bass", bass(bass_note("E2"), 3.4 * song.beat, 0.5), (end + bar) * 4)
+    song.notes("box", bell, ending, pan=0.25, vel=0.5, offset=(end + max(0, outro - 2)) * 4)
+    return song.mix({
+        "keys": {"lp": 3200, "gain": 0.85, "send": 0.4},
+        "bass": {"lp": 900, "gain": 0.8, "send": 0.05},
+        "perc": {"lp": 6000, "gain": 0.75, "send": 0.15},
+        "hats": {"gain": 0.45, "send": 0.1},
+        "box": {"gain": 0.6, "send": 0.55},
+    }, reverb=0.32, loudness=SONG_LOUDNESS)
+
+
+def song_dal():
+    """The canteen's dal jingle: oom-pah bass, a kalimba bouncing round the
+    chords, claps, and a hook at each end with a ta-da."""
+    bpm, intro, per_line, count, outro = song_shape("dal")
+    verse = per_line * count
+    song = Song(bpm, intro + verse + outro, loop=False, seed=43)
+    chords = [("G3 B3 D4", "G2"), ("E3 G3 B3", "E2"), ("C3 E3 G3", "C2"), ("D3 F#3 A3", "D2")]
+    hook = bars("D5:0.5 D5:0.5 B4:0.5 D5:0.5 E5:1 D5:1", "B4:0.5 A4:0.5 G4:0.5 A4:0.5 B4:1 r:1")
+
+    def groove(bar, chord_text, root, busy=True):
+        chord = voicing(chord_text)
+        low = bass_note(root)
+        for beat, number, length in ((0, low, 0.45), (1, low + 7, 0.3), (2, low, 0.45), (3, low + 7, 0.3)):
+            song.put("bass", bass(number, length * song.beat, 0.7), bar * 4 + beat)
+        song.put("perc", drum(55, 140, 0.6, 9.0, bar), bar * 4)
+        song.put("perc", drum(55, 140, 0.45, 9.0, bar + 30), bar * 4 + 2)
+        song.put("perc", clap(0.55, bar), bar * 4 + 1, pan=-0.1)
+        song.put("perc", clap(0.6, bar + 50), bar * 4 + 3, pan=0.1)
+        for step in range(8):
+            song.put("hats", shaker(0.55 if step % 2 else 0.3, bar * 8 + step), bar * 4 + step * 0.5, pan=0.35)
+        if busy:
+            arpeggio(song, "keys", chord, bar, [0, 1, 2, 11, 2, 1, 0, 1], instrument=kalimba, vel=0.4, octave=1)
+        else:
+            song.chord("keys", kalimba, [n + 12 for n in chord], bar * 4, 1.0, vel=0.35)
+            song.chord("keys", kalimba, [n + 12 for n in chord], bar * 4 + 2, 1.0, vel=0.3)
+
+    for bar in range(intro):
+        chord_text, root = chords[0] if bar % 2 == 0 else chords[3]
+        groove(bar, chord_text, root, busy=False)
+    song.notes("lead", kalimba, hook, pan=0.1, vel=0.6, offset=max(0, intro - 2) * 4)
+    song.notes("lead", bell, [(b, n + 12, l) for b, n, l in hook], pan=-0.25, gain=0.35, offset=max(0, intro - 2) * 4)
+    for index in range(verse):
+        chord_text, root = chords[index % len(chords)]
+        groove(intro + index, chord_text, root)
+    end = intro + verse
+    for bar in range(outro - 1):
+        groove(end + bar, chords[0][0] if bar % 2 == 0 else chords[3][0], chords[0][1] if bar % 2 == 0 else chords[3][1],
+               busy=False)
+    song.notes("lead", kalimba, hook[:6], pan=0.1, vel=0.6, offset=(end + outro - 2) * 4 if outro >= 2 else end * 4)
+    last = (end + outro - 1) * 4
+    for index, name in enumerate(["G3", "B3", "D4", "G4", "B4"]):
+        song.put("brass", brass(midi(name), 2.6 * song.beat, 0.75), last, pan=(index - 2) * 0.2, human=0)
+    song.put("bass", bass(bass_note("G2"), 2.6 * song.beat, 0.75), last, human=0)
+    song.put("perc", drum(55, 140, 0.8, 6.0, 99), last, human=0)
+    song.put("perc", crash(0.5), last, human=0)
+    song.put("lead", bell(midi("G6"), 0, 0.5), last + 0.5, pan=0.35, human=0)
+    return song.mix({
+        "keys": {"lp": 5000, "gain": 0.7, "send": 0.3},
+        "lead": {"lp": 7000, "gain": 0.8, "send": 0.35},
+        "bass": {"lp": 900, "gain": 0.8, "send": 0.05},
+        "perc": {"lp": 7000, "gain": 0.7, "send": 0.15},
+        "hats": {"gain": 0.45, "send": 0.1},
+        "brass": {"lp": 4500, "gain": 0.8, "send": 0.3},
+    }, reverb=0.25, loudness=SONG_LOUDNESS)
+
+
+def song_roast():
+    """Riverside FM's roast: a funk vamp, slap-ish bass, brass stabs at the
+    start and end of each line, a big hit to finish."""
+    bpm, intro, per_line, count, outro = song_shape("roast")
+    verse = per_line * count
+    song = Song(bpm, intro + verse + outro, loop=False, seed=47)
+    vamp = [("F3 A3 C4 E4", "D2"), ("F3 B3 D4", "G2")]
+    turn = [("F3 Ab3 D4", "Bb1"), ("E3 G3 C#4", "A1")]
+    stab_dm = voicing("D4 F4 A4 C5")
+
+    def stab(chord, beat, length=0.35, vel=0.7):
+        song.chord("brass", brass, chord, beat, length, spread=0.4, vel=vel)
+
+    def groove(bar, chord_text, root, comp=True):
+        chord = voicing(chord_text)
+        low = bass_note(root)
+        for beat, number, length in ((0, low, 0.4), (0.75, low, 0.2), (1.5, low + 12, 0.2), (2, low, 0.4),
+                                     (2.75, low + 10, 0.2), (3, low + 7, 0.3), (3.5, low + 10, 0.3)):
+            song.put("bass", bass(number, length * song.beat, 0.75), bar * 4 + beat)
+        song.put("perc", drum(52, 150, 0.7, 9.0, bar), bar * 4)
+        song.put("perc", drum(52, 150, 0.5, 9.0, bar + 20), bar * 4 + 1.5)
+        song.put("perc", drum(52, 150, 0.55, 9.0, bar + 40), bar * 4 + 2.5)
+        song.put("perc", snare(0.6, bar), bar * 4 + 1)
+        song.put("perc", snare(0.65, bar + 70), bar * 4 + 3)
+        for step in range(8):
+            song.put("hats", hat(0.55 if step % 2 == 0 else 0.35, bar * 8 + step, 0.12 if step == 7 else 0.06),
+                     bar * 4 + step * 0.5, pan=0.3)
+        if comp:
+            for beat in (0.5, 1.75, 2.5, 3.75):
+                song.chord("keys", epiano, chord, bar * 4 + beat, 0.2, spread=0.3, vel=0.32)
+
+    # The intro: the hook stabs, a riser, then the drums come in with a fill.
+    for bar in range(intro):
+        first = bar == max(0, intro - 2)
+        if first and intro >= 2:
+            for beat in (0, 0.75, 1.5):
+                stab(stab_dm, bar * 4 + beat)
+            song.put("perc", swell(2 * song.beat, 0.7), bar * 4 + 2, human=0)
+            song.put("bass", bass(bass_note("D2"), 0.4 * song.beat, 0.8), bar * 4)
+        else:
+            groove(bar, vamp[0][0], vamp[0][1], comp=False)
+            for beat in (2.5, 3.25, 3.5, 3.75):
+                song.put("perc", snare(0.5, bar * 10 + int(beat * 4)), bar * 4 + beat)
+    for index in range(verse):
+        bar = intro + index
+        line = index // per_line
+        pair = turn if line % 4 == 3 else vamp
+        chord_text, root = pair[index % 2]
+        groove(bar, chord_text, root)
+        if index % per_line == 0:
+            stab(voicing(chord_text) if pair is turn else stab_dm, bar * 4, vel=0.6)
+        if index % per_line == per_line - 1:
+            stab(voicing(chord_text), bar * 4 + 3.5, 0.3, vel=0.55)
+    end = intro + verse
+    for bar in range(outro - 1):
+        groove(end + bar, vamp[0][0], vamp[0][1], comp=False)
+        for beat in (0, 0.75, 1.5, 2.5):
+            stab(stab_dm, (end + bar) * 4 + beat)
+    last = (end + outro - 1) * 4
+    stab(voicing("D4 F4 A4 C5 E5"), last, 2.4, vel=0.85)
+    song.put("bass", bass(bass_note("D2"), 2.4 * song.beat, 0.8), last, human=0)
+    song.put("perc", drum(52, 150, 0.9, 5.0, 98), last, human=0)
+    song.put("perc", crash(0.6), last, human=0)
+    return song.mix({
+        "keys": {"lp": 4000, "gain": 0.6, "send": 0.2},
+        "bass": {"lp": 1100, "gain": 0.85, "send": 0.04},
+        "perc": {"lp": 7000, "gain": 0.75, "send": 0.12},
+        "hats": {"gain": 0.45, "send": 0.08},
+        "brass": {"lp": 4200, "gain": 0.75, "send": 0.3},
+    }, reverb=0.22, loudness=SONG_LOUDNESS)
+
+
 TRACKS = (("title", title), ("hospital", hospital), ("theatre", theatre), ("night", night),
-          ("emergency", emergency), ("sad", sad), ("fanfare", fanfare))
+          ("emergency", emergency), ("sad", sad), ("fanfare", fanfare),
+          ("song_night", song_night), ("song_dal", song_dal), ("song_roast", song_roast))
 
 
 def write_ogg(name, samples):

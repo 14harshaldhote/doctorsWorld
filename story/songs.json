@@ -1,0 +1,74 @@
+{
+	"_about": "Stage 26, the sarcastic songs: the night nurses' song, the canteen's dal jingle and the radio's roast, with Riverside FM's requests. Kokoro can't really sing, so each line is half sung, half chanted, in the singer's own voice, over music made by tools/make_music.py (which reads the tempo and the bars from here, so the music and the words keep time). A song lasts (intro + lines x bars_per_line + outro) bars of four beats. Read by Songs.",
+	"station": {
+		"name": "Riverside FM",
+		"tagline": "The hospital radio. Broadcasting from a broom cupboard on the second floor."
+	},
+	"songs": {
+		"night": {
+			"title": "The Night Shift Song",
+			"by": "The night nurses",
+			"track": "song_night",
+			"bpm": 88,
+			"intro": 2,
+			"bars_per_line": 2,
+			"outro": 2,
+			"lines": [
+				{"say": "priya", "text": "Two a.m., the chai is cold. The drip is beeping. I am old."},
+				{"say": "grace", "text": "Doctor's sleeping in a chair. Pager's screaming. Nobody cares."},
+				{"say": "priya", "text": "Bed four wants water, bed six wants home, bed two wants a charger for his phone."},
+				{"say": "grace", "text": "Night shift, night shift, who needs sleep? We run on biscuits and the beep."},
+				{"say": "priya", "text": "Night doctor said, call me if it's bad. It's bad. The phone is off."},
+				{"say": "grace", "text": "Seven o'clock, the day staff come. Fresh and showered. We are numb."},
+				{"say": "priya", "text": "Night shift, night shift, nobody sees. Night shift, night shift, pass the tea."},
+				{"say": "grace", "text": "And if you ask us how we are: we're fine. We're fine. We're fine."}
+			]
+		},
+		"dal": {
+			"title": "The Canteen Dal Jingle",
+			"by": "Mani, from the canteen",
+			"track": "song_dal",
+			"bpm": 112,
+			"intro": 2,
+			"bars_per_line": 2,
+			"outro": 2,
+			"lines": [
+				{"say": "mani", "text": "Riverside canteen! Dal of the day!"},
+				{"say": "mani", "text": "Same as yesterday, in a brand new way."},
+				{"say": "mani", "text": "Yellow dal, yellow dal, a little bit of salt."},
+				{"say": "mani", "text": "Water with a rumour of dal. Not our fault."},
+				{"say": "mani", "text": "Twenty rupees, rice is free. Extra pickle, don't ask me."},
+				{"say": "mani", "text": "Riverside canteen. Your stomach is on call."}
+			]
+		},
+		"roast": {
+			"title": "Doctor, Doctor",
+			"by": "RJ Bunty, Riverside FM",
+			"track": "song_roast",
+			"bpm": 100,
+			"intro": 2,
+			"bars_per_line": 2,
+			"outro": 2,
+			"lines": [
+				{"say": "rj", "text": "Doctor, doctor, your handwriting's a crime. The chemist needs a priest every time."},
+				{"say": "rj", "text": "You said, just a small prick. It was not small. It was a lie."},
+				{"say": "rj", "text": "Ordered every test the lab can do. For a sprained ankle. Well done, you."},
+				{"say": "rj", "text": "Doctor, doctor, eleven missed calls from your mum. Pick up. She's found a rishta."},
+				{"say": "rj", "text": "Ten years of medical college. Still can't find a parking space."},
+				{"say": "rj", "text": "You're fine, go home, drink water. That's it? That's the whole degree?"},
+				{"say": "rj", "text": "Doctor, doctor, we love you, it's true. But wash your hands. We saw you."},
+				{"say": "rj", "text": "That was a request from bed four. He's still waiting for his discharge."}
+			]
+		}
+	},
+	"requests": [
+		{"say": "rj", "song": "night", "text": "A request from Ward 4, bed two, for {called}. Thank you for the sleeping pill. He would like another one. Here's the night shift song."},
+		{"say": "rj", "song": "dal", "text": "This one's from Sister Grace to all the interns. Label your samples. And eat something. Her words, not mine. Here's the dal song."},
+		{"say": "rj", "song": "dal", "text": "Dedication from the canteen to whoever keeps stealing the green chillies. Mani knows. Mani always knows."},
+		{"say": "rj", "song": "night", "text": "For Doctor Sethi, from the night nurses. Your snoring is now on the rota. Here's the night shift song."},
+		{"say": "rj", "song": "roast", "text": "From cubicle three, for {called}. You were very gentle and you have nice shoes. That's the whole request. Here's the roast."},
+		{"say": "rj", "song": "roast", "text": "From Mr. Malhotra, to every department. The AC budget is final. Here's a song to sweat to."},
+		{"say": "rj", "song": "roast", "text": "For Doctor Iyer, from nobody, because everybody is scared of her. Anonymous. Very anonymous."},
+		{"say": "rj", "song": "night", "text": "Request from the lab. Please write the patient's name on the tube. Any name. We're not fussy."}
+	]
+}

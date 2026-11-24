@@ -8,7 +8,8 @@ extends Node
 ## Main adds the one Music node; scenes ask for a track with Music.cue(),
 ## which does nothing in tests and tools where there is no Music node.
 ## While someone speaks a line aloud the music dips (duck_for_speech), so
-## every word is clear.
+## every word is clear. While a song plays (SongPlayer) the background
+## steps right back (hold_for_song), and lines don't dip the song.
 
 const TRACKS := ["title", "hospital", "theatre", "night", "emergency", "sad"]
 const FADE := 1.4
@@ -18,6 +19,10 @@ const DUCK := -14.0
 const SPEECH_DUCK := -10.0
 
 static var player: Music
+## True while a song is playing over the background music.
+static var song_on := false
+## How far the background steps back under a song, in dB.
+const SONG_HOLD := -32.0
 
 ## The track playing (or fading in) now, or "".
 var track := ""
@@ -60,6 +65,16 @@ static func current() -> String:
 	if player != null and is_instance_valid(player):
 		return player.track
 	return ""
+
+
+## Steps the background music back while a song plays, and brings it back
+## after.
+static func hold_for_song(on: bool) -> void:
+	if on == song_on:
+		return
+	song_on = on
+	if player != null and is_instance_valid(player):
+		player.set_song_hold(on)
 
 
 ## Dips the music while a line is spoken aloud, and brings it back after.
@@ -105,6 +120,9 @@ func is_ducked_for_speech() -> bool:
 
 
 func set_speech_duck(on: bool) -> void:
+	if on and song_on:
+		# A song's own singers don't dip it.
+		on = false
 	if on == _speech_ducked:
 		return
 	_speech_ducked = on
@@ -139,7 +157,20 @@ func play_track(track_name: String) -> void:
 	next.stream = stream(track_name)
 	next.volume_db = -40.0
 	next.play()
-	_fade(next, 0.0, false)
+	_fade(next, SONG_HOLD if song_on else 0.0, false)
+
+
+func set_song_hold(on: bool) -> void:
+	if on:
+		set_speech_duck(false)
+	if _players.is_empty() or not is_inside_tree():
+		return
+	var current := _players[_active]
+	if not current.playing:
+		return
+	var hold := create_tween()
+	hold.tween_property(current, "volume_db", SONG_HOLD if on else 0.0, 0.6 if on else 1.6)
+	_tweens.append(hold)
 
 
 func play_fanfare() -> void:

@@ -154,6 +154,8 @@ static func items(profile: PlayerProfile) -> Array:
 			found.append(news_post(profile, day))
 		if Outbreak.starts_on(profile.count("hospital_seed"), day):
 			found.append(outbreak_post(profile, day))
+	# How the colleagues' asks went (stage 26).
+	found.append_array(Lives.items(profile))
 	return found
 
 
