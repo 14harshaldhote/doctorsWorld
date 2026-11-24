@@ -23,6 +23,9 @@ Tracks:
   emergency  urgent strings and drums for a crash call (D minor)
   sad        slow piano and strings for bad news (A minor)
   fanfare    a short flourish for a promotion; it does not loop
+  party      the parties' dhol: a bright, bouncy loop at 112 for dancing
+             (G mixolydian); its first beat is at 0.0 s and the dance-off
+             counts on that
 
 The songs (story/songs.json) play once, start to end, under lines half sung,
 half chanted by the characters. Each reads its tempo and bar plan from
@@ -788,6 +791,90 @@ def fanfare():
 
 # --- The songs -----------------------------------------------------------------
 
+def dhol(vel=0.7, seed=0):
+    """The dhol's big side: a deep boom with a slap of skin on top."""
+    rng = np.random.default_rng(seed + 1500)
+    t = _time(0.7)
+    sweep = 70.0 + 70.0 * np.exp(-t * 26.0)
+    body = np.sin(2 * np.pi * np.cumsum(sweep) / RATE) * np.exp(-t * 6.5)
+    skin = lowpass(highpass(rng.standard_normal(len(t)), 400, 1), 2400) * np.exp(-t * 55.0) * 0.35
+    return (body + skin) * 0.5 * vel
+
+
+def tilli(vel=0.6, seed=0):
+    """The dhol's thin side, hit with a cane: a bright, short crack."""
+    rng = np.random.default_rng(seed + 1700)
+    t = _time(0.18)
+    ring = np.sin(2 * np.pi * 420.0 * t) * np.exp(-t * 38.0) * 0.4
+    crack = lowpass(highpass(rng.standard_normal(len(t)), 1800, 2), 8000) * np.exp(-t * 60.0)
+    return (ring + crack) * 0.16 * vel
+
+
+def party():
+    """The parties' dhol (Diwali on the terrace, the farewell, the wedding
+    floor): dhol and claps on every beat so a dancer can always find it,
+    a plucked high riff, brass on the turn. Bar 0 counts in."""
+    song = Song(112, 32, seed=29)
+    chords = {"G": ("D3 G3 B3 D4", "G2"), "F": ("C3 F3 A3 C4", "F2"), "C": ("C3 E3 G3 C4", "C3"),
+              "D": ("D3 F#3 A3 D4", "D2")}
+    # A: the riff over G; B: up to C, the brass takes the tune. 68 s round.
+    plan = ["G", "G", "F", "G", "G", "G", "F", "C",
+            "G", "F", "C", "G", "G", "G", "F", "D",
+            "C", "C", "G", "G", "F", "F", "G", "D",
+            "C", "C", "G", "G", "F", "F", "G", "D"]
+    # Two bars each (lengths in beats).
+    riff_g = phrase("G5:0.5 G5:0.5 B5:0.5 D6:0.5 C6:0.5 B5:0.5 A5:1 G5:0.5 A5:0.5 B5:0.5 G5:0.5 A5:2")
+    riff_fc = phrase("F5:0.5 F5:0.5 A5:0.5 C6:0.5 A5:0.5 G5:0.5 F5:1 E5:0.5 G5:0.5 C6:0.5 G5:0.5 E5:2")
+    riff_fd = phrase("F5:0.5 F5:0.5 A5:0.5 C6:0.5 A5:0.5 G5:0.5 F5:1 F#5:0.5 A5:0.5 D6:0.5 A5:0.5 F#5:2")
+    riff_c = phrase("E5:0.5 G5:0.5 C6:0.5 G5:0.5 E5:0.5 G5:0.5 C6:1 D6:0.5 C6:0.5 G5:0.5 E5:0.5 G5:2")
+    riff_f = phrase("F5:0.5 A5:0.5 C6:0.5 A5:0.5 F5:0.5 A5:0.5 C6:1 D6:0.5 C6:0.5 A5:0.5 F5:0.5 A5:2")
+    hook_c = phrase("C5:1 E5:0.5 G5:0.5 r:0.5 G5:0.5 A5:0.5 G5:0.5 E5:2 r:2")
+    hook_f = phrase("F5:1 A5:0.5 C6:0.5 r:0.5 C6:0.5 D6:0.5 C6:0.5 A5:2 r:2")
+    for bar, name in enumerate(plan):
+        chord_text, root = chords[name]
+        chord = voicing(chord_text)
+        low = bass_note(root)
+        start = bar * 4
+        # The chaal: boom on every beat, the cane on the "and"s.
+        for beat in range(4):
+            song.put("dhol", dhol(0.95 if beat == 0 else 0.75, bar * 4 + beat), start + beat)
+            song.put("dhol", tilli(0.7 if beat % 2 else 0.5, bar * 8 + beat), start + beat + 0.5, pan=0.2)
+        song.put("dhol", tilli(0.45, bar * 8 + 5), start + 3.75, pan=0.2)
+        if bar % 2 == 1:
+            song.put("dhol", dhol(0.55, bar * 4 + 9), start + 3.5)
+        for beat in (1, 3):
+            song.put("claps", clap(0.7, bar * 2 + beat), start + beat, pan=-0.15)
+        for step in range(8):
+            song.put("claps", shaker(0.6 if step % 2 else 0.4, bar * 8 + step), start + step * 0.5, pan=0.35)
+        for beat, number, length in ((0, low, 0.45), (1.5, low, 0.3), (2, low + 7, 0.4), (3, low + 12, 0.25),
+                                     (3.5, low + 7, 0.25)):
+            song.put("bass", bass(number, length * song.beat, 0.7), start + beat)
+        for beat in (0.5, 1.5, 2.5, 3.5):
+            song.chord("keys", epiano, chord, start + beat, 0.22, spread=0.35, vel=0.28)
+        if bar % 4 == 3:
+            song.chord("brass", brass, [n + 12 for n in chord[1:]], start + 2.5, 0.35, vel=0.65)
+            song.chord("brass", brass, [n + 12 for n in chord[1:]], start + 3.0, 0.8, vel=0.75)
+    # The plucked riff answers itself, then rests, so it never nags.
+    for offset, riff in ((16, riff_g), (24, riff_fc), (48, riff_g), (56, riff_fd), (64, riff_c), (80, riff_f)):
+        song.notes("riff", kalimba, riff, pan=0.25, vel=0.6, offset=offset)
+        song.notes("riff", kalimba, [(b, n - 12, l) for b, n, l in riff], pan=-0.25, vel=0.35, offset=offset)
+    for offset, hook in ((96, hook_c), (112, hook_f)):
+        song.notes("brass", brass, hook, pan=-0.1, vel=0.7, offset=offset)
+        song.notes("brass", brass, [(b, n - 12, l) for b, n, l in hook], pan=0.15, vel=0.5, offset=offset)
+    for bar in (0, 8, 16, 24):
+        song.put("dhol", crash(0.45 if bar % 16 == 0 else 0.3, bar + 3), bar * 4, human=0)
+    for bar in (15, 31):
+        song.put("dhol", swell(4 * song.beat, 0.5, bar), bar * 4, human=0)
+    return song.mix({
+        "dhol": {"lp": 7500, "gain": 0.85, "send": 0.12},
+        "claps": {"gain": 0.5, "send": 0.15},
+        "bass": {"lp": 900, "gain": 0.7, "send": 0.03},
+        "keys": {"lp": 3600, "gain": 0.5, "send": 0.2},
+        "brass": {"lp": 4200, "gain": 0.6, "send": 0.3},
+        "riff": {"lp": 6000, "gain": 0.55, "send": 0.3},
+    }, reverb=0.18, rt60=1.4, loudness=LOOP_LOUDNESS)
+
+
 def song_shape(song_id):
     """A song's tempo and bar plan from story/songs.json, the same numbers
     the game times the lines by: (bpm, intro bars, bars a line, lines,
@@ -977,7 +1064,7 @@ def song_roast():
 
 
 TRACKS = (("title", title), ("hospital", hospital), ("theatre", theatre), ("night", night),
-          ("emergency", emergency), ("sad", sad), ("fanfare", fanfare),
+          ("emergency", emergency), ("sad", sad), ("fanfare", fanfare), ("party", party),
           ("song_night", song_night), ("song_dal", song_dal), ("song_roast", song_roast))
 
 

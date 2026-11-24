@@ -10,7 +10,8 @@ extends RefCounted
 ##   breathers  a toast and a voice anywhere (the radio plays a song)
 ##   colleagues on a day one of them wants to ask (Lives), they walk up to
 ##              the doctor standing on the ward and the conversation plays;
-##              then they go back to what they were doing
+##              then they go back to what they were doing. Mum does the same
+##              when nobody has called home for days (Life, stage 27)
 ##   songs      the night nurses' song late on a night shift, the canteen's
 ##              jingle at lunchtime every few days, with the words on screen
 ##
@@ -301,6 +302,10 @@ func _maybe_side() -> void:
 		return
 	if ward.shift != null and ward.shift.director != null and ward.shift.director.tension >= float(Feelings.rule("hard", 55)):
 		return
+	# Nobody has called home for days (stage 27, Life): Mum comes herself.
+	if not ward.night and Life.mum_due(profile) and profile.count(Life.MUM) != profile.day:
+		start_mum()
+		return
 	var arc := Lives.today(profile)
 	if arc.is_empty():
 		return
@@ -313,11 +318,22 @@ func _maybe_side() -> void:
 
 ## A colleague walks up to ask (also for tests and screenshots).
 func start_side(arc: String) -> void:
-	var who := Lives.who(arc)
+	_visit(Lives.who(arc), Lives.talk(arc), arc)
+
+
+## Mum walks onto the ward with rajma (also for tests and screenshots).
+## Sister Grace has a word if she's on the ward.
+func start_mum() -> void:
+	var grace := ward.rig_for("grace")
+	ward.profile.set_flag("lf_grace_here", grace != null and grace.visible)
+	_visit("mum", str(Life.rule("visit_talk", "lf_mum_visit")), "")
+
+
+func _visit(who: String, talk: String, arc: String) -> void:
 	var rig := ward.rig_for(who)
 	if rig == null:
 		return
-	side = {"arc": arc, "who": who, "talk": Lives.talk(arc), "phase": "walking", "clock": 0.0,
+	side = {"arc": arc, "who": who, "talk": talk, "phase": "walking", "clock": 0.0,
 		"was": {"visible": rig.visible, "position": rig.position, "turn": rig.rotation.y}}
 	if not rig.visible:
 		ward.put(who, "door")
@@ -325,7 +341,10 @@ func start_side(arc: String) -> void:
 	ward.player.moving = 0.0
 	ward.hud.set_talking(true)
 	var name := str(StoryBook.cast().get(who, {}).get("name", who))
-	ward.hud.toast("%s is coming over." % (name if name.begins_with("Dr.") or name.begins_with("Sister") else name.split(" ")[0]))
+	if who == "mum":
+		ward.hud.toast("Is that Mum? On Ward 4? With a steel dabba?")
+	else:
+		ward.hud.toast("%s is coming over." % (name if name.begins_with("Dr.") or name.begins_with("Sister") else name.split(" ")[0]))
 	var towards := rig.position - ward.player.position
 	towards.y = 0.0
 	if towards.length() > SIDE_REACH + 0.2:
@@ -354,7 +373,10 @@ func _tick_side(delta: float) -> void:
 func talk_finished(key: String) -> bool:
 	if side.is_empty() or key != str(side["talk"]):
 		return false
-	Lives.asked(ward.profile, str(side["arc"]))
+	if not str(side["arc"]).is_empty():
+		Lives.asked(ward.profile, str(side["arc"]))
+	elif str(side["who"]) == "mum":
+		Life.mum_came(ward.profile)
 	var who := str(side["who"])
 	var was: Dictionary = side["was"]
 	side = {}

@@ -945,6 +945,86 @@ phone's Radio app plays any of them and the day's request
 The screenshot tool sets `WardFeelings.hold`, so nothing comes round by
 itself in the other shots.
 
+## Evenings and parties
+
+`story/life.json` holds the rules (`first_day`, `start`, `wake`,
+`good_sleep`, `worst_sleep`, `hungry_sleep`, `home_every`), the evening's
+activities with their costs on the clock, the canteen (`staff` per stretch of
+the story, `chai` talks and `tips` per colleague, `mani`), the hostel
+(`eats`, `walks`, `studies`, `scrolls`), `sleep_lines`, `mum_texts`, the
+calls home (`calls`, each a talk in `story/evenings.json`, some with an
+`if`), and the parties. `Life` reads it; everything it keeps is a profile
+counter (names at the top of `game/core/life.gd`), so it is in the morning
+snapshot and nothing runs per frame.
+
+**When.** Every finished day on Ward 4 from `first_day` that isn't a night
+shift has an evening (`Life.has_evening`). `Main._close_day` calls
+`Life.day_closed`, which marks it due (`life_due`) with the minute the doctor
+left; `Main.show_hospital` plays it first while `Life.evening_due` holds, so
+a save from before evenings existed, or a day restarted from the title, is
+never owed one. Closing the game mid-evening starts it again: nothing is kept
+until `Life.go_to_bed`.
+
+**The evening.** `Evening` (game/world/evening.gd) builds an `EveningSet`
+(the canteen, the hostel room, and the party places, all from shared
+pieces with the same `you`, `g1`..`g7` and `door` spots and `wide`, `talk`,
+`game` shots; a shot may set `offset` and `lift` for the camera's h/v
+offsets, and `play_spots` says where the doctor and the rival stand for a
+game). `EveningPanel` lists what there's time for and "Go to bed".
+`choose(id)` does one: chai with one of tonight's two colleagues
+(`Life.staff_tonight`, `Life.had_chai`: a talk, a little trust, and their
+tip for the next day's kind, `Life.kind_of`, shown again in the morning),
+the radio (the "roast" song through `SongPlayer`), the walk to the hostel,
+the call home (`Life.call_for`: a lost patient, a promotion, Mum's visit or
+the first call first, then the ordinary ones in turn; `CallFrame` dresses
+the screen as a video call with the family built off-camera at
+`EveningSet.FAMILY`), food, study or scrolling. `go_to_bed()` ends it with a
+lights-out card. Tests drive it with `update(delta)` and
+`play_until(condition, reply, skill, seconds)`.
+
+**Sleep.** `Life.sleep_hours(bed, ate)` counts to the alarm (`wake`), less
+`hungry_sleep` on an empty stomach. The next morning `Life.morning` gives a
+toast with the hours and the tip, and `Life.tremor` (0 at `good_sleep` hours
+or more, 1 at `worst_sleep` or less) is handed to `OperationTask.tremor`,
+which wobbles the scalpel and the needle by up to `TREMOR_REACH`;
+`OperationView` says so in its kicker from `OperationTask.SHAKY`.
+
+**Home.** `Life.days_without_home` counts from the first evening, so a career
+from before evenings isn't owed calls. From two days, each morning keeps a
+nag counter and `Life.items` gives Mum's message for the phone (each text
+once a stretch: she escalates, never repeats). Past `home_every` days
+`Life.mum_due` holds and `WardFeelings` sends Mum up to Ward 4 like a
+colleague's ask (`start_mum`, talk `lf_mum_visit`, with a line from Sister
+Grace when she's on the ward); `Life.mum_came` counts it.
+
+**Parties.** Each party in `parties` has a `day` (fixed), an `arc` (Dr.
+Khan's reception: the first free evening after her `khan_wedding` ask), or
+comes round in `repeat` (from Day 31, every 7 days). It names its place
+(`where`), the talk, its `guests`, the game (`carrom`, `antakshari`,
+`dance` or `speech`) and `against` whom, `bed`, `xp`, and for a pager night
+the flag for leaving (`left`, with `left_bed`). The talk's steps can say
+`{"do": "game"}`, `{"do": "page"}` (the pager card over the scene, from
+`pages`, with the `left_cards` card after if the doctor goes) and
+`{"do": "arrive", ...}` (someone walks in late: Varun at Dr. Rao's
+farewell). `Life.went` gives trust with every guest who has a meter and the
+XP; `Life.skipped` takes a little. The game's result sets
+`Life.result_flag(id, result)` for the talk's `if`.
+
+**The games** (game/ui/games/) extend `MiniGame`: a card on the right with
+the title, one line on how to play, a score line, the play area (which
+scrolls only if it can't fit) and "Sit out" (a loss). Time passes only
+through `tick()`, and `auto_step(skill)` plays a move for the tests and the
+screenshot tool. `CarromGame` runs fixed-step physics on a 2x2 board, three
+strikes each, ties to the doctor. `AntakshariGame` offers three songs (one
+right, one already sung or wrong, one with the wrong letter) against
+`seconds`; the other side forgets the words `miss` of the time, and ties go
+to them. `DanceGame` plays `assets/music/party.ogg` (made by
+`tools/make_music.py party` at the game's BPM) and judges taps against the
+heard audio time, falling back to the frame clock if the two drift apart by
+more than `DRIFT`. `SpeechGame` plays a speech from `speeches`, a line at a
+time from three; the points give `great`, `ok` or `flop` against its
+thresholds.
+
 ## The phone
 
 `story/phone.json` holds the phone's people (`contacts`: a name, a colour, a

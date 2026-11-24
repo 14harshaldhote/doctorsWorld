@@ -137,6 +137,8 @@ VOICES = {
     "mani": {"mix": {"hm_omega": 0.6, "am_michael": 0.4}, "speed": 1.04},
     "boy": {"mix": {"af_sky": 0.55, "hf_beta": 0.3, "hm_psi": 0.15}, "speed": 1.05, "child": True},
     "girl": {"mix": {"af_sky": 0.5, "hf_alpha": 0.5}, "speed": 1.06, "child": True},
+    # Stage 27: Dr. Varun Khanna, the batchmate at CarePlus, in person at last.
+    "varun": {"mix": {"hm_psi": 0.5, "am_echo": 0.3, "am_fenrir": 0.2}, "speed": 1.07},
     # The people casualty makes up (PatientVoices, story/patients.json): a
     # young, a middle-aged and an old voice for men and for women, a warmer
     # and a sharper one where there's room, so a temper sounds like itself.

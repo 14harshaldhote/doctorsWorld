@@ -11,7 +11,7 @@ extends Node
 ## every word is clear. While a song plays (SongPlayer) the background
 ## steps right back (hold_for_song), and lines don't dip the song.
 
-const TRACKS := ["title", "hospital", "theatre", "night", "emergency", "sad"]
+const TRACKS := ["title", "hospital", "theatre", "night", "emergency", "sad", "party"]
 const FADE := 1.4
 ## How far the music dips while the fanfare plays, in dB.
 const DUCK := -14.0

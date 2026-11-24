@@ -146,12 +146,14 @@ static func asked(profile: PlayerProfile, id: String) -> void:
 	PhoneBook.forget()
 
 
-## The day the message about how it went arrives.
+## The day the message about how it went arrives: never before the evening
+## of the party the arc invited the doctor to (Life), if it has one.
 static func payoff_day(profile: PlayerProfile, id: String) -> int:
 	var after: Array = arc(id).get("after", [1, 2])
 	var low := int(after[0])
 	var spread := maxi(1, int(after[1]) - low + 1)
-	return asked_on(profile, id) + low + _roll(profile, "payoff|" + id) % spread
+	var day := asked_on(profile, id) + low + _roll(profile, "payoff|" + id) % spread
+	return maxi(day, Life.reception_day(profile, id) + 1)
 
 
 ## How it went, in the colleague's words, for what the doctor said ("" when

@@ -546,6 +546,9 @@ func _ward_shots() -> void:
 	# Stage 26: the director and feelings.
 	await _feelings_shots()
 
+	# Stage 27: life outside the wards.
+	await _life_shots()
+
 
 ## The career map over the ward: the road and the race, a Chief's road,
 ## the wall of letters, one letter open, and the end card with the post.
@@ -1125,6 +1128,157 @@ func _feelings_shots() -> void:
 		Speech.stop()
 		goat.settle_camera()
 		goat.set_process(false))
+
+
+## The evening after a finished day, as Main would open it.
+static func _evening_after(finished: int, flags: Array = []) -> Evening:
+	var doctor := sample_profile_on_ward(finished + 1, flags)
+	doctor.set_count("hospital_seed", 2026)
+	return Evening.new(doctor, finished, 18 * 60 + 40)
+
+
+## Plays an evening on (games played well) until a condition holds, the
+## line on screen typed out in full.
+static func _evening_until(evening: Evening, shot_name: String, condition: Callable, reply: int = 0) -> void:
+	if not evening.play_until(condition, reply, 0.8, 400.0):
+		push_error("%s: the evening never got there" % shot_name)
+	if evening.ui.is_typing():
+		evening.ui.finish_typing()
+
+
+## A party on its evening, played on to a moment.
+func _party_shot(shot_name: String, finished: int, flags: Array, moment: Callable, reply: int = 0) -> void:
+	var evening := _evening_after(finished, flags)
+	await _shot(shot_name, evening, func() -> void:
+		evening.choose("party")
+		_evening_until(evening, shot_name, moment.bind(evening), reply)
+		evening.set_process(false))
+
+
+func _life_shots() -> void:
+	# The canteen after Day 5: Mani, two colleagues on late, the evening's menu.
+	var canteen := _evening_after(5)
+	await _shot("200-evening-canteen", canteen, func() -> void:
+		canteen.update(0.8)
+		canteen.set_process(false))
+	# Chai: who to sit with.
+	var chai := _evening_after(5)
+	await _shot("201-evening-chai", chai, func() -> void:
+		chai.choose("canteen")
+		_evening_until(chai, "201-evening-chai", func() -> bool: return chai.ui.is_choosing())
+		chai.set_process(false))
+	# Mani's radio: the roast, the words along the bottom.
+	var radio := _evening_after(5)
+	await _shot("202-evening-radio", radio, func() -> void:
+		radio.choose("radio")
+		while radio.songs.playing() and radio.songs.line < 1:
+			radio.update(0.1)
+		if radio.banner == null:
+			push_error("202-evening-radio: no words on screen")
+		else:
+			radio.banner.refresh()
+		radio.set_process(false))
+	# The hostel room: dinner, a call home, reading up, scrolling.
+	var room := _evening_after(5)
+	await _shot("203-evening-hostel", room, func() -> void:
+		room.choose("hostel")
+		_evening_until(room, "203-evening-hostel", func() -> bool: return room.phase == "menu" and room.where == "hostel_room")
+		room.update(0.8)
+		room.set_process(false))
+	# Home on the laptop: the first call.
+	var call := _evening_after(5)
+	await _shot("204-evening-call", call, func() -> void:
+		call.choose("hostel")
+		_evening_until(call, "204-evening-call", func() -> bool: return call.phase == "menu" and call.where == "hostel_room")
+		call.choose("call")
+		_evening_until(call, "204-evening-call", func() -> bool:
+			return call.ui.is_choosing() or (call.story.runner.history.size() >= 2 and not call.ui.is_typing()))
+		call.set_process(false))
+	# Lights out late, hungry: the card says what that does to the morning.
+	var late := _evening_after(5)
+	await _shot("205-evening-lights-out", late, func() -> void:
+		late.minutes = 25 * 60 + 10
+		late.choose("bed")
+		for frame in 45:
+			late.update(1.0 / 30.0)
+		late.set_process(false))
+	# Diwali on the terrace.
+	await _party_shot("206-party-diwali", 10, [], func(e: Evening) -> bool:
+		return e.talking == "party" and e.story.runner.history.size() >= 3 and not e.ui.is_typing())
+	# Antakshari against Sister Grace.
+	await _party_shot("207-game-antakshari", 10, [], func(e: Evening) -> bool:
+		return e.game is AntakshariGame and (e.game as AntakshariGame).round_index >= 2 \
+			and (e.game as AntakshariGame).state == "choose")
+	# The pager, mid-party: stay or go.
+	await _party_shot("208-party-pager", 10, [], func(e: Evening) -> bool:
+		return e.pager != null and e.ui.is_choosing())
+	# Carrom in the hostel against Varun.
+	var carrom := _evening_after(7)
+	await _shot("209-game-carrom", carrom, func() -> void:
+		carrom.choose("party")
+		_evening_until(carrom, "209-game-carrom", func() -> bool: return carrom.game is CarromGame)
+		var board := carrom.game as CarromGame
+		for frame in 900:
+			if board.strikes >= 2 and board.state == "aim" and board.my_turn():
+				break
+			board.auto_step(0.8)
+			board.tick(1.0 / 30.0)
+		carrom.set_process(false))
+	# Sister Grace's birthday: a toast, a line at a time.
+	await _party_shot("210-game-speech", 17, [], func(e: Evening) -> bool:
+		return e.game is SpeechGame and (e.game as SpeechGame).state == "choose")
+	# Dr. Khan's reception: the dance-off.
+	var dance := _evening_after(13)
+	dance.profile.set_count(Lives.PREFIX + "khan_wedding", 12)
+	await _shot("211-game-dance", dance, func() -> void:
+		dance.choose("party")
+		_evening_until(dance, "211-game-dance", func() -> bool: return dance.game is DanceGame)
+		var floor_game := dance.game as DanceGame
+		for frame in 360:
+			floor_game.auto_step(0.85)
+			dance.update(1.0 / 30.0)
+		dance.set_process(false))
+	# Dr. Rao's farewell, and Varun walks in with flowers.
+	await _party_shot("212-varun-arrives", 23, [], func(e: Evening) -> bool:
+		var varun: AvatarRig = e.current_set.actors.get("varun")
+		return varun != null and varun.visible and not e.story.is_walking("varun") and e.ui.is_open() \
+			and e.ui.line_text().length() > 0 and not e.ui.is_typing())
+	# Mum on Ward 4, with a steel dabba.
+	var mum := Ward.new(sample_profile_on_ward(10, ["beds_checked", "casualty_intro"]))
+	mum.profile.set_count("hospital_seed", 2026)
+	Life.go_to_bed(mum.profile, 4, 22 * 60, true)
+	await _shot("213-mum-on-ward", mum, func() -> void:
+		mum.play_until(func() -> bool: return mum.mode == "walk" and mum.place == "ward",
+			Ward.pick_tones(["Patient first", "Honest", "Calm"]))
+		mum._toasts.clear()
+		mum.feelings.start_mum()
+		for frame in int((WardFeelings.SIDE_TIMEOUT + 1.0) * 30.0):
+			mum.update(1.0 / 30.0)
+			if mum.story.is_playing() and mum.talk_ui.line_text().length() > 0:
+				break
+		mum.play_until(func() -> bool: return mum.talk_ui.is_choosing(), Callable(), null, 30.0)
+		Speech.stop()
+		mum.settle_camera()
+		mum.set_process(false))
+	# The morning after a short night: how long you slept, and the tip from chai.
+	var tired := Ward.new(sample_profile_on_ward(12, ["beds_checked", "casualty_intro"]))
+	tired.profile.set_count("hospital_seed", 2026)
+	Life.go_to_bed(tired.profile, 11, 25 * 60 + 40, false)
+	await _shot("214-morning-tired", tired, func() -> void:
+		tired.play_until(func() -> bool: return tired.mode == "walk" and tired.place == "ward",
+			Ward.pick_tones(["Patient first", "Honest", "Calm"]))
+		for frame in 60:
+			tired.update(1.0 / 30.0)
+		tired.settle_camera()
+		tired.set_process(false))
+	# Mum's texts when home hasn't heard from you.
+	await _phone_shot("215-phone-mum", 12, 13 * 60 + 40, [], func(w: Ward, p: PhonePanel) -> void:
+		Life.go_to_bed(w.profile, 5, 23 * 60, true)
+		# Three mornings without a call: she escalates.
+		for day in [7, 8, 9]:
+			w.profile.set_count(Life.NAG + str(day), day - 5)
+		PhoneBook.forget()
+		p.open_chat("mum"))
 
 
 ## An old man in casualty, in a cubicle, and the moment open with him.

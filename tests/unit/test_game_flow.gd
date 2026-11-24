@@ -213,6 +213,7 @@ func test_going_home_after_training_leads_to_theatre_day_and_then_the_ward() -> 
 ## Waits for a drill's card between days, then skips it, or plays it well
 ## and goes on. Returns the XP the drill gave.
 func _past_drill(main: Main, play: bool = false) -> int:
+	_past_evening(main)
 	var lab := main.screen as SkillsLab
 	if lab == null or lab.drill.is_empty():
 		return 0
@@ -231,6 +232,15 @@ func _past_drill(main: Main, play: bool = false) -> int:
 	var earned := main.profile.total_xp - before
 	lab.view.done_pressed.emit()
 	return earned
+
+
+## The evening after a ward day (stage 27), if there is one: straight to bed.
+func _past_evening(main: Main) -> void:
+	var evening := main.screen as Evening
+	if evening == null:
+		return
+	evening.choose("bed")
+	evening.play_until(func() -> bool: return main.screen != evening, 0, 0.7, 60.0)
 
 
 ## Plays a lobby conversation to its end: the one on show, or a new one

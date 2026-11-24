@@ -1,0 +1,230 @@
+{
+	"_about": "Stage 27, life outside the wards. After every day on Ward 4 (not after a night shift) the doctor has an evening: chai in the canteen with whoever is on late, the hostel room, a video call home, food, and bed. When the doctor goes to bed decides how steady their hands are in theatre the next day. Nobody calling home for four evenings brings Mum to the ward. Some evenings are parties, with a game. Read by Life; the conversations are in evenings.json.",
+	"first_day": 4,
+	"start": 1140,
+	"wake": 390,
+	"good_sleep": 6.5,
+	"worst_sleep": 4.0,
+	"hungry_sleep": 0.5,
+	"home_every": 4,
+	"activities": {
+		"party": {"minutes": 0},
+		"canteen": {"title": "Chai in the canteen", "sub": "Mani's chai, whoever's on late, and the gossip", "minutes": 40},
+		"radio": {"title": "Ask Mani to turn up the radio", "sub": "Riverside FM, one song", "minutes": 5},
+		"hostel": {"title": "Back to the hostel", "sub": "Ten minutes' walk, five if it's raining", "minutes": 12},
+		"call": {"title": "Video call home", "sub": "Mum, Dad and Anu, all talking at once", "minutes": 30},
+		"eat": {"title": "Eat something", "sub": "Something that isn't a biscuit", "minutes": 20},
+		"study": {"title": "Read up on tomorrow", "sub": "The textbook is heavier than your eyelids", "minutes": 60, "xp": 15},
+		"scroll": {"title": "Scroll in bed", "sub": "Just five minutes. It is never five minutes", "minutes": 45},
+		"bed": {"title": "Go to bed", "sub": "Lights out"}
+	},
+	"walks": [
+		"The security guard salutes, then asks about his BP. Free consultation number four this week.",
+		"A stray dog walks you to the gate, like every night. Better attendance than the interns.",
+		"It's drizzling. An auto driver quotes surge pricing with a straight face. You walk.",
+		"The chai stall outside is shutting. The owner pours you the last half cup for free. It's mostly sugar."
+	],
+	"studies": {
+		"theatre": "Tomorrow's a theatre day. You read the steps of the operation twice, then dream about them in the wrong order.",
+		"review": "Review tomorrow. You make flashcards. The flashcards make you anxious. Classic.",
+		"meeting": "A meeting tomorrow. You read the agenda and three emails that say 'as discussed'. Nothing was discussed.",
+		"ward": "Bailey and Love, chapter whatever. You remember two things, and one of them is even useful.",
+		"night": "A night shift tomorrow. You read the chest pain protocol and try to remember what sleep felt like."
+	},
+	"scrolls": [
+		"Varun posted his new car. Then a reel about gratitude. Then the car again, from a different angle.",
+		"Forty-five minutes of videos about surgeons. One of them has you in the background, yawning. Eleven likes.",
+		"The family group has 214 new messages. Dad has forwarded the same good morning rose nine times. It's night.",
+		"A reel says doctors should sleep eight hours. You save it. You will never open it again.",
+		"A thread about whether hospital food counts as a human rights issue. You agree with everyone in it.",
+		"Anu has posted your old room, captioned: it's mine now. It is."
+	],
+	"mani": [
+		{"say": "mani", "text": "Doctor! Chai? Of course chai. What else is there in life. Sit, sit.", "mood": "happy"},
+		{"say": "mani", "text": "Last batch of samosas, Doctor. They're from the afternoon. They've seen things.", "mood": "calm"},
+		{"say": "mani", "text": "The machine is broken, so it's my hands today. Better, actually. Don't tell the management.", "mood": "happy"},
+		{"say": "mani", "text": "Doctor, you look like the night shift and you're not even on it. Chai, double sugar. My orders.", "mood": "calm"}
+	],
+	"staff": {
+		"ward": ["priya", "tom", "grace", "khan", "sethi", "iyer"],
+		"junior": ["priya", "tom", "grace", "khan", "sethi", "iyer"],
+		"senior": ["priya", "tom", "grace", "khan", "zoya", "iyer"],
+		"surgeon": ["priya", "tom", "grace", "khan", "zoya", "neha", "iyer"],
+		"hod": ["priya", "tom", "grace", "khan", "zoya", "neha", "iyer"],
+		"chief": ["priya", "tom", "grace", "khan", "zoya", "neha", "iyer", "saxena"]
+	},
+	"chai": {
+		"priya": ["ch_priya_1", "ch_priya_2"],
+		"tom": ["ch_tom_1", "ch_tom_2"],
+		"grace": ["ch_grace_1", "ch_grace_2"],
+		"khan": ["ch_khan_1", "ch_khan_2"],
+		"sethi": ["ch_sethi_1", "ch_sethi_2"],
+		"zoya": ["ch_zoya_1", "ch_zoya_2"],
+		"neha": ["ch_neha_1", "ch_neha_2"],
+		"iyer": ["ch_iyer_1", "ch_iyer_2"],
+		"saxena": ["ch_saxena_1"]
+	},
+	"tips": {
+		"priya": [
+			{"for": "ward", "line": {"say": "priya", "text": "Free tip. In casualty, worry about the quiet ones on the bench. The loud ones are fine. Loud means breathing.", "mood": "focused"}, "short": "In casualty, worry about the quiet ones on the bench."},
+			{"for": "night", "line": {"say": "priya", "text": "If you're on tomorrow night, eat before ten. After ten the canteen is shut and the vending machine is a liar.", "mood": "calm"}, "short": "On a night, eat before ten."},
+			{"for": "any", "line": {"say": "priya", "text": "Read the drug chart twice. The second time you find the thing you didn't find the first time. Every time.", "mood": "calm"}, "short": "Read the drug chart twice."}
+		],
+		"tom": [
+			{"for": "theatre", "line": {"say": "tom", "text": "Theatre tomorrow? Say the instrument's name in your head before you ask for it. Half the doctors ask for the wrong thing and blame my ears.", "mood": "calm"}, "short": "In theatre, name the instrument in your head first."},
+			{"for": "any", "line": {"say": "tom", "text": "When Dr. Iyer goes quiet in theatre, that's good. When she starts humming, run.", "mood": "happy"}, "short": "If Dr. Iyer starts humming in theatre, run."}
+		],
+		"grace": [
+			{"for": "review", "line": {"say": "grace", "text": "Review tomorrow. Be on time, wear a clean coat, and don't say basically. Nobody senior has ever liked basically.", "mood": "focused"}, "short": "At a review: on time, clean coat, never say basically."},
+			{"for": "any", "line": {"say": "grace", "text": "Write the time on everything. If it isn't written, it didn't happen. If it isn't timed, it happened whenever the lawyer says.", "mood": "focused"}, "short": "Write the time on everything."}
+		],
+		"khan": [
+			{"for": "theatre", "line": {"say": "khan", "text": "Operating tomorrow? Ask me about the airway before you ask about the cut. Surgeons forget the patient has a head.", "mood": "focused"}, "short": "Before the cut, ask about the airway."},
+			{"for": "night", "line": {"say": "khan", "text": "On a night, write down every call. At four in the morning you'll swear you never got a call you definitely got.", "mood": "calm"}, "short": "On a night, write down every call."},
+			{"for": "any", "line": {"say": "khan", "text": "If a patient says they feel like they're going to die, believe them. They're usually right, and always worth checking.", "mood": "focused"}, "short": "When a patient says they feel they're dying, check."}
+		],
+		"sethi": [
+			{"for": "night", "line": {"say": "sethi", "text": "On nights, see the sickest one first, even if the loudest relative is shouting. Relatives get louder. Patients get quieter.", "mood": "focused"}, "short": "On nights, sickest first, not loudest."},
+			{"for": "review", "line": {"say": "sethi", "text": "At the review, if you don't know, say you don't know, then say how you'd find out. That's the whole trick. Took me three years.", "mood": "calm"}, "short": "At a review, say you don't know, then how you'd find out."},
+			{"for": "any", "line": {"say": "sethi", "text": "Examine the belly every time. Scans are lovely. Hands are faster.", "mood": "calm"}, "short": "Examine the belly every time."}
+		],
+		"zoya": [
+			{"for": "theatre", "line": {"say": "zoya", "text": "Eat breakfast before theatre. Not optional. I fainted on a retractor once. The retractor was fine.", "mood": "tired"}, "short": "Eat breakfast before theatre."},
+			{"for": "any", "line": {"say": "zoya", "text": "Lowkey best hack: keep a biscuit in your coat. Not for you. For the patient's grandmother. Instant trust.", "mood": "happy"}, "short": "Keep a biscuit in your coat for the grandmothers."}
+		],
+		"neha": [
+			{"for": "theatre", "line": {"say": "neha", "text": "Tomorrow in theatre, count the swabs out loud with me. Not in your head. Swabs hide in silence.", "mood": "focused"}, "short": "Count the swabs out loud."},
+			{"for": "any", "line": {"say": "neha", "text": "Wash your hands where the patient can see you. They're watching. They're always watching.", "mood": "calm"}, "short": "Wash your hands where the patient can see."}
+		],
+		"iyer": [
+			{"for": "meeting", "line": {"say": "iyer", "text": "In a meeting, the person who speaks last usually wins. Say less, later.", "mood": "calm"}, "short": "In a meeting, say less, later."},
+			{"for": "any", "line": {"say": "iyer", "text": "Before you tell a family something hard, sit down. Standing makes it sound like you're leaving.", "mood": "calm"}, "short": "Sit down before you tell a family something hard."}
+		],
+		"saxena": [
+			{"for": "any", "line": {"say": "saxena", "text": "If a chart says the patient is well, go and look anyway. Charts are optimists.", "mood": "happy"}, "short": "If the chart says well, look anyway."}
+		]
+	},
+	"eats": [
+		{"title": "Maggi, again", "text": "Two packets, one kettle, no plate. The hostel's culinary tradition, older than the building's wiring."},
+		{"title": "Mum's thepla", "text": "The last of the parcel. Slightly squashed, entirely perfect. You eat it standing at the window like a raccoon with a medical degree."},
+		{"title": "The dhaba outside the gate", "text": "Dal, rice, and a roti that could stop a door. The owner asks for advice about his knee. Free consultation, free pickle."},
+		{"title": "Bread and an optimistic banana", "text": "The banana has opinions. You eat it anyway. Dinner is a state of mind."},
+		{"title": "Leftover biryani", "text": "From somebody's party, in a box with three names on it, none of them yours. Medicine is about tough decisions."}
+	],
+	"sleep_lines": [
+		[7.5, "Slept like a patient after morphine. Hands steady."],
+		[6.5, "A decent night. Hands steady enough."],
+		[5.0, "Not much sleep. Your hands will shake a little in theatre today."],
+		[0.0, "Barely slept. Your hands are shaking. Theatre will notice."]
+	],
+	"mum_texts": [
+		[2, "Beta, call when you're free. Not urgent. Just call."],
+		[3, "Your father says you're busy saving lives. Lives can spare five minutes for your mother."],
+		[4, "Okay. I'm coming. Don't tell your father, he'll want to bring his forwards."]
+	],
+	"calls": [
+		{"id": "vc_loss", "if": "lost_today", "with": ["mum"]},
+		{"id": "vc_promoted", "if": "promoted_today", "with": ["dad", "mum"]},
+		{"id": "vc_after_visit", "if": "mum_visited", "with": ["anu"]},
+		{"id": "vc_first", "if": "first_call", "with": ["mum", "dad", "anu"]},
+		{"id": "vc_food", "with": ["mum"]},
+		{"id": "vc_forwards", "with": ["dad"]},
+		{"id": "vc_anu_fest", "with": ["anu", "mum"]},
+		{"id": "vc_rishta", "with": ["mum", "dad"]},
+		{"id": "vc_neighbour", "with": ["mum", "anu"]}
+	],
+	"parties": {
+		"hostel_night": {"day": 7, "title": "Hostel night", "sub": "The batch, the common room, one carrom board with a crack in it", "where": "hostel", "talk": "pt_hostel", "guests": ["varun"], "game": "carrom", "against": "varun", "bed": 1410, "xp": 40},
+		"diwali": {"day": 10, "title": "Diwali on the terrace", "sub": "Ward 4's party: diyas, sweets, and no rockets this year", "where": "terrace", "talk": "pt_diwali", "guests": ["iyer", "grace", "priya", "tom", "khan"], "game": "antakshari", "against": "grace", "bed": 1485, "left": "pt_diwali_left", "left_bed": 1440, "xp": 40},
+		"grace_birthday": {"day": 17, "title": "Sister Grace's birthday", "sub": "She says she doesn't do birthdays. There's a cake with her face on it", "where": "breakroom", "talk": "pt_grace", "guests": ["grace", "priya", "tom", "zoya", "khan"], "game": "speech", "speech": "grace_toast", "bed": 1420, "left": "pt_grace_left", "left_bed": 1400, "xp": 40},
+		"khan_reception": {"arc": "khan_wedding", "title": "Dr. Khan's reception", "sub": "Three biryanis, two mothers, one dance floor", "where": "wedding", "talk": "pt_khan", "guests": ["khan", "varun", "priya", "tom"], "game": "dance", "against": "varun", "bed": 1470, "left": "pt_khan_left", "left_bed": 1530, "missed": "pt_khan_missed", "xp": 50},
+		"rao_farewell": {"day": 23, "title": "Dr. Rao's farewell", "sub": "Thirty-four years, one pen, no speeches. Officially", "where": "seminar", "talk": "pt_rao", "guests": ["rao", "iyer", "grace", "tom", "khan", "sethi", "varun"], "game": "speech", "speech": "rao_farewell", "bed": 1430, "xp": 60},
+		"carrom_night": {"title": "Carrom in the doctors' lounge", "sub": "Zoya has challenged the Chief. Loudly. In the group chat", "where": "hostel", "talk": "pt_carrom_night", "guests": ["zoya", "saxena"], "game": "carrom", "against": "zoya", "bed": 1410, "xp": 30},
+		"antakshari_night": {"title": "Antakshari night", "sub": "Nurses against doctors, a rematch nobody asked for", "where": "terrace", "talk": "pt_antakshari_night", "guests": ["priya", "grace", "tom", "zoya"], "game": "antakshari", "against": "priya", "bed": 1440, "xp": 30},
+		"sangeet_night": {"title": "Neha's cousin's sangeet", "sub": "Dhol, mehendi, and a man nobody invited", "where": "wedding", "talk": "pt_sangeet_night", "guests": ["neha", "varun", "priya", "zoya"], "game": "dance", "against": "varun", "bed": 1470, "left": "pt_sangeet_left", "left_bed": 1500, "xp": 30}
+	},
+	"repeat": {"from": 31, "every": 7, "parties": ["carrom_night", "antakshari_night", "sangeet_night"]},
+	"pages": {
+		"pt_diwali": "Casualty: man, 30, burn to the right hand. A rocket. Registrar's in theatre.",
+		"pt_grace": "Ward 4: bed 3's drip has tissued and the new nurse can't get a line.",
+		"pt_khan": "Casualty: an appendix that won't wait. Dr. Sethi is stuck in traffic.",
+		"pt_sangeet_night": "Casualty: a tourist has swallowed a fish bone. He says he's an influencer."
+	},
+	"left_cards": {
+		"pt_diwali_left": ["22:40 · Casualty", "A cold tap, a clean dressing, and a man who promises never to hold a rocket again. He's lying."],
+		"pt_grace_left": ["21:50 · Bed 3", "A new line on the first try, while the new nurse watches. Grace saves you the piece with her eyebrow."],
+		"pt_khan_left": ["00:10 · Theatre", "The appendix comes out angry but whole. You get home at half past one, smelling of biryani and surgical spirit."],
+		"pt_sangeet_left": ["23:30 · Casualty", "One fish bone, one tonsil, one influencer who films the forceps. He tags the hospital. Malhotra is thrilled."]
+	},
+	"antakshari": {
+		"rounds": 8,
+		"seconds": 8.0,
+		"miss": 0.25,
+		"titles": [
+			"Aankhon Mein Saline", "Ambulance Wali Raat", "Aaja Mere OPD", "Aadhi Raat Ka Ward",
+			"Bechari Night Shift", "Bas Ek Chai", "Bulbul Ka Bypass", "Bina Bleep Ke Raat",
+			"Chai Ke Bahane", "Chalo Canteen", "Chhota Sa Drip",
+			"Dil Mera Pager", "Do Pal Ka Breakfast", "Dhak Dhak Monitor", "Dawa Ki Dukaan",
+			"Ek Pyaali Chai", "Emergency Mein Milna", "Ek Raat Ka Rota",
+			"Gulabi Gloves", "Gol Gol Goli", "Gale Mein Stethoscope",
+			"Haath Dho Le Re", "Hum Tum Aur Swab", "Hawa Mein Oxygen",
+			"Ishq Ka Injection", "Itni Si Shift", "Intezaar OPD Ka",
+			"Jab Bleep Baje", "Jhoomo Night Duty", "Jaldi Aao Doctor",
+			"Khushi Ke Stitches", "Kahin Door Ka Rota", "Kya Hua Plaster",
+			"Lambi Shift Ka Gaana", "Labon Pe Mask", "Lo Aa Gayi Report",
+			"Masala Chai Tera Pyaar", "Mohabbat Aur Mop", "Meri Neend Kahan",
+			"Neend Na Aaye Ward Mein", "Nabz Dekho Na", "Naya Naya Intern",
+			"OT Mein Dil Lagaa", "Oxygen Wali Saans",
+			"Pyaar Ka Pulse", "Pehli Baar Suture", "Pagal Pager",
+			"Raat Bhar Rounds", "Rimjhim Saline", "Rota Ka Raja",
+			"Saanson Ka Monitor", "Sunday Bhi Duty", "Sister Ki Diary",
+			"Tere Bina OT Soona", "Thoda Sa Tetanus", "Tum Aur Teen Taanke",
+			"Udaas Ambulance", "Uff Yeh Rota",
+			"Yaadon Ka X-ray", "Yeh Shift Na Hoti", "Yaar Mera Ward Boy"
+		]
+	},
+	"speeches": {
+		"grace_toast": {
+			"title": "A toast for Sister Grace",
+			"great": 6, "ok": 4,
+			"rounds": [
+				[
+					{"tone": "Heart", "text": "Sister Grace taught me that a ward runs on two things: tea, and her pencil.", "points": 3, "reaction": "A warm laugh. Priya says aww out loud, then pretends she didn't."},
+					{"tone": "Funny", "text": "Grace has been head nurse so long, the building asks her permission before it settles.", "points": 3, "reaction": "Tom snorts chai through his nose. Grace's mouth twitches. That's a standing ovation, from her."},
+					{"tone": "Risky", "text": "Grace was born on this day. Many years ago. Exactly how many is classified.", "points": 1, "reaction": "One brave laugh, from Zoya. Grace looks at Zoya. Zoya stops laughing."}
+				],
+				[
+					{"tone": "Heart", "text": "Every patient who went home from Ward 4 went home a little because of you. Thank you.", "points": 3, "reaction": "Silence, the good kind. Grace looks very hard at the cake."},
+					{"tone": "Funny", "text": "May your year be long, your nights short, and your pencil always sharp.", "points": 2, "reaction": "Laughter, and a cheer from the corridor. Even a patient in a wheelchair claps."},
+					{"tone": "Risky", "text": "We got you a cake because we couldn't get you a day off. You'd have refused it anyway.", "points": 2, "reaction": "A big laugh. Grace says that's true, and that the cake is also too sweet."}
+				]
+			]
+		},
+		"rao_farewell": {
+			"title": "Dr. Rao's farewell speech",
+			"great": 8, "ok": 6,
+			"rounds": [
+				[
+					{"tone": "Heart", "text": "When I was an intern, Dr. Rao told me the patient doesn't care how clever you are, only whether you came. I still come.", "points": 3, "reaction": "A soft murmur goes round the room. Dr. Iyer nods, once, slowly."},
+					{"tone": "Funny", "text": "Dr. Rao has been Head of Surgery so long, his first pager ran on coal.", "points": 3, "reaction": "The room laughs. Dr. Rao laughs too, which nobody has seen since 2011."},
+					{"tone": "Risky", "text": "I've prepared a short speech. Dr. Rao taught me that short means forty minutes.", "points": 1, "reaction": "A nervous laugh. Somebody at the back checks the time."}
+				],
+				[
+					{"tone": "Heart", "text": "He said sorry to a patient, to her face, when it would have been easier not to. That's the bravest thing I've seen in a hospital.", "points": 3, "reaction": "The room goes very still. Dr. Rao looks at his hands. Grace hands him a tissue without looking."},
+					{"tone": "Funny", "text": "His handwriting is so bad that pharmacy has a Dr. Rao department. Two pharmacists. Full time.", "points": 3, "reaction": "Huge laugh. A pharmacist in the doorway shouts that it's three now."},
+					{"tone": "Risky", "text": "He once said my stitches looked like a railway map. Of Mumbai. In the monsoon.", "points": 2, "reaction": "Laughter. Dr. Rao says it was a compliment. It was not a compliment."}
+				],
+				[
+					{"tone": "Heart", "text": "Thank you, sir. For everything you taught us, and for everything you let us learn the hard way.", "points": 3, "reaction": "Applause, long and real. Tom whistles. Dr. Rao stands up, then sits down again, then stands."},
+					{"tone": "Funny", "text": "Enjoy retirement, sir. The pension office has a queue. You'll feel right at home.", "points": 2, "reaction": "Laughter and applause. Mr. Malhotra laughs loudest, which is suspicious."},
+					{"tone": "Risky", "text": "We'll miss you, sir. The pen, we'll miss more. Please leave the pen.", "points": 2, "reaction": "Laughter. Dr. Rao puts the pen in his pocket and pats it. Not today."}
+				]
+			]
+		}
+	},
+	"verdicts": {
+		"great": "The room loved it.",
+		"ok": "It went down fine.",
+		"flop": "It was a speech. Technically."
+	}
+}

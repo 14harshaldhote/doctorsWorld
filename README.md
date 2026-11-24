@@ -523,6 +523,38 @@ Here's everything, in order, so you can decide how much of your life to give it:
   roast called "Doctor, Doctor". The words run along the bottom of the screen
   like a music video, so you can sing along, which nobody asked you to do.
   The phone has a Radio app now, with a new request most days.
+- And then the shift ends. Technically. After a day on the ward you get an
+  evening, which is like a weekend but shorter and you still smell of
+  Betadine. It starts in Mani's canteen, where whoever is on late is having
+  chai. Sit with one of them for gossip, a little trust and a tip for
+  tomorrow, which turns up again in the morning because nobody expected you
+  to remember it. The canteen radio takes requests, mostly from RJ Bunty.
+- Then the hostel room: one bed, one phone, and a packet of biscuits that has
+  seen things. Video call home and Mum, Dad and Anu all talk at once, about
+  your food, your posture and a rishta nobody asked for. Eat something real,
+  read up on tomorrow, or scroll until it is somehow one in the morning.
+  Everything costs time on the clock, and when you go to bed decides how you
+  slept.
+- Sleep badly and the morning tells you so, and so do your hands. In theatre
+  they shake, and everything you hold shakes with them. Going to bed hungry
+  counts too. Your body keeps receipts.
+- Don't call home for a few days and Mum starts texting. She doesn't repeat
+  herself. She escalates. After that she gets on a bus and walks onto Ward 4
+  in the middle of your shift with a steel dabba of rajma, in front of Sister
+  Grace, who has questions.
+- Some evenings are parties. Hostel night with your batch, Diwali on the
+  terrace, Sister Grace's birthday (she doesn't do birthdays, there is a cake
+  with her face on it), Dr. Khan's wedding reception and Dr. Rao's farewell.
+  Each one has a game: carrom on a board with a crack in it, antakshari
+  against the clock, a dance-off you tap in time with the dhol, or a speech
+  in front of everyone, one line at a time. Win or flop, people remember.
+  Skip one and they remember that too.
+- Varun, your batchmate who sold out to CarePlus and has been texting you
+  about his car for weeks, finally turns up in person. He is exactly as
+  advertised. The shirt is linen, so no hugging.
+- And the pager goes off in the middle of a party, because the hospital has
+  never once respected your social life. Go back in and you miss the cake.
+  Stay and someone notices.
 
 Screenshots of every screen are rebuilt automatically after each change, on
 the [`screenshots` branch](../../tree/screenshots).

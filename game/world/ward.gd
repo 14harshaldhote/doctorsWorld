@@ -498,134 +498,14 @@ func bed(bed_id: String) -> WardBed:
 # --- People -------------------------------------------------------------------
 
 func _build_people() -> void:
-	_person("iyer", {"skin": 3, "face": 1, "height": 3, "hair_style": 7, "hair_colour": 5, "brows": 0, "glasses": 4,
-		"scrubs": 1, "watch": true}, AvatarConfig.Mood.FOCUSED)
-	_person("grace", {"skin": 7, "face": 0, "hair_style": 6, "hair_colour": 0, "scrubs": 4, "coat": false,
-		"stethoscope": false, "watch": true, "brows": 2}, AvatarConfig.Mood.HAPPY)
-	_person("priya", {"skin": 6, "face": 3, "hair_style": 8, "hair_colour": 0, "eyes": 7, "scrubs": 2, "coat": false,
-		"stethoscope": false, "watch": true}, AvatarConfig.Mood.CALM)
-	_person("sethi", {"skin": 4, "face": 2, "height": 4, "hair_style": 2, "hair_colour": 1, "facial_hair": 4,
-		"scrubs": 6, "brows": 2}, AvatarConfig.Mood.TIRED)
-	_person("rao", {"skin": 5, "face": 5, "height": 2, "body": 2, "hair_style": 1, "hair_colour": 6, "glasses": 2,
-		"facial_hair": 2, "scrubs": 1, "brows": 5}, AvatarConfig.Mood.CALM)
-	_person("malhotra", {"skin": 2, "face": 4, "height": 3, "hair_style": 2, "hair_colour": 5, "glasses": 3,
-		"scrubs": 6, "coat": false, "stethoscope": false, "watch": true, "brows": 3}, AvatarConfig.Mood.FOCUSED, "casual")
-	_person("rohit", {"skin": 6, "face": 4, "body": 0, "height": 3, "hair_style": 3, "hair_colour": 0, "brows": 2,
-		"coat": false, "stethoscope": false}, AvatarConfig.Mood.TIRED, "patient")
-	_person("sunita", {"skin": 6, "face": 0, "body": 1, "height": 1, "hair_style": 8, "hair_colour": 1, "brows": 4,
-		"scrubs": 4, "coat": false, "stethoscope": false}, AvatarConfig.Mood.WORRIED, "kurta")
-	_person("lakshmi", {"skin": 7, "face": 5, "body": 2, "height": 1, "hair_style": 7, "hair_colour": 5, "brows": 4,
-		"glasses": 1, "coat": false, "stethoscope": false}, AvatarConfig.Mood.WORRIED, "patient")
-	_person("kunal", {"skin": 3, "face": 2, "body": 1, "height": 3, "hair_style": 2, "hair_colour": 3, "facial_hair": 1,
-		"scrubs": 7, "coat": false, "stethoscope": false, "watch": true}, AvatarConfig.Mood.ANGRY, "casual")
-	_person("banerjee", {"skin": 2, "face": 0, "body": 0, "height": 0, "hair_style": 7, "hair_colour": 6, "brows": 3,
-		"glasses": 5, "coat": false, "stethoscope": false}, AvatarConfig.Mood.TIRED, "patient")
-	_person("salim", {"skin": 6, "face": 4, "body": 0, "height": 2, "hair_style": 0, "hair_colour": 0, "facial_hair": 4,
-		"brows": 2, "coat": false, "stethoscope": false}, AvatarConfig.Mood.TIRED, "patient")
-	_person("joseph", {"skin": 4, "face": 4, "body": 0, "height": 2, "hair_style": 1, "hair_colour": 6, "glasses": 4,
-		"facial_hair": 2, "brows": 3, "coat": false, "stethoscope": false}, AvatarConfig.Mood.CALM, "patient")
-	_person("maria", {"skin": 4, "face": 1, "body": 1, "height": 2, "hair_style": 9, "hair_colour": 1, "brows": 1,
-		"scrubs": 5, "coat": false, "stethoscope": false}, AvatarConfig.Mood.WORRIED, "kurta")
-	_person("peter", {"skin": 4, "face": 2, "body": 2, "height": 3, "hair_style": 0, "hair_colour": 2, "facial_hair": 1,
-		"scrubs": 1, "coat": false, "stethoscope": false}, AvatarConfig.Mood.ANGRY, "casual")
-	_person("leela", {"skin": 4, "face": 3, "hair_style": 5, "hair_colour": 1, "eyes": 2, "scrubs": 2, "coat": false,
-		"stethoscope": false}, AvatarConfig.Mood.WORRIED, "kurta")
-	var child := _person("aarav", {"skin": 4, "face": 0, "eyes": 4, "hair_style": 3, "hair_colour": 0, "scrubs": 7,
-		"coat": false, "stethoscope": false}, AvatarConfig.Mood.HAPPY, "casual")
-	child.scale = Vector3.ONE * 0.64
-	_person("tom", {"skin": 3, "face": 2, "hair_style": 2, "hair_colour": 0, "facial_hair": 1, "scrubs": 1, "coat": false,
-		"stethoscope": false, "height": 3}, AvatarConfig.Mood.HAPPY)
-	_person("khan", {"skin": 4, "face": 4, "hair_style": 10, "hair_colour": 0, "brows": 1, "scrubs": 3, "coat": false,
-		"height": 2}, AvatarConfig.Mood.FOCUSED)
-	# Eight months later: the Junior Resident's patients.
-	_person("deepa", {"skin": 5, "face": 3, "body": 1, "height": 2, "hair_style": 8, "hair_colour": 0, "brows": 2,
-		"scrubs": 2, "coat": false, "stethoscope": false}, AvatarConfig.Mood.WORRIED, "kurta")
-	_person("bansal", {"skin": 3, "face": 5, "body": 2, "height": 2, "hair_style": 1, "hair_colour": 6, "glasses": 3,
-		"facial_hair": 2, "brows": 4, "coat": false, "stethoscope": false}, AvatarConfig.Mood.TIRED, "patient")
-	_person("farida", {"skin": 4, "face": 1, "body": 1, "height": 1, "hair_style": 9, "hair_colour": 1, "brows": 1,
-		"glasses": 1, "coat": false, "stethoscope": false}, AvatarConfig.Mood.CALM, "patient")
-	_person("raju", {"skin": 7, "face": 2, "body": 1, "height": 3, "hair_style": 0, "hair_colour": 0, "facial_hair": 4,
-		"brows": 3, "coat": false, "stethoscope": false}, AvatarConfig.Mood.WORRIED, "patient")
-	_person("mehra", {"skin": 2, "face": 0, "body": 2, "height": 1, "hair_style": 7, "hair_colour": 6, "brows": 4,
-		"glasses": 5, "scrubs": 5, "coat": false, "stethoscope": false, "watch": true}, AvatarConfig.Mood.ANGRY, "kurta")
-	# A year later: the Senior Resident's intern, patients and colleagues.
-	_person("zoya", {"skin": 3, "face": 3, "height": 1, "hair_style": 6, "hair_colour": 1, "eyes": 7, "brows": 1,
-		"scrubs": 2, "watch": true}, AvatarConfig.Mood.WORRIED)
-	_person("bhatt", {"skin": 5, "face": 2, "body": 2, "height": 4, "hair_style": 1, "hair_colour": 0, "facial_hair": 4,
-		"brows": 2, "scrubs": 3}, AvatarConfig.Mood.HAPPY)
-	_person("gomes", {"skin": 4, "face": 5, "body": 0, "height": 0, "hair_style": 7, "hair_colour": 6, "brows": 4,
-		"glasses": 5, "coat": false, "stethoscope": false}, AvatarConfig.Mood.CALM, "patient")
-	_person("francis", {"skin": 4, "face": 2, "body": 2, "height": 3, "hair_style": 2, "hair_colour": 5, "facial_hair": 2,
-		"brows": 3, "scrubs": 1, "coat": false, "stethoscope": false, "watch": true}, AvatarConfig.Mood.WORRIED, "casual")
-	_person("nanda", {"skin": 3, "face": 5, "body": 2, "height": 2, "hair_style": 0, "hair_colour": 5, "facial_hair": 2,
-		"glasses": 2, "brows": 3, "coat": false, "stethoscope": false}, AvatarConfig.Mood.TIRED, "patient")
-	_person("imran", {"skin": 6, "face": 4, "body": 0, "height": 3, "hair_style": 3, "hair_colour": 0, "facial_hair": 1,
-		"brows": 2, "coat": false, "stethoscope": false}, AvatarConfig.Mood.WORRIED, "patient")
-	_person("rubina", {"skin": 6, "face": 1, "height": 1, "hair_style": 10, "hair_colour": 0, "eyes": 1, "brows": 1,
-		"scrubs": 4, "coat": false, "stethoscope": false}, AvatarConfig.Mood.WORRIED, "kurta")
-	# Three months a surgeon: the first patient on your own list, your own
-	# theatre team, and the chair of the board.
-	_person("kurup", {"skin": 6, "face": 5, "body": 2, "height": 1, "hair_style": 7, "hair_colour": 6, "brows": 4,
-		"glasses": 1, "coat": false, "stethoscope": false}, AvatarConfig.Mood.TIRED, "patient")
-	_person("venu", {"skin": 6, "face": 4, "body": 1, "height": 2, "hair_style": 1, "hair_colour": 6, "facial_hair": 2,
-		"glasses": 3, "brows": 3, "scrubs": 5, "coat": false, "stethoscope": false}, AvatarConfig.Mood.WORRIED, "casual")
-	_person("neha", {"skin": 3, "face": 1, "height": 2, "hair_style": 10, "hair_colour": 0, "eyes": 3, "brows": 1,
-		"scrubs": 2, "coat": false, "stethoscope": false}, AvatarConfig.Mood.FOCUSED)
-	_person("bose", {"skin": 4, "face": 2, "body": 1, "height": 3, "hair_style": 2, "hair_colour": 1, "facial_hair": 3,
-		"glasses": 2, "brows": 2, "scrubs": 3, "coat": false}, AvatarConfig.Mood.HAPPY)
-	_person("rajan", {"skin": 5, "face": 0, "body": 1, "height": 2, "hair_style": 7, "hair_colour": 6, "brows": 3,
-		"glasses": 4, "scrubs": 6, "coat": false, "stethoscope": false, "watch": true}, AvatarConfig.Mood.CALM, "kurta")
-	# Six months a head of department: the day case that came back, the
-	# rival for Chief of Medicine, the Dean, and a new intern of your own.
-	_person("sinha", {"skin": 4, "face": 1, "body": 1, "height": 2, "hair_style": 9, "hair_colour": 5, "brows": 3,
-		"glasses": 1, "coat": false, "stethoscope": false}, AvatarConfig.Mood.TIRED, "patient")
-	_person("kapoor", {"skin": 3, "face": 2, "body": 1, "height": 4, "hair_style": 2, "hair_colour": 0, "facial_hair": 3,
-		"brows": 2, "scrubs": 1, "coat": false, "stethoscope": false, "watch": true}, AvatarConfig.Mood.HAPPY, "casual")
-	_person("dean", {"skin": 4, "face": 5, "body": 2, "height": 2, "hair_style": 1, "hair_colour": 6, "facial_hair": 4,
-		"glasses": 1, "brows": 4, "scrubs": 5, "coat": false, "stethoscope": false}, AvatarConfig.Mood.CALM, "kurta")
-	_person("saxena", {"skin": 5, "face": 3, "height": 1, "hair_style": 6, "hair_colour": 0, "eyes": 5, "brows": 1,
-		"scrubs": 1}, AvatarConfig.Mood.WORRIED)
-	# The Chief's days: Mr. Malhotra's son, a CarePlus day case, and three
-	# families at the complaints desk.
-	var teen := _person("dev", {"skin": 2, "face": 0, "body": 0, "height": 2, "hair_style": 3, "hair_colour": 0, "brows": 2,
-		"coat": false, "stethoscope": false}, AvatarConfig.Mood.WORRIED, "patient")
-	teen.scale = Vector3.ONE * 0.9
-	_person("verghese", {"skin": 5, "face": 1, "body": 1, "height": 2, "hair_style": 8, "hair_colour": 1, "brows": 1,
-		"glasses": 2, "coat": false, "stethoscope": false}, AvatarConfig.Mood.ANGRY, "patient")
-	_person("relative_a", {"skin": 5, "face": 2, "body": 2, "height": 3, "hair_style": 0, "hair_colour": 5, "facial_hair": 3,
-		"brows": 3, "scrubs": 5, "coat": false, "stethoscope": false, "watch": true}, AvatarConfig.Mood.ANGRY, "casual")
-	_person("relative_b", {"skin": 3, "face": 3, "body": 1, "height": 1, "hair_style": 9, "hair_colour": 6, "brows": 4,
-		"glasses": 3, "scrubs": 4, "coat": false, "stethoscope": false}, AvatarConfig.Mood.ANGRY, "kurta")
-	_person("relative_c", {"skin": 6, "face": 1, "body": 0, "height": 2, "hair_style": 5, "hair_colour": 0, "eyes": 6, "brows": 1,
-		"scrubs": 7, "coat": false, "stethoscope": false}, AvatarConfig.Mood.WORRIED, "kurta")
-	# The walk-ins of the endless days.
-	_person("arif", {"skin": 4, "face": 0, "body": 0, "height": 3, "hair_style": 3, "hair_colour": 0, "brows": 2,
-		"glasses": 2, "coat": false, "stethoscope": false}, AvatarConfig.Mood.WORRIED, "patient")
-	_person("mohan", {"skin": 6, "face": 2, "body": 2, "height": 2, "hair_style": 1, "hair_colour": 5, "facial_hair": 3,
-		"brows": 3, "coat": false, "stethoscope": false}, AvatarConfig.Mood.TIRED, "patient")
-	_person("savitri", {"skin": 6, "face": 1, "body": 1, "height": 1, "hair_style": 7, "hair_colour": 6, "brows": 4,
-		"scrubs": 6, "coat": false, "stethoscope": false}, AvatarConfig.Mood.HAPPY, "kurta")
-	_person("usha", {"skin": 5, "face": 3, "body": 1, "height": 2, "hair_style": 7, "hair_colour": 5, "brows": 3,
-		"glasses": 4, "coat": false, "stethoscope": false}, AvatarConfig.Mood.CALM, "patient")
-	_person("rosy", {"skin": 2, "face": 5, "body": 1, "height": 0, "hair_style": 9, "hair_colour": 6, "brows": 4,
-		"glasses": 1, "coat": false, "stethoscope": false}, AvatarConfig.Mood.CALM, "patient")
-	_person("gurdeep", {"skin": 3, "face": 4, "body": 2, "height": 4, "hair_style": 0, "hair_colour": 0, "facial_hair": 5,
-		"brows": 3, "coat": false, "stethoscope": false}, AvatarConfig.Mood.WORRIED, "patient")
-	_person("anwar", {"skin": 5, "face": 5, "body": 1, "height": 2, "hair_style": 1, "hair_colour": 6, "facial_hair": 5,
-		"glasses": 3, "brows": 4, "coat": false, "stethoscope": false}, AvatarConfig.Mood.TIRED, "patient")
-	_person("kavita", {"skin": 4, "face": 2, "body": 1, "height": 2, "hair_style": 6, "hair_colour": 0, "eyes": 4, "brows": 1,
-		"coat": false, "stethoscope": false}, AvatarConfig.Mood.TIRED, "patient")
-	_person("saroja", {"skin": 5, "face": 1, "body": 1, "height": 0, "hair_style": 7, "hair_colour": 6, "brows": 3,
-		"glasses": 2, "coat": false, "stethoscope": false}, AvatarConfig.Mood.TIRED, "patient")
-	_person("venkat", {"skin": 5, "face": 3, "body": 1, "height": 3, "hair_style": 0, "hair_colour": 1, "facial_hair": 1,
-		"glasses": 1, "brows": 2, "coat": false, "stethoscope": false}, AvatarConfig.Mood.WORRIED, "casual")
-	# Patients who sleep through the week, so the ward is full.
-	_person("bg1", {"skin": 8, "face": 5, "body": 2, "hair_style": 1, "hair_colour": 5, "facial_hair": 5,
-		"coat": false, "stethoscope": false}, AvatarConfig.Mood.TIRED, "patient")
-	_person("bg2", {"skin": 1, "face": 1, "hair_style": 9, "hair_colour": 2, "coat": false, "stethoscope": false},
-		AvatarConfig.Mood.CALM, "patient")
-	_person("bg3", {"skin": 5, "face": 3, "body": 1, "hair_style": 0, "hair_colour": 0, "facial_hair": 2,
-		"coat": false, "stethoscope": false}, AvatarConfig.Mood.TIRED, "patient")
+	for id: String in CastLooks.LOOKS:
+		if id in CastLooks.OFF_THE_WARD:
+			continue
+		var rig := _person(id, (CastLooks.LOOKS[id] as Array)[0], CastLooks.mood(id), CastLooks.outfit(id))
+		rig.scale = Vector3.ONE * CastLooks.scale(id)
+	# Mum, who turns up when the doctor hasn't called home for days (Life):
+	# she looks like the player, as she does at home.
+	_add_rig("mum", StorySet.family_looks(profile.avatar)["mum"], AvatarConfig.Mood.HAPPY, "kurta")
 	for id: String in people:
 		_hide(id)
 
@@ -634,6 +514,10 @@ func _person(id: String, look: Dictionary, mood: int, outfit: String = "doctor")
 	var config := AvatarConfig.new()
 	for key: String in look:
 		config.set(key, look[key])
+	return _add_rig(id, config, mood, outfit)
+
+
+func _add_rig(id: String, config: AvatarConfig, mood: int, outfit: String) -> AvatarRig:
 	var rig := AvatarRig.new(config)
 	rig.name = id.capitalize().replace(" ", "")
 	rig.outfit = outfit
@@ -1041,6 +925,10 @@ func _begin_day() -> void:
 		_show_day_card()
 		_clear_in = 2.0
 		_intro_in = 2.5
+	# Last night (stage 27): how the doctor slept, and the tip from chai.
+	if not night:
+		for line: String in Life.morning(profile):
+			_queue_toast(line, 2, false)
 	_refresh_hud()
 
 
@@ -1248,7 +1136,7 @@ func _tag_text(place: String) -> String:
 
 func _talk(key: String, partner: String) -> void:
 	var steps := StoryBook.conversation("ward", key)
-	for chapter: String in WardStory.CHAPTERS + ["lives"]:
+	for chapter: String in WardStory.CHAPTERS + ["lives", "evenings"]:
 		if steps.is_empty():
 			steps = StoryBook.conversation(chapter, key)
 	mode = "story"
@@ -1934,6 +1822,7 @@ func open_operation(procedure: String) -> void:
 	setup["scrub_nurse"] = str(team[1]) if team.size() > 1 else "tom"
 	setup["anaesthetist"] = str(team[2]) if team.size() > 2 else "khan"
 	operation = OperationTask.new(_case_seed(procedure), setup)
+	operation.tremor = Life.tremor(profile)
 	view = OperationView.new(operation, self, profile)
 	view.name = "Training"
 	view.done_text = "Back to the ward"

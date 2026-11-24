@@ -118,7 +118,7 @@ func test_every_story_file_is_valid() -> void:
 	var cast := StoryBook.cast()
 	expect(cast.has("iyer") and cast.has("grace"), "the cast loads")
 	var actions: Array = Opening.ACTIONS + Lobby.ACTIONS + SkillsLab.ACTIONS + Theatre.ACTIONS + Ward.ACTIONS \
-		+ StoryPlayer.GENERIC
+		+ Evening.ACTIONS + StoryPlayer.GENERIC
 	var names := StoryBook.chapter_names()
 	for expected in ["banter", "cases", "day1", "opening", "theatre", "training", "ward"]:
 		expect(names.has(expected), "chapter %s exists" % expected)

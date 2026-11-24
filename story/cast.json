@@ -65,5 +65,6 @@
 	"rj": {"name": "RJ Bunty", "role": "Riverside FM, the hospital radio", "voice": 1.06, "gender": "male", "pace": 1.08},
 	"mani": {"name": "Mani", "role": "Runs the canteen", "voice": 0.92, "gender": "male"},
 	"boy": {"name": "A boy", "role": "Patient · a child in casualty", "voice": 1.55, "gender": "male", "child": true, "pace": 1.05},
-	"girl": {"name": "A girl", "role": "Patient · a child in casualty", "voice": 1.6, "gender": "female", "child": true, "pace": 1.05}
+	"girl": {"name": "A girl", "role": "Patient · a child in casualty", "voice": 1.6, "gender": "female", "child": true, "pace": 1.05},
+	"varun": {"name": "Dr. Varun Khanna", "role": "Your batchmate · CarePlus Hospitals", "voice": 1.02, "gender": "male", "pace": 1.06}
 }

@@ -27,6 +27,15 @@ func _main(day: int) -> Main:
 	return main
 
 
+## The evening after a ward day comes before the drill: straight to bed.
+func _past_evening(main: Main) -> void:
+	var evening := main.screen as Evening
+	expect(evening != null, "the evening comes first")
+	if evening != null:
+		evening.choose("bed")
+		evening.play_until(func() -> bool: return main.screen != evening, 0, 0.7, 60.0)
+
+
 func _card(lab: SkillsLab) -> DrillCard:
 	for frame in 150:
 		if lab.drill_card != null:
@@ -112,6 +121,7 @@ func test_a_drill_can_be_skipped_and_quitting_never_skips_or_repeats_one() -> vo
 	var main := _main(10)
 	main.profile.set_flag("jump_9")
 	main._on_day_finished()
+	_past_evening(main)
 	var lab := main.screen as SkillsLab
 	expect(lab != null and lab.drill == Drills.before_day(11), "a drill before Day 11")
 	_card(lab)
@@ -250,6 +260,7 @@ func test_history_drills_bring_new_practice_patients() -> void:
 	var main := _main(5)
 	main.profile.set_flag("jump_9")
 	main._on_day_finished()
+	_past_evening(main)
 	var lab := main.screen as SkillsLab
 	expect(lab != null and lab.drill == "history", "a history drill before Day 6")
 	var card := _card(lab)

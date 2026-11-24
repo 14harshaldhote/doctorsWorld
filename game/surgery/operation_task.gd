@@ -41,6 +41,10 @@ const SHORT_BEAT := 0.8
 ## A trace closer than this to the guide covers it.
 const TRACE_NEAR := 0.7
 const STITCH_MISS := 1.0
+## How far (in skin units) the worst tremor moves the scalpel or the needle.
+const TREMOR_REACH := 0.5
+## From this much tremor on the doctor notices it (the view says so).
+const SHAKY := 0.2
 const STITCH_TARGET := 6
 const MAX_STITCHES := 10
 const SWAB_BASE_COUNT := 10
@@ -97,6 +101,11 @@ var fill_level := 0.0
 var trace: PackedVector2Array = PackedVector2Array()
 var tracing := false
 var stitches: Array[Dictionary] = []
+## How much the doctor's hands shake today, 0 to 1 (Life.tremor: a late
+## night). Every cut point and stitch lands up to TREMOR_REACH off, the
+## same way every time.
+var tremor := 0.0
+var _shakes := 0
 ## Steps done so far (and complications handled), for the 3D view.
 var done_steps: Array[String] = []
 ## Complications still to come, by the step they follow.
@@ -1093,6 +1102,7 @@ func trace_begin(spot: Vector2) -> void:
 func trace_to(spot: Vector2) -> void:
 	if not tracing:
 		return
+	spot = shaken(spot)
 	if trace.is_empty() or trace[trace.size() - 1].distance_to(spot) >= 0.15:
 		trace.append(spot)
 		changed.emit()
@@ -1238,6 +1248,7 @@ func tap(spot: String) -> void:
 func place_stitch(spot: Vector2) -> bool:
 	if phase != "act" or action != "stitch" or stitches.size() >= MAX_STITCHES:
 		return false
+	spot = shaken(spot)
 	var found := guide_nearest(spot)
 	if float(found[1]) > STITCH_MISS:
 		stitch_misses += 1
@@ -1248,6 +1259,18 @@ func place_stitch(spot: Vector2) -> bool:
 	_say_by(_lead(), "%d." % stitches.size() if stitches.size() < stitch_target() else "That'll hold. Tie it off.")
 	changed.emit()
 	return true
+
+
+## Where a tired hand puts the scalpel or the needle when aiming for spot:
+## off by a little, in a different direction each time (nothing at all
+## after a good night).
+func shaken(spot: Vector2) -> Vector2:
+	if tremor <= 0.0:
+		return spot
+	_shakes += 1
+	var turn := _shakes * 2.39996
+	var amount := clampf(tremor, 0.0, 1.0) * TREMOR_REACH * (0.55 + 0.45 * sin(_shakes * 1.7))
+	return spot + Vector2(cos(turn), sin(turn)) * amount
 
 
 func tie_off() -> void:

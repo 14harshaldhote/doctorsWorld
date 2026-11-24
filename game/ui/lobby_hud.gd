@@ -42,6 +42,8 @@ var _toast_time := 0.0
 ## The stretch of the screen toasts are centred in, as shares of its width:
 ## all of it, or only the left while the patient card covers the right.
 var _toast_span := Vector2(0.0, 1.0)
+## The toast's own top (under the clock), once the safe area is counted.
+var _toast_top := -1.0
 var _portrait_rig: AvatarRig
 var _shown_level := -1
 var _xp_tween: Tween
@@ -465,14 +467,43 @@ func set_toast_span(left: float, right: float) -> void:
 	_fit_toast()
 
 
-## Centres the toast in its stretch of the screen, its words wrapped to fit.
+## Centres the toast in its stretch of the screen (under the clock), its
+## words wrapped to fit: narrow enough to clear the name badge and the pager
+## card when there's room between them, or across its stretch just below
+## them when there isn't.
 func _fit_toast() -> void:
 	if _toast == null or not is_inside_tree():
 		return
-	var middle := (_toast_span.x + _toast_span.y) * 0.5
+	var view := get_viewport_rect().size.x
+	if _toast_top < 0.0:
+		_toast_top = _toast.offset_top
+	var left := _toast_span.x * view
+	var right := _toast_span.y * view
+	var centre := (left + right) * 0.5
+	var half := (right - left) * 0.5
+	var below := 0.0
+	var badge := get_node_or_null("Badge") as Control
+	for card: Control in [badge, _pager]:
+		if card == null or not card.visible or card.size.x <= 1.0:
+			continue
+		var rect := card.get_global_rect()
+		if rect.end.x <= left or rect.position.x >= right:
+			continue
+		below = maxf(below, rect.end.y)
+		if rect.get_center().x < centre:
+			half = minf(half, centre - rect.end.x)
+		else:
+			half = minf(half, rect.position.x - centre)
+	var room := half * 2.0
+	if room >= UiKit.px(240):
+		_toast.offset_top = _toast_top
+	else:
+		room = right - left
+		_toast.offset_top = maxf(_toast_top, below + UiKit.px(8))
+	var middle := centre / maxf(view, 1.0)
 	_toast.anchor_left = middle
 	_toast.anchor_right = middle
-	var room := (_toast_span.y - _toast_span.x) * get_viewport_rect().size.x - UiKit.px(32 + 28)
+	room -= UiKit.px(32 + 28)
 	var font := _toast_label.get_theme_font("font")
 	var wide := font.get_string_size(_toast_label.text, HORIZONTAL_ALIGNMENT_LEFT, -1,
 		_toast_label.get_theme_font_size("font_size")).x

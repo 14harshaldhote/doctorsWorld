@@ -1,0 +1,514 @@
+{
+	"ch_priya_1": [
+		{"say": "priya", "text": "Bed nine asked if I'm married. Then if my sister's married. Then if I have a cousin. He's ninety-one.", "mood": "tired"},
+		{"say": "priya", "text": "I said I'm married to the drug chart. He said the drug chart can't cook. Rude. Accurate, but rude.", "mood": "calm", "gesture": "shrug"},
+		{"choose": [
+			{"tone": "Laugh", "text": "Did he at least take his tablets?", "trust": {"priya": 2}, "then": [
+				{"say": "priya", "text": "Every single one. For me. Apparently that's romance now.", "mood": "happy"}
+			]},
+			{"tone": "Rescue", "text": "I'll do bed nine's round tomorrow.", "trust": {"priya": 3}, "then": [
+				{"say": "priya", "text": "You're a hero. A tired, badly dressed hero.", "mood": "happy"}
+			]}
+		]}
+	],
+	"ch_priya_2": [
+		{"say": "priya", "text": "Grace is doing next month's rota. In pencil. Nobody has ever seen her rubber. Nobody.", "mood": "worried"},
+		{"say": "priya", "text": "If I get four nights in a row again, I'm going to start talking to the drip stands. They're good listeners.", "mood": "tired"},
+		{"choose": [
+			{"tone": "Offer", "text": "Want me to put in a word?", "trust": {"priya": 1}, "then": [
+				{"say": "priya", "text": "With Grace? Bold. I'll write your obituary in capital letters.", "mood": "shocked"}
+			]},
+			{"tone": "Joke", "text": "The drip stands do give great advice.", "trust": {"priya": 2}, "then": [
+				{"say": "priya", "text": "They do! Stand still, keep dripping. Life lessons.", "mood": "happy"}
+			]}
+		]}
+	],
+	"ch_tom_1": [
+		{"say": "tom", "text": "Dr. Iyer threw a clip today. Not at anyone. Near someone. Near me.", "mood": "calm"},
+		{"say": "tom", "text": "Twenty years I've been scrubbing. My reflexes are excellent. My heart is not.", "mood": "tired"},
+		{"choose": [
+			{"tone": "Kind", "text": "You caught it, though?", "then": [
+				{"say": "tom", "text": "Caught it, counted it, put it back on the tray. She said thank you. I nearly fainted.", "mood": "happy"}
+			]},
+			{"tone": "Tease", "text": "Maybe it was a compliment.", "then": [
+				{"say": "tom", "text": "In theatre language, yes. A clip near your head means you're doing fine. A clip at your head, update your CV.", "mood": "calm"}
+			]}
+		]}
+	],
+	"ch_tom_2": [
+		{"say": "tom", "text": "My daughter wants a laptop for college. A specific one. The one with the fruit on it.", "mood": "calm"},
+		{"say": "tom", "text": "I asked how much. She said, Papa, don't look at the price, look at the vibe. The vibe is two months of my salary.", "mood": "tired", "gesture": "open_hands"},
+		{"choose": [
+			{"tone": "Practical", "text": "There are cheaper ones that work fine.", "then": [
+				{"say": "tom", "text": "I said that. She said I'm giving budget. I don't know what it means, but I felt attacked.", "mood": "calm"}
+			]},
+			{"tone": "Proud", "text": "She's going to do great things with it.", "then": [
+				{"say": "tom", "text": "That's what I tell myself. Great things. Also reels. Mostly reels.", "mood": "happy"}
+			]}
+		]}
+	],
+	"ch_grace_1": [
+		{"say": "grace", "text": "Sit properly. You slouch like an intern who's just been told they're not an intern any more.", "mood": "calm"},
+		{"say": "grace", "text": "Thirty-one years on Ward 4. The building got older, the doctors got younger, and the biscuits got smaller.", "mood": "tired"},
+		{"choose": [
+			{"tone": "Respect", "text": "Thirty-one years. That's a record.", "trust": {"grace": 3}, "then": [
+				{"say": "grace", "text": "It's a sentence. With good behaviour I'd have been out in twenty.", "mood": "happy"}
+			]},
+			{"tone": "Cheek", "text": "The biscuits, I believe. The doctors, never.", "trust": {"grace": 2}, "then": [
+				{"say": "grace", "text": "Flattery. I'm writing it down. In pencil.", "mood": "calm"}
+			]}
+		]}
+	],
+	"ch_grace_2": [
+		{"say": "grace", "text": "Do you know why I do the rota in pencil? Because everybody wants to change it, and nobody wants to ask me.", "mood": "focused"},
+		{"say": "grace", "text": "The ones who ask, I say yes. Mostly. The ones who go behind my back get Sundays. Every Sunday. Forever.", "mood": "calm"},
+		{"choose": [
+			{"tone": "Note", "text": "So the trick is to just ask.", "trust": {"grace": 2}, "then": [
+				{"say": "grace", "text": "The trick is to ask nicely. And bring kaju katli. Not the cheap kind.", "mood": "calm"}
+			]},
+			{"tone": "Fear", "text": "I'm never touching your rota.", "trust": {"grace": 1}, "then": [
+				{"say": "grace", "text": "Good. You're learning. Slowly. But learning.", "mood": "happy"}
+			]}
+		]}
+	],
+	"ch_khan_1": [
+		{"say": "khan", "text": "A man asked me to count backwards from ten in Urdu this morning before I put him to sleep. I did. He was out by seven.", "mood": "calm"},
+		{"say": "khan", "text": "Then he woke up and asked if I was single. Anaesthesia does strange things. Mostly to men.", "mood": "happy"},
+		{"choose": [
+			{"tone": "Laugh", "text": "What did you tell him?", "trust": {"khan": 2}, "then": [
+				{"say": "khan", "text": "That I'm in a relationship with my monitor. It beeps when it's upset. Very honest.", "mood": "happy"}
+			]},
+			{"tone": "Curious", "text": "Does that happen a lot?", "trust": {"khan": 2}, "then": [
+				{"say": "khan", "text": "Every week. One proposed. One asked for my mother's number. My mother would have said yes.", "mood": "calm"}
+			]}
+		]}
+	],
+	"ch_khan_2": [
+		{"say": "khan", "text": "Wedding planning is worse than a crash section at three in the morning. At least in theatre people listen to me.", "mood": "tired"},
+		{"say": "khan", "text": "My mother wants four hundred guests. His mother wants six hundred. We are at war over plastic chairs.", "mood": "angry"},
+		{"choose": [
+			{"tone": "Joke", "text": "Elope. Theatre ten is free on Sundays.", "trust": {"khan": 2}, "then": [
+				{"say": "khan", "text": "Don't tempt me. The lights are better and nobody's aunty can find it.", "mood": "happy"}
+			]},
+			{"tone": "Kind", "text": "It'll be beautiful anyway.", "trust": {"khan": 1}, "then": [
+				{"say": "khan", "text": "It'll be loud. Beautiful is optional. Loud is guaranteed.", "mood": "calm"}
+			]}
+		]}
+	],
+	"ch_sethi_1": [
+		{"say": "sethi", "text": "I've been awake so long my coffee is drinking me now.", "mood": "tired"},
+		{"say": "sethi", "text": "If anyone pages me in the next six hours, tell them I've emigrated. Say Canada. Everyone believes Canada.", "mood": "calm"},
+		{"choose": [
+			{"tone": "Cover", "text": "Go and sleep. I'll take your bleep for an hour.", "trust": {"sethi": 3}, "then": [
+				{"say": "sethi", "text": "You're a terrible liar and a good doctor. I'll take it.", "mood": "happy"}
+			]},
+			{"tone": "Tease", "text": "Canada needs surgeons too, you know.", "trust": {"sethi": 1}, "then": [
+				{"say": "sethi", "text": "Canada can wait. My bed can't.", "mood": "tired"}
+			]}
+		]}
+	],
+	"ch_sethi_2": [
+		{"say": "sethi", "text": "My mother sent me a biodata. Height, hobbies, blood group. Blood group. In case I need a transfusion on the first date.", "mood": "shocked"},
+		{"say": "sethi", "text": "Her hobby is travelling. Everyone's hobby is travelling. Nobody's hobby is sitting in a canteen at nine at night.", "mood": "calm"},
+		{"choose": [
+			{"tone": "Tease", "text": "Did you check if you're compatible?", "trust": {"sethi": 2}, "then": [
+				{"say": "sethi", "text": "O positive. Universal donor. Commitment issues, probably.", "mood": "happy"}
+			]},
+			{"tone": "Kind", "text": "Maybe give it a chance?", "trust": {"sethi": 1}, "then": [
+				{"say": "sethi", "text": "After the exam. And after the next one. There's always a next one.", "mood": "tired"}
+			]}
+		]}
+	],
+	"ch_zoya_1": [
+		{"say": "zoya", "text": "Okay so I accidentally called a consultant bro today. Out loud. To his face.", "mood": "worried"},
+		{"say": "zoya", "text": "He said excuse me. I said, sorry sir, bro is gender neutral now. It is not. I made that up on the spot.", "mood": "shocked"},
+		{"choose": [
+			{"tone": "Laugh", "text": "Did he buy it?", "trust": {"zoya": 2}, "then": [
+				{"say": "zoya", "text": "He said okay, bro. So either we're friends now or I'm fired. Unclear.", "mood": "happy"}
+			]},
+			{"tone": "Mentor", "text": "Maybe save bro for after six.", "trust": {"zoya": 2}, "then": [
+				{"say": "zoya", "text": "Noted. After six, and never to anyone with a lanyard.", "mood": "calm"}
+			]}
+		]}
+	],
+	"ch_zoya_2": [
+		{"say": "zoya", "text": "I have three alarms. One normal, one loud, and one that's just my mother saying my full name.", "mood": "tired"},
+		{"say": "zoya", "text": "The third one works every time. Trauma is a powerful motivator.", "mood": "calm"},
+		{"choose": [
+			{"tone": "Relate", "text": "My mum's voice could wake the whole floor.", "trust": {"zoya": 2}, "then": [
+				{"say": "zoya", "text": "See? Mothers are the original pager. No battery, full signal.", "mood": "happy"}
+			]},
+			{"tone": "Advice", "text": "Maybe go to bed before two?", "trust": {"zoya": 1}, "then": [
+				{"say": "zoya", "text": "Wow. Revolutionary. Next you'll tell me to drink water.", "mood": "calm"}
+			]}
+		]}
+	],
+	"ch_neha_1": [
+		{"say": "neha", "text": "Dr. Bose sang a whole ghazal during the closing today. Eleven minutes. The patient was asleep. Lucky patient.", "mood": "calm"},
+		{"say": "neha", "text": "I time closings in songs now. A hernia is two ghazals. A gallbladder is three and an encore.", "mood": "happy"},
+		{"choose": [
+			{"tone": "Laugh", "text": "And a bowel resection?", "then": [
+				{"say": "neha", "text": "A full concert. With an interval for chai.", "mood": "happy"}
+			]},
+			{"tone": "Request", "text": "Ask him for something faster.", "then": [
+				{"say": "neha", "text": "Faster? He doesn't own faster. Even his fast songs are slow.", "mood": "calm"}
+			]}
+		]}
+	],
+	"ch_neha_2": [
+		{"say": "neha", "text": "Somebody keeps stealing the good scissors from theatre two. I labelled them. They still go missing. With the label.", "mood": "angry"},
+		{"say": "neha", "text": "I'm going to put a tracker on them. Or a curse. Whichever is cheaper.", "mood": "focused"},
+		{"choose": [
+			{"tone": "Join", "text": "Count me in for the curse.", "then": [
+				{"say": "neha", "text": "Excellent. Midnight, theatre two, bring a swab.", "mood": "happy"}
+			]},
+			{"tone": "Suspect", "text": "Have you checked Tom's pockets?", "then": [
+				{"say": "neha", "text": "Tom's pockets are a museum. Three pens, a bolt, and a samosa from last year. No scissors.", "mood": "calm"}
+			]}
+		]}
+	],
+	"ch_iyer_1": [
+		{"say": "iyer", "text": "Don't look so alarmed. Surgeons are allowed chai. It's in the constitution.", "mood": "tired"},
+		{"say": "iyer", "text": "My mother rang. She's decided I should have been a lawyer. She says it isn't too late. I'm fifty-two.", "mood": "calm"},
+		{"choose": [
+			{"tone": "Warm", "text": "You'd have been a terrifying lawyer.", "trust": {"iyer": 2}, "then": [
+				{"say": "iyer", "text": "I'm a terrifying surgeon. Same skill, better lighting.", "mood": "calm"}
+			]},
+			{"tone": "Honest", "text": "I'm glad you're not.", "trust": {"iyer": 3}, "then": [
+				{"say": "iyer", "text": "So am I. Most days. Don't tell her.", "mood": "happy"}
+			]}
+		]}
+	],
+	"ch_iyer_2": [
+		{"say": "iyer", "text": "The secret of thirty years in surgery? Sit when you can. Eat when you can. Sleep when you can.", "mood": "calm"},
+		{"say": "iyer", "text": "And never, ever say it's quiet tonight. The building hears you.", "mood": "focused", "gesture": "wag"},
+		{"choose": [
+			{"tone": "Promise", "text": "I'll never say it.", "trust": {"iyer": 2}, "then": [
+				{"say": "iyer", "text": "Good. Somebody said it in 2009. We had a bus.", "mood": "calm"}
+			]},
+			{"tone": "Test", "text": "It is quiet tonight, though.", "trust": {"iyer": 1}, "then": [
+				{"say": "iyer", "text": "Out. Go home. Now. Before something comes through the door.", "mood": "shocked"}
+			]}
+		]}
+	],
+	"ch_saxena_1": [
+		{"say": "saxena", "text": "Is it normal for a patient to review me out loud? He said ten on ten, would get appendicitis again.", "mood": "happy"},
+		{"say": "saxena", "text": "I told him that's not how appendicitis works. He said manifesting.", "mood": "calm"},
+		{"choose": [
+			{"tone": "Proud", "text": "That's a good day.", "trust": {"saxena": 2}, "then": [
+				{"say": "saxena", "text": "It's my best day. I'm screenshotting it in my brain.", "mood": "happy"}
+			]},
+			{"tone": "Warn", "text": "Don't let it go to your head.", "trust": {"saxena": 1}, "then": [
+				{"say": "saxena", "text": "Too late. It's already in my head. It's redecorating.", "mood": "calm"}
+			]}
+		]}
+	],
+	"vc_first": [
+		{"say": "mum", "text": "There you are! We can see you! Can you see us? Anu, move, I can't see myself.", "mood": "happy"},
+		{"say": "anu", "text": "Mum, you don't need to see yourself. That's literally not the point of a video call.", "mood": "calm"},
+		{"say": "dad", "text": "The picture is very clear. This phone was eleven thousand rupees. Every rupee is visible.", "mood": "happy"},
+		{"choose": [
+			{"tone": "Warm", "text": "I miss you all.", "then": [
+				{"say": "mum", "text": "Look at that. Now I'm crying, and the camera can see it. Eleven thousand rupees of crying.", "mood": "happy"}
+			]},
+			{"tone": "Tease", "text": "Dad, why is your camera pointing at the fan?", "then": [
+				{"say": "dad", "text": "It's a new angle. Very modern. Anu set it.", "mood": "calm"},
+				{"say": "anu", "text": "I did not.", "mood": "calm"}
+			]}
+		]},
+		{"say": "mum", "text": "Are you eating? You look thin. The camera adds weight and you still look thin.", "mood": "worried"}
+	],
+	"vc_loss": [
+		{"say": "mum", "text": "You're quiet. You're never quiet on the phone. You were quiet when you were six and broke the mixie.", "mood": "worried"},
+		{"say": "mum", "text": "Somebody didn't make it today, na. You don't have to tell me. I can hear it.", "mood": "calm"},
+		{"choose": [
+			{"tone": "Tell her", "text": "We lost a patient today.", "then": [
+				{"say": "mum", "text": "Then you'll eat something, you'll sleep, and tomorrow you'll go back. Sad, and then back. That's the job, na?", "mood": "calm"}
+			]},
+			{"tone": "Deflect", "text": "Just tired, Mum.", "then": [
+				{"say": "mum", "text": "Tired. Okay. Tired people eat too. I'll stay on the line till you eat something. I've waited longer for less.", "mood": "calm"}
+			]}
+		]},
+		{"say": "mum", "text": "Your father wants to say something. He won't. But he wants to. That counts.", "mood": "happy"}
+	],
+	"vc_promoted": [
+		{"say": "dad", "text": "Promoted! I've told Gupta uncle, the milkman, and two people at the bank who didn't ask.", "mood": "happy"},
+		{"say": "mum", "text": "He's printed your photo on the office colour printer. His boss thinks it's a wanted poster.", "mood": "happy"},
+		{"choose": [
+			{"tone": "Grateful", "text": "Thank you for always believing in me.", "then": [
+				{"say": "dad", "text": "Believing? I had no choice. Your school fees were non-refundable.", "mood": "calm"},
+				{"say": "mum", "text": "He cried. In the car. Twice.", "mood": "happy"}
+			]},
+			{"tone": "Mortified", "text": "Dad, please don't print any more photos.", "then": [
+				{"say": "dad", "text": "Too late. Laminated. Fridge, office, and my wallet.", "mood": "happy"}
+			]}
+		]}
+	],
+	"vc_after_visit": [
+		{"say": "anu", "text": "Mum went to your hospital? Like, physically? With a tiffin? I'm screaming.", "mood": "happy"},
+		{"say": "anu", "text": "She's told the whole building it's a five star hospital. She also said one of the nurses was very strict. Which one?", "mood": "calm"},
+		{"choose": [
+			{"tone": "Groan", "text": "Sister Grace. Please never repeat that.", "then": [
+				{"say": "anu", "text": "The one with the pencil? Mum says she's a very strong lady. That's Mum for terrifying.", "mood": "happy"}
+			]},
+			{"tone": "Laugh", "text": "Honestly, it was iconic.", "then": [
+				{"say": "anu", "text": "I know. She's already planning the next visit. With pickle. In a glass jar. Be afraid.", "mood": "happy"}
+			]}
+		]}
+	],
+	"vc_food": [
+		{"say": "mum", "text": "What did you eat today? And don't say chai. Chai is not food. Chai is a feeling.", "mood": "focused"},
+		{"say": "mum", "text": "I'm sending a parcel with Gupta uncle's son. Thepla, pickle, and the laddoos you pretend you don't like.", "mood": "happy"},
+		{"choose": [
+			{"tone": "Grateful", "text": "You're the best, Mum.", "then": [
+				{"say": "mum", "text": "I know. Share the laddoos with the nurses. Not all. Some. The good nurses.", "mood": "happy"}
+			]},
+			{"tone": "Honest", "text": "I had biscuits. Three. That counts.", "then": [
+				{"say": "mum", "text": "Three biscuits. My child is a doctor and eats like a sparrow. I'm sending double.", "mood": "worried"}
+			]}
+		]}
+	],
+	"vc_forwards": [
+		{"say": "dad", "text": "Did you get my forward? The one about turmeric curing everything. It has a doctor in it. A real one. With a coat.", "mood": "happy"},
+		{"say": "dad", "text": "Seventy-two thousand people forwarded it. They can't all be wrong.", "mood": "focused"},
+		{"choose": [
+			{"tone": "Gentle", "text": "Turmeric's lovely in dal, Dad. It doesn't cure cancer.", "then": [
+				{"say": "dad", "text": "Hmm. I'll keep it in the dal, then. Don't tell your mother. She's already put it in the milk.", "mood": "calm"}
+			]},
+			{"tone": "Firm", "text": "Please stop forwarding those to the family group.", "then": [
+				{"say": "dad", "text": "Free speech. Also, your aunty forwards worse. She sent one about onions in socks.", "mood": "calm"}
+			]}
+		]},
+		{"say": "dad", "text": "Okay, okay. You're the doctor. I'm only the father who paid for the doctor.", "mood": "happy"}
+	],
+	"vc_anu_fest": [
+		{"say": "anu", "text": "Emergency. Not medical. Worse. College fest is next week and Mum says I should just wear something from your cupboard.", "mood": "worried"},
+		{"say": "anu", "text": "Your cupboard is ninety percent scrubs. I'm not going to my fest dressed as a ward. Huge respect. Not the vibe.", "mood": "calm"},
+		{"choose": [
+			{"tone": "Help", "text": "I'll send you money for something new.", "then": [
+				{"say": "anu", "text": "This is why you're the favourite. Don't tell Mum. Actually, tell Mum. She should know.", "mood": "happy"}
+			]},
+			{"tone": "Tease", "text": "Scrubs are very comfortable, actually.", "then": [
+				{"say": "anu", "text": "Comfortable is not a personality. Okay, boomer. Doctor boomer.", "mood": "calm"}
+			]}
+		]},
+		{"say": "mum", "text": "I'm listening, you know. Both of you. Eat something.", "mood": "calm"}
+	],
+	"vc_rishta": [
+		{"say": "mum", "text": "Sharma aunty has found someone for you. Software, Pune, owns a car, owns two plants, both alive.", "mood": "happy"},
+		{"say": "dad", "text": "I told her our child is a doctor, there's no time. She said, then when? I said after the next promotion. I've been saying that for years.", "mood": "calm"},
+		{"choose": [
+			{"tone": "Firm", "text": "Mum, I'm married to the job for now.", "then": [
+				{"say": "mum", "text": "The job doesn't call me on Sundays. The job doesn't eat my rajma. Fine. I'll tell her you're focusing.", "mood": "calm"}
+			]},
+			{"tone": "Joke", "text": "Ask if the plants want to meet first.", "then": [
+				{"say": "mum", "text": "See? This is why nobody can arrange anything for you. Too smart. Too funny. Eat something.", "mood": "happy"}
+			]}
+		]}
+	],
+	"vc_neighbour": [
+		{"say": "mum", "text": "Mrs. Kulkarni from downstairs has a pain in her knee. I told her you'll look at it. On video. Now.", "mood": "happy"},
+		{"say": "anu", "text": "She's literally standing behind Mum holding her knee up to the camera. I'm so sorry.", "mood": "shocked"},
+		{"choose": [
+			{"tone": "Kind", "text": "Show me the knee, aunty. Can you bend it?", "then": [
+				{"say": "mum", "text": "See? Free consultation. She's brought pakoras for you. I'll freeze them. They'll be terrible.", "mood": "happy"}
+			]},
+			{"tone": "Boundaries", "text": "Mum, I can't examine knees on a video call.", "then": [
+				{"say": "mum", "text": "Then what is this phone for? Eleven thousand rupees and it can't do knees.", "mood": "angry"}
+			]}
+		]},
+		{"say": "anu", "text": "Aunty says you're very confident for your age. That's a compliment, from her. Take it.", "mood": "calm"}
+	],
+	"lf_mum_visit": [
+		{"say": "mum", "text": "There you are! No call for days. Days! I thought, either you're very busy or very dead. So I came to check which.", "mood": "happy"},
+		{"say": "mum", "text": "I brought rajma. Hot. In the steel dabba. Don't make that face. Everybody can see you making that face.", "mood": "calm", "gesture": "offer"},
+		{"choose": [
+			{"tone": "Hug", "text": "Mum! You came all this way?", "flag": "lf_mum_hugged", "then": [
+				{"say": "mum", "text": "Two buses and an auto. The auto driver knows your whole life now. He says congratulations.", "mood": "happy"}
+			]},
+			{"tone": "Mortified", "text": "Mum, I'm working. On a ward. With patients.", "flag": "lf_mum_mortified", "then": [
+				{"say": "mum", "text": "And I'm your mother. On a ward. With rajma. Both things can be true.", "mood": "calm"}
+			]}
+		]},
+		{"if": "lf_grace_here", "then": [
+			{"say": "grace", "text": "Aunty, visiting hours are four to six. But rajma is welcome at the nurses' desk any time.", "mood": "happy"}
+		]},
+		{"say": "mum", "text": "See? Very nice lady. A bit strict. Call me tonight. Every night. Or next time I'm bringing your father. And his forwards.", "mood": "happy", "gesture": "wag"}
+	],
+	"pt_hostel": [
+		{"do": "shot", "name": "talk"},
+		{"say": "varun", "text": "Look who it is! The government hospital legend. Still living on canteen samosas? I'd hug you, but this shirt is linen.", "mood": "happy", "gesture": "open_hands"},
+		{"say": "varun", "text": "CarePlus gave me my own parking spot. With my name on it. In gold. Well, gold coloured.", "mood": "happy"},
+		{"choose": [
+			{"tone": "Dry", "text": "Congratulations on the parking spot.", "then": [
+				{"say": "varun", "text": "Thank you. You can visit it sometime. Not park in it. Visit.", "mood": "calm"}
+			]},
+			{"tone": "Jab", "text": "Do they let you operate, or just park?", "then": [
+				{"say": "varun", "text": "Wow. Okay. Wow.", "mood": "angry"}
+			]}
+		]},
+		{"say": "varun", "text": "Carrom. You and me. Loser buys chai for the whole batch. I've been practising. On an app.", "mood": "focused", "gesture": "point"},
+		{"do": "game"},
+		{"do": "shot", "name": "talk"},
+		{"if": "pt_hostel_won", "then": [
+			{"say": "varun", "text": "That board is tilted. I'm reporting this board. Fine. Chai's on me. Small cups.", "mood": "shocked"}
+		], "else": [
+			{"say": "varun", "text": "Like I said. App training. I'm posting this. Hashtag CarePlus excellence.", "mood": "happy", "gesture": "cheer"}
+		]},
+		{"say": "varun", "text": "Honestly, though. This is nice. Nobody at CarePlus plays carrom. They play squash. I hate squash.", "mood": "tired"}
+	],
+	"pt_diwali": [
+		{"do": "shot", "name": "talk"},
+		{"say": "iyer", "text": "Diwali on the terrace. Thirty years, and the fire brigade has only come twice.", "mood": "happy"},
+		{"say": "grace", "text": "No rockets this year. Last year Tom's rocket went into the ICU window. The patient said it was the best Diwali of his life.", "mood": "calm"},
+		{"say": "tom", "text": "He did say that. I have it in writing.", "mood": "happy", "gesture": "raise"},
+		{"say": "priya", "text": "Antakshari! Nurses against doctors. Losers wash the sweet boxes. All of them. Even the sticky ones.", "mood": "happy", "gesture": "cheer"},
+		{"do": "game"},
+		{"do": "shot", "name": "talk"},
+		{"if": "pt_diwali_won", "then": [
+			{"say": "grace", "text": "The doctors won. Write down the date. It won't happen again.", "mood": "shocked"}
+		], "else": [
+			{"say": "grace", "text": "Nurses win. As always. The sweet boxes are in the corner, Doctor. Sticky side up.", "mood": "happy"}
+		]},
+		{"do": "page"},
+		{"say": "khan", "text": "That's your pager. On Diwali. Of course it is.", "mood": "calm"},
+		{"choose": [
+			{"tone": "Go", "text": "I'll go. Save me a kaju katli.", "flag": "pt_diwali_left", "trust": {"iyer": 2}, "then": [
+				{"say": "priya", "text": "One kaju katli. Guarded with my life. Okay, with Tom's life.", "mood": "happy"}
+			]},
+			{"tone": "Stay", "text": "Casualty can manage one burn.", "flag": "pt_diwali_stayed", "trust": {"iyer": -2}, "then": [
+				{"say": "iyer", "text": "Can it? Casualty tonight is two nurses and a man with a mop.", "mood": "focused"}
+			]}
+		]}
+	],
+	"pt_grace": [
+		{"do": "shot", "name": "talk"},
+		{"say": "priya", "text": "Surprise! Okay, it's not a surprise. She found the cake at four. She's been pretending not to know for three hours.", "mood": "happy"},
+		{"say": "grace", "text": "I don't do birthdays. Birthdays are for people with time. I have a ward.", "mood": "angry", "gesture": "fold_arms"},
+		{"say": "zoya", "text": "Sister Grace, it's literally a vibe though. There's a cake. With your face on it. Printed.", "mood": "happy"},
+		{"say": "grace", "text": "My face. On a cake. And who is going to cut my face?", "mood": "shocked"},
+		{"say": "tom", "text": "Speech! The doctor gives the speech. Doctors love talking. It's in the training.", "mood": "happy", "gesture": "clap"},
+		{"do": "game"},
+		{"do": "shot", "name": "talk"},
+		{"if": "pt_grace_great", "then": [
+			{"say": "grace", "text": "Well. That was adequate. Very adequate. Somebody give the doctor the piece with my eyebrow.", "mood": "happy"}
+		], "else": [
+			{"if": "pt_grace_ok", "then": [
+				{"say": "grace", "text": "Thank you. Short. I like short. Like doctors' handwriting, but readable.", "mood": "calm"}
+			], "else": [
+				{"say": "grace", "text": "That was a speech. Technically. Cut the cake before anyone else talks.", "mood": "calm"}
+			]}
+		]},
+		{"do": "page"},
+		{"choose": [
+			{"tone": "Go", "text": "I'll do it. Keep my slice safe.", "flag": "pt_grace_left", "trust": {"grace": 3}, "then": [
+				{"say": "grace", "text": "Leaving my party for my ward. Correct answer. I'll cut you a big piece. Not the face.", "mood": "happy"}
+			]},
+			{"tone": "Stay", "text": "Bed three can wait ten minutes.", "flag": "pt_grace_stayed", "trust": {"grace": -2}, "then": [
+				{"say": "grace", "text": "My ward does not wait ten minutes. Not even on my birthday. I'll do it myself. Happy birthday to me.", "mood": "angry"}
+			]}
+		]}
+	],
+	"pt_khan": [
+		{"do": "shot", "name": "talk"},
+		{"say": "khan", "text": "You came! Eat first. There are three biryanis and a war between two mothers. Pick a side carefully.", "mood": "happy", "gesture": "open_hands"},
+		{"say": "varun", "text": "Surprise. The groom is my cousin. Small world. Small, unfair world.", "mood": "happy"},
+		{"say": "khan", "text": "My husband's cousin. I found out at the engagement. I've made my peace with it. Mostly.", "mood": "tired"},
+		{"say": "varun", "text": "Dance-off. You and me. The family wants a show. My aunt has already started filming.", "mood": "focused", "gesture": "point"},
+		{"do": "game"},
+		{"do": "shot", "name": "talk"},
+		{"if": "pt_khan_won", "then": [
+			{"say": "varun", "text": "I tore something. A ligament or my pride. Don't examine either.", "mood": "shocked"},
+			{"say": "khan", "text": "Best wedding present so far. Better than the four pressure cookers.", "mood": "happy"}
+		], "else": [
+			{"say": "varun", "text": "And that's how it's done. Aunties, did you get that? Family group. Now.", "mood": "happy", "gesture": "cheer"},
+			{"say": "khan", "text": "You did your best. Your best was enthusiastic.", "mood": "calm"}
+		]},
+		{"do": "page"},
+		{"choose": [
+			{"tone": "Go", "text": "I'm sorry. I have to go.", "flag": "pt_khan_left", "trust": {"iyer": 2}, "then": [
+				{"say": "khan", "text": "Go. Take biryani. A doctor who leaves a wedding for a patient is the only kind I'd invite.", "mood": "calm"}
+			]},
+			{"tone": "Stay", "text": "Tonight, I'm a guest.", "flag": "pt_khan_stayed", "trust": {"khan": 2, "iyer": -1}, "then": [
+				{"say": "khan", "text": "Then dance, guest. The appendix has other doctors. You only get one of my weddings. Hopefully.", "mood": "happy"}
+			]}
+		]}
+	],
+	"pt_rao": [
+		{"do": "shot", "name": "talk"},
+		{"say": "grace", "text": "Thirty-four years, and nobody has ever seen him without that pen. Tonight he's put it down. It's unsettling.", "mood": "calm"},
+		{"say": "rao", "text": "Please. No speeches. I hate speeches. Especially ones about me.", "mood": "calm", "gesture": "open_hands"},
+		{"say": "iyer", "text": "Which is why the new Head of Department is giving one. Go on. You've been volunteered. By me.", "mood": "happy"},
+		{"do": "game"},
+		{"do": "shot", "name": "talk"},
+		{"if": "pt_rao_great", "then": [
+			{"say": "rao", "text": "I said no speeches. That one I'll allow. Write it down for me. I'll read it when the pension office is rude.", "mood": "happy"}
+		], "else": [
+			{"if": "pt_rao_ok", "then": [
+				{"say": "rao", "text": "Thank you. Short and true. Like a good operation.", "mood": "calm"}
+			], "else": [
+				{"say": "rao", "text": "You'll be a fine Head of Department. Speeches aren't in the job description. Thank God.", "mood": "calm"}
+			]}
+		]},
+		{"do": "arrive", "who": "varun"},
+		{"say": "varun", "text": "Sorry, sorry, am I late? CarePlus sent flowers. And me. Mostly the flowers.", "mood": "happy", "gesture": "offer"},
+		{"say": "rao", "text": "Dr. Khanna. Your hospital sends flowers to my farewell, and a junior to count the chairs. Very CarePlus.", "mood": "calm"},
+		{"say": "varun", "text": "I am not counting the chairs. I counted them in the car. There are forty.", "mood": "shocked"},
+		{"choose": [
+			{"tone": "Gracious", "text": "Stay, Varun. Have a samosa.", "flag": "pt_rao_varun_stayed", "then": [
+				{"say": "varun", "text": "Really? Okay. Our canteen does quinoa. I miss samosas. Don't tell anyone.", "mood": "happy"}
+			]},
+			{"tone": "Dry", "text": "The door's where you left it.", "flag": "pt_rao_varun_out", "then": [
+				{"say": "varun", "text": "Harsh. Fair, but harsh. The flowers stay, though. They were expensive.", "mood": "tired"}
+			]}
+		]},
+		{"say": "rao", "text": "{called}. Look after Ward 4. And look after Meera. She won't let you, so do it quietly.", "mood": "calm"}
+	],
+	"pt_carrom_night": [
+		{"do": "shot", "name": "talk"},
+		{"say": "zoya", "text": "Carrom. Me against the Chief. If I win, I get Sunday off. If you win, I'll still ask for Sunday off.", "mood": "focused", "gesture": "point"},
+		{"say": "saxena", "text": "I'm keeping score. I'm also streaming this to the intern group. Twelve people are watching. Thirteen. Hi, Mummy.", "mood": "happy"},
+		{"do": "game"},
+		{"do": "shot", "name": "talk"},
+		{"if": "pt_carrom_night_won", "then": [
+			{"say": "zoya", "text": "Okay, that was clean. Respect. I'm still asking for Sunday.", "mood": "shocked"}
+		], "else": [
+			{"say": "zoya", "text": "Sunday off, Chief. You said. On stream. Thirteen witnesses.", "mood": "happy", "gesture": "cheer"}
+		]}
+	],
+	"pt_antakshari_night": [
+		{"do": "shot", "name": "talk"},
+		{"say": "priya", "text": "Antakshari night! Nurses against doctors. We're unbeaten since Diwali. Mostly. Shh.", "mood": "happy", "gesture": "cheer"},
+		{"say": "grace", "text": "Same rules. No repeats, no humming, and no pretending a song exists when it doesn't, Dr. Qureshi.", "mood": "focused"},
+		{"say": "zoya", "text": "It existed. In my heart.", "mood": "calm"},
+		{"do": "game"},
+		{"do": "shot", "name": "talk"},
+		{"if": "pt_antakshari_night_won", "then": [
+			{"say": "priya", "text": "The doctors won? Who taught you songs? Was it the radio? It was the radio.", "mood": "shocked"}
+		], "else": [
+			{"say": "priya", "text": "Nurses win! Sweet boxes, Chief. You know where they are.", "mood": "happy"}
+		]}
+	],
+	"pt_sangeet_night": [
+		{"do": "shot", "name": "talk"},
+		{"say": "neha", "text": "My cousin's sangeet. You're invited because my mother wanted to see a real Chief. Be impressive. Or at least tall.", "mood": "happy"},
+		{"say": "varun", "text": "Before you ask, no, nobody invited me. I always come. It's a gift.", "mood": "happy", "gesture": "open_hands"},
+		{"say": "zoya", "text": "Dance-off. Chief against the uninvited man. The dhol is ready. I am so ready.", "mood": "happy", "gesture": "clap"},
+		{"do": "game"},
+		{"do": "shot", "name": "talk"},
+		{"if": "pt_sangeet_night_won", "then": [
+			{"say": "varun", "text": "Fine. You win. I'm going to eat four gulab jamuns and process this.", "mood": "tired"}
+		], "else": [
+			{"say": "varun", "text": "Undefeated at weddings I wasn't invited to. Write it on my hoarding.", "mood": "happy", "gesture": "cheer"}
+		]},
+		{"do": "page"},
+		{"choose": [
+			{"tone": "Go", "text": "Casualty needs me. Sorry, Neha.", "flag": "pt_sangeet_left", "then": [
+				{"say": "neha", "text": "Go, go. My mother is now more impressed, not less. You've ruined it for every future guest.", "mood": "happy"}
+			]},
+			{"tone": "Stay", "text": "The registrar can handle a fish bone.", "flag": "pt_sangeet_stayed", "then": [
+				{"say": "neha", "text": "Correct. Fish bones are character building. For registrars.", "mood": "happy"}
+			]}
+		]}
+	]
+}

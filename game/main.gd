@@ -198,6 +198,10 @@ func welcome_back(reward: Dictionary) -> WelcomeCard:
 
 
 func _show_hospital_screen() -> void:
+	# The evening after a day on the ward comes before anything else.
+	if Life.evening_due(profile, profile.day - 1):
+		show_evening(profile.day - 1)
+		return
 	if profile.has_flag(Drills.FLAG):
 		if Drills.due_before(profile.day):
 			show_drill()
@@ -251,6 +255,19 @@ func show_theatre() -> void:
 	_swap(theatre)
 
 
+## The evening after a day on the ward (stage 27): chai, the hostel, a call
+## home, a party; bed decides how the doctor sleeps.
+func show_evening(finished: int) -> void:
+	var evening := Evening.new(profile, finished, profile.count(Life.LEFT))
+	evening.finished.connect(_on_evening_finished)
+	_swap(evening)
+
+
+func _on_evening_finished() -> void:
+	_save()
+	show_hospital()
+
+
 ## Between two days (Days 3 to 27): one station in the skills lab, a true
 ## story from medicine and free XP, then the next day.
 func show_drill() -> void:
@@ -291,6 +308,7 @@ func _on_day_finished() -> void:
 func _close_day(finished: int) -> void:
 	if profile.day != finished:
 		return
+	Life.day_closed(profile, finished, profile.minutes)
 	profile.day = finished + 1
 	profile.minutes = PlayerProfile.DAY_START
 	profile.set_flag(Drills.FLAG, Drills.due_before(profile.day))

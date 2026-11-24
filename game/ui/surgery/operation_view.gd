@@ -48,7 +48,11 @@ func _kicker_text() -> String:
 	var op := _op()
 	if op == null:
 		return "Theatre 2 · Rohit Kulkarni"
-	return "%s · %s" % [str(op.procedure.get("theatre", "Theatre 2")), op.patient_name()]
+	var kicker := "%s · %s" % [str(op.procedure.get("theatre", "Theatre 2")), op.patient_name()]
+	# A short night shows in the hands (stage 27), and the doctor knows it.
+	if op.tremor >= OperationTask.SHAKY:
+		kicker += " · Your hands are shaking"
+	return kicker
 
 
 func _build() -> void:

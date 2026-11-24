@@ -53,7 +53,11 @@
 			"needs": {"family": 0.9},
 			"after": [2, 4],
 			"payoff": [
-				{"if": "lv_khan_yes", "text": "Thank you for coming. My aunt wants to know who the doctor was who ate two plates of biryani and left in twenty minutes because of a page. She's not angry. She's disappointed. Same thing."},
+				{"if": "pt_khan_left", "text": "Thank you for coming. My aunt wants to know who the doctor was who ate two plates of biryani and left in twenty minutes because of a page. She's not angry. She's disappointed. Same thing. Dr. Iyer says the appendix came out clean. Good."},
+				{"if": "pt_khan_stayed&pt_khan_won", "text": "My husband's family now asks about you before they ask about me. Varun has left the family group twice. Thank you for staying, guest. Best present. Sorry, pressure cookers."},
+				{"if": "pt_khan_stayed", "text": "Thank you for staying. The aunties have adopted you. Varun posted the dance-off. The comments are not on your side. I have reported all of them."},
+				{"if": "pt_khan_missed", "text": "We missed you. You missed three kinds of biryani. I saved you a box. It's in the anaesthetic room fridge. Don't tell infection control."},
+				{"if": "lv_khan_yes", "text": "Thank you for saying yes. The dates went mad and the reception happened in a blur. My aunt has saved you a box of sweets and a lecture."},
 				{"if": "lv_khan_call", "text": "We missed you. You missed three kinds of biryani. I saved you a box. It's in the anaesthetic room fridge. Don't tell infection control."}
 			]
 		},

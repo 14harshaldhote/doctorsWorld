@@ -8,7 +8,8 @@ extends RefCounted
 
 const FOLDER := "res://story"
 ## Story files that hold rules and data, not conversations.
-const RULE_BOOKS := ["cast.json", "phone.json", "patients.json", "mistakes.json", "feelings.json", "songs.json", "arcs.json"]
+const RULE_BOOKS := ["cast.json", "phone.json", "patients.json", "mistakes.json", "feelings.json", "songs.json", "arcs.json",
+	"life.json"]
 
 static var _cache := {}
 

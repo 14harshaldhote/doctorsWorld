@@ -278,6 +278,9 @@ func _ward_days(first_day: int, last_day: int, last_reply: bool) -> void:
 	var guard := 0
 	while main.profile.day <= last_day and guard < 40:
 		guard += 1
+		var evening := main.screen as Evening
+		if evening != null:
+			_evening(evening)
 		var lab := main.screen as SkillsLab
 		if lab != null and not lab.drill.is_empty():
 			for frame in 150:
@@ -305,6 +308,17 @@ func _ward_days(first_day: int, last_day: int, last_reply: bool) -> void:
 		if main.profile.day == day:
 			break
 	_expect_clear("days %d to %d" % [first_day, last_day])
+
+
+## The evening between two ward days: the party if there is one, or chai
+## in the canteen, every frame checked; then bed.
+func _evening(evening: Evening) -> void:
+	evening.choose("party" if evening.available("party") else "canteen")
+	evening.play_until(func() -> bool:
+		_check(evening)
+		return evening.phase == "menu" or evening.is_done(), 0, 0.7, 600.0)
+	evening.choose("bed")
+	evening.play_until(func() -> bool: return evening.is_done(), 0, 0.7, 60.0)
 
 
 func test_ward_days_every_frame_with_the_first_replies() -> void:
