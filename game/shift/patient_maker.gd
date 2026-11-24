@@ -260,15 +260,33 @@ static func _temper_fits(id: String, speaker: String, sex: String, age: int) -> 
 
 
 static func _temper(rng: SeededRandom, speaker: String, sex: String, age: int) -> String:
+	var picked := _weighted(rng, _tempers_for(speaker, sex, age))
+	return picked if not picked.is_empty() else "calm"
+
+
+## The tempers that fit a speaker, with their weights, in id order. Working
+## them out is most of the cost of making a patient, so each speaker kind is
+## worked out once and kept (until the tempers themselves change).
+static var _temper_options := {}
+static var _temper_source: Dictionary = {}
+
+
+static func _tempers_for(speaker: String, sex: String, age: int) -> Array:
 	var all := PatientParts.personalities()
+	if not is_same(all, _temper_source):
+		_temper_source = all
+		_temper_options.clear()
+	var key := "%s|%s|%d" % [speaker, sex, age]
+	if _temper_options.has(key):
+		return _temper_options[key]
 	var ids := all.keys()
 	ids.sort()
 	var options := []
 	for id: String in ids:
 		if _temper_fits(id, speaker, sex, age):
 			options.append([id, int(all[id].get("weight", 1))])
-	var picked := _weighted(rng, options)
-	return picked if not picked.is_empty() else "calm"
+	_temper_options[key] = options
+	return options
 
 
 ## A job for their age and sex, from the illness's own list when it has one.

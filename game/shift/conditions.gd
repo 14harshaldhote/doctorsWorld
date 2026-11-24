@@ -89,12 +89,42 @@ static func can_walk_in(id: String, day: int, age: int = -1, sex: String = "") -
 ## walk in on the day (rarer and harder ones join as the career goes on),
 ## for someone this age and sex when given. extra adds ids with weights of
 ## their own (an invented outbreak).
+## [id, weight] for every condition that can walk in on a day for someone
+## this age and sex, in id order. Kept once worked out (until the library
+## changes): checking all of them for every arrival was the slowest part of
+## a patient walking in. Days past the last `from_day` are all alike.
+static var _walk_in_options := {}
+static var _walk_in_source: Dictionary = {}
+static var _last_from_day := 0
+
+
+static func _walk_ins(day: int, age: int, sex: String) -> Array:
+	var library := all()
+	if not is_same(library, _walk_in_source):
+		_walk_in_source = library
+		_walk_in_options.clear()
+		_last_from_day = 0
+		for id: String in library:
+			var entry: Variant = library[id]
+			if entry is Dictionary:
+				_last_from_day = maxi(_last_from_day, int((entry as Dictionary).get("from_day", 0)))
+	var key := "%d|%d|%s" % [mini(day, _last_from_day), age, sex]
+	if _walk_in_options.has(key):
+		return _walk_in_options[key]
+	var options := []
+	for id: String in ids():
+		if can_walk_in(id, day, age, sex):
+			options.append([id, weight(id)])
+	_walk_in_options[key] = options
+	return options
+
+
 static func pick(rng: SeededRandom, avoid: Array = [], day: int = 9999, extra: Dictionary = {}, age: int = -1,
 		sex: String = "") -> String:
 	var options := []
-	for id: String in ids():
-		if id not in avoid and can_walk_in(id, day, age, sex):
-			options.append([id, weight(id)])
+	for option: Array in _walk_ins(day, age, sex):
+		if option[0] not in avoid:
+			options.append(option)
 	var added := extra.keys()
 	added.sort()
 	for id: String in added:
