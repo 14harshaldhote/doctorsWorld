@@ -96,12 +96,20 @@ func test_scrubbing_takes_time_and_skipped_areas_are_named() -> void:
 	task.scrub("backs", 2.0)
 	task.do_step("rinse")
 	expect_equal(task.skipped.size(), 4, "four areas skipped")
-	expect(task.coach.contains("thumbs"), "the coach names them")
+	expect_equal(task.coach, "You skipped 4 parts. Germs love the bits you skip.", "said aloud, the count")
 	task.do_step("towel")
 	task.do_step("gown")
 	task.do_step("gloves")
 	expect_equal(task.score(), 100 - 4 * ScrubTask.POINTS_PER_SKIPPED_AREA)
 	expect(_note_text(task).contains("Germs hide there"))
+	expect(_note_text(task).contains("thumbs"), "the card names every one")
+	var two := ScrubTask.new()
+	two.do_step("water")
+	two.do_step("soap")
+	for area: String in ["palms", "backs", "fingers", "wrists"]:
+		two.scrub(area, 2.0)
+	two.do_step("rinse")
+	expect_equal(two.coach, "You skipped: thumbs and nails. Germs love the bits you skip.", "one or two are named")
 
 
 # --- Read the monitor ---------------------------------------------------------

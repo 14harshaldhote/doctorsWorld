@@ -82,8 +82,9 @@ func answer(kind: String) -> void:
 		if right == "none":
 			_say("Right: everything is in range. Not every screen is an emergency.")
 		else:
-			_say("Yes. %s %s is %s. Normal is %s." % [Vitals.NAMES[right], vitals.value_text(right),
-				vitals.problem_words(right), Vitals.NORMAL[right]])
+			# The number is on the screen; the line says what it means, so it
+			# is the same recording every time.
+			_say("Yes. The %s is %s. Normal is %s." % [_named(right), vitals.problem_words(right), Vitals.NORMAL[right]])
 	else:
 		_miss(right, kind)
 	revealing = true
@@ -152,13 +153,12 @@ func _next_round() -> void:
 func _miss(right: String, kind: String) -> void:
 	var what := ""
 	if right == "none":
-		what = "Everything was in range: %s %s is normal." % [Vitals.NAMES[kind], vitals.value_text(kind)] \
+		what = "Everything was in range. The %s is normal." % _named(kind) \
 			if not kind.is_empty() else "Everything was in range there."
 	else:
-		what = "%s %s is %s; normal is %s." % [Vitals.NAMES[right], vitals.value_text(right),
-			vitals.problem_words(right), Vitals.NORMAL[right]]
+		what = "The %s is %s; normal is %s." % [_named(right), vitals.problem_words(right), Vitals.NORMAL[right]]
 		if not kind.is_empty() and kind != "none":
-			what = "%s %s is fine. %s" % [Vitals.NAMES[kind], vitals.value_text(kind), what]
+			what = "The %s is fine. %s" % [_named(kind), what]
 	if kind.is_empty():
 		what = "Too slow. " + what
 	if right not in _missed:
@@ -183,3 +183,8 @@ func _end() -> void:
 	else:
 		_note(false, "%.1f seconds a screen on average. Get it under 3 and the monitor stops being scary." % average)
 	_finish()
+
+
+## A vital's name inside a sentence: "heart rate", "oxygen".
+func _named(kind: String) -> String:
+	return str(Vitals.NAMES[kind]).to_lower()

@@ -41,8 +41,8 @@ func test_it_starts_at_convocation_with_a_title_card() -> void:
 
 func test_the_dean_calls_out_the_players_name() -> void:
 	var opening := _opening()
-	var reached := opening.play_until(func() -> bool: return _said(opening, "dean").has("Kiran Rao!"))
-	expect(reached, "the dean reads out the name")
+	var reached := opening.play_until(func() -> bool: return _said(opening, "dean").has("Dr. Kiran! Come on up."))
+	expect(reached, "the dean calls the new doctor up by name")
 	reached = opening.play_until(func() -> bool:
 		return (opening.current_set.actors["you"] as AvatarRig).held() == "certificate")
 	expect(reached, "the certificate is handed over")
@@ -52,7 +52,7 @@ func test_the_dean_calls_out_the_players_name() -> void:
 func test_the_family_cheers_with_their_own_lines() -> void:
 	var opening := _opening()
 	opening.play_until(func() -> bool: return not _said(opening, "anu").is_empty())
-	expect(_said(opening, "anu")[0].contains("Kiran"), "Anu shouts the first name")
+	expect(_said(opening, "anu")[0].contains("our doctor"), "Anu shouts for her sibling, in a line her own voice recorded")
 	var anu: AvatarRig = opening.current_set.actors["anu"]
 	expect_equal(anu.gesture, "cheer", "Anu is cheering")
 	expect(anu.talking, "and her mouth moves")

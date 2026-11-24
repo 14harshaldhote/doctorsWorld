@@ -217,11 +217,14 @@ func _rinse() -> void:
 	stage = STEPS.find("towel")
 	if skipped.is_empty():
 		_say("Rinsed, fingertips up. Now the towel.")
-	else:
+	elif skipped.size() <= 2:
 		var names := PackedStringArray()
 		for area: String in skipped:
 			names.append(label_of(area).to_lower())
-		_say("You skipped: %s. Germs love the bits you skip." % ", ".join(names), true)
+		_say("You skipped: %s. Germs love the bits you skip." % " and ".join(names), true)
+	else:
+		# The score card lists them all; said aloud, the count is enough.
+		_say("You skipped %d parts. Germs love the bits you skip." % skipped.size(), true)
 
 
 func _reset_scrub() -> void:

@@ -41,6 +41,11 @@ func _process(_delta: float) -> bool:
 
 
 func _run_all() -> void:
+	quit(0 if _run_suite() else 1)
+
+
+## Runs the tests and prints what failed. True when everything passed.
+func _run_suite() -> bool:
 	var catcher := ErrorCatcher.new()
 	OS.add_logger(catcher)
 	var only := ""
@@ -90,12 +95,12 @@ func _run_all() -> void:
 				failed.append("%s › %s\n      %s" % [file.get_basename(), method_name, "\n      ".join(problems)])
 		print("%s %s (%d tests)" % ["FAIL" if suite_failures > 0 else "ok  ", file.get_basename(), methods.size()])
 
+	OS.remove_logger(catcher)
 	var seconds := (Time.get_ticks_msec() - started) / 1000.0
 	if failed.is_empty():
 		print("\nAll %d tests passed in %.2f s." % [total, seconds])
-		quit(0)
-	else:
-		print("\n%d of %d tests failed:" % [failed.size(), total])
-		for line in failed:
-			print("  FAIL " + line)
-		quit(1)
+		return true
+	print("\n%d of %d tests failed:" % [failed.size(), total])
+	for line in failed:
+		print("  FAIL " + line)
+	return false

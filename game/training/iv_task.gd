@@ -75,13 +75,19 @@ func insert() -> void:
 	angle_points = clampi(int(round(ANGLE_POINTS - miss * 2.0)), 0, ANGLE_POINTS)
 	phase = "steady"
 	offset = Vector2.ZERO
+	# Said to the nearest five degrees (rounded away from the safe range when
+	# outside it), so each line is one natural recording, not a number
+	# stitched into a sentence.
 	if miss <= 0.0:
-		_say("%d degrees. In you go. Now hold it steady: keep the tip in the circle." % int(round(angle)))
+		_say("About %d degrees. In you go. Now hold it steady: keep the tip in the circle." % (roundi(angle / 5.0) * 5))
 	elif angle > ANGLE_HIGH:
-		_say("%d degrees is steep: you'll go straight out the back of the vein. Hold steady anyway." %
-			int(round(angle)), true)
+		_say("About %d degrees is steep: you'll go straight out the back of the vein. Hold steady anyway." %
+			(ceili(angle / 5.0) * 5), true)
+	elif angle >= 5.0:
+		_say("About %d degrees is flat: you'll skate along under the skin. Hold steady anyway." %
+			(floori(angle / 5.0) * 5), true)
 	else:
-		_say("%d degrees is flat: you'll skate along under the skin. Hold steady anyway." % int(round(angle)), true)
+		_say("That's flat: you'll skate along under the skin. Hold steady anyway.", true)
 
 
 ## Moves the needle tip by a correction, in millimetres (the player's drag).

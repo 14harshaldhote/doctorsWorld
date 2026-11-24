@@ -12,11 +12,18 @@ const SEED := 4242
 
 var _settings_before: GameSettings = GameSettings.current
 var _backend_before: SpeechBackend = Speech.backend
+## What Speech was noting before (tools/voice_lines.gd notes every line the
+## tests say, so a test that listens adds to it instead of wiping it).
+var _listening_before: bool = Speech.listening
+var _heard_before: Dictionary = Speech.heard
 
 
 func cleanup() -> void:
-	Speech.listening = false
-	Speech.heard.clear()
+	var heard_here := Speech.heard
+	Speech.heard = _heard_before
+	if _listening_before and not is_same(heard_here, _heard_before):
+		Speech.heard.merge(heard_here)
+	Speech.listening = _listening_before
 	Speech.stop()
 	Speech.use_backend(_backend_before)
 	super()
@@ -431,7 +438,7 @@ func test_answers_are_spoken_in_the_patients_voice_and_stop_with_the_card() -> v
 	var fake: SpeechBackend = load("res://tests/unit/fake_speech.gd").new()
 	Speech.use_backend(fake)
 	Speech.listening = true
-	Speech.heard.clear()
+	Speech.heard = {}
 	var ward := _ward(12)
 	_to_casualty(ward)
 	var patient := ward.shift.make_patient("renal_colic")

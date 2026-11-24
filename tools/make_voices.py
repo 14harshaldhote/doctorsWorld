@@ -12,16 +12,22 @@ the game sound like people instead of the phone's reading voice:
   * everything a made-up casualty patient can say, in each of the ten
     patient voices that could say it, listed by tools/patient_lines.gd in
     tools/patient_lines.json (the game joins a hello, an opening line and
-    an answer from these clips).
+    an answer from these clips);
+  * every line the skills lab's stations can say, listed by
+    tools/task_lines.gd in tools/task_lines.json.
+
+Every line is acted the same way (sentence by sentence, with pauses and a
+softer sound), so the coaching sounds like the story, not like a reader.
 
 Each character has their own voice, made by blending Kokoro's voices (so
 nobody else's game sounds like this). A line's mood sets its pace, calls
 come through a phone, children sound like children. The player's own
 doctor is never voiced, so their lines and replies get no clips.
 
-The player's name in a line ({called}) is said as "Doctor". Lines with
-numbers in them (a pulse, a swab count) are kept as the words around the
-numbers plus each number said on its own, and the game joins them up
+The player's name in a line ({called}) is said as "Doctor". A line with
+numbers in it (a pulse, a swab count) is recorded whole, numbers and all,
+as the game said it; for numbers it never said, the words around them and
+each number on its own are kept too, and the game joins them up
 (VoiceBank). Clips are named by what they say, so a second run only makes
 the clips that changed and removes the ones no longer used.
 
@@ -351,6 +357,16 @@ def patient_lines():
         return []
     with open(path) as file:
         return [(entry["who"], entry["text"], entry.get("mood", "")) for entry in json.load(file)]
+
+
+def task_lines():
+    """(who, text) for every line the skills lab's stations can say
+    (tools/task_lines.json, written by tools/task_lines.gd)."""
+    path = os.path.join(ROOT, "tools", "task_lines.json")
+    if not os.path.exists(path):
+        return []
+    with open(path) as file:
+        return [(entry["who"], entry["text"]) for entry in json.load(file)]
 
 
 def catalogue_lines(story):
@@ -719,8 +735,11 @@ def plan(model_dir, only):
         speed = MOOD_SPEED.get(mood, 1.0)
         split = number_parts(text) if templated and re.search(r"\d", text) else None
         if acted:
+            # The whole line as it was said, numbers and all; a line with
+            # numbers keeps its pieces too (below), for numbers not heard.
             lines.append((who, normalize(text), [(model_dir, who, text, 1.0, ".", mood)]))
-            return
+            if split is None:
+                return
         if split is None:
             lines.append((who, normalize(text), [(model_dir, who, text, speed, ".")]))
             return
@@ -741,10 +760,12 @@ def plan(model_dir, only):
 
     for who, text, mood in story:
         add(who, text, mood, False, acted=True)
+    for who, text in task_lines():
+        add(who, text, "", False, acted=True)
     for who, text in catalogue_lines(story):
-        add(who, text, "", True)
+        add(who, text, "", True, acted=True)
     for who, text in fact_lines():
-        add(who, text, "", False)
+        add(who, text, "", False, acted=True)
     for who, text, mood in patient_lines():
         add(who, text, mood, False, acted=True)
     unique = {}

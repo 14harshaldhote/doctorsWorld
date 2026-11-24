@@ -623,14 +623,23 @@ the same loudness. The player's doctor (`you`) gets no clips: they are
 never voiced.
 
 - What is said comes from `story/*.json` (every line and reply),
-  `story/cases.json` (every answer and finding) and `tools/voice_lines.json`:
-  the coaching and theatre lines, listed by `tools/voice_lines.gd`, which runs
-  the test suite and then every operation again well, shakily and badly while
-  `Speech` notes each line it is asked to say.
+  `story/cases.json` (every answer and finding), `tools/task_lines.json` and
+  `tools/voice_lines.json`. `tools/task_lines.gd` plays each skills lab
+  station down every branch (every step too early, every order, every
+  angle, every answer) and lists every line its coach can say;
+  `tools/voice_lines.gd` runs the test suite and then every operation and
+  ward day again well, shakily and badly while `Speech` notes each line it
+  is asked to say (the theatre and ward coaching).
+- Every line is acted the same way as the story (below), so coaching never
+  sounds flatter than the scene around it.
 - The player's name ({called}) is said as "Doctor", so one clip fits every
-  player. Lines from code with numbers in them are kept as the words between
-  the numbers plus clips of each number on its own, in the same voice;
-  `VoiceBank` joins them up ("Heart rate" + "88" + "and slowing").
+  player. Nobody else says the player's name ({name}, {first}): a recording
+  can't. A line from code with numbers in it is recorded whole as it was
+  heard; for numbers it never said, the words between the numbers plus clips
+  of each number on its own are kept too, and `VoiceBank` joins them up
+  ("Heart rate" + "88" + "and slowing"). Training lines are written so their
+  numbers come from a short list (rounded angles, counts), so each is one
+  whole recording.
 - Clips are named by what they say: a second run makes only what changed and
   deletes clips no line uses. `assets/voices/manifest.json` lists them by who
   says them and the line's words (lower case, no punctuation, `{called}` and
@@ -645,6 +654,7 @@ never voiced.
 pip install kokoro-onnx scipy          # and ffmpeg
 # kokoro-v1.0.onnx and voices-v1.0.bin from
 # https://github.com/thewh1teagle/kokoro-onnx/releases (model-files-v1.0)
+godot --headless --path . -s res://tools/task_lines.gd    # after changing a skills lab station's lines
 godot --headless --path . -s res://tools/voice_lines.gd -- tools/voice_lines.json   # after new code lines
 godot --headless --path . -s res://tools/patient_lines.gd   # after changing conditions.json or patients.json
 python3 tools/make_voices.py --model DIR                # everything, one worker a core
@@ -658,7 +668,10 @@ through a `RecordedVoice` on the "Spoken" bus, which sends to Voices. The speed
 setting plays the clip faster or slower and a pitch shift on that bus keeps
 the voice's pitch. Words are reached on a clock from each clip's word times,
 so the text and the lips keep pace with it, as with the device's voices.
-`test_recorded_voices.gd` checks every story line has a recording.
+`test_recorded_voices.gd` checks every story line has a recording, and
+`test_task_voices.gd` that every training line has one whole recording, that
+`tools/task_lines.json` matches the code, and that the first two days, played
+through every screen, ask for nothing unrecorded.
 
 Story lines are acted rather than read (`performed()`): Kokoro reads every
 sentence alike, so each sentence (a word or two goes with its neighbour) is
