@@ -37,6 +37,9 @@ plan"). This file covers how to build, run and test the game.
 | 23. The doctor's phone | `PhonePanel` over the game (Phone button, a swipe up from the bottom, P on a Mac; the clock keeps running, 30 fps while it's up): Chats with two-reply answers, Calls (`ring`, answer, decline, rang out; lines spoken in the caller's voice, the doctor's replies only shown), Lab results (the story's reports and casualty's live ones), the Pager (today's pages), the Feed and Photos (`PhotoCard`, pictures drawn in code). `PhoneBook` reads `story/phone.json` (contacts, 144 messages, calls, posts, photos, reports, each on a day and time with a story condition) and keeps what was read, answered and picked up in `profile.phone`, checked on load (`PhoneBook.clean`). `PhoneWriter` writes the game's own: Varun's reels, the family's evenings (gentler after a death), the batch group on the race, the hospital page and the paper after Day 28, and a thank-you from someone casualty sent home. New messages show as a banner and a number on the Phone button; the end-of-day card says who is about to text. Screenshots 175-182 | Done |
 | 24. Patients that never run out | `story/conditions.json` grows to 57 illnesses common in India (each with a `weight`, the `from_day` it opens on, a family's `plain` words, optional `jobs`, `with`, `told_by` a parent or colleague, and a `late` stage); `story/patients.json` holds the parts (`PatientParts`): ten patient voices (`PatientVoices`), twelve tempers, jobs, who comes with them, the mixes and twists (`extras`), the invented outbreak (`Outbreak`) and coming back (`returns`); `PatientMaker` builds each case from one seed; returning patients from `profile.patients` (`ShiftDay.remember`, `past`, `clean_patients`); answers read aloud from clips joined sentence by sentence (`VoiceBank.sentences`); four more communities in `NameMaker`; the card shows who they are, what's known and who answers; toasts sit beside the card; screenshots 183-187 | Done |
 | 25. Mistakes and deaths | `story/mistakes.json` read by `Fates` (game/shift/fates.gd): the chances, whose fault a death is (`Fates.FAULTS`), the conditions that can come in beyond saving, the lab's critical calls and wrong results, the read-back, the forgotten bed, the family's lines and Iyer's M&M messages. `ShiftSim` rolls them from its own `fate` stream (`plan_fates`, `_harm`, `_die`, `_result_back`, `repeat_test`, `treat_alert`, `answer_readback`, `_hold_over`); the card gets the lab's call and the read-back (`PatientPanel`); a death opens the relatives' room (`FamilyCard`) for a patient the doctor saw, and every death goes on the wall (`profile.wall`, `WallPanel`, the "The wall" tag by the desk). Day 5 loses Mrs. Saroja Raman whatever is done (`saroja_round`, `saroja_son`, `saroja_wall`). The phone gets Maps (`HospitalMap`). Screenshots 188-193 | Done |
+| 26. The director and feelings | A pacing director (`Director`, `story/feelings.json`) that keeps a tension number for the shift and gives it breathers, emotional and silly moments, lifts that remember the doctor's choices, colleagues' asks (`Lives`), three sarcastic songs and the phone's radio, and the goat. See The director and feelings below. Screenshots 194-199 | Done |
+| 27. Life outside the wards | An evening after every ward day from Day 4 (`Evening`, `story/life.json`, `Life`): chai in the canteen, the hostel room, a video call home, eating, studying, scrolling, bed; sleep and hunger reach the next day's theatre (`OperationTask.tremor`); Mum texts after days without a call and then walks onto Ward 4; five parties with a game each (`game/ui/games/`: carrom, antakshari, dance-off, speech) and the pager going off; Varun in person, voiced. See Evenings and parties below. Screenshots 200-215 | Done |
+| 28. Speed | Characters nobody can see skip their posing (`AvatarRig._on_screen`, joints looked up once per build) and breathe and blink on their own beat; the voice list is read on a background thread at boot (`VoiceBank.warm`); the phone's messages are rebuilt only when something they are made from changes (`PhoneBook._state_key`); Space or Return moves a talk on (`ui_accept`) and 1 to 9 pick a reply (the `reply_1` to `reply_9` actions; the game reads no raw keys); the casualty toast refits when a Mac window is resized; `tools/profile.gd` and `tools/soak.gd`. See Performance below | Done |
 
 The earlier SwiftUI and SpriteKit prototype is kept on the git branch
 `swift-prototype`.
@@ -49,9 +52,11 @@ The earlier SwiftUI and SpriteKit prototype is kept on the git branch
 3. Press **Play** (F5, or Cmd+B on a Mac).
 
 Controls on a computer: click the floor to walk and click a person to talk
-(in the lobby and the skills lab WASD and the arrow keys walk too). P brings
-the phone up and puts it away; Esc puts it away, or pauses. On a phone or
-tablet: tap, and swipe up from the bottom of the screen for the phone.
+(in the lobby and the skills lab WASD and the arrow keys walk too). In a
+conversation, Space or Return does what a click does and 1 to 9 pick a reply.
+P brings the phone up and puts it away; Esc puts it away, or pauses. On a
+phone or tablet: tap, and swipe up from the bottom of the screen for the
+phone.
 
 ## Run it on a Mac
 
@@ -1090,6 +1095,45 @@ see-through or glowing meshes, and characters' joints, so doors, lamps,
 blankets, faces and moving parts keep working. Scenes now draw 90 to 340
 meshes instead of 170 to 640. `tests/unit/test_performance.gd` keeps each
 scene inside a budget of meshes and triangles.
+
+The game's own code (stage 28) costs under 1.5 ms a frame in its busiest
+scenes: Ward 4 with sixty people about, casualty, the phone over the ward.
+What made the difference:
+
+- **Characters out of sight wait.** `AvatarRig._process` keeps its clocks
+  running but only poses a character the camera can see (its chest within
+  `REACH` of the view, `_on_screen`; one frustum is shared by everyone for a
+  frame). The time it missed is owed and paid on the first frame it is seen,
+  so it comes back into view mid-stride where it should be. With no camera
+  (tests, tools) everyone is posed. The joints posed every frame are looked
+  up once per build (`_find_joints`), and eyes are touched only when a blink
+  starts or ends. Each character's clock starts somewhere new, so a ward
+  doesn't breathe or blink as one.
+- **The voice list loads at boot, on another thread.** `VoiceBank.warm()`
+  (called first thing in `Main._ready`) reads the 1.8 MB manifest in the
+  background; the first line anyone speaks used to stall the game while it
+  was parsed. `reset()` and the first lookup wait for it.
+- **The phone keeps its messages.** `PhoneBook.items` is rebuilt only when
+  something it is made from changes (`_state_key`: flags, counts, the phone's
+  own state, trust, experience, the name, the wall). The clock is not one of
+  them, since `has_arrived` reads it; the HUD's once-a-second check no longer
+  rebuilds a hundred messages.
+
+Measure with `tools/profile.gd` (the busiest moments, one line each: the
+game code per frame as mean, 95th percentile and worst, physics, draw calls,
+objects, nodes and memory; draw calls only with a window):
+
+    godot --headless --path . -s res://tools/profile.gd
+    xvfb-run -a godot --path . --resolution 1334x750 -s res://tools/profile.gd -- ward,casualty
+
+`tools/soak.gd` plays a new career from the title for 30 minutes (or the
+minutes given), choices picked and tasks done by the bot, a few seconds of
+every day through the real frame loop with the phone opened on some, and the
+evenings in turn (parties, chai, the hostel, a call home). After each day it
+notes objects, nodes, nodes left out of the tree and memory, and fails if
+they climb past the baseline (`DRIFT`, `MEMORY_DRIFT_MB`):
+
+    godot --headless --path . -s res://tools/soak.gd -- 30
 
 ## Training tasks
 

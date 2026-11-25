@@ -17,6 +17,7 @@ var _curtain: ColorRect
 
 
 func _ready() -> void:
+	VoiceBank.warm()
 	var loaded := store.load_or_start()
 	profile = loaded["profile"]
 	has_save = loaded["outcome"] in [SaveStore.Outcome.LOADED, SaveStore.Outcome.RESTORED] and profile.created

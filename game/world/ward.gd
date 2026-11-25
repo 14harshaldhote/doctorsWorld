@@ -2592,13 +2592,24 @@ func _open_panel() -> void:
 	panel.acted.connect(_on_panel)
 	_layer.add_child(panel)
 	_layer.move_child(panel, overlay.get_index())
-	# News while the card is up shows beside it, not behind it.
+	_fit_toast_to_panel()
+	if not get_viewport().size_changed.is_connected(_fit_toast_to_panel):
+		get_viewport().size_changed.connect(_fit_toast_to_panel)
+
+
+# News while the card is up shows beside it, not behind it (again whenever
+# the window changes size, on a Mac).
+func _fit_toast_to_panel() -> void:
+	if panel == null or hud == null:
+		return
 	var screen := get_viewport().get_visible_rect().size.x
 	hud.set_toast_span(0.0, 1.0 - (-panel.sheet.offset_left + UiKit.px(24)) / maxf(1.0, screen))
 
 
 func _close_panel() -> void:
 	_stop_answer()
+	if is_inside_tree() and get_viewport().size_changed.is_connected(_fit_toast_to_panel):
+		get_viewport().size_changed.disconnect(_fit_toast_to_panel)
 	if hud != null:
 		hud.set_toast_span(0.0, 1.0)
 	if panel != null:

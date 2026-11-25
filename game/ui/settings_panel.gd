@@ -2,7 +2,7 @@ class_name SettingsPanel
 extends Control
 ## The settings, over whatever screen opened them (the title screen or the
 ## pause menu): music, sound effects and voice volume, reading lines aloud
-## (on or off, how fast, your doctor's voice), text size, reduced motion, the
+## (on or off, how fast), text size, reduced motion, the
 ## colour-blind-safe monitor, the graphics mode and reminders, plus the
 ## privacy policy and acknowledgements. Every change takes effect at once so
 ## you can hear and see it; Done saves them.

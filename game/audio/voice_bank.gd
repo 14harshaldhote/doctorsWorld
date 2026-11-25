@@ -22,6 +22,8 @@ const FOLDER := "res://assets/voices/"
 const MANIFEST := FOLDER + "manifest.json"
 
 static var _loaded := false
+## The background task reading the manifest (warm), or -1.
+static var _warming := -1
 ## "who|key" to the line's parts.
 static var _lines := {}
 ## who to [{"regex", "kinds", "parts"}] for lines with a name or a number.
@@ -34,6 +36,7 @@ static var _ender: RegEx
 
 ## Forgets what was loaded; the manifest is read again when next needed.
 static func reset() -> void:
+	_finish_warming()
 	_loaded = false
 	_lines.clear()
 	_patterns.clear()
@@ -136,10 +139,33 @@ static func sentences(text: String) -> PackedStringArray:
 	return found
 
 
+## Starts reading the manifest on another thread, at boot. It is 1.8 MB of
+## JSON and takes a phone a good tenth of a second, which would otherwise
+## stall the game the first time anyone speaks.
+static func warm() -> void:
+	if _loaded or _warming >= 0:
+		return
+	_loaded = true
+	_warming = WorkerThreadPool.add_task(_read_manifest, false, "Voice manifest")
+
+
 static func _load() -> void:
+	_finish_warming()
 	if _loaded:
 		return
 	_loaded = true
+	_read_manifest()
+
+
+# Waits for a background read to end (usually long done by now).
+static func _finish_warming() -> void:
+	if _warming < 0:
+		return
+	WorkerThreadPool.wait_for_task_completion(_warming)
+	_warming = -1
+
+
+static func _read_manifest() -> void:
 	if not FileAccess.file_exists(MANIFEST):
 		return
 	var data: Variant = JSON.parse_string(FileAccess.get_file_as_string(MANIFEST))

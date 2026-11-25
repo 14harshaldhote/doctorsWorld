@@ -555,6 +555,17 @@ Here's everything, in order, so you can decide how much of your life to give it:
 - And the pager goes off in the middle of a party, because the hospital has
   never once respected your social life. Go back in and you miss the cake.
   Stay and someone notices.
+- The hospital got faster. Nobody on the ward stops doing anything, but the
+  people you can't see no longer act for nobody, so an old iPhone keeps up
+  with sixty of them. They also no longer breathe and blink in unison, which
+  was frankly a cult.
+- The first line anyone said each session used to freeze the game for a
+  moment while it found everyone's voice. It looks them up at the door now,
+  like a good receptionist, and the phone stopped rereading every message
+  you have ever received once a second. Relatable, but no.
+- On a Mac, Space or Return moves a conversation on and the number keys pick
+  your reply, so you can be rude to a board member's mother without
+  touching the trackpad.
 
 Screenshots of every screen are rebuilt automatically after each change, on
 the [`screenshots` branch](../../tree/screenshots).

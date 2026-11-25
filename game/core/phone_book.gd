@@ -309,11 +309,12 @@ static func fill(profile: PlayerProfile, text: String) -> String:
 # --- Everything on the phone ----------------------------------------------------------
 
 ## Every item this career has, arrived or still to come today, oldest first.
-## Worked out at most once a frame.
+## Worked out again only when something it is made from changes: the clock
+## is not one of them (has_arrived reads that), so a quiet ward does not
+## rebuild a hundred messages every second.
 static func items(profile: PlayerProfile) -> Array:
 	var phone := state(profile)
-	var key := "%d|%d|%d|%d|%d|%d|%d" % [Engine.get_process_frames(), profile.get_instance_id(), _version, profile.day,
-		profile.minutes, profile.flags.size(), profile.rank()]
+	var key := _state_key(profile)
 	if key == _cache_key:
 		return _cache
 	var found: Array = []
@@ -355,6 +356,16 @@ static func items(profile: PlayerProfile) -> Array:
 	_cache = found
 	_cache_key = key
 	return found
+
+
+# Everything the items are made from: the story's conditions (flags, rank,
+# replies, calls), the name in the texts, and the counts, trust, experience
+# and wall the made-up messages read. Hashes are cheap next to the rebuild.
+static func _state_key(profile: PlayerProfile) -> String:
+	return "%d|%d|%d|%d|%d|%d|%s|%s|%d|%d|%d|%d|%d|%d" % [profile.get_instance_id(), _version, profile.day,
+		profile.rank(), profile.rank_held, profile.total_xp, profile.name, profile.address_form, profile.flags.hash(),
+		profile.counters.hash(), profile.phone.hash(), profile.relationships.hash(), profile.wall.hash(),
+		profile.patients.hash()]
 
 
 ## An entry from the data as an item, with every field there.

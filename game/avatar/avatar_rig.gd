@@ -94,6 +94,9 @@ const GESTURES := {
 ## Head movements: nods and shakes play once, the others hold for the line.
 const HEAD_GESTURES := ["nod", "shake", "tilt", "down", "up"]
 const ARM_REST := [0.0, 0.0, -0.09, -0.2, 0.0, 0.0]
+## How far round the chest a character can reach (arms out, head turned),
+## for the on-screen check. Generous, so nobody freezes at the edge.
+const REACH := 1.6
 
 ## Emitted after the character has been rebuilt.
 signal rebuilt
@@ -143,11 +146,38 @@ var _mouth: Node3D
 var _walk_phase := 0.0
 var _clock := 0.0
 var _shown_moving := 0.0
+# The joints posed every frame, found once per build.
+var _j_hips: Node3D
+var _j_torso: Node3D
+var _j_head: Node3D
+var _j_shadow: Node3D
+var _j_hip_l: Node3D
+var _j_hip_r: Node3D
+var _j_knee_l: Node3D
+var _j_knee_r: Node3D
+var _j_shoulder_l: Node3D
+var _j_shoulder_r: Node3D
+var _j_elbow_l: Node3D
+var _j_elbow_r: Node3D
+# Seconds of easing owed by frames skipped while off screen.
+var _owed := 0.0
+var _blinking := false
+
+# Characters made so far, to start each one's clock somewhere new.
+static var _made := 0
+# One camera's frustum, shared by every character for one frame.
+static var _frustum_frame := -1
+static var _frustum_camera := 0
+static var _frustum_planes: Array[Plane] = []
 
 
 func _init(start_config: AvatarConfig = null) -> void:
 	if start_config != null:
 		config = start_config.copy()
+	# Everyone breathes and blinks on their own beat, not the whole ward at
+	# once (the golden ratio spreads them evenly, the same way every run).
+	_clock = fposmod(_made * 0.618034, 1.0) * 3.4
+	_made += 1
 
 
 func _ready() -> void:
@@ -377,6 +407,7 @@ func build() -> void:
 	var shadow := LowPoly.shadow_blob(0.26 * width, Vector2(1.0, 0.8))
 	model.add_child(shadow)
 	_joints["Shadow"] = shadow
+	_find_joints()
 	var props := _props.duplicate()
 	_props.clear()
 	for side: String in props:
@@ -510,6 +541,7 @@ func _build_face(head: Node3D) -> void:
 		head.remove_child(old)
 		old.free()
 	_eyes.clear()
+	_blinking = false
 	var face := Node3D.new()
 	face.name = "Face"
 	head.add_child(face)
@@ -727,6 +759,21 @@ func _square_lens(glasses: Node3D, centre: Vector3, size: float, stretch: Vector
 	LowPoly.put(holder, LowPoly.torus(size, size + 0.006, FRAME, 4, 4), Vector3.ZERO, Vector3(0, PI / 4, 0))
 
 
+func _find_joints() -> void:
+	_j_hips = joint("Hips")
+	_j_torso = joint("Torso")
+	_j_head = joint("Head")
+	_j_shadow = joint("Shadow")
+	_j_hip_l = joint("HipL")
+	_j_hip_r = joint("HipR")
+	_j_knee_l = joint("KneeL")
+	_j_knee_r = joint("KneeR")
+	_j_shoulder_l = joint("ShoulderL")
+	_j_shoulder_r = joint("ShoulderR")
+	_j_elbow_l = joint("ElbowL")
+	_j_elbow_r = joint("ElbowR")
+
+
 func _add_joint(parent: Node3D, joint_name: String, position: Vector3, rotation: Vector3 = Vector3.ZERO) -> Node3D:
 	var node := LowPoly.joint(parent, joint_name, position, rotation)
 	_joints[joint_name] = node
@@ -736,33 +783,32 @@ func _add_joint(parent: Node3D, joint_name: String, position: Vector3, rotation:
 ## Poses the body for a point in the walk cycle. walk is 0 (still) to 1.
 ## Deterministic, so screenshots and tests can ask for an exact pose.
 func set_pose(phase: float, walk: float, breath: float = 0.0) -> void:
-	var hips := joint("Hips")
+	var hips := _j_hips
 	if hips == null:
 		return
 	var swing := sin(phase)
-	joint("Shadow").visible = not sitting and not lying
+	_j_shadow.visible = not sitting and not lying
 	if sitting:
-		for suffix in ["L", "R"]:
-			joint("Hip" + suffix).rotation.x = -1.5
-			joint("Knee" + suffix).rotation.x = 1.5
+		_j_hip_l.rotation.x = -1.5
+		_j_hip_r.rotation.x = -1.5
+		_j_knee_l.rotation.x = 1.5
+		_j_knee_r.rotation.x = 1.5
 		hips.position.y = 0.48
 	else:
-		joint("HipL").rotation.x = -swing * 0.5 * walk
-		joint("HipR").rotation.x = swing * 0.5 * walk
-		joint("KneeL").rotation.x = maxf(0.0, swing) * 0.75 * walk
-		joint("KneeR").rotation.x = maxf(0.0, -swing) * 0.75 * walk
+		_j_hip_l.rotation.x = -swing * 0.5 * walk
+		_j_hip_r.rotation.x = swing * 0.5 * walk
+		_j_knee_l.rotation.x = maxf(0.0, swing) * 0.75 * walk
+		_j_knee_r.rotation.x = maxf(0.0, -swing) * 0.75 * walk
 		hips.position.y = HIP_HEIGHT + absf(cos(phase)) * 0.028 * walk
-	joint("ShoulderL").rotation.x = swing * 0.42 * walk
-	joint("ShoulderR").rotation.x = -swing * 0.42 * walk
-	joint("ElbowL").rotation.x = -0.2 - 0.25 * walk
-	joint("ElbowR").rotation.x = -0.2 - 0.25 * walk
-	if sitting:
-		joint("ElbowL").rotation.x = -0.9
-		joint("ElbowR").rotation.x = -0.9
-	var torso := joint("Torso")
+	_j_shoulder_l.rotation.x = swing * 0.42 * walk
+	_j_shoulder_r.rotation.x = -swing * 0.42 * walk
+	var elbow := -0.9 if sitting else -0.2 - 0.25 * walk
+	_j_elbow_l.rotation.x = elbow
+	_j_elbow_r.rotation.x = elbow
+	var torso := _j_torso
 	torso.scale = Vector3(1.0, 1.0 + breath * 0.012, 1.0 + breath * 0.008)
 	torso.rotation.x = 0.05 * walk
-	joint("Head").rotation.x = -0.04 * walk + breath * 0.012
+	_j_head.rotation.x = -0.04 * walk + breath * 0.012
 
 
 ## The gesture an arm should take now: the active gesture's pose for that arm,
@@ -780,7 +826,7 @@ func _arm_goal(side: String) -> Variant:
 
 ## Layers gestures, head movement and gaze over the walk/idle pose.
 func _update_upper(delta: float, snap: bool = false) -> void:
-	var hips := joint("Hips")
+	var hips := _j_hips
 	if hips == null:
 		return
 	var rate := 1.0 if snap else 1.0 - exp(-delta * 8.0)
@@ -807,8 +853,8 @@ func _update_upper(delta: float, snap: bool = false) -> void:
 				arm[2] -= (sin(t * 11.0) * 0.5 + 0.5) * 0.14
 			if move.has("bounce"):
 				arm[2] += sin(t * 7.0) * 0.12
-		var shoulder := joint("Shoulder" + side)
-		var elbow := joint("Elbow" + side)
+		var shoulder := _j_shoulder_l if side == "L" else _j_shoulder_r
+		var elbow := _j_elbow_l if side == "L" else _j_elbow_r
 		shoulder.rotation = Vector3(
 			lerpf(shoulder.rotation.x, arm[0], weight),
 			lerpf(0.0, arm[1] * sign, weight),
@@ -819,8 +865,8 @@ func _update_upper(delta: float, snap: bool = false) -> void:
 			lerpf(0.0, arm[5] * sign, weight))
 	# Shrugs lift the shoulders; cheering bounces on the toes.
 	_shrug = lerpf(_shrug, float(move.get("shrug", 0.0)), rate)
-	for side: String in ["L", "R"]:
-		joint("Shoulder" + side).position.y = 0.46 + 0.035 * _shrug
+	_j_shoulder_l.position.y = 0.46 + 0.035 * _shrug
+	_j_shoulder_r.position.y = 0.46 + 0.035 * _shrug
 	if move.has("bounce") and not sitting:
 		hips.position.y += absf(sin(t * 7.0)) * 0.035
 	# Gaze: the head turns towards the target and the chest follows a little.
@@ -837,7 +883,7 @@ func _update_upper(delta: float, snap: bool = false) -> void:
 			goal_look.x = clampf(atan2(local.x, local.z), -turn, turn)
 			goal_look.y = clampf(-atan2(local.y - eye_height, flat.length()), -0.45, 0.45)
 	_look = goal_look if snap else _look.lerp(goal_look, 1.0 - exp(-delta * 6.0))
-	var head := joint("Head")
+	var head := _j_head
 	var nod := 0.0
 	var shake := 0.0
 	var tilt := float(move.get("tilt", 0.0))
@@ -859,7 +905,7 @@ func _update_upper(delta: float, snap: bool = false) -> void:
 	head.rotation.x += nod + _look.y
 	head.rotation.y = _look.x * 0.75 + shake
 	head.rotation.z = tilt
-	joint("Torso").rotation.y = _look.x * 0.25
+	_j_torso.rotation.y = _look.x * 0.25
 
 
 func _process(delta: float) -> void:
@@ -869,17 +915,47 @@ func _process(delta: float) -> void:
 	_since_syllable += delta
 	_shown_moving = move_toward(_shown_moving, moving, delta * 4.0)
 	_walk_phase = fmod(_walk_phase + delta * TAU * (0.6 + 1.0 * _shown_moving), TAU)
+	_mouth_open = move_toward(_mouth_open, 0.0, delta * 7.0)
+	# The clocks keep running, so whoever walks back into view is mid-stride
+	# where they should be; only the posing waits.
+	if not _on_screen():
+		_owed += delta
+		return
+	delta += _owed
+	_owed = 0.0
 	set_pose(_walk_phase, _shown_moving, sin(_clock * 1.9) * (1.0 - _shown_moving))
 	_update_upper(delta)
-	if blink_every > 0.0:
-		var blink := fmod(_clock, blink_every) < 0.12
+	var blink := blink_every > 0.0 and fmod(_clock, blink_every) < 0.12
+	if blink != _blinking:
+		_blinking = blink
 		for eye in _eyes:
 			if is_instance_valid(eye):
 				eye.scale.y = 0.15 if blink else 1.0
-	_mouth_open = move_toward(_mouth_open, 0.0, delta * 7.0)
 	if _mouth != null and is_instance_valid(_mouth):
 		var open := _mouth_open
 		if talking and _since_syllable > 0.6:
 			# Talking without a voice (a quiet aside): a steady murmur.
 			open = absf(sin(_clock * 14.0))
 		_mouth.scale.y = 1.0 + open * 1.5
+
+
+## Whether anyone could see this character now. A busy ward holds sixty of
+## them and most stand behind the camera or round a corner; posing those is
+## wasted work. With no camera (tests, tools) everyone counts as seen.
+func _on_screen() -> bool:
+	if not is_visible_in_tree():
+		return false
+	var camera := get_viewport().get_camera_3d()
+	if camera == null:
+		return true
+	var frame := Engine.get_process_frames()
+	var id := camera.get_instance_id()
+	if frame != _frustum_frame or id != _frustum_camera:
+		_frustum_frame = frame
+		_frustum_camera = id
+		_frustum_planes.assign(camera.get_frustum())
+	var chest := global_transform * Vector3(0.0, 1.0, 0.0)
+	for plane in _frustum_planes:
+		if plane.distance_to(chest) > REACH:
+			return false
+	return true

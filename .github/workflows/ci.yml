@@ -17,7 +17,7 @@ jobs:
   game-linux:
     name: Tests and screenshots (Linux)
     runs-on: ubuntu-24.04
-    timeout-minutes: 30
+    timeout-minutes: 40
     permissions:
       contents: write
     steps:
@@ -46,6 +46,11 @@ jobs:
 
       - name: Tests
         run: ~/godot/godot --headless --path . -s res://tests/run_tests.gd
+
+      - name: Two minutes of play, and nothing builds up
+        # A new career from the title, day after day; fails if objects, nodes
+        # or memory climb (tools/soak.gd; run it for 30 minutes locally).
+        run: ~/godot/godot --headless --path . -s res://tools/soak.gd -- 2
 
       - name: The exported game carries the story files
         # Stories are plain JSON, which Godot leaves out of an export unless

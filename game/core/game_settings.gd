@@ -1,8 +1,8 @@
 class_name GameSettings
 extends RefCounted
 ## The player's settings for this device: how loud the music, sound effects
-## and voices are, whether lines are read aloud (how fast, and in which
-## voice for the player's doctor), the text size, reduced motion, the
+## and voices are, whether lines are read aloud (and how fast), the text
+## size, reduced motion, the
 ## colour-blind-safe monitor, the graphics mode and reminders. They belong to the device, not the career,
 ## so a new career keeps them. Kept in their own small JSON file, written
 ## safely the same way as the save.

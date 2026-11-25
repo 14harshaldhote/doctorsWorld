@@ -568,6 +568,34 @@ func _gui_input(event: InputEvent) -> void:
 			tap()
 
 
+## A keyboard (the Mac): Space or Return does what a tap does, and 1 to 9
+## (the reply_1 to reply_9 actions) pick that reply. Not while the pause menu
+## or the phone is in front.
+func _unhandled_input(event: InputEvent) -> void:
+	if event.is_echo() or not event.is_pressed() or not is_visible_in_tree() or _covered():
+		return
+	if _choosing:
+		var buttons := choice_buttons()
+		for index in mini(buttons.size(), 9):
+			if event.is_action_pressed(StringName("reply_%d" % (index + 1))):
+				buttons[index].pressed.emit()
+				get_viewport().set_input_as_handled()
+				return
+	elif event.is_action_pressed(&"ui_accept"):
+		tap()
+		get_viewport().set_input_as_handled()
+
+
+func _covered() -> bool:
+	var parent := get_parent()
+	if parent == null:
+		return false
+	for sibling in parent.get_children():
+		if sibling is LobbyHud and ((sibling as LobbyHud).menu_open() or (sibling as LobbyHud).phone_open()):
+			return true
+	return false
+
+
 ## Finishes the line being typed, or moves on.
 func tap() -> void:
 	if _choosing:
