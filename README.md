@@ -7,13 +7,27 @@ mostly about the fees. Now a letter says you start Monday at Riverside City
 Hospital, a place where the lifts are slow, the coffee is worse, and everyone
 already has an opinion about you.
 
-Doctors World is a small, chunky, fully 3D story game for iPhone and iPad. You
-make your doctor, walk the corridors, talk to people who talk back, and try to
-climb from terrified intern to Chief of Medicine without killing anyone. Or at
-least without killing anyone important.
+Doctors World is a small, chunky, fully 3D story game for iPhone, iPad and
+Mac. You make your doctor, walk the corridors, talk to people who talk back,
+and try to climb from terrified intern to Chief of Medicine without killing
+anyone. Or at least without killing anyone important. Then the shift ends,
+technically, and your mother wants to know if you've eaten.
 
 > Every patient, illness and hospital in the game is made up. This is a game,
 > not medical advice. If you're actually unwell, put the phone down.
+
+## Where it stands
+
+The whole career is built. Convocation to the corner office, and then the
+corner office keeps going. For ever. Like a mortgage. Every line is written
+and spoken, every rank is playable, and the hospital keeps making fresh
+patients for as long as you keep turning up.
+
+What it isn't yet is in the App Store. That needs Apple's paid developer
+account, which costs money, which junior doctors famously don't have. Until
+then you can play it on a Mac, or put it on your own iPhone or iPad from a
+Mac (see [Play it](#play-it)). Next on the list: voices with more feeling,
+because some of them still deliver bad news like a railway announcement.
 
 ## What you'll be doing
 
@@ -45,6 +59,17 @@ and the patient's heart rate tells you how it's going.
 how it happened, a mother who won't leave the corridor, an old man who has
 outlived three of his doctors and intends to outlive you.
 
+**Running casualty.** A red door at the end of the ward, a waiting room that
+never empties, and a clock that keeps going while you decide who's dying and
+who's just loud.
+
+**Carrying a phone.** Chats, calls, lab results, the pager and a family group
+that never sleeps. The hospital doesn't stop while you scroll. Neither does
+your mother.
+
+**Having a life, technically.** Chai in the canteen, a hostel room, video
+calls home and the occasional party, until the pager remembers you exist.
+
 **Hospital politics.** Who gets the good cases, who gets blamed for the bad
 ones, and why the head of department suddenly wants to be your friend.
 
@@ -63,12 +88,47 @@ how you know you're winning.
 | Head of Department | Meetings. So many meetings. |
 | Chief of Medicine | Everything is your fault now. Congratulations. |
 
-## What works right now
+## Play it
 
-All ten stages are in, from convocation to the corner office, and then the
-corner office keeps going. For ever. Like a mortgage. The old 2D
-version has been retired (it's kept safe on the `swift-prototype` branch).
-Here's everything, in order, so you can decide how much of your life to give it:
+**On a Mac.** Every change to the game builds a fresh Mac app. Open the
+[latest successful build](../../actions/workflows/ci.yml?query=branch%3Amain+is%3Asuccess),
+scroll to the bottom and download **DoctorsWorld-mac** (you need to be signed
+in to GitHub, and it's about 200 MB, most of it people talking). Then:
+
+1. Unzip it, then unzip what comes out (GitHub zips the zip, as a treat), and
+   drag **Doctors World.app** into Applications.
+2. Double-click it. macOS says it can't check the developer, which is fair,
+   because nobody paid Apple to vouch for us. Click **Done**.
+3. Open **System Settings > Privacy & Security**, scroll down to the line
+   about Doctors World, click **Open Anyway** and confirm.
+
+After that it opens like any other app, and it remembers where you were.
+
+**On an iPhone or iPad.** Until it's in the App Store, it goes on through a
+Mac with Xcode and a free Apple ID. A free ID's install stops opening after
+7 days, so you plug the phone in and run it again once a week, like a
+prescription. Your save stays put. The steps are in
+[docs/DEVELOPMENT.md](docs/DEVELOPMENT.md#run-it-on-your-iphone-or-ipad). It's
+built to run smoothly on phones as old as the iPhone SE (2nd generation), and
+every phone gets exactly the same game.
+
+**Controls.**
+
+| To | On a Mac | On an iPhone or iPad |
+| --- | --- | --- |
+| Walk | Click the floor (WASD or the arrow keys in the lobby and skills lab) | Tap the floor |
+| Talk to someone | Click them | Tap them |
+| Move a conversation on | Click, Space or Return | Tap |
+| Pick a reply | Click it, or press 1 to 9 | Tap it |
+| Get your phone out | P, or the Phone button | Swipe up from the bottom, or the Phone button |
+| Pause | Esc, or the Menu button | The Menu button |
+
+## Everything in it
+
+Here's the lot, roughly in the order it happens to you, so you can decide how
+much of your life to give it.
+
+### The first three days
 
 - The title screen: the hospital at dusk, an ambulance, a doctor wandering about.
 - A cold open: two black cards from your third day, so you know exactly how
@@ -91,14 +151,6 @@ Here's everything, in order, so you can decide how much of your life to give it:
   is speaking, and lips that keep time. Nurses gossip by the vending machine
   whether you're listening or not, though you only catch it if you wander
   close.
-- Everyone talks out loud. Every line you can read, someone actually says,
-  in their own natural voice, recorded for this game, and the words appear as
-  they're said instead of racing ahead. Dr. Iyer sounds like Dr.
-  Iyer all game, and children sound like children. Your own doctor stays
-  quiet: your lines and replies are yours to read, in whatever voice is in
-  your head. The music
-  ducks out of the way while anyone speaks. Too slow? Too fast? There's a
-  setting. Too honest? No setting for that.
 - Day 2, the skills lab. Six stations, three trainers, and a sign promising
   that everything you break is plastic. Scrub in without touching your face
   (you will want to). Read a patient monitor before Dr. Iyer reads you.
@@ -129,9 +181,12 @@ Here's everything, in order, so you can decide how much of your life to give it:
   over, and then you get to explain that to his mother. Afterwards Dr. Iyer
   tells you what she really thought, and the next morning the pager tells you
   how he's doing.
-- Days 4 to 8, the surgical ward. Six beds, a trolley in admissions, a side
-  room everyone wants, and an X-ray viewer that hums. Sister Grace runs the
-  handover; Dr. Iyer runs you. A pager card tells you who's next.
+
+### The ward, Days 4 to 8
+
+- The surgical ward. Six beds, a trolley in admissions, a side room everyone
+  wants, and an X-ray viewer that hums. Sister Grace runs the handover; Dr.
+  Iyer runs you. A pager card tells you who's next.
 - Five patients, each with a story. Mrs. Lakshmi Pillai has pain under her
   ribs and a secret her son doesn't know, and he's on a video call asking.
   Kunal, an influencer with a sore wrist, is filming you and would like the
@@ -150,35 +205,16 @@ Here's everything, in order, so you can decide how much of your life to give it:
   patient, refuse, or hand the beds over comes back to you when Dr. Anand
   Rao, the head of surgery, asks what you saw this week.
 - The review. Dr. Rao reads the week back to you, the letters arrive, and if
-  you've earned it you finish Day 8 as a Junior Resident. Experience now
-  shows your level; rank comes from being promoted. The next morning is an
+  you've earned it you finish Day 8 as a Junior Resident. Experience shows
+  your level; rank comes from being promoted. The next morning is an
   ordinary day, which is somehow worse.
-- Music. A minute or more of each, so it doesn't loop in your head like a
-  pager: a warm tune for the title, an easy one for the ward, a tense one for
-  theatre (no drums: the heart monitor keeps the beat, and you'd rather it
-  kept going), a lonely piano for the night shift, an urgent one for when the
-  doors bang open, a sad one for when things go wrong, and a fanfare when
-  you're promoted, which is the only time anyone in a hospital gets one. Buttons click, the monitor beeps with the patient's heart (lower
-  when their oxygen drops, so you'll hear it before you see it), and good
-  scores chime.
-- Settings, from the title screen or the pause menu: separate volumes for
-  music, sound effects and voices; reading lines aloud (off, slower, normal or
-  faster); bigger text, which grows everywhere at once;
-  Reduce motion, for people who'd rather the camera didn't swoop; a
-  colour-blind-safe monitor in blue and orange with arrows, because "the red
-  number" is not a diagnosis; and Battery saver, which older iPhones pick by
-  themselves.
-- Things move like they mean it: screens fade in, buttons push in when you
-  tap them, score cards pop up and the stars land one at a time, and your
-  promotion comes with confetti.
-- Room for the notch and the home bar on newer iPhones, and older iPhones
-  have about half as much to draw, so the hospital runs smoothly on phones as
-  tired as the staff. The sound plays even with the silent switch on, because
-  the game has its own volume settings and you'd only turn them all off anyway.
-- Eight months later. You're a Junior Resident now, which means the pager no
-  longer makes you jump, mostly, and the cases come with real operating
-  theatres attached. The team walks you in, gowns up, and Dr. Khan briefs you
-  with whatever you did or didn't ask on the ward.
+
+### Junior Resident
+
+- Eight months later. The pager no longer makes you jump, mostly, and the
+  cases come with real operating theatres attached. The team walks you in,
+  gowns up, and Dr. Khan briefs you with whatever you did or didn't ask on
+  the ward.
 - Deepa cut her hand on a broken glass while cooking, and the glass is still
   in there somewhere. Find it before you find a tendon. Did you ask about her
   last tetanus jab? The time-out board will.
@@ -203,9 +239,12 @@ Here's everything, in order, so you can decide how much of your life to give it:
 - The review, with Dr. Rao, Dr. Iyer and an empty chair. Yours. They
   remember the hand, the lump, the credit and the VIP, and if you've earned
   it you walk out a Senior Resident.
-- A year later. Senior Resident: an intern of your own, Dr. Zoya Qureshi,
-  who is keen, terrified, and writes drug charts at three in the morning.
-  Teach her, watch her, or throw her in. She remembers which.
+
+### Senior Resident
+
+- A year later. An intern of your own, Dr. Zoya Qureshi, who is keen,
+  terrified, and writes drug charts at three in the morning. Teach her,
+  watch her, or throw her in. She remembers which.
 - Mrs. Gomes, eighty-one, broke her hip and would like someone who doesn't
   whisper. Her son drove five hours from Pune to sign things on her behalf.
   She is perfectly capable of signing them herself, if anyone asks her.
@@ -229,12 +268,15 @@ Here's everything, in order, so you can decide how much of your life to give it:
   doctor at night. You were alone on Tuesday night. Dr. Rao lets you decide.
 - The review, again. Same table, different chair. Earn it and you walk out
   a Surgeon.
-- Three months later. Surgeon. Your name on the theatre door, in capitals,
-  laminated by someone who should have been doing something else. Pick your
-  own team: the scrub nurse who's been awake since yesterday and swears he's
-  fine, or the new one who counts like a bank cashier. The anaesthetist who
-  reads everything, two hours from now, or the quick one who reads the notes
-  in the lift. Both choices come back to bite you, in different places.
+
+### Surgeon
+
+- Three months later. Your name on the theatre door, in capitals, laminated
+  by someone who should have been doing something else. Pick your own team:
+  the scrub nurse who's been awake since yesterday and swears he's fine, or
+  the new one who counts like a bank cashier. The anaesthetist who reads
+  everything, two hours from now, or the quick one who reads the notes in
+  the lift. Both choices come back to bite you, in different places.
 - Mrs. Kurup, sixty-four, can't stop being sick and hasn't passed wind since
   Friday (she'll tell you, at length). Open her belly, follow the swollen
   bowel down to where it goes flat, and find what's been strangling it.
@@ -252,11 +294,14 @@ Here's everything, in order, so you can decide how much of your life to give it:
 - Dr. Rao retires, and the Head of Department job is you or Dr. Sethi, who
   has done the management course twice and mentions it. The interview panel
   includes a retired judge. She can tell when an answer's been rehearsed.
-- Six months later. Head of Department: Dr. Rao's old office, a door that
-  sticks, and everybody's problems before your own. The nurses are voting on
-  a strike, the Dean is retiring, and a private chain called CarePlus has
-  sent Dr. Sameer Kapoor to look round. He finds the paper charts charming,
-  the way people find old cars charming.
+
+### Head of Department
+
+- Six months later. Dr. Rao's old office, a door that sticks, and
+  everybody's problems before your own. The nurses are voting on a strike,
+  the Dean is retiring, and a private chain called CarePlus has sent Dr.
+  Sameer Kapoor to look round. He finds the paper charts charming, the way
+  people find old cars charming.
 - Mrs. Rekha Sinha taught Hindi for thirty-one years and had her gallbladder
   out on Dr. Sethi's new "home by evening" scheme. Three days later she's back,
   yellow, feverish and correcting your grammar. Ask the right questions (yes,
@@ -289,6 +334,9 @@ Here's everything, in order, so you can decide how much of your life to give it:
   Grace tell you where everyone ended up. Rohit builds bridges. Dr. Rao grows
   roses. Then the pager goes off, because it always does, and the ward carries
   on without an ending, the way wards do.
+
+### Chief of Medicine, for ever
+
 - Then you're the Chief, and it never stops. The first week is a casebook of
   people you already know, now on the other side of the bed: Mrs. Banerjee
   with a cut arm and a tin of biscuits, Mr. Malhotra's teenage son (and Mr.
@@ -300,24 +348,10 @@ Here's everything, in order, so you can decide how much of your life to give it:
   a cheque, cameras at the door, a family with a lawyer's card. Your answers
   move three numbers (staff, money, and whether the town trusts you), and
   every fifth day the board reads them back to you, slowly.
-- A career map, because apparently you need a map to know you're lost. Every
-  rank from Intern to Chief is a stop on the road: the ones you've done, the
-  one you're on with exactly what stands between you and the next (a review,
-  a level, a board that reads reports slowly), and the locked ones teasing
-  what's coming. Further down, the road splits into Emergency, the
-  Children's ward and Heart, which are "coming", in the way a lift in a
-  government hospital is "coming".
-- Dr. Varun Khanna, your batchmate, took the CarePlus job, the CarePlus car
-  and a twelve-foot hoarding of his own face at the highway signal. Every
-  month you race him on XP earned, not on promotions, so you can't win by
-  turning up to a review. He has good days, bad days and a podcast. Lose a
-  patient and he gets a push. He will tell the WhatsApp group either way.
-- Letters. The people you looked after write to you, and what you did
-  decides who writes and what they say. Rohit writes from home, or from the
-  ICU. Aarav sends a crayon robot. Mrs. Mehra sends tea, or a copy of her
-  complaint to the board. Some people don't write at all, and their space on
-  the wall stays empty, which is its own kind of letter. Twenty-four places
-  on the wall, and the last one is a hundred days away.
+- Fourteen kinds of hard call, and none comes back inside a week: somebody
+  important wants to skip the queue, the antivenom runs out in snake season,
+  a resident falls asleep at a red light, the scanner dies, the television
+  wants a hero, and Dr. Kapoor drops by with a proposal and a smile.
 - Things go wrong, as they do in an Indian hospital, usually at once. The
   lights die in the middle of an operation. Two Ramesh Kumars, one
   gallbladder. A corridor full of grieving, furious relatives and one cousin
@@ -331,6 +365,150 @@ Here's everything, in order, so you can decide how much of your life to give it:
   the rules. On hard there's a clock. On extreme there's a clock and nobody
   will help you. Every third day as Chief, one of them happens again,
   differently.
+- After that the days are made fresh every morning, for as long as you can
+  stand it: a night rota from a ward full of different patients, crashes on
+  the highway, a simulator case in front of interns who are placing bets on
+  you. Every ten days the town grows and the hospital gets busier: patients
+  turn faster, puzzles stop going easy on you, and the board raises its bar.
+  There are milestone days, cake included. There is no last day. That's the
+  job.
+- No two weeks are the same, which is not a compliment. Some weeks the rains
+  come and the highway turns to glass. Some weeks it's the festival: rockets
+  in fists, a crush at the gate, and half the staff on leave. Some weeks a
+  water main bursts and the stomach bug fills the beds and empties the nurses'
+  room, and you have to keep it away from everyone who can't fight it. Each
+  one costs you something, every morning, until it's over.
+- Strangers walk in, too: an engineering student with an exam at nine, the
+  man who delivers your gas cylinders, the tea lady from the bus stand, your
+  head nurse's old headmistress, a piano teacher who fell over her cat, a
+  lorry driver who walked in with a split spleen, an old tailor who inspects
+  your stitches, and a bus conductor who came in on her own bus. Once you've
+  operated on them, the interns get them in the simulator. Forever.
+- Every day ends on a card with your winning run, how close the next review
+  or board report is, and a line about tomorrow, which is usually worse.
+
+### Casualty, the clock, and the wall
+
+- Casualty. There's a red door at the end of Ward 4, and behind it four
+  cubicles, six plastic benches and a triage nurse who has seen it all,
+  twice. People walk in off the street all day: a sprained wrist, a tummy
+  bug, a man who is definitely not having a heart attack (he is). Tap
+  someone, they lie on a trolley, and you ask, examine, order tests and
+  decide, while the waiting room gets longer and the sickest get worse.
+  Every career has its own hospital, so your Tuesday is not your friend's.
+- The clock runs. Half a hospital minute every second you stand about,
+  and the story doesn't wait: leave a page unanswered for an hour and you
+  arrive late, it costs you, and people notice. When the story's done you
+  hand over and go home, or you don't, because casualty is right there.
+- Patients that never run out. Fifty-seven real illnesses, the kind India
+  actually gets: heat stroke, scrub typhus, a swallowed coin, a dog bite, a
+  scooter versus a stray. Some show up late because they tried Eno first
+  (four times). Some are on blood thinners. Some are pregnant and haven't
+  mentioned it. Some are "only drinking at weddings" and smell like the whole
+  baraat. A toddler's mother answers for the toddler, a Googler has read
+  three websites, a bargainer wants only the tests that are really needed,
+  and a teenager is sarcastic at you while actively unwell. Ten patient
+  voices, names from every corner of the country, and people you treated
+  weeks ago walk back in: with something new, worse because you got it
+  wrong, or with a box of kaju katli because you didn't. Every so often a
+  mystery fever goes round town. It is made up for the game and the game
+  says so, loudly. What you do about it is not.
+- And sometimes they die. Not often, and usually not for no reason: you sat
+  on someone until they crashed, you treated a number instead of a person,
+  you nodded while Sister Priya read a drug back for the wrong cubicle. The
+  lab rings with critical results, and now and then the result is wrong: a
+  burst sample, somebody else's sticker, a sodium of 13 typed by a finger
+  that was busy elsewhere. Repeat it or treat it. Some mornings the night
+  team's handover forgets a bed. And some patients come in already past
+  saving, which is nobody's fault and helps less than you'd think.
+- After a death you go to the relatives' room and choose how to say it:
+  plainly, in medical words, or by sending the nurse. They'll remember
+  which. Then the name goes up on the wall by the desk, and nobody takes it
+  down. If it was your fault, Dr. Iyer texts you about Friday's M&M. Bring
+  the notes, not excuses. The first name goes up on Day 5, and there is
+  nothing you can do about it, which is the point.
+
+### The phone
+
+- Swipe up from the bottom of the screen (or press P on a Mac) and there it
+  is: Chats, Calls, Lab results, the Pager, a Feed and Photos. Mum wants to
+  know if you ate the poha. Dad forwards a good-morning flower with a quote
+  about the present. Your sister wants your room. Varun posts reels about
+  his parking spot. Rohit's mother asks if he can have ice cream, a retired
+  postmaster sends you a photo of a blue tin that is not biscuits (it is
+  never biscuits), and someone types a message at 23:10 and deletes it. Lab
+  reports land on it. People casualty sent home text to say thank you. Your
+  mother calls at exactly the wrong moment, because that is her gift.
+- A map of the hospital, so "I got lost" is no longer a medical excuse.
+- A Radio app, with a new request most days.
+
+### Drama, feelings and songs
+
+- The shift has a sense of drama, like a TV show that knows when to cut to
+  an advert. After a hard stretch the hospital lets you breathe: Sister
+  Grace puts chai in your hand, Dr. Sethi tells a joke so bad the patient in
+  cubicle four laughs, the hospital radio takes a request. After a long
+  quiet stretch an ambulance remembers you exist. And in the middle of the
+  worst moments something stupid happens, because it always does: a goat
+  walks through casualty, an uncle films the crash call for the family
+  group, a man in a very white kurta announces that he knows the local MLA.
+  The defibrillator does not care.
+- A few times a week something gets to you instead. An old man with a photo
+  of his wife propped against the water jug. A child who watches you wash
+  your hands for a long time and then asks, very quietly. Sister Priya in
+  the sluice, rinsing a bedpan that is already clean. You choose what to do,
+  and sometimes, days later, someone texts to say what it meant.
+- Your colleagues have lives, apparently. Needs, goals, rotas, mothers,
+  weddings. Every so often one of them walks up on the ward and asks you for
+  something: cover for an interview, a reference, a quiz before an exam. What
+  you say gets remembered, and they text you how it went. Badly, sometimes.
+- There are songs. The night nurses have one about the night shift, the
+  canteen has a jingle about its dal, and Riverside FM, the hospital radio
+  broadcasting from a broom cupboard on the second floor, has RJ Bunty and a
+  roast called "Doctor, Doctor". The words run along the bottom of the screen
+  like a music video, so you can sing along, which nobody asked you to do.
+
+### After the shift
+
+- After a day on the ward you get an evening, which is like a weekend but
+  shorter and you still smell of Betadine. It starts in Mani's canteen,
+  where whoever is on late is having chai. Sit with one of them for gossip,
+  a little trust and a tip for tomorrow, which turns up again in the morning
+  because nobody expected you to remember it. The canteen radio takes
+  requests, mostly from RJ Bunty.
+- Then the hostel room: one bed, one phone, and a packet of biscuits that has
+  seen things. Video call home and Mum, Dad and Anu all talk at once, about
+  your food, your posture and a rishta nobody asked for. Eat something real,
+  read up on tomorrow, or scroll until it is somehow one in the morning.
+  Everything costs time on the clock, and when you go to bed decides how you
+  slept.
+- Sleep badly and the morning tells you so, and so do your hands. In theatre
+  they shake, and everything you hold shakes with them. Going to bed hungry
+  counts too. Your body keeps receipts.
+- Don't call home for a few days and Mum starts texting. She doesn't repeat
+  herself. She escalates. After that she gets on a bus and walks onto Ward 4
+  in the middle of your shift with a steel dabba of rajma, in front of Sister
+  Grace, who has questions.
+- Some evenings are parties. Hostel night with your batch, Diwali on the
+  terrace, Sister Grace's birthday (she doesn't do birthdays, there is a cake
+  with her face on it), Dr. Khan's wedding reception and Dr. Rao's farewell.
+  Each one has a game: carrom on a board with a crack in it, antakshari
+  against the clock, a dance-off you tap in time with the dhol, or a speech
+  in front of everyone, one line at a time. Win or flop, people remember.
+  Skip one and they remember that too.
+- Dr. Varun Khanna, your batchmate, took the CarePlus job, the CarePlus car
+  and a twelve-foot hoarding of his own face at the highway signal. Every
+  month you race him on XP earned, not on promotions, so you can't win by
+  turning up to a review. He has good days, bad days and a podcast. Lose a
+  patient and he gets a push. He will tell the WhatsApp group either way.
+  After weeks of texting you about his car he finally turns up in person,
+  exactly as advertised. The shirt is linen, so no hugging.
+- And the pager goes off in the middle of a party, because the hospital has
+  never once respected your social life. Go back in and you miss the cake.
+  Stay and someone notices.
+
+### Something every day
+
 - A 60-second case every day, the same one for every doctor in the
   country, because suffering is better shared. One emergency, three
   questions, one minute, twelve kinds: a sugar that's too low or too high or
@@ -362,36 +540,109 @@ Here's everything, in order, so you can decide how much of your life to give it:
   crises without a slip, a perfect minute, a mystery solved on two clues,
   ten operations in a row, a month ahead of Varun. Earned once, kept for
   good, worth nothing, wanted badly.
-- After that the days are made fresh every morning, for as long as you can
-  stand it: a night rota from a ward full of different patients, crashes on
-  the highway, a simulator case in front of interns who are placing bets on
-  you. Every ten days the town grows and the hospital gets busier: patients
-  turn faster, puzzles stop going easy on you, and the board raises its bar.
-  There are milestone days, cake included. There is no last day. That's the
-  job.
-- No two weeks are the same, which is not a compliment. Some weeks the rains
-  come and the highway turns to glass. Some weeks it's the festival: rockets
-  in fists, a crush at the gate, and half the staff on leave. Some weeks a
-  water main bursts and the stomach bug fills the beds and empties the nurses'
-  room, and you have to keep it away from everyone who can't fight it. Each
-  one costs you something, every morning, until it's over.
-- Strangers walk in, too: an engineering student with an exam at nine, the
-  man who delivers your gas cylinders, the tea lady from the bus stand, your
-  head nurse's old headmistress, a piano teacher who fell over her cat, a
-  lorry driver who walked in with a split spleen, an old tailor who inspects
-  your stitches, and a bus conductor who came in on her own bus. Once you've
-  operated on them, the interns get them in the simulator. Forever.
-- Fourteen kinds of hard call now, and none comes back inside a week:
-  somebody important wants to skip the queue, the antivenom runs out in snake
-  season, a resident falls asleep at a red light, the scanner dies, the
-  television wants a hero, and Dr. Kapoor drops by with a proposal and a smile.
-- Every day ends on a card with your winning run, how close the next review
-  or board report is, and a line about tomorrow, which is usually worse.
+- Letters. The people you looked after write to you, and what you did
+  decides who writes and what they say. Rohit writes from home, or from the
+  ICU. Aarav sends a crayon robot. Mrs. Mehra sends tea, or a copy of her
+  complaint to the board. Some people don't write at all, and their space on
+  the wall stays empty, which is its own kind of letter. Twenty-four places
+  on the wall, and the last one is a hundred days away.
+- Homework. Between every day from the end of your first operation to the
+  start of Day 28, you stop in the skills lab for one station: the monitor,
+  a drip, a row of stitches, the instrument tray or the sink. It takes a
+  minute or two and pays XP just for turning up, more for stars and more
+  for beating your own best, and more again the higher you climb. You can
+  skip it. Tom will know.
+- The history drill brings a stranger each time, not just Mr. Kumar: a man
+  with a stent and an opinion, a woman whose period is late and who is
+  allergic to gloves, a seventy-four-year-old who did not trip, and a car
+  salesman with one kidney and a fever. Five questions. Choose well.
+- Things you didn't know you wanted to know: every training score card ends
+  with a true story from medicine, and Dr. Iyer, Sister Grace or Tom reads it
+  to you out loud. Catgut was never cat. The first proper heart tracing
+  machine weighed 270 kilos and needed five people and buckets of salt
+  water. Rubber gloves exist because a surgeon fell for his scrub nurse.
+- Turning up pays. Open the game on a new day and there's XP waiting, more
+  for every day in a row for a week, and more the higher you've climbed. Miss
+  a day and the streak starts again, like every good habit.
+- A career map, because apparently you need a map to know you're lost. Every
+  rank from Intern to Chief is a stop on the road: the ones you've done, the
+  one you're on with exactly what stands between you and the next (a review,
+  a level, a board that reads reports slowly), and the locked ones teasing
+  what's coming. Further down, the road splits into Emergency, the
+  Children's ward and Heart, which are "coming", in the way a lift in a
+  government hospital is "coming".
 - Reminders, if you want them, and only if you say so. After your first day
   Dr. Iyer offers to page you when patients are waiting: a stranger in
   Emergency, the rains arriving, a winning run about to go cold. One a day at
   the hour you usually play, never at night, and after a week of silence
   from you, silence from them. Which is more than the real ones manage.
+
+### Voices, music and how it feels
+
+- Everyone talks out loud. Every line you can read, someone actually says,
+  in their own voice, recorded for this game, and the words appear as
+  they're said instead of racing ahead. Every sentence gets its own pace and
+  pitch and a breath before the next, the way tired people actually talk at
+  six in the morning. Dr. Iyer sounds like Dr. Iyer all game, and children
+  sound like children. Your own doctor stays quiet: your lines and replies
+  are yours to read, in whatever voice is in your head. The music ducks out
+  of the way while anyone speaks. Too slow? Too fast? There's a setting. Too
+  honest? No setting for that.
+- People talk the way people talk, not the way they write. More "na", fewer
+  speeches. The seniors are sarcastic. The young ones are Gen Z: Zoya is
+  lowkey a fan and highkey terrified, Dev Malhotra finds his father's budget
+  voice so cringe, and Dr. Saxena's brain is a loading screen. Dr. Iyer had
+  to ask what "it's giving" means. She regrets it.
+- Music. A minute or more of each, so it doesn't loop in your head like a
+  pager: a warm tune for the title, an easy one for the ward, a tense one for
+  theatre (no drums: the heart monitor keeps the beat, and you'd rather it
+  kept going), a lonely piano for the night shift, an urgent one for when the
+  doors bang open, a sad one for when things go wrong, and a fanfare when
+  you're promoted, which is the only time anyone in a hospital gets one.
+  Buttons click, the monitor beeps with the patient's heart (lower when their
+  oxygen drops, so you'll hear it before you see it), and good scores chime.
+- Settings, from the title screen or the pause menu: separate volumes for
+  music, sound effects and voices; reading lines aloud (off, slower, normal or
+  faster); bigger text, which grows everywhere at once; Reduce motion, for
+  people who'd rather the camera didn't swoop; a colour-blind-safe monitor in
+  blue and orange with arrows, because "the red number" is not a diagnosis;
+  and Battery saver, which older iPhones pick by themselves.
+- Things move like they mean it: screens fade in, buttons push in when you
+  tap them, score cards pop up and the stars land one at a time, and your
+  promotion comes with confetti.
+- People walk round each other, and round beds, walls and the side room's
+  furniture, and wait their turn, which is more than most real corridors
+  manage.
+- Hard to get stuck. If the place you need is off the edge of the screen,
+  its tag waits at the edge with an arrow, and tapping the bed, the patient
+  or the floor beside them works too. Closing the game halfway through a day
+  doesn't pay you twice, or promote you twice, which would be generous but
+  wrong.
+- Quick, even on an older iPhone. Nobody on the ward stops doing anything,
+  but the people you can't see don't act for nobody, so the phone keeps up
+  with sixty of them, and they don't breathe and blink in unison, which would
+  frankly be a cult. Everyone's voice is looked up at the door, like a good
+  receptionist, so the first line of the day doesn't freeze anything.
+- Kind to your battery. Menus run at half speed, and when another app is in
+  front the game drops to a crawl and the hospital waits for you. Nobody
+  dies while you answer your mother.
+- Room for the notch and the home bar on newer iPhones, and older iPhones
+  have about half as much to draw, so the hospital runs smoothly on phones as
+  tired as the staff. The sound plays even with the silent switch on, because
+  the game has its own volume settings and you'd only turn them all off anyway.
+- On a Mac it's the same game in a window you can resize, with a mouse
+  instead of a thumb. Space or Return moves a conversation on and the number
+  keys pick your reply, so you can be rude to a board member's mother without
+  touching the trackpad.
+
+### Honest, and private
+
+- Honesty, enforced. Edit your save and the game notices, puts the edited
+  one aside and takes you back to your last honest save. Move the phone's
+  date back to farm the daily case and nothing pays until the real date
+  catches up. Shared results carry a check code, and "Check a friend's
+  result" tells you whether your cousin really got 3 of 3 in 22 seconds.
+  He didn't.
 - A privacy policy, which is short because there's nothing to say: the game
   collects nothing, sends nothing and knows nothing about you except your
   doctor's haircut. It's in Settings, and in [docs/PRIVACY.md](docs/PRIVACY.md)
@@ -399,173 +650,6 @@ Here's everything, in order, so you can decide how much of your life to give it:
 - Acknowledgements, also in Settings: the free software it's built with
   (Godot, the Kokoro voices, the fonts), every licence they came with, and a
   thank-you to the night shift.
-- Homework. Between every day from the end of your first operation to the
-  start of Day 28, you stop in the skills lab for one station: the monitor,
-  a drip, a row of stitches, the instrument tray or the sink. It takes a
-  minute or two and pays XP just for turning up, more for stars and more
-  for beating your own best, and more again the higher you climb. You can
-  skip it. Tom will know.
-- Things you didn't know you wanted to know: every training score card ends
-  with a true story from medicine. Catgut was never cat. The first proper heart
-  tracing machine weighed 270 kilos and needed five people and buckets of
-  salt water. Rubber gloves exist because a surgeon fell for his
-  scrub nurse.
-- Fewer ways to get stuck. If the place you need is off the edge of the
-  screen, its tag waits at the edge with an arrow, and tapping the bed, the
-  patient or the floor beside them works too. Closing the game halfway
-  through a day no longer pays you twice, or promotes you twice, which was
-  generous but wrong.
-- Turning up pays. Open the game on a new day and there's XP waiting, more
-  for every day in a row for a week, and more the higher you've climbed. Miss
-  a day and the streak starts again, like every good habit.
-- Four more patients who are not Mr. Kumar. The history drill now brings a
-  stranger each time: a man with a stent and an opinion, a woman whose
-  period is late and who is allergic to gloves, a seventy-four-year-old who
-  did not trip, and a car salesman with one kidney and a fever. Five
-  questions. Choose well.
-- The drill card talks. Dr. Iyer, Sister Grace or Tom says their piece and
-  then tells you the story, out loud, in their own recorded voice.
-- People have stopped walking through each other. Also through beds, walls
-  and the side room's furniture. Doctors now go round things and wait their
-  turn, which is more than most real corridors manage.
-- The voices sound less like a station announcement. Every sentence gets its
-  own pace and pitch and a breath before the next, softly, the way tired
-  people actually talk at six in the morning.
-- The first two weeks were rewritten in the way people speak, not the way
-  they write. More "na", fewer speeches. Dr. Iyer is exactly as unimpressed.
-- And then the rest of it, from the eight months later card to the Chief's
-  endless days: about thirteen hundred lines that now sound like people
-  rather than minutes of a meeting. The seniors got more sarcastic. The young
-  ones got Gen Z: Zoya is lowkey a fan and highkey terrified, Dev Malhotra
-  finds his father's budget voice so cringe, and Dr. Saxena's brain is a
-  loading screen. Dr. Iyer had to ask what "it's giving" means. She regrets it.
-- Casualty. There's a red door at the end of Ward 4 now, and behind it four
-  cubicles, six plastic benches and a triage nurse who has seen it all,
-  twice. People walk in off the street all day: a sprained wrist, a tummy
-  bug, a man who is definitely not having a heart attack (he is). Tap
-  someone, they lie on a trolley, and you ask, examine, order tests and
-  decide, while the waiting room gets longer and the sickest get worse.
-  Every career has its own hospital, so your Tuesday is not your friend's.
-- The clock runs now. Half a hospital minute every second you stand about,
-  and the story doesn't wait: leave a page unanswered for an hour and you
-  arrive late, it costs you, and people notice. When the story's done you
-  hand over and go home, or you don't, because casualty is right there.
-- Honesty, enforced. Edit your save and the game notices, puts the edited
-  one aside and takes you back to your last honest save. Move the phone's
-  date back to farm the daily case and nothing pays until the real date
-  catches up. Shared results carry a check code, and "Check a friend's
-  result" tells you whether your cousin really got 3 of 3 in 22 seconds.
-  He didn't.
-- Kinder to your battery. Menus run at half speed, and when another app is
-  in front the game drops to a crawl and the hospital waits for you. Nobody
-  dies while you answer your mother.
-- A Mac version. Same game, a bigger window, a mouse instead of a thumb.
-- A phone. Swipe up from the bottom of the screen (or press P on a Mac) and
-  there it is: Chats, Calls, Lab results, the Pager, a Feed and Photos. Mum
-  wants to know if you ate the poha. Dad forwards a good-morning flower with
-  a quote about the present. Your sister wants your room. Varun posts reels
-  about his parking spot. Rohit's mother asks if he can have ice cream, a
-  retired postmaster sends you a photo of a blue tin that is not biscuits
-  (it is never biscuits), and someone types a message at 23:10 and deletes
-  it. Lab reports land on it. People casualty sent home text to say thank
-  you. Your mother calls at exactly the wrong moment, because that is her
-  gift. The hospital doesn't stop while you scroll. Neither does your mother.
-- Patients that never run out. Fifty-seven real illnesses now, the kind
-  India actually gets: heat stroke, scrub typhus, a swallowed coin, a dog
-  bite, a scooter versus a stray. Some show up late because they tried Eno
-  first (four times). Some are on blood thinners. Some are pregnant and
-  haven't mentioned it. Some are "only drinking at weddings" and smell like
-  the whole baraat. A toddler's mother answers for the toddler, a Googler
-  has read three websites, a bargainer wants only the tests that are really
-  needed, and a teenager is sarcastic at you while actively unwell. Ten new
-  voices, names from every corner of the country, and people you treated
-  weeks ago walk back in: with something new, worse because you got it
-  wrong, or with a box of kaju katli because you didn't. Every so often a
-  mystery fever goes round town. It is made up for the game and the game
-  says so, loudly. What you do about it is not.
-- And sometimes they die. Not often, and usually not for no reason: you sat
-  on someone until they crashed, you treated a number instead of a person,
-  you nodded while Sister Priya read a drug back for the wrong cubicle. The
-  lab rings with critical results now, and now and then the result is
-  wrong: a burst sample, somebody else's sticker, a sodium of 13 typed by a
-  finger that was busy elsewhere. Repeat it or treat it. Some mornings the
-  night team's handover forgets a bed. And some patients come in already
-  past saving, which is nobody's fault and helps less than you'd think.
-  After a death you go to the relatives' room and choose how to say it:
-  plainly, in medical words, or by sending the nurse. They'll remember
-  which. Then the name goes up on the wall by the desk, and nobody takes it
-  down. If it was your fault, Dr. Iyer texts you about Friday's M&M. Bring
-  the notes, not excuses. The first name goes up on Day 5, and there is
-  nothing you can do about it, which is the point.
-- The phone has a map of the hospital now, so "I got lost" is no longer a
-  medical excuse.
-- The shift has a sense of drama now, like a TV show that knows when to
-  cut to an advert. After a hard stretch the hospital lets you breathe:
-  Sister Grace puts chai in your hand, Dr. Sethi tells a joke so bad the
-  patient in cubicle four laughs, the hospital radio takes a request. After
-  a long quiet stretch an ambulance remembers you exist. And in the middle
-  of the worst moments something stupid happens, because it always does: a
-  goat walks through casualty, an uncle films the crash call for the family
-  group, a man in a very white kurta announces that he knows the local MLA.
-  The defibrillator does not care.
-- A few times a week something gets to you instead. An old man with a photo
-  of his wife propped against the water jug. A child who watches you wash
-  your hands for a long time and then asks, very quietly. Sister Priya in
-  the sluice, rinsing a bedpan that is already clean. You choose what to do,
-  and sometimes, days later, someone texts to say what it meant.
-- Your colleagues have lives, apparently. Needs, goals, rotas, mothers,
-  weddings. Every so often one of them walks up on the ward and asks you for
-  something: cover for an interview, a reference, a quiz before an exam. What
-  you say gets remembered, and they text you how it went. Badly, sometimes.
-- There are songs. The night nurses have one about the night shift, the
-  canteen has a jingle about its dal, and Riverside FM, the hospital radio
-  broadcasting from a broom cupboard on the second floor, has RJ Bunty and a
-  roast called "Doctor, Doctor". The words run along the bottom of the screen
-  like a music video, so you can sing along, which nobody asked you to do.
-  The phone has a Radio app now, with a new request most days.
-- And then the shift ends. Technically. After a day on the ward you get an
-  evening, which is like a weekend but shorter and you still smell of
-  Betadine. It starts in Mani's canteen, where whoever is on late is having
-  chai. Sit with one of them for gossip, a little trust and a tip for
-  tomorrow, which turns up again in the morning because nobody expected you
-  to remember it. The canteen radio takes requests, mostly from RJ Bunty.
-- Then the hostel room: one bed, one phone, and a packet of biscuits that has
-  seen things. Video call home and Mum, Dad and Anu all talk at once, about
-  your food, your posture and a rishta nobody asked for. Eat something real,
-  read up on tomorrow, or scroll until it is somehow one in the morning.
-  Everything costs time on the clock, and when you go to bed decides how you
-  slept.
-- Sleep badly and the morning tells you so, and so do your hands. In theatre
-  they shake, and everything you hold shakes with them. Going to bed hungry
-  counts too. Your body keeps receipts.
-- Don't call home for a few days and Mum starts texting. She doesn't repeat
-  herself. She escalates. After that she gets on a bus and walks onto Ward 4
-  in the middle of your shift with a steel dabba of rajma, in front of Sister
-  Grace, who has questions.
-- Some evenings are parties. Hostel night with your batch, Diwali on the
-  terrace, Sister Grace's birthday (she doesn't do birthdays, there is a cake
-  with her face on it), Dr. Khan's wedding reception and Dr. Rao's farewell.
-  Each one has a game: carrom on a board with a crack in it, antakshari
-  against the clock, a dance-off you tap in time with the dhol, or a speech
-  in front of everyone, one line at a time. Win or flop, people remember.
-  Skip one and they remember that too.
-- Varun, your batchmate who sold out to CarePlus and has been texting you
-  about his car for weeks, finally turns up in person. He is exactly as
-  advertised. The shirt is linen, so no hugging.
-- And the pager goes off in the middle of a party, because the hospital has
-  never once respected your social life. Go back in and you miss the cake.
-  Stay and someone notices.
-- The hospital got faster. Nobody on the ward stops doing anything, but the
-  people you can't see no longer act for nobody, so an old iPhone keeps up
-  with sixty of them. They also no longer breathe and blink in unison, which
-  was frankly a cult.
-- The first line anyone said each session used to freeze the game for a
-  moment while it found everyone's voice. It looks them up at the door now,
-  like a good receptionist, and the phone stopped rereading every message
-  you have ever received once a second. Relatable, but no.
-- On a Mac, Space or Return moves a conversation on and the number keys pick
-  your reply, so you can be rude to a board member's mother without
-  touching the trackpad.
 
 Screenshots of every screen are rebuilt automatically after each change, on
 the [`screenshots` branch](../../tree/screenshots).
