@@ -6,7 +6,7 @@
 	"aarav": {"name": "Aarav", "role": "Leela's son, 6", "voice": 1.55, "gender": "male", "child": true, "pace": 1.05},
 	"tom": {"name": "Tom D'Souza", "role": "Scrub nurse", "voice": 0.9, "gender": "male", "later_roles": {"31": "Scrub nurse · your patient", "32": "Scrub nurse"}},
 	"priya": {"name": "Priya Nambiar", "role": "Staff nurse", "voice": 1.22, "trust": 45, "gender": "female"},
-	"dean": {"name": "Dr. R. Menon", "role": "Dean of the medical college", "voice": 0.82, "trust": 45, "gender": "male", "pace": 0.95, "later_roles": {"24": "Dean and Chief of Medicine · retiring"}},
+	"dean": {"name": "Dean Menon", "role": "Dean of the medical college", "voice": 0.82, "trust": 45, "gender": "male", "pace": 0.95, "later_roles": {"24": "Dean and Chief of Medicine · retiring"}},
 	"mum": {"name": "Mum", "role": "Your mother", "voice": 1.15, "gender": "female"},
 	"dad": {"name": "Dad", "role": "Your father", "voice": 0.84, "gender": "male"},
 	"anu": {"name": "Anu", "role": "Your little sister", "voice": 1.32, "gender": "female", "child": true},

@@ -128,6 +128,8 @@ func show_title() -> void:
 
 func _on_new_career() -> void:
 	profile = PlayerProfile.new()
+	# The name box starts empty, not with the sample doctor's name.
+	profile.name = ""
 	show_name()
 
 

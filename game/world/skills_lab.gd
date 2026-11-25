@@ -43,6 +43,11 @@ const START := Vector3(0, 0, 3.2)
 const DOOR_SPOT := Vector3(6.3, 0, 3.4)
 const DOOR_TAG := Vector3(6.8, 1.9, 3.4)
 const HOME_FADE := 1.2
+## The overview is framed for a wide phone. A narrower screen (a Mac window,
+## an iPad) opens the view out to show the same width of the lab, so the
+## history station and the door are never cut off at the sides.
+const WIDE_ASPECT := 2.0
+const OVERVIEW_FOV := 42.0
 
 const WALL := Color("#EEF2EC")
 const WALL_TOP := Color("#DCE8E6")
@@ -843,6 +848,12 @@ func tap(screen_point: Vector2) -> void:
 
 ## The station drawn nearest a screen point (its furniture or its tag), or "".
 func station_at(screen_point: Vector2) -> String:
+	# A tag held at the edge of the screen takes a tap too.
+	if can_go_home() and hud.tag_pinned("door") and hud.tag_hit("door", screen_point):
+		return "door"
+	for id: String in stations:
+		if hud.tag_pinned("station_" + id) and hud.tag_hit("station_" + id, screen_point):
+			return id
 	var best := ""
 	var best_distance := UiKit.px(TAP_RADIUS / 2.0)
 	for id: String in stations:
@@ -1048,11 +1059,23 @@ func _place_camera(weight: float) -> void:
 		focus.z = clampf(focus.z, -0.6, 1.4)
 		goal = focus + Vector3(0, 6.2, 7.0)
 		target = focus + Vector3(0, 0.2, -1.6)
+		fov = overview_fov()
 	_camera_target = _camera_target.lerp(target, weight) if weight < 1.0 else target
 	camera.position = camera.position.lerp(goal, weight) if weight < 1.0 else goal
 	camera.h_offset = lerpf(camera.h_offset, offset, weight)
 	camera.fov = lerpf(camera.fov, fov, weight)
 	camera.look_at(_camera_target)
+
+
+## The overview's field of view for the screen's shape: 42 degrees on a wide
+## phone, more on a narrower screen so it shows as much of the lab across.
+func overview_fov() -> float:
+	var view := get_viewport().get_visible_rect().size if is_inside_tree() else Vector2(WIDE_ASPECT, 1.0)
+	var aspect := view.x / maxf(view.y, 1.0)
+	if aspect >= WIDE_ASPECT:
+		return OVERVIEW_FOV
+	var across := tan(deg_to_rad(OVERVIEW_FOV / 2.0)) * WIDE_ASPECT / aspect
+	return minf(rad_to_deg(2.0 * atan(across)), 70.0)
 
 
 func _update_tags() -> void:
@@ -1065,10 +1088,12 @@ func _update_tags() -> void:
 		var best := profile.best_score(id)
 		if best >= 0:
 			text += " · %d" % best
+		# The station to do next keeps its tag in sight: off the screen or
+		# under the task list, it waits at the edge with an arrow.
 		hud.set_tag("station_" + id, text, camera.unproject_position(point),
-			walking and not camera.is_position_behind(point), id == next)
+			walking and not camera.is_position_behind(point), id == next, id == next)
 	hud.set_tag("door", "Home time", camera.unproject_position(DOOR_TAG),
-		walking and can_go_home() and not camera.is_position_behind(DOOR_TAG), next.is_empty())
+		walking and can_go_home() and not camera.is_position_behind(DOOR_TAG), next.is_empty(), next.is_empty())
 
 
 func _on_menu_choice(choice: String) -> void:

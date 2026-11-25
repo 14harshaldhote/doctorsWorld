@@ -12,6 +12,9 @@ var name_field: LineEdit
 var next_button: Button
 var _form_chips: Array[Button] = []
 var _badge_name: Label
+## True once the player has tapped first or last name, so the pick shows
+## even before a name is typed.
+var _form_tapped := false
 
 
 func _init(for_profile: PlayerProfile = null) -> void:
@@ -121,6 +124,7 @@ func _on_name_changed(_text: String) -> void:
 
 func _on_form_picked(form_id: String) -> void:
 	profile.address_form = form_id
+	_form_tapped = true
 	_refresh()
 
 
@@ -132,13 +136,18 @@ func _on_next() -> void:
 
 
 ## Updates the chips, the badge and the Next button from what is typed.
+## With nothing typed yet the chips say "First name" and "Last name" and
+## neither looks picked, so no made-up name is ever shown as the player's.
 func _refresh() -> void:
 	var typed := PlayerProfile.clean_name(name_field.text)
 	var preview := PlayerProfile.new()
-	preview.name = typed if not typed.is_empty() else "Your Name"
+	preview.name = typed
 	for chip in _form_chips:
 		var form_id: String = chip.get_meta("form")
-		chip.text = "Dr. " + (preview.first_name() if form_id == "first" else preview.last_name())
-		UiKit.set_chip(chip, profile.address_form == form_id)
-	_badge_name.text = "Dr. " + preview.name
+		if typed.is_empty():
+			chip.text = "First name" if form_id == "first" else "Last name"
+		else:
+			chip.text = "Dr. " + (preview.first_name() if form_id == "first" else preview.last_name())
+		UiKit.set_chip(chip, profile.address_form == form_id and (_form_tapped or not typed.is_empty()))
+	_badge_name.text = "Dr. " + (typed if not typed.is_empty() else "Your Name")
 	next_button.disabled = typed.is_empty()

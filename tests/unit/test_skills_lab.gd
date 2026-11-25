@@ -283,3 +283,54 @@ func test_hud_shows_stars_for_each_station() -> void:
 		func(icon: Node) -> bool: return (icon as UiIcon).kind == "star")
 	expect_equal(stars.size(), 3, "three lit stars for a 90")
 	expect_equal(lab.next_station(), "monitor")
+
+
+func _tag_centre(lab: SkillsLab, id: String) -> Vector2:
+	var tag: Control = lab.hud._tags[id]
+	return tag.position + tag.size / 2.0
+
+
+func test_a_narrow_screen_widens_the_view_and_keeps_the_way_out_in_sight() -> void:
+	# A Mac window or an iPad is narrower than a phone: the camera widens so
+	# the lab still fits across, and the station to do next and the door
+	# always show (at the edge with an arrow if need be) and take a click.
+	for size: Vector2i in [Vector2i(1440, 900), Vector2i(1024, 768), Vector2i(1334, 750), Vector2i(1688, 780)]:
+		tree.root.size = size
+		var aspect := float(size.x) / size.y
+		var profile := _profile()
+		for id in ["scrub", "monitor", "instruments", "iv", "stitch"]:
+			profile.record_score(id, 80)
+			profile.set_flag("trained_" + id)
+		var lab := _lab(profile)
+		if aspect >= SkillsLab.WIDE_ASPECT:
+			expect_near(lab.overview_fov(), SkillsLab.OVERVIEW_FOV, 0.0001, "%s: a wide phone keeps the usual view" % size)
+		else:
+			expect(lab.overview_fov() > SkillsLab.OVERVIEW_FOV, "%s: a narrower screen sees more (%.1f)" % [size, lab.overview_fov()])
+		expect(lab.overview_fov() <= 70.0, "%s: never a fish-eye" % size)
+		expect_near(lab.camera.fov, lab.overview_fov(), 0.01, "%s: the camera uses it" % size)
+		_run(lab, 0.2)
+		expect_equal(lab.next_needed(), "history")
+		var history: Control = lab.hud._tags["station_history"]
+		expect(history.visible, "%s: the history station's tag shows" % size)
+		var screen := lab.get_viewport().get_visible_rect()
+		expect(screen.encloses(Rect2(history.position, history.size)), "%s: on the screen" % size)
+		expect_equal(lab.station_at(_tag_centre(lab, "station_history")), "history", "%s: a click on it picks history" % size)
+		profile.set_flag("trained_history")
+		profile.set_flag("training_done")
+		_run(lab, 0.2)
+		var door: Control = lab.hud._tags["door"]
+		expect(door.visible, "%s: the way home shows once training is done" % size)
+		expect(screen.encloses(Rect2(door.position, door.size)), "%s: the door's tag is on the screen" % size)
+		expect_equal(lab.station_at(_tag_centre(lab, "door")), "door", "%s: a click on it goes home" % size)
+		lab.get_parent().remove_child(lab)
+		lab.free()
+	tree.root.size = Vector2i(1688, 780)
+
+
+func test_a_pinned_tag_waits_at_the_edge_with_an_arrow_and_takes_a_tap() -> void:
+	var lab := _lab()
+	lab.hud.set_tag("station_history", "Take a history", Vector2(-400, 300), true, true, true)
+	expect(lab.hud.tag_pinned("station_history"), "off the screen, the tag pins to the edge")
+	expect_equal(lab.station_at(_tag_centre(lab, "station_history")), "history")
+	lab.hud.set_tag("station_iv", "IV line", Vector2(-400, 300), true, false, false)
+	expect(not lab.hud._tags["station_iv"].visible, "a tag that is not pinned just hides off screen")

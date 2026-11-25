@@ -49,6 +49,15 @@ func test_the_dean_calls_out_the_players_name() -> void:
 	expect(opening.mark("dean_front") != null, "the stage has its marks")
 
 
+func test_the_deans_name_tag_cannot_be_read_as_the_graduates_name() -> void:
+	var opening := _opening()
+	opening.play_until(func() -> bool: return _said(opening, "dean").size() == 1)
+	expect(_said(opening, "dean")[0].ends_with("our next graduate is..."), "the dean is announcing someone")
+	var tag := opening.ui._speaker.text
+	expect_equal(tag, "DEAN MENON", "his tag says he is the dean")
+	expect(not tag.begins_with("DR"), "and is not a doctor's name, which read as the graduate's (\"DR. R. MENON\" looked like \"Dr. Ramona\")")
+
+
 func test_the_family_cheers_with_their_own_lines() -> void:
 	var opening := _opening()
 	opening.play_until(func() -> bool: return not _said(opening, "anu").is_empty())

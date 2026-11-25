@@ -186,38 +186,45 @@ SOFT_ABOVE = 6500
 # Names the voice says wrongly as written, spelt the way they are said.
 RESPELL = {
     "Iyer": "Eye-yer", "Nambiar": "Nambiyaar", "Kulkarni": "Coolkarni", "Bhatia": "Bhaatiya",
-    "Sethi": "Saythee", "Yadav": "Yaadav", "Sunita": "Soo-neetha", "Kunal": "Koonal", "Priya": "Preeya",
+    "Sethi": "Say-tee", "Yadav": "Yaadav", "Sunita": "Soo-neeta", "Kunal": "Koonal", "Priya": "Preeya",
     "Farida": "Fareeda", "Prakash": "Prakaash", "Ramesh": "Raamesh", "Kabir": "Kabeer", "Rawat": "Raawat",
-    "Dubai": "Doo-bye", "Asha": "Aasha", "ji": "jee", "Arre": "Arey", "arre": "arey", "Achha": "Achcha",
-    "achha": "achcha", "Bhaiya": "Bhaiyya", "Menon": "Maynon", "Fernandes": "Fernandez", "D'Souza": "D Souza",
+    "Dubai": "Doo-bye", "Asha": "Aasha", "ji": "jee", "Arre": "Uh-ray", "arre": "uh-ray", "Arey": "Uh-ray", "arey": "uh-ray", "Achha": "Achcha",
+    "achha": "achcha", "Bhaiya": "Bhai-yaa", "Menon": "Maynon", "Fernandes": "Fernandez", "D'Souza": "D Souza",
     "Qureshi": "Koo-ray-shee", "Gomes": "Gomez", "Philomena": "Fillo-meena", "Bhatt": "Bhutt", "Nanda": "Nunda",
     "Imran": "Imraan", "Rubina": "Roo-beena", "Margao": "Mar-gow", "Nagpur": "Naag-poor", "Pune": "Poona",
-    "idli": "idlee", "Harish": "Hareesh", "Vivek": "Viveyk", "Zoya": "Zoyaa",
+    "idli": "Itlee", "Harish": "Hareesh", "Vivek": "Vivayk", "Zoya": "Zoyaa",
     "co-amoxiclav": "co-amoxi-clav", "Co-amoxiclav": "Co-amoxi-clav", "eGFR": "e G F R",
     "Kurup": "Koo-roop", "Shanta": "Shaanta", "Venu": "Vay-noo", "Neha": "Nay-ha", "Arindam": "Ah-rin-dum",
-    "Bose": "Bohs", "Nirmala": "Nir-mala", "Rajan": "Raajan", "Ernakulam": "Er-naa-kulam", "Rehan": "Ray-haan",
+    "Bose": "Bohs", "Nirmala": "Nir-mala", "Rajan": "Raajan", "Ernakulam": "Er-naa-ku-lum", "Rehan": "Ray-haan",
     "Joshi": "Joe-shee", "Anand": "Aanand",
     "Sinha": "Sin-haa", "Rekha": "Ray-kha", "Saxena": "Sak-saynaa", "Ira": "Eera", "Sameer": "Sa-meer",
     "Kapoor": "Ka-poor", "Lucknow": "Luck-now", "Coorg": "Koorg", "Ananya": "Ah-nun-ya", "Arora": "Ah-ro-raa",
     "Chawla": "Chaav-laa", "Iqbal": "Ik-baal", "Naidu": "Nai-doo", "Hegde": "Heg-day", "Kamath": "Kaa-mat",
-    "Desai": "De-sai", "Bedi": "Bay-dee", "Lobo": "Lo-bo", "Ghosh": "Gohsh", "Rodrigues": "Rod-ree-gues",
+    "Desai": "Day-sai", "Bedi": "Bay-dee", "Lobo": "Lo-bo", "Ghosh": "Gohsh", "Rodrigues": "Rod-ree-gues",
     "CarePlus": "Care Plus", "Ma'am": "Mam",
-    "Verghese": "Ver-geese", "Anjali": "Un-ja-lee", "Gaikwad": "Gike-waad", "Lele": "Lay-lay",
-    "Siddiqui": "Sid-dee-kee", "Bela": "Bay-la", "payesh": "pa-yesh", "Bhosale": "Bho-sa-lay",
+    "Verghese": "Ver-geese", "Anjali": "Un-ja-lee", "Gaikwad": "Guy-kwaad", "Lele": "Lay-lay",
+    "Siddiqui": "Sid-dee-kee", "Bela": "Bay-la", "payesh": "pa-yaysh", "Bhosale": "Bho-sa-lay",
     "Rizvi": "Riz-vee", "Menezes": "Me-nay-zes", "Patil": "Paa-til", "Saini": "Sai-nee", "Bakshi": "Buck-shee",
-    "Kurian": "Koo-ree-an", "D'Mello": "D Mello", "Pawar": "Pa-waar", "Rane": "Raa-nay", "Mitali": "Mi-taa-lee",
+    "Kurian": "Koo-ree-an", "D'Mello": "D Mello", "Pawar": "Pa-waar", "Rane": "Raa-nay", "Mitali": "Mee-taa-lee",
     "dupatta": "du-putta",
-    "Kale": "Kaa-lay", "Savitri": "Saa-vit-ree", "Tiwari": "Ti-waa-ree", "poha": "po-haa", "Pereira": "Pe-ray-ra",
-    "Sandhu": "Sun-dhoo", "Bhave": "Bhaa-vay", "Mirza": "Meer-zaa", "Krishnan": "Krish-nun", "Hussain": "Hu-sain",
-    "Usha": "Oo-shaa", "Kavita": "Ka-vi-taa", "Shinde": "Shin-day", "Bhide": "Bhi-day", "Sawant": "Saa-vant",
-    "Kadam": "Ka-dum", "Dalvi": "Dul-vee", "Kher": "Kair", "Bhalla": "Bhul-laa", "Bajaj": "Ba-jaaj", "Vaz": "Vaaz",
-    "Kohli": "Koh-lee", "Thakur": "Thaa-koor", "Dutta": "Dut-taa", "Nashik": "Naa-shik", "beedis": "bee-dees",
+    "Kale": "Kaa-lay", "Savitri": "Saa-vit-ree", "Tiwari": "Tiwaaree", "poha": "po-haa", "Pereira": "Pe-ray-ra",
+    "Sandhu": "Sundhu", "Bhave": "Bhaa-vay", "Mirza": "Meer-zaa", "Krishnan": "Krish-nun", "Hussain": "Hu-sain",
+    "Usha": "Oo-shaa", "Kavita": "Kavitaa", "Shinde": "Shin-day", "Bhide": "Bhiday", "Sawant": "Saa-vant",
+    "Kadam": "Ka-dum", "Dalvi": "Dul-vee", "Kher": "Kare", "Bhalla": "Bhul-laa", "Bajaj": "Ba-jaaj", "Vaz": "Vaaz",
+    "Kohli": "Koh-lee", "Thakur": "Taa-kur", "Dutta": "Dut-taa", "Nashik": "Naa-shik", "beedis": "bee-dees",
     "Kunte": "Koon-tay", "Gurdeep": "Gur-deep",
-    "Mani": "Maa-nee", "Vellore": "Vel-lore", "Manipal": "Mani-paal", "nikah": "ni-kaah", "Ammi": "Um-mee",
-    "rishta": "rish-taa", "Rahu": "Raa-hoo", "thali": "thaa-lee",
+    "Mani": "Maa-nee", "Vellore": "Vel-lore", "Manipal": "Mani-paal", "nikah": "nikaah", "Ammi": "Um-mee",
+    "rishta": "rish-taa", "Rahu": "Raa-hoo", "thali": "taa-lee",
+    # Hindi words: "beta" is a child, not the Greek letter; "th" and "dh"
+    # are a breathy t and d, never the English "th".
+    "beta": "baytaa", "Beta": "Baytaa", "beti": "bay-tee", "Papa": "Paapa", "papa": "paapa",
+    "puri": "poo-ree", "Puri": "Poo-ree", "chole": "cho-lay", "gulab": "gu-laab", "sangeet": "sun-gheet",
+    "dhol": "dhole", "paratha": "pa-raa-taa", "Paratha": "Pa-raa-taa", "Thepla": "Tay-pla", "sahab": "saa-hab",
+    # Sounds, not letters: the voice spells out a word with no vowel in it.
+    "Hm": "Hmm", "hm": "hmm", "Hmph": "Humph", "Shh": "Shush", "Mmh": "Uh",
 }
 TITLES = {"Dr.": "Doctor", "Mr.": "Mister", "Mrs.": "Missus", "Ms.": "Miz"}
-ACRONYMS = ["ICU", "VIP", "MBBS", "ECG", "CPR", "OPD", "MRI", "HIV", "IVF", "DNA", "CCTV", "ENT", "NICU", "HR", "INR", "CT", "MDT", "MLA", "FM"]
+ACRONYMS = ["ICU", "IV", "UPS", "VIP", "MBBS", "ECG", "CPR", "OPD", "MRI", "HIV", "IVF", "DNA", "CCTV", "ENT", "NICU", "HR", "INR", "CT", "MDT", "MLA", "FM"]
 # Test players' names, which turn back into {called} in the catalogue. (Not
 # "Rao" or "Joseph": the cast has a Dr. Rao and a Mr. Joseph.)
 TEST_NAMES = ["Verma", "Asha", "Kiran", "Mei", "Lin", "Kofi", "Mensah", "Ravi", "Das", "Nila"]
@@ -423,13 +430,44 @@ def catalogue_lines(story):
     return list(kept.values()) + case_lines(heard)
 
 
+NUMBER_WORDS = ["", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven",
+                "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen"]
+TENS = ["", "", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"]
+UNITS = {"kg": "kilos", "mg": "milligrams", "ml": "millilitres", "cm": "centimetres", "mm": "millimetres",
+         "km": "kilometres"}
+
+
+def number_words(value):
+    """0 to 99 in words: "ninety-eight"."""
+    if value < 20:
+        return NUMBER_WORDS[value] or "zero"
+    return TENS[value // 10] + ("-" + NUMBER_WORDS[value % 10] if value % 10 else "")
+
+
+def year_words(match):
+    """A year as people say it: 1998 is "nineteen ninety-eight", the 1840s
+    "the eighteen forties" (the voice says "one thousand eight hundred")."""
+    year, decade = int(match.group(1)), match.group(2)
+    high, low = divmod(year, 100)
+    if decade:
+        last = number_words(low) if low else "hundred"
+        return number_words(high) + " " + (last[:-1] + "ies" if last.endswith("y") else last + "s")
+    if low == 0:
+        return number_words(high) + " hundred"
+    return number_words(high) + (" oh " if low < 10 else " ") + number_words(low)
+
+
 def spoken(text):
     """What the voice is given for a shown line."""
     text = text.replace("{called}", "Doctor")
     for title, said in TITLES.items():
         text = re.sub(r"\b" + re.escape(title), said, text)
+    # A name's respelling holds for "Iyer's" too, not only "Iyer".
     for word, said in RESPELL.items():
-        text = re.sub(r"(?<![\w'])" + re.escape(word) + r"(?![\w'])", said, text)
+        text = re.sub(r"(?<![\w'])" + re.escape(word) + r"(?![\w]|'(?!s\b))", said, text)
+    text = re.sub(r"\b(1[1-9]\d\d)(s)?\b", year_words, text)
+    text = re.sub(r"\b(\d+)'s\b", lambda match: match.group(1) + "s" if match.group(1) != "1" else "one's", text)
+    text = re.sub(r"(\d) ?(%s)\b" % "|".join(UNITS), lambda match: match.group(1) + " " + UNITS[match.group(2)], text)
     for word in ACRONYMS:
         text = re.sub(r"\b%s\b" % word, " ".join(word), text)
     text = re.sub(r"[·—–]", ", ", text).replace("*", "").replace("_", " ").replace("~", "")

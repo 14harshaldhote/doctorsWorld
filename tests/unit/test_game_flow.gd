@@ -63,6 +63,37 @@ func test_new_career_runs_name_then_look_then_the_opening_then_hospital() -> voi
 	_clear()
 
 
+func test_a_new_career_starts_with_an_empty_name_box() -> void:
+	var main := _main()
+	(main.screen as TitleScreen).new_career_pressed.emit()
+	var naming := main.screen as NameScreen
+	expect_equal(naming.name_field.text, "", "no sample name in the box")
+	expect(naming.next_button.disabled, "and nothing to go on with")
+	var labels := naming._form_chips.map(func(chip: Button) -> String: return chip.text)
+	expect_equal(labels, ["First name", "Last name"], "the choices say what they are")
+	for chip: Button in naming._form_chips:
+		expect(not chip.button_pressed, "%s is not picked before a name is typed" % chip.text)
+	expect_equal(naming._badge_name.text, "Dr. Your Name", "the badge waits for a name")
+	naming.name_field.text = "Meera Verma"
+	naming._on_name_changed(naming.name_field.text)
+	labels = naming._form_chips.map(func(chip: Button) -> String: return chip.text)
+	expect_equal(labels, ["Dr. Meera", "Dr. Verma"], "the choices use the typed name")
+	expect(naming._form_chips[1].button_pressed and not naming._form_chips[0].button_pressed,
+		"last name is picked once a name is typed")
+	naming.name_field.text = ""
+	naming._on_name_changed("")
+	naming._on_form_picked("first")
+	expect(naming._form_chips[0].button_pressed, "a tap shows its pick even with the box empty")
+	naming.name_field.text = "Meera Verma"
+	naming._on_name_changed(naming.name_field.text)
+	naming._on_next()
+	expect_equal(main.profile.called(), "Dr. Meera")
+	(main.screen as AvatarCreator).back_pressed.emit()
+	naming = main.screen as NameScreen
+	expect_equal(naming.name_field.text, "Meera Verma", "back from the look keeps what was typed")
+	expect(naming._form_chips[0].button_pressed, "and the pick")
+
+
 func test_an_empty_name_cannot_go_on() -> void:
 	var main := _main()
 	(main.screen as TitleScreen).new_career_pressed.emit()
