@@ -140,13 +140,14 @@ func choose(index: int) -> Dictionary:
 	}
 
 
-## Fills in the player's name and how people address them.
-func fill(text: String) -> String:
+## Fills in the player's name and how people address them. In a line said
+## aloud by who, {called} is what their voice can say (Speech.address).
+func fill(text: String, who: String = "") -> String:
 	return text.format({
 		"name": profile.name,
 		"first": profile.first_name(),
 		"last": profile.last_name(),
-		"called": profile.called(),
+		"called": Speech.address(who, profile.called()) if "{called}" in text else profile.called(),
 		"title": profile.full_title(),
 	})
 
@@ -191,7 +192,7 @@ static func mood_index(mood_name: String) -> int:
 
 func _line_event(step: Dictionary) -> Dictionary:
 	var speaker := str(step["say"])
-	var text := fill(str(step.get("text", "")))
+	var text := fill(str(step.get("text", "")), speaker)
 	history.append([speaker, text])
 	if speaker != "you" and start_trust(speaker) >= 0:
 		_about = speaker

@@ -213,7 +213,7 @@
 		},
 		{
 			"say": "iyer",
-			"text": "No, no. You'll be awake, and once the edges are numb you won't feel a thing. {called} is operating. I'm only watching.",
+			"text": "No, no. You'll be awake, and once the edges are numb you won't feel a thing. And who's operating? {called}. I'm only watching.",
 			"mood": "calm",
 			"gesture": "open_hands",
 			"to": "deepa"
@@ -391,7 +391,7 @@
 	"morning10": [
 		{
 			"say": "sethi",
-			"text": "Handover, {called}, quickly yaar. I've been here since yesterday and my coffee has its own pulse.",
+			"text": "Handover, {called}. Quickly, yaar. I've been here since yesterday and my coffee has its own pulse.",
 			"mood": "tired",
 			"gesture": "explain"
 		},
@@ -1961,7 +1961,7 @@
 			"then": [
 				{
 					"say": "iyer",
-					"text": "Deepa's hand was hard going, and I finished it. But {called} told her the truth about it.",
+					"text": "Deepa's hand was hard going, and I finished it. But you told her the truth about it, {called}.",
 					"mood": "calm",
 					"gesture": "explain",
 					"to": "rao"
@@ -1991,7 +1991,7 @@
 			"else": [
 				{
 					"say": "iyer",
-					"text": "Mr. Bansal was missed, and owned. Since then {called} has examined every kidney stone like it's a bomb.",
+					"text": "Mr. Bansal was missed, and owned. Since then you've examined every kidney stone like it's a bomb, {called}.",
 					"mood": "calm",
 					"gesture": "explain",
 					"to": "rao"

@@ -10,15 +10,20 @@ signal ran_out
 
 var parts: Array = []
 var index := -1
+## Where in its file the part playing now ends (seconds), for a part that is
+## a stretch of a longer file (a name); -1 for a whole clip.
+var _until := -1.0
 
 
 func _ready() -> void:
 	finished.connect(_on_finished)
+	set_process(false)
 	if index >= 0 and index < parts.size() and not playing:
 		_play_current()
 
 
-## Starts a line: parts are {stream, length, words}. speed above 1 plays
+## Starts a line: parts are {stream, length, words}, and "from" for a part
+## that starts that far into its file and lasts length. speed above 1 plays
 ## faster (the bus keeps the pitch where it was).
 func play_parts(list: Array, speed: float) -> void:
 	parts = list
@@ -32,21 +37,40 @@ func play_parts(list: Array, speed: float) -> void:
 func halt() -> void:
 	parts = []
 	index = -1
+	_until = -1.0
+	set_process(false)
 	stop()
 
 
 func _play_current() -> void:
 	if index < 0 or index >= parts.size():
 		return
-	stream = (parts[index] as Dictionary)["stream"]
-	play()
+	var part: Dictionary = parts[index]
+	stream = part["stream"]
+	if part.has("from"):
+		_until = float(part["from"]) + float(part["length"])
+		set_process(true)
+		play(float(part["from"]))
+	else:
+		_until = -1.0
+		set_process(false)
+		play()
 	if index == 0:
 		started.emit()
+
+
+func _process(_delta: float) -> void:
+	# A stretch of a longer file stops where it ends and the next part starts.
+	if _until >= 0.0 and playing and get_playback_position() >= _until:
+		stop()
+		_on_finished()
 
 
 func _on_finished() -> void:
 	if index < 0:
 		return
+	_until = -1.0
+	set_process(false)
 	index += 1
 	if index >= parts.size():
 		index = -1

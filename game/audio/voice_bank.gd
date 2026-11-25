@@ -6,8 +6,13 @@ extends RefCounted
 ## game. A line is found by who says it and what it says, ignoring case and
 ## punctuation.
 ##
-## Lines that use the player's name are stored with {called} in its place
-## and say "Doctor" there, so one clip serves every player. Lines with
+## Lines that use the player's name are stored with {called} in its place.
+## Each is recorded whole, saying "Doctor" there, and also in pieces: the
+## words before the name and the words after it. A few hundred common names
+## are recorded as "Doctor Verma." in the voice of everyone who uses the
+## player's name, so a player called one of them hears their own name, put
+## between the pieces. Any other name hears the whole line with "Doctor"
+## (and Speech.address shows "Doctor" on screen too). Lines with
 ## numbers in them (a pulse, a count of swabs) are stored with # for each
 ## number and are put together from clips: the words around the numbers,
 ## and each number said on its own by the same person.
@@ -30,6 +35,11 @@ static var _lines := {}
 static var _patterns := {}
 ## who to {number: part}.
 static var _numbers := {}
+## A name as looked up ("verma") to {"clip", "said": {who: {ending: part}}}:
+## the recordings of "Doctor Verma." in everyone's voice, one file a name.
+static var _names := {}
+## Who has lines that can be said with a name in them.
+static var _naming := {}
 static var _cleaner: RegEx
 static var _ender: RegEx
 
@@ -41,6 +51,8 @@ static func reset() -> void:
 	_lines.clear()
 	_patterns.clear()
 	_numbers.clear()
+	_names.clear()
+	_naming.clear()
 
 
 ## Uses a manifest given as data (tests). Parts may carry a "stream"
@@ -81,14 +93,46 @@ static func find(who: String, text: String) -> Array:
 		if found == null:
 			continue
 		var values := []
+		var called := ""
 		var kinds: Array = pattern["kinds"]
 		for index in kinds.size():
 			if str(kinds[index]) == "#":
 				values.append(int(found.get_string(index + 1)))
-		var parts := _resolve(who, pattern["parts"], values)
+			else:
+				called = name_key(found.get_string(index + 1))
+		var parts := []
+		# The player's own name, when it was recorded in this voice.
+		if pattern.has("named") and can_say_name(who, called):
+			parts = _resolve(who, pattern["named"], values, called)
+		if parts.is_empty():
+			parts = _resolve(who, pattern["parts"], values)
 		if not parts.is_empty():
 			return parts
 	return _cover(who, text)
+
+
+## How a name is looked up: "Dr. D'Souza" is "d souza".
+static func name_key(called: String) -> String:
+	var plain := normalize(called)
+	for title in ["dr ", "doctor "]:
+		if plain.begins_with(title):
+			return plain.substr(title.length())
+	return plain
+
+
+## True when who's recorded voice can say the doctor's name (as "Dr. Verma"
+## or "verma") in their lines.
+static func can_say_name(who: String, called: String) -> bool:
+	_load()
+	var entry: Dictionary = _names.get(name_key(called), {})
+	return not entry.is_empty() and (entry["said"] as Dictionary).has(who)
+
+
+## True when who has recorded lines with the doctor's name in them (so a
+## name their voice can't say has to be "Doctor" on screen too).
+static func names_doctor(who: String) -> bool:
+	_load()
+	return _naming.has(who)
 
 
 ## A line put together from recorded lines: split at the ends of sentences
@@ -187,6 +231,10 @@ static func _read(manifest: Dictionary) -> void:
 		if compiled.is_empty():
 			continue
 		compiled["parts"] = parts
+		if "{" in key:
+			_naming[who] = true
+			if entry.has("named"):
+				compiled["named"] = entry["named"]
 		if not _patterns.has(who):
 			_patterns[who] = []
 		(_patterns[who] as Array).append(compiled)
@@ -197,6 +245,11 @@ static func _read(manifest: Dictionary) -> void:
 		for value: String in list:
 			said[int(value)] = list[value]
 		_numbers[who] = said
+	var names: Dictionary = manifest.get("names", {})
+	for key: String in names:
+		var entry: Dictionary = names[key]
+		if entry.has("clip") or entry.has("stream"):
+			_names[key] = entry
 
 
 ## A regular expression for a key with {names} and # numbers in it, and the
@@ -225,13 +278,25 @@ static func _compile(key: String) -> Dictionary:
 
 
 ## Turns stored parts into playable ones, with each {"number": n} part
-## replaced by the clip of the n-th number in values. Empty if any clip is
-## missing.
-static func _resolve(who: String, parts: Array, values: Array) -> Array:
+## replaced by the clip of the n-th number in values, and a {"name": "."}
+## part by who saying the name called ends that way ("Doctor Verma."). A
+## name is a stretch of its file: "from" seconds in, for "length". Empty if
+## any clip is missing.
+static func _resolve(who: String, parts: Array, values: Array, called: String = "") -> Array:
 	var playable := []
 	for part: Dictionary in parts:
 		var piece := part
-		if part.has("number"):
+		if part.has("name"):
+			var entry: Dictionary = _names.get(called, {})
+			var said: Array = ((entry.get("said", {}) as Dictionary).get(who, {}) as Dictionary).get(str(part["name"]), [])
+			if said.size() < 3:
+				return []
+			piece = {"from": float(said[0]), "length": float(said[1]), "words": said[2]}
+			if entry.has("stream"):
+				piece["stream"] = entry["stream"]
+			else:
+				piece["clip"] = entry["clip"]
+		elif part.has("number"):
 			var index := int(part["number"])
 			if index >= values.size():
 				return []
@@ -247,5 +312,8 @@ static func _resolve(who: String, parts: Array, values: Array) -> Array:
 		if stream == null:
 			return []
 		var length := float(piece.get("length", stream.get_length()))
-		playable.append({"stream": stream, "length": length, "words": piece.get("words", [])})
+		var playing := {"stream": stream, "length": length, "words": piece.get("words", [])}
+		if piece.has("from"):
+			playing["from"] = float(piece["from"])
+		playable.append(playing)
 	return playable

@@ -55,7 +55,7 @@ const WOOD := Color("#C9A27A")
 var profile: PlayerProfile
 var walk_area: WalkArea
 var player: AvatarRig
-var camera: Camera3D
+var camera: FitCamera
 var hud: LobbyHud
 var talk_ui: ConversationUi
 var story: StoryPlayer
@@ -110,9 +110,9 @@ func _ready() -> void:
 	player.rotation.y = _facing
 	add_child(player)
 	_marker = _build_marker()
-	camera = Camera3D.new()
+	camera = FitCamera.new()
 	camera.name = "Camera"
-	camera.fov = 42
+	camera.designed_fov = 42
 	add_child(camera)
 	var layer := CanvasLayer.new()
 	layer.name = "HudLayer"
@@ -640,6 +640,10 @@ func tap(screen_point: Vector2) -> void:
 
 ## The id of the person drawn at a screen point, or "".
 func person_at(screen_point: Vector2) -> String:
+	# A tag held at the edge of the screen takes a tap too.
+	for id: String in people:
+		if hud.tag_pinned(id) and hud.tag_hit(id, screen_point):
+			return id
 	var best := ""
 	var best_distance := TAP_RADIUS
 	for id: String in people:
@@ -830,7 +834,9 @@ func _update_tags() -> void:
 		if id in ["nair", "leela"]:
 			text += " · waiting"
 		var highlight := next_task == id or (next_task == "patient" and id in ["nair", "leela"])
-		hud.set_tag(id, text, camera.unproject_position(head), shown, highlight)
+		# The person to see next keeps their tag in sight: off the screen or
+		# under a panel, it waits at the edge with an arrow.
+		hud.set_tag(id, text, camera.unproject_position(head), shown, highlight, highlight)
 
 
 func _on_menu_choice(choice: String) -> void:

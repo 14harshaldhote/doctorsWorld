@@ -302,12 +302,11 @@ func test_a_narrow_screen_widens_the_view_and_keeps_the_way_out_in_sight() -> vo
 			profile.record_score(id, 80)
 			profile.set_flag("trained_" + id)
 		var lab := _lab(profile)
-		if aspect >= SkillsLab.WIDE_ASPECT:
-			expect_near(lab.overview_fov(), SkillsLab.OVERVIEW_FOV, 0.0001, "%s: a wide phone keeps the usual view" % size)
+		if aspect >= FitCamera.WIDE_ASPECT:
+			expect_near(lab.camera.fov, SkillsLab.OVERVIEW_FOV, 0.01, "%s: a wide phone keeps the usual view" % size)
 		else:
-			expect(lab.overview_fov() > SkillsLab.OVERVIEW_FOV, "%s: a narrower screen sees more (%.1f)" % [size, lab.overview_fov()])
-		expect(lab.overview_fov() <= 70.0, "%s: never a fish-eye" % size)
-		expect_near(lab.camera.fov, lab.overview_fov(), 0.01, "%s: the camera uses it" % size)
+			expect(lab.camera.fov > SkillsLab.OVERVIEW_FOV + 1.0, "%s: a narrower screen sees more (%.1f)" % [size, lab.camera.fov])
+		expect(lab.camera.fov <= FitCamera.WIDEST, "%s: never a fish-eye" % size)
 		_run(lab, 0.2)
 		expect_equal(lab.next_needed(), "history")
 		var history: Control = lab.hud._tags["station_history"]

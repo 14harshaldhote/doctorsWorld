@@ -101,7 +101,14 @@ jobs:
           } > README.md
           git add -A
           git commit -qm "Screenshots for ${GITHUB_SHA}"
-          git push -qf origin HEAD:screenshots
+          # GitHub sometimes refuses a big push on its side ("fatal error in
+          # commit_refs_rules"). Try three times; the screenshots are in the
+          # run's artifact either way, so a refusal is a warning, not a red run.
+          for wait in 20 60 0; do
+            if git push -qf origin HEAD:screenshots; then exit 0; fi
+            sleep "$wait"
+          done
+          echo "::warning::GitHub refused the screenshots branch push; the screenshots are in this run's artifact."
 
   ios-macos:
     name: iOS and Mac builds (macOS)

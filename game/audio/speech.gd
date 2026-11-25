@@ -114,6 +114,19 @@ static func speaks(who: String) -> bool:
 	return who != PLAYER and available()
 
 
+## How who addresses the doctor in a line they say aloud: called ("Dr.
+## Verma") when their recorded voice can say that name, else "Doctor", so
+## the words on screen are the words heard. With voices off, the name; and
+## while lines are being listed for recording (listening), the name, which
+## tools/make_voices.py turns back into {called}.
+static func address(who: String, called: String) -> String:
+	if who == PLAYER or who.is_empty() or not allowed() or listening or called == "Doctor":
+		return called
+	if VoiceBank.names_doctor(who) and not VoiceBank.can_say_name(who, called):
+		return "Doctor"
+	return called
+
+
 ## Starts reading a line aloud as a cast member. Returns the line's number,
 ## or 0 when it is not read aloud (always for the player, "you").
 static func say(text: String, who: String, on_start: Callable = Callable(), on_word: Callable = Callable(),

@@ -21,7 +21,7 @@ var ambulance: Node3D
 ## keep it in step with the story clock.
 var manual_time := false
 
-var _camera: Camera3D
+var _camera: FitCamera
 var _clock := 0.0
 var _walker: AvatarRig
 var _light_bar: MeshInstance3D
@@ -47,9 +47,9 @@ func _ready() -> void:
 	_build_people()
 	StaticBatch.optimise(self)
 	if own_camera:
-		_camera = Camera3D.new()
+		_camera = FitCamera.new()
 		_camera.name = "Camera"
-		_camera.fov = 40
+		_camera.designed_fov = 40
 		add_child(_camera)
 		_place_camera(0.0)
 

@@ -24,6 +24,10 @@
 		"who": "anu"
 	},
 	{
+		"text": "Mum, you don't need to see yourself. That's literally not the point of a video call.",
+		"who": "anu"
+	},
+	{
 		"text": "So... can I have your room when you go?",
 		"who": "anu"
 	},
@@ -612,6 +616,10 @@
 		"who": "dad"
 	},
 	{
+		"text": "The picture is very clear. This phone was eleven thousand rupees. Every rupee is visible.",
+		"who": "dad"
+	},
+	{
 		"text": "Twenty-two years of school fees. Worth every rupee. ...Mostly.",
 		"who": "dad"
 	},
@@ -1156,6 +1164,10 @@
 		"who": "grace"
 	},
 	{
+		"text": "Aunty, visiting hours are four to six. But rajma is welcome at the nurses' desk any time.",
+		"who": "grace"
+	},
+	{
 		"text": "Backs of hands done. 4 to go.",
 		"who": "grace"
 	},
@@ -1221,6 +1233,10 @@
 	},
 	{
 		"text": "Doctor! When something becomes a weapon, the talking is over. Out, calmly, and call one one two.",
+		"who": "grace"
+	},
+	{
+		"text": "Doctor's sleeping in a chair. Pager's screaming. Nobody cares.",
 		"who": "grace"
 	},
 	{
@@ -1449,6 +1465,10 @@
 	},
 	{
 		"text": "It'll hold, mostly. But someone's carrying more than they should. Watch them at midday.",
+		"who": "grace"
+	},
+	{
+		"text": "It's a sentence. With good behaviour I'd have been out in twenty.",
 		"who": "grace"
 	},
 	{
@@ -1828,6 +1848,10 @@
 		"who": "grace"
 	},
 	{
+		"text": "No rockets this year. Last year Tom's rocket went into the ICU window. The patient said it was the best Diwali of his life.",
+		"who": "grace"
+	},
+	{
 		"text": "Nothing. Thirty-four years on the wards. I've been splashed with everything.",
 		"who": "grace"
 	},
@@ -1837,6 +1861,10 @@
 	},
 	{
 		"text": "Now, your team. Tom's on the board, but he did a double. The night list, then a burns case till six.",
+		"who": "grace"
+	},
+	{
+		"text": "Nurses win. As always. The sweet boxes are in the corner, Doctor. Sticky side up.",
 		"who": "grace"
 	},
 	{
@@ -2032,6 +2060,10 @@
 		"who": "grace"
 	},
 	{
+		"text": "Sit properly. You slouch like an intern who's just been told they're not an intern any more.",
+		"who": "grace"
+	},
+	{
 		"text": "Six beds by ten. Mrs. Kurup offered to go home in a taxi. I said no.",
 		"who": "grace"
 	},
@@ -2040,15 +2072,15 @@
 		"who": "grace"
 	},
 	{
-		"text": "So you're the new intern. Dr. Kiran, right?",
+		"text": "So you're the new intern, Dr. Kiran. Good, we need the hands.",
 		"who": "grace"
 	},
 	{
-		"text": "So you're the new intern. Dr. Rao, right?",
+		"text": "So you're the new intern, Dr. Rao. Good, we need the hands.",
 		"who": "grace"
 	},
 	{
-		"text": "So you're the new intern. Dr. Verma, right?",
+		"text": "So you're the new intern, Dr. Verma. Good, we need the hands.",
 		"who": "grace"
 	},
 	{
@@ -2153,6 +2185,14 @@
 	},
 	{
 		"text": "Thirty minutes, ten jobs, and the inspectors always open the sluice room. Always.",
+		"who": "grace"
+	},
+	{
+		"text": "Thirty-four years, and nobody has ever seen him without that pen. Tonight he's put it down. It's unsettling.",
+		"who": "grace"
+	},
+	{
+		"text": "Thirty-one years on Ward 4. The building got older, the doctors got younger, and the biscuits got smaller.",
 		"who": "grace"
 	},
 	{
@@ -2261,6 +2301,10 @@
 	},
 	{
 		"text": "Worried, no. Awake, yes. He likes credit the way Mr. Malhotra likes beds.",
+		"who": "grace"
+	},
+	{
+		"text": "Write the time on everything. If it isn't written, it didn't happen. If it isn't timed, it happened whenever the lawyer says.",
 		"who": "grace"
 	},
 	{
@@ -2692,6 +2736,10 @@
 		"who": "iyer"
 	},
 	{
+		"text": "Before you tell a family something hard, sit down. Standing makes it sound like you're leaving.",
+		"who": "iyer"
+	},
+	{
 		"text": "Big swabs. Where's it coming from? Pack that corner first, hard. I'll pack the other three.",
 		"who": "iyer"
 	},
@@ -2745,6 +2793,10 @@
 	},
 	{
 		"text": "But she was home by six on Saturday, with a leaflet that told her pain was normal, and nobody rang her. That part is somebody's fault.",
+		"who": "iyer"
+	},
+	{
+		"text": "Can you take my clinic for an hour? My mother's care home rang. She's decided the nurses are spies again.",
 		"who": "iyer"
 	},
 	{
@@ -2948,6 +3000,10 @@
 		"who": "iyer"
 	},
 	{
+		"text": "Diwali on the terrace. Thirty years, and the fire brigade has only come twice.",
+		"who": "iyer"
+	},
+	{
 		"text": "Do you remember your first operation? Rohit's appendix. You held the scalpel like a pen and apologised to it.",
 		"who": "iyer"
 	},
@@ -2957,6 +3013,10 @@
 	},
 	{
 		"text": "Don't let go! I need it open the whole time.",
+		"who": "iyer"
+	},
+	{
+		"text": "Don't look so alarmed. Surgeons are allowed chai. It's in the constitution.",
 		"who": "iyer"
 	},
 	{
@@ -3032,7 +3092,7 @@
 		"who": "iyer"
 	},
 	{
-		"text": "Dr. Kiran? You're late.",
+		"text": "Dr. Kiran. You're late.",
 		"who": "iyer"
 	},
 	{
@@ -3056,7 +3116,7 @@
 		"who": "iyer"
 	},
 	{
-		"text": "Dr. Rao? You're late.",
+		"text": "Dr. Rao. You're late.",
 		"who": "iyer"
 	},
 	{
@@ -3096,7 +3156,7 @@
 		"who": "iyer"
 	},
 	{
-		"text": "Dr. Verma? You're late.",
+		"text": "Dr. Verma. You're late.",
 		"who": "iyer"
 	},
 	{
@@ -3141,6 +3201,10 @@
 	},
 	{
 		"text": "Every answer right, inside the minute. Don't let it go to your head. Tomorrow's case is already waiting.",
+		"who": "iyer"
+	},
+	{
+		"text": "Every doctor keeps a wall of names in their head. Ours is also on the actual wall, by this desk. Hers is the first on yours.",
 		"who": "iyer"
 	},
 	{
@@ -3636,6 +3700,10 @@
 		"who": "iyer"
 	},
 	{
+		"text": "I'm a terrifying surgeon. Same skill, better lighting.",
+		"who": "iyer"
+	},
+	{
 		"text": "I'm only watching today, Chief. Your patient, your hands, and her biscuits.",
 		"who": "iyer"
 	},
@@ -3980,6 +4048,10 @@
 		"who": "iyer"
 	},
 	{
+		"text": "My mother rang. She's decided I should have been a lawyer. She says it isn't too late. I'm fifty-two.",
+		"who": "iyer"
+	},
+	{
 		"text": "Navel port in.",
 		"who": "iyer"
 	},
@@ -4020,27 +4092,27 @@
 		"who": "iyer"
 	},
 	{
-		"text": "No, no. You'll be awake, and once the edges are numb you won't feel a thing. Dr. Das is operating. I'm only watching.",
+		"text": "No, no. You'll be awake, and once the edges are numb you won't feel a thing. And who's operating? Dr. Das. I'm only watching.",
 		"who": "iyer"
 	},
 	{
-		"text": "No, no. You'll be awake, and once the edges are numb you won't feel a thing. Dr. Joseph is operating. I'm only watching.",
+		"text": "No, no. You'll be awake, and once the edges are numb you won't feel a thing. And who's operating? Dr. Joseph. I'm only watching.",
 		"who": "iyer"
 	},
 	{
-		"text": "No, no. You'll be awake, and once the edges are numb you won't feel a thing. Dr. Lin is operating. I'm only watching.",
+		"text": "No, no. You'll be awake, and once the edges are numb you won't feel a thing. And who's operating? Dr. Lin. I'm only watching.",
 		"who": "iyer"
 	},
 	{
-		"text": "No, no. You'll be awake, and once the edges are numb you won't feel a thing. Dr. Mensah is operating. I'm only watching.",
+		"text": "No, no. You'll be awake, and once the edges are numb you won't feel a thing. And who's operating? Dr. Mensah. I'm only watching.",
 		"who": "iyer"
 	},
 	{
-		"text": "No, no. You'll be awake, and once the edges are numb you won't feel a thing. Dr. Rao is operating. I'm only watching.",
+		"text": "No, no. You'll be awake, and once the edges are numb you won't feel a thing. And who's operating? Dr. Rao. I'm only watching.",
 		"who": "iyer"
 	},
 	{
-		"text": "No, no. You'll be awake, and once the edges are numb you won't feel a thing. Dr. Verma is operating. I'm only watching.",
+		"text": "No, no. You'll be awake, and once the edges are numb you won't feel a thing. And who's operating? Dr. Verma. I'm only watching.",
 		"who": "iyer"
 	},
 	{
@@ -4380,11 +4452,11 @@
 		"who": "iyer"
 	},
 	{
-		"text": "Rohit's mother still asks for Dr. Rao by name. That's worth more than my report.",
+		"text": "Rohit's mother still asks for you by name, Dr. Rao. That's worth more than my report.",
 		"who": "iyer"
 	},
 	{
-		"text": "Rohit's mother still asks for Dr. Verma by name. That's worth more than my report.",
+		"text": "Rohit's mother still asks for you by name, Dr. Verma. That's worth more than my report.",
 		"who": "iyer"
 	},
 	{
@@ -4436,31 +4508,35 @@
 		"who": "iyer"
 	},
 	{
+		"text": "She was a judge for thirty years. She's very good at accusing people. Less good at evidence.",
+		"who": "iyer"
+	},
+	{
 		"text": "She's awake behind the screen, with the spinal working. Straight down the side of the thigh, along my line.",
 		"who": "iyer"
 	},
 	{
-		"text": "She's gone grey and sweaty. Heart rate 88, and slowing. Pressure 118 over 74. Dr. Das?",
+		"text": "She's gone grey and sweaty. Heart rate 88, and slowing. Pressure 118 over 74. Your call, Dr. Das.",
 		"who": "iyer"
 	},
 	{
-		"text": "She's gone grey and sweaty. Heart rate 88, and slowing. Pressure 118 over 74. Dr. Rao?",
+		"text": "She's gone grey and sweaty. Heart rate 88, and slowing. Pressure 118 over 74. Your call, Dr. Rao.",
 		"who": "iyer"
 	},
 	{
-		"text": "She's gone grey and sweaty. Heart rate 88, and slowing. Pressure 118 over 74. Dr. Verma?",
+		"text": "She's gone grey and sweaty. Heart rate 88, and slowing. Pressure 118 over 74. Your call, Dr. Verma.",
 		"who": "iyer"
 	},
 	{
-		"text": "She's gone grey and sweaty. Heart rate 99, and slowing. Pressure 110 over 70. Dr. Das?",
+		"text": "She's gone grey and sweaty. Heart rate 99, and slowing. Pressure 110 over 70. Your call, Dr. Das.",
 		"who": "iyer"
 	},
 	{
-		"text": "She's gone grey and sweaty. Heart rate 99, and slowing. Pressure 110 over 70. Dr. Rao?",
+		"text": "She's gone grey and sweaty. Heart rate 99, and slowing. Pressure 110 over 70. Your call, Dr. Rao.",
 		"who": "iyer"
 	},
 	{
-		"text": "She's gone grey and sweaty. Heart rate 99, and slowing. Pressure 110 over 70. Dr. Verma?",
+		"text": "She's gone grey and sweaty. Heart rate 99, and slowing. Pressure 110 over 70. Your call, Dr. Verma.",
 		"who": "iyer"
 	},
 	{
@@ -4489,6 +4565,10 @@
 	},
 	{
 		"text": "Sit down a minute.",
+		"who": "iyer"
+	},
+	{
+		"text": "Sit down a minute. No, sit. The ward can manage five minutes without you. It managed thirty years without you.",
 		"who": "iyer"
 	},
 	{
@@ -4533,6 +4613,10 @@
 	},
 	{
 		"text": "Soft. Nothing to learn here.",
+		"who": "iyer"
+	},
+	{
+		"text": "Some names on that wall will be your fault. Most won't. Learn the difference, or you'll carry all of them. Now eat one of her idlis. That's an order.",
 		"who": "iyer"
 	},
 	{
@@ -4677,6 +4761,10 @@
 	},
 	{
 		"text": "Thank you. Everyone happy? Then we begin.",
+		"who": "iyer"
+	},
+	{
+		"text": "Thank you. It's mostly backs and knees. If anyone asks, I'm in theatre. It's a lie, but a kind one.",
 		"who": "iyer"
 	},
 	{
@@ -4893,6 +4981,10 @@
 	},
 	{
 		"text": "There was a sliver of glass in there, the size of a rice grain. That would've festered for months.",
+		"who": "iyer"
+	},
+	{
+		"text": "There was nothing to change. Not the drugs, not the timing, not you. Her heart had done seventy-eight years, and it was finished.",
 		"who": "iyer"
 	},
 	{
@@ -5144,6 +5236,10 @@
 		"who": "iyer"
 	},
 	{
+		"text": "We took out a short piece of dead bowel and joined the ends. He'll be eating again in a few days.",
+		"who": "iyer"
+	},
+	{
 		"text": "We'll talk about this.",
 		"who": "iyer"
 	},
@@ -5169,6 +5265,10 @@
 	},
 	{
 		"text": "Where every round starts. With the patient you know.",
+		"who": "iyer"
+	},
+	{
+		"text": "Which is why the new Head of Department is giving one. Go on. You've been volunteered. By me.",
 		"who": "iyer"
 	},
 	{
@@ -5205,6 +5305,10 @@
 	},
 	{
 		"text": "Yes. The oxygen is too low. Normal is 95% or more.",
+		"who": "iyer"
+	},
+	{
+		"text": "You did. You sat with her, and you were there for her son. That's the job too. It's not in the textbook because it doesn't fit in a box.",
 		"who": "iyer"
 	},
 	{
@@ -5392,6 +5496,10 @@
 		"who": "kapoor"
 	},
 	{
+		"text": "A man asked me to count backwards from ten in Urdu this morning before I put him to sleep. I did. He was out by seven.",
+		"who": "khan"
+	},
+	{
 		"text": "A paratha at five? Then his stomach is full. I'll put him to sleep fast and protect his airway. Thank you.",
 		"who": "khan"
 	},
@@ -5560,6 +5668,10 @@
 		"who": "khan"
 	},
 	{
+		"text": "If a patient says they feel like they're going to die, believe them. They're usually right, and always worth checking.",
+		"who": "khan"
+	},
+	{
 		"text": "Inhaler in, fluids running... the wheeze is easing, pressure's back. Asthma and two days of vomiting. Good call.",
 		"who": "khan"
 	},
@@ -5624,6 +5736,10 @@
 		"who": "khan"
 	},
 	{
+		"text": "On a night, write down every call. At four in the morning you'll swear you never got a call you definitely got.",
+		"who": "khan"
+	},
+	{
 		"text": "Penicillin? Then no co-amoxiclav. Swapping to one that's safe. Thank you.",
 		"who": "khan"
 	},
@@ -5680,15 +5796,15 @@
 		"who": "khan"
 	},
 	{
-		"text": "She's gone grey and sweaty. Heart rate 88, and slowing. Pressure 118 over 74. Dr. Rao?",
+		"text": "She's gone grey and sweaty. Heart rate 88, and slowing. Pressure 118 over 74. Your call, Dr. Rao.",
 		"who": "khan"
 	},
 	{
-		"text": "She's gone grey and sweaty. Heart rate 88, and slowing. Pressure 118 over 74. Dr. Verma?",
+		"text": "She's gone grey and sweaty. Heart rate 88, and slowing. Pressure 118 over 74. Your call, Dr. Verma.",
 		"who": "khan"
 	},
 	{
-		"text": "She's gone grey and sweaty. Heart rate 99, and slowing. Pressure 110 over 70. Dr. Verma?",
+		"text": "She's gone grey and sweaty. Heart rate 99, and slowing. Pressure 110 over 70. Your call, Dr. Verma.",
 		"who": "khan"
 	},
 	{
@@ -5709,6 +5825,18 @@
 	},
 	{
 		"text": "Spinal's working. She's awake behind the screen, and she's told me about every saint in Margao.",
+		"who": "khan"
+	},
+	{
+		"text": "That I'm in a relationship with my monitor. It beeps when it's upset. Very honest.",
+		"who": "khan"
+	},
+	{
+		"text": "That's your pager. On Diwali. Of course it is.",
+		"who": "khan"
+	},
+	{
+		"text": "Then he woke up and asked if I was single. Anaesthesia does strange things. Mostly to men.",
 		"who": "khan"
 	},
 	{
@@ -5884,11 +6012,11 @@
 		"who": "lakshmi"
 	},
 	{
-		"text": "Arjun, this is Dr. Rao. Be nice.",
+		"text": "Arjun, be nice. This is your doctor, Dr. Rao.",
 		"who": "lakshmi"
 	},
 	{
-		"text": "Arjun, this is Dr. Verma. Be nice.",
+		"text": "Arjun, be nice. This is your doctor, Dr. Verma.",
 		"who": "lakshmi"
 	},
 	{
@@ -6132,15 +6260,15 @@
 		"who": "malhotra"
 	},
 	{
-		"text": "Dr. Rao! The chairman called. Mr. Bhatia's uncle called the chairman. The side room. Today.",
-		"who": "malhotra"
-	},
-	{
 		"text": "Dr. Rao, the board meets on Monday. Ward 4 is running over a hundred percent. Four general beds become two private rooms. That pays for the ward.",
 		"who": "malhotra"
 	},
 	{
 		"text": "Dr. Rao. Sorry, the night porter woke me. I hear we have an unidentified patient.",
+		"who": "malhotra"
+	},
+	{
+		"text": "Dr. Rao. The chairman called. Mr. Bhatia's uncle called the chairman. The side room. Today.",
 		"who": "malhotra"
 	},
 	{
@@ -6152,15 +6280,15 @@
 		"who": "malhotra"
 	},
 	{
-		"text": "Dr. Verma! The chairman called. Mr. Bhatia's uncle called the chairman. The side room. Today.",
-		"who": "malhotra"
-	},
-	{
-		"text": "Dr. Verma, this is Dr. Sameer Kapoor. Medical Director of CarePlus. Twelve hospitals, four cities.",
-		"who": "malhotra"
-	},
-	{
 		"text": "Dr. Verma. Sorry, the night porter woke me. I hear we have an unidentified patient.",
+		"who": "malhotra"
+	},
+	{
+		"text": "Dr. Verma. The chairman called. Mr. Bhatia's uncle called the chairman. The side room. Today.",
+		"who": "malhotra"
+	},
+	{
+		"text": "Dr. Verma. This is Dr. Sameer Kapoor. Medical Director of CarePlus. Twelve hospitals, four cities.",
 		"who": "malhotra"
 	},
 	{
@@ -6316,11 +6444,11 @@
 		"who": "malhotra"
 	},
 	{
-		"text": "Sister, the doctor can speak. Dr. Rao? Two beds. Yes?",
+		"text": "Sister, the doctor can speak. Two beds, Dr. Rao. Yes?",
 		"who": "malhotra"
 	},
 	{
-		"text": "Sister, the doctor can speak. Dr. Verma? Two beds. Yes?",
+		"text": "Sister, the doctor can speak. Two beds, Dr. Verma. Yes?",
 		"who": "malhotra"
 	},
 	{
@@ -6458,6 +6586,46 @@
 	{
 		"text": "Your first budget meeting is Monday at eight. I've brought a brochure.",
 		"who": "malhotra"
+	},
+	{
+		"text": "Doctor! Chai? Of course chai. What else is there in life. Sit, sit.",
+		"who": "mani"
+	},
+	{
+		"text": "Doctor, you look like the night shift and you're not even on it. Chai, double sugar. My orders.",
+		"who": "mani"
+	},
+	{
+		"text": "Last batch of samosas, Doctor. They're from the afternoon. They've seen things.",
+		"who": "mani"
+	},
+	{
+		"text": "Riverside canteen! Dal of the day!",
+		"who": "mani"
+	},
+	{
+		"text": "Riverside canteen. Your stomach is on call.",
+		"who": "mani"
+	},
+	{
+		"text": "Same as yesterday, in a brand new way.",
+		"who": "mani"
+	},
+	{
+		"text": "The machine is broken, so it's my hands today. Better, actually. Don't tell the management.",
+		"who": "mani"
+	},
+	{
+		"text": "Twenty rupees, rice is free. Extra pickle, don't ask me.",
+		"who": "mani"
+	},
+	{
+		"text": "Water with a rumour of dal. Not our fault.",
+		"who": "mani"
+	},
+	{
+		"text": "Yellow dal, yellow dal, a little bit of salt.",
+		"who": "mani"
 	},
 	{
 		"text": "...Okay. Okay, Papa.",
@@ -6648,11 +6816,23 @@
 		"who": "mohan"
 	},
 	{
+		"text": "Are you eating? You look thin. The camera adds weight and you still look thin.",
+		"who": "mum"
+	},
+	{
 		"text": "Hello? Beta? Can you hear me? I'm on speaker. Your father is also here, pretending he's not listening.",
 		"who": "mum"
 	},
 	{
+		"text": "I brought rajma. Hot. In the steel dabba. Don't make that face. Everybody can see you making that face.",
+		"who": "mum"
+	},
+	{
 		"text": "I'm not crying. It's the dust in this hall.",
+		"who": "mum"
+	},
+	{
+		"text": "Look at that. Now I'm crying, and the camera can see it. Eleven thousand rupees of crying.",
 		"who": "mum"
 	},
 	{
@@ -6664,7 +6844,23 @@
 		"who": "mum"
 	},
 	{
+		"text": "See? Very nice lady. A bit strict. Call me tonight. Every night. Or next time I'm bringing your father. And his forwards.",
+		"who": "mum"
+	},
+	{
 		"text": "So? Did you find the place? Is it big? Did anybody shout at you yet?",
+		"who": "mum"
+	},
+	{
+		"text": "There you are! No call for days. Days! I thought, either you're very busy or very dead. So I came to check which.",
+		"who": "mum"
+	},
+	{
+		"text": "There you are! We can see you! Can you see us? Anu, move, I can't see myself.",
+		"who": "mum"
+	},
+	{
+		"text": "Two buses and an auto. The auto driver knows your whole life now. He says congratulations.",
 		"who": "mum"
 	},
 	{
@@ -7192,6 +7388,22 @@
 		"who": "pm_mid_warm"
 	},
 	{
+		"text": "Okay. Okay. Was there pain at the end?",
+		"who": "pm_mid_warm"
+	},
+	{
+		"text": "Your face is saying it. Don't let your face say it. You say it.",
+		"who": "pm_mid_warm"
+	},
+	{
+		"text": "Go, go. She was a nurse. She'd say the same thing.",
+		"who": "pm_old_soft"
+	},
+	{
+		"text": "My wife. Twelve years gone. One look at you and she'd have sent for a tiffin.",
+		"who": "pm_old_soft"
+	},
+	{
 		"text": "Great week so far, as you can see. Here, at the back, on the right. It twists and goes down to the front. I can't sit still.",
 		"who": "pm_young"
 	},
@@ -7292,6 +7504,10 @@
 		"who": "priya"
 	},
 	{
+		"text": "An uncle in casualty called me beta, the way my father does. I haven't been home in eight months. That's all. That's literally all.",
+		"who": "priya"
+	},
+	{
 		"text": "Ananya had the heaviest patient on the floor. She did well. She also cried in the sluice. She says it was a vibe, not a breakdown.",
 		"who": "priya"
 	},
@@ -7308,11 +7524,19 @@
 		"who": "priya"
 	},
 	{
+		"text": "Antakshari! Nurses against doctors. Losers wash the sweet boxes. All of them. Even the sticky ones.",
+		"who": "priya"
+	},
+	{
 		"text": "Ask her everything theatre will need, Doctor. Quickly. She's going grey.",
 		"who": "priya"
 	},
 	{
 		"text": "Aspirin every morning, for her knees, because she won't take anything stronger. Theatre needs to know.",
+		"who": "priya"
+	},
+	{
+		"text": "Bed nine asked if I'm married. Then if my sister's married. Then if I have a cousin. He's ninety-one.",
 		"who": "priya"
 	},
 	{
@@ -7632,6 +7856,10 @@
 		"who": "priya"
 	},
 	{
+		"text": "Every single one. For me. Apparently that's romance now.",
+		"who": "priya"
+	},
+	{
 		"text": "Every tag right. Dr. Iyer's out of theatre and she's walked the line. She didn't change a single one.",
 		"who": "priya"
 	},
@@ -7708,6 +7936,10 @@
 		"who": "priya"
 	},
 	{
+		"text": "Free tip. In casualty, worry about the quiet ones on the bench. The loud ones are fine. Loud means breathing.",
+		"who": "priya"
+	},
+	{
 		"text": "From this month. I'll tell them before you change your mind. Not that you would.",
 		"who": "priya"
 	},
@@ -7717,6 +7949,14 @@
 	},
 	{
 		"text": "Good. First aid fixed without making it worse. The village will be told, nicely, about ropes and razors.",
+		"who": "priya"
+	},
+	{
+		"text": "Got a minute? Okay, thirty seconds. Vellore called. The critical care nursing course. The interview is on Thursday.",
+		"who": "priya"
+	},
+	{
+		"text": "Grace has me on nights all week. If I ask her to swap, she'll look at me like I asked for a kidney. Her kidney.",
 		"who": "priya"
 	},
 	{
@@ -7884,6 +8124,14 @@
 		"who": "priya"
 	},
 	{
+		"text": "I said I'm married to the drug chart. He said the drug chart can't cook. Rude. Accurate, but rude.",
+		"who": "priya"
+	},
+	{
+		"text": "If you're on tomorrow night, eat before ten. After ten the canteen is shut and the vending machine is a liar.",
+		"who": "priya"
+	},
+	{
 		"text": "Imran Ali, twenty-four. Fell two floors off the scaffold at the new mall site. His friends carried him in. He's very pale, Doctor.",
 		"who": "priya"
 	},
@@ -7925,6 +8173,10 @@
 	},
 	{
 		"text": "It's gone through the tea towel, Dr. Verma. And two of my gauze pads.",
+		"who": "priya"
+	},
+	{
+		"text": "It's nothing. It's the bleach. Bleach does this to everyone. Go, they need you outside.",
 		"who": "priya"
 	},
 	{
@@ -8916,6 +9168,10 @@
 		"who": "priya"
 	},
 	{
+		"text": "One kaju katli. Guarded with my life. Okay, with Tom's life.",
+		"who": "priya"
+	},
+	{
 		"text": "One you tagged to wait went grey on the trolley, Chief. Dr. Iyer pulled them forward. They'll live. Just.",
 		"who": "priya"
 	},
@@ -9104,6 +9360,10 @@
 		"who": "priya"
 	},
 	{
+		"text": "Right. No, totally. It's only my whole career. Cool. Cool cool cool.",
+		"who": "priya"
+	},
+	{
 		"text": "Right. The signs and the clotting test together. Now, the antivenom.",
 		"who": "priya"
 	},
@@ -9161,6 +9421,10 @@
 	},
 	{
 		"text": "She walks to the kerb, still holding her wrist. Probably broken. Definitely walking.",
+		"who": "priya"
+	},
+	{
+		"text": "She went at twenty past. Very quietly. Her son had gone down for tea. He's coming back up now.",
 		"who": "priya"
 	},
 	{
@@ -9640,6 +9904,10 @@
 		"who": "priya"
 	},
 	{
+		"text": "Two a.m., the chai is cold. The drip is beeping. I am old.",
+		"who": "priya"
+	},
+	{
 		"text": "Two died at the scene. Everyone who reached us alive is still alive. Go and drink some tea. Then the corridor.",
 		"who": "priya"
 	},
@@ -9681,6 +9949,10 @@
 	},
 	{
 		"text": "We'll move you to bed two. It's by the window.",
+		"who": "priya"
+	},
+	{
+		"text": "Why is there a goat. Doctor, don't look at me. I'm a nurse, not a farmer.",
 		"who": "priya"
 	},
 	{
@@ -9801,6 +10073,14 @@
 	},
 	{
 		"text": "You press gently on both hips. The pelvis is stable.",
+		"who": "priya"
+	},
+	{
+		"text": "You would? She'll make you fill a form. In triplicate. With a pencil she sharpened in 1998.",
+		"who": "priya"
+	},
+	{
+		"text": "You. Doing a drug round. Okay. I'm writing everything on the chart in capital letters.",
 		"who": "priya"
 	},
 	{
@@ -10028,11 +10308,19 @@
 		"who": "rao"
 	},
 	{
+		"text": "Dr. Khanna. Your hospital sends flowers to my farewell, and a junior to count the chairs. Very CarePlus.",
+		"who": "rao"
+	},
+	{
 		"text": "Dr. Rao. You've been on this ward all week. What did you see?",
 		"who": "rao"
 	},
 	{
 		"text": "Dr. Sethi. The night.",
+		"who": "rao"
+	},
+	{
+		"text": "Dr. Verma. Look after Ward 4. And look after Meera. She won't let you, so do it quietly.",
 		"who": "rao"
 	},
 	{
@@ -10048,11 +10336,15 @@
 		"who": "rao"
 	},
 	{
-		"text": "I chair, I don't vote. Dr. Verma, you were alone with the floor on Tuesday night. You decide it.",
+		"text": "I chair, I don't vote. You were alone with the floor on Tuesday night, Dr. Verma. You decide it.",
 		"who": "rao"
 	},
 	{
 		"text": "I did. And a good surgeon says no to the head of department when the head is wrong.",
+		"who": "rao"
+	},
+	{
+		"text": "I said no speeches. That one I'll allow. Write it down for me. I'll read it when the pension office is rude.",
 		"who": "rao"
 	},
 	{
@@ -10117,6 +10409,10 @@
 	},
 	{
 		"text": "Now. The meeting.",
+		"who": "rao"
+	},
+	{
+		"text": "Please. No speeches. I hate speeches. Especially ones about me.",
 		"who": "rao"
 	},
 	{
@@ -10286,6 +10582,46 @@
 	{
 		"text": "Pooja... tell Pooja...",
 		"who": "rider"
+	},
+	{
+		"text": "A request from Ward 4, bed two. It's for you, Dr. Verma. Thank you for the sleeping pill. He would like another one. Here's the night shift song.",
+		"who": "rj"
+	},
+	{
+		"text": "Doctor, doctor, eleven missed calls from your mum. Pick up. She's found a rishta.",
+		"who": "rj"
+	},
+	{
+		"text": "Doctor, doctor, we love you, it's true. But wash your hands. We saw you.",
+		"who": "rj"
+	},
+	{
+		"text": "Doctor, doctor, your handwriting's a crime. The chemist needs a priest every time.",
+		"who": "rj"
+	},
+	{
+		"text": "For Doctor, from bed two.",
+		"who": "rj"
+	},
+	{
+		"text": "Ordered every test the lab can do. For a sprained ankle. Well done, you.",
+		"who": "rj"
+	},
+	{
+		"text": "Ten years of medical college. Still can't find a parking space.",
+		"who": "rj"
+	},
+	{
+		"text": "That was a request from bed four. He's still waiting for his discharge.",
+		"who": "rj"
+	},
+	{
+		"text": "You said, just a small prick. It was not small. It was a lie.",
+		"who": "rj"
+	},
+	{
+		"text": "You're fine, go home, drink water. That's it? That's the whole degree?",
+		"who": "rj"
 	},
 	{
 		"text": "...Okay. Okay. At least I can revise in bed.",
@@ -10484,6 +10820,26 @@
 		"who": "salim"
 	},
 	{
+		"text": "Go, go. You have other patients. Come back after and tell me who's been naughty on the ward.",
+		"who": "saroja"
+	},
+	{
+		"text": "He's still angry. He just has better manners in the morning.",
+		"who": "saroja"
+	},
+	{
+		"text": "I've been resting since four in the morning. Sit, Doctor. Have you eaten? You look like you haven't eaten.",
+		"who": "saroja"
+	},
+	{
+		"text": "Venkat, give the doctor one of my idlis. Mine, not the canteen ones. The canteen ones are a punishment.",
+		"who": "saroja"
+	},
+	{
+		"text": "You're the new one. Dr. Iyer said you'd come. She said you're good. She also said you're slow, but I think she meant careful.",
+		"who": "saroja"
+	},
+	{
 		"text": "Chief! The simulator's loaded. A real case from last month, same scans, same surprises. I've turned the difficulty up. You said you liked it hard. Your funeral. Not literally.",
 		"who": "saxena"
 	},
@@ -10576,27 +10932,27 @@
 		"who": "sethi"
 	},
 	{
-		"text": "...Rigid. Right. Book theatre. I'm twenty minutes away. And Dr. Das? Thank you for not listening to me.",
+		"text": "...Rigid. Right. Book theatre. I'm twenty minutes away. One more thing, Dr. Das. Thank you for not listening to me.",
 		"who": "sethi"
 	},
 	{
-		"text": "...Rigid. Right. Book theatre. I'm twenty minutes away. And Dr. Joseph? Thank you for not listening to me.",
+		"text": "...Rigid. Right. Book theatre. I'm twenty minutes away. One more thing, Dr. Joseph. Thank you for not listening to me.",
 		"who": "sethi"
 	},
 	{
-		"text": "...Rigid. Right. Book theatre. I'm twenty minutes away. And Dr. Lin? Thank you for not listening to me.",
+		"text": "...Rigid. Right. Book theatre. I'm twenty minutes away. One more thing, Dr. Lin. Thank you for not listening to me.",
 		"who": "sethi"
 	},
 	{
-		"text": "...Rigid. Right. Book theatre. I'm twenty minutes away. And Dr. Mensah? Thank you for not listening to me.",
+		"text": "...Rigid. Right. Book theatre. I'm twenty minutes away. One more thing, Dr. Mensah. Thank you for not listening to me.",
 		"who": "sethi"
 	},
 	{
-		"text": "...Rigid. Right. Book theatre. I'm twenty minutes away. And Dr. Rao? Thank you for not listening to me.",
+		"text": "...Rigid. Right. Book theatre. I'm twenty minutes away. One more thing, Dr. Rao. Thank you for not listening to me.",
 		"who": "sethi"
 	},
 	{
-		"text": "...Rigid. Right. Book theatre. I'm twenty minutes away. And Dr. Verma? Thank you for not listening to me.",
+		"text": "...Rigid. Right. Book theatre. I'm twenty minutes away. One more thing, Dr. Verma. Thank you for not listening to me.",
 		"who": "sethi"
 	},
 	{
@@ -10724,6 +11080,10 @@
 		"who": "sethi"
 	},
 	{
+		"text": "Examine the belly every time. Scans are lovely. Hands are faster.",
+		"who": "sethi"
+	},
+	{
 		"text": "Fast because he's sore. Paracetamol. Good night, everyone.",
 		"who": "sethi"
 	},
@@ -10740,27 +11100,27 @@
 		"who": "sethi"
 	},
 	{
-		"text": "Handover, Dr. Das, quickly yaar. I've been here since yesterday and my coffee has its own pulse.",
+		"text": "Handover, Dr. Das. Quickly, yaar. I've been here since yesterday and my coffee has its own pulse.",
 		"who": "sethi"
 	},
 	{
-		"text": "Handover, Dr. Joseph, quickly yaar. I've been here since yesterday and my coffee has its own pulse.",
+		"text": "Handover, Dr. Joseph. Quickly, yaar. I've been here since yesterday and my coffee has its own pulse.",
 		"who": "sethi"
 	},
 	{
-		"text": "Handover, Dr. Lin, quickly yaar. I've been here since yesterday and my coffee has its own pulse.",
+		"text": "Handover, Dr. Lin. Quickly, yaar. I've been here since yesterday and my coffee has its own pulse.",
 		"who": "sethi"
 	},
 	{
-		"text": "Handover, Dr. Mensah, quickly yaar. I've been here since yesterday and my coffee has its own pulse.",
+		"text": "Handover, Dr. Mensah. Quickly, yaar. I've been here since yesterday and my coffee has its own pulse.",
 		"who": "sethi"
 	},
 	{
-		"text": "Handover, Dr. Rao, quickly yaar. I've been here since yesterday and my coffee has its own pulse.",
+		"text": "Handover, Dr. Rao. Quickly, yaar. I've been here since yesterday and my coffee has its own pulse.",
 		"who": "sethi"
 	},
 	{
-		"text": "Handover, Dr. Verma, quickly yaar. I've been here since yesterday and my coffee has its own pulse.",
+		"text": "Handover, Dr. Verma. Quickly, yaar. I've been here since yesterday and my coffee has its own pulse.",
 		"who": "sethi"
 	},
 	{
@@ -10828,7 +11188,15 @@
 		"who": "sethi"
 	},
 	{
+		"text": "I've been awake so long my coffee is drinking me now.",
+		"who": "sethi"
+	},
+	{
 		"text": "I've read the op note. Mine, and yours.",
+		"who": "sethi"
+	},
+	{
+		"text": "If anyone pages me in the next six hours, tell them I've emigrated. Say Canada. Everyone believes Canada.",
 		"who": "sethi"
 	},
 	{
@@ -11028,7 +11396,15 @@
 		"who": "sethi"
 	},
 	{
+		"text": "Why did the surgeon take a ladder to work? Because the patient was in a critical condition. Upstairs. I'll see myself out.",
+		"who": "sethi"
+	},
+	{
 		"text": "You ran the bay well. I'd say so even if we weren't both interviewing tomorrow. Which, sadly, we are.",
+		"who": "sethi"
+	},
+	{
+		"text": "You're a terrible liar and a good doctor. I'll take it.",
 		"who": "sethi"
 	},
 	{
@@ -11268,6 +11644,10 @@
 		"who": "tom"
 	},
 	{
+		"text": "A hospital in Dubai wants a scrub nurse. Four times the money. They want a reference from a doctor who's seen me work.",
+		"who": "tom"
+	},
+	{
 		"text": "A mesh? Are you sure, Doctor?",
 		"who": "tom"
 	},
@@ -11452,6 +11832,10 @@
 		"who": "tom"
 	},
 	{
+		"text": "Doctor. Small favour. Not small. Medium.",
+		"who": "tom"
+	},
+	{
 		"text": "Drill. Set to the wire.",
 		"who": "tom"
 	},
@@ -11496,6 +11880,10 @@
 		"who": "tom"
 	},
 	{
+		"text": "Glowing. Like a headlamp. Thank you, Doctor. I mean it.",
+		"who": "tom"
+	},
+	{
 		"text": "Go on, then. I've heard you ask a hundred of these. Let's see if you were listening.",
 		"who": "tom"
 	},
@@ -11537,6 +11925,10 @@
 	},
 	{
 		"text": "Hands still. Nobody moves a thing inside till the camera's back. Good.",
+		"who": "tom"
+	},
+	{
+		"text": "He did say that. I have it in writing.",
 		"who": "tom"
 	},
 	{
@@ -11613,6 +12005,10 @@
 	},
 	{
 		"text": "Morning, Doctor. Same as the lab, just faster. He's already asleep in there.",
+		"who": "tom"
+	},
+	{
+		"text": "My daughter got engineering in Manipal. The fees have more zeroes than my salary.",
 		"who": "tom"
 	},
 	{
@@ -12052,6 +12448,66 @@
 		"who": "tom"
 	},
 	{
+		"text": "CarePlus gave me my own parking spot. With my name on it. In gold. Well, gold coloured.",
+		"who": "varun"
+	},
+	{
+		"text": "Carrom. You and me. Loser buys chai for the whole batch. I've been practising. On an app.",
+		"who": "varun"
+	},
+	{
+		"text": "Honestly, though. This is nice. Nobody at CarePlus plays carrom. They play squash. I hate squash.",
+		"who": "varun"
+	},
+	{
+		"text": "I am not counting the chairs. I counted them in the car. There are forty.",
+		"who": "varun"
+	},
+	{
+		"text": "Like I said. App training. I'm posting this. Hashtag CarePlus excellence.",
+		"who": "varun"
+	},
+	{
+		"text": "Look who it is! The government hospital legend. Still living on canteen samosas? I'd hug you, but this shirt is linen.",
+		"who": "varun"
+	},
+	{
+		"text": "Really? Okay. Our canteen does quinoa. I miss samosas. Don't tell anyone.",
+		"who": "varun"
+	},
+	{
+		"text": "Sorry, sorry, am I late? CarePlus sent flowers. And me. Mostly the flowers.",
+		"who": "varun"
+	},
+	{
+		"text": "Thank you. You can visit it sometime. Not park in it. Visit.",
+		"who": "varun"
+	},
+	{
+		"text": "Amma, rest. Don't make the doctor stand there listening to your reviews.",
+		"who": "venkat"
+	},
+	{
+		"text": "Cardiology came at six. They said the machines won't help her now. She signed the paper last year: no tubes, no machines. I was angry about it then.",
+		"who": "venkat"
+	},
+	{
+		"text": "Doctor? Priya said to wait for you. Tell me. Just tell me.",
+		"who": "venkat"
+	},
+	{
+		"text": "She packed idlis for the nurses before we left home. Four in the morning, chest pain, and she's packing idlis. Please. Someone eat them.",
+		"who": "venkat"
+	},
+	{
+		"text": "Thank you for saying it straight. She hated it when people talked around things.",
+		"who": "venkat"
+	},
+	{
+		"text": "Twenty minutes. I was buying tea. Twenty minutes, and I was buying tea.",
+		"who": "venkat"
+	},
+	{
 		"text": "Doctor. I know it's your job. Be careful anyway.",
 		"who": "venu"
 	},
@@ -12272,6 +12728,10 @@
 		"who": "zoya"
 	},
 	{
+		"text": "I've been here since six. I had a biscuit at ten. Or I dreamt the biscuit. Unclear.",
+		"who": "zoya"
+	},
+	{
 		"text": "I've watched him since ten. His pulse just kept going up. Dr. Sethi said not to call about sore, and I didn't want to be that intern.",
 		"who": "zoya"
 	},
@@ -12313,6 +12773,10 @@
 	},
 	{
 		"text": "Only if it's really bad, though. I don't want to be that intern.",
+		"who": "zoya"
+	},
+	{
+		"text": "Quick question. Is it normal to forget whether you ate today? Asking for a friend. The friend is me.",
 		"who": "zoya"
 	},
 	{
@@ -12385,6 +12849,10 @@
 	},
 	{
 		"text": "You said there are no stupid questions at three in the morning. I asked eleven this week. Some were very stupid. Thank you for answering all of them anyway.",
+		"who": "zoya"
+	},
+	{
+		"text": "You're holding my bleep? That's the most iconic thing a senior has ever done. Okay. Bye. Eating.",
 		"who": "zoya"
 	}
 ]

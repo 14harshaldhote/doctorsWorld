@@ -58,7 +58,7 @@ var bedtime := -1
 ## The two colleagues on late tonight.
 var staff: Array = []
 
-var camera: Camera3D
+var camera: FitCamera
 var ui: ConversationUi
 var overlay: StoryOverlay
 var story: StoryPlayer
@@ -86,9 +86,9 @@ func _init(for_profile: PlayerProfile = null, finished_day: int = 4, left_at: in
 
 func _ready() -> void:
 	name = "Evening"
-	camera = Camera3D.new()
+	camera = FitCamera.new()
 	camera.name = "Camera"
-	camera.fov = 44
+	camera.designed_fov = 44
 	add_child(camera)
 	camera.make_current()
 	_layer = CanvasLayer.new()
@@ -115,6 +115,7 @@ func _ready() -> void:
 	songs = SongPlayer.new()
 	songs.name = "Radio"
 	songs.manual = true
+	songs.called = profile.called()
 	songs.finished.connect(_end_radio)
 	add_child(songs)
 	party = Life.party_on(profile, day)
@@ -785,7 +786,7 @@ func _start_shot(shot_name: String, offset: float = -1.0) -> void:
 		return
 	_shot = current_set.shots[shot_name]
 	_shot_t = 0.0
-	camera.fov = float(_shot.get("fov", 44.0))
+	camera.designed_fov = float(_shot.get("fov", 44.0))
 	camera.h_offset = offset if offset >= 0.0 else float(_shot.get("offset", 0.0))
 	camera.v_offset = float(_shot.get("lift", 0.0))
 	_update_camera(0.0)

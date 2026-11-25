@@ -405,7 +405,7 @@
 		},
 		{
 			"say": "lakshmi",
-			"text": "Arjun, this is {called}. Be nice.",
+			"text": "Arjun, be nice. This is your doctor, {called}.",
 			"mood": "calm",
 			"gesture": "hold"
 		},
@@ -541,7 +541,7 @@
 		},
 		{
 			"say": "malhotra",
-			"text": "Sister, the doctor can speak. {called}? Two beds. Yes?",
+			"text": "Sister, the doctor can speak. Two beds, {called}. Yes?",
 			"mood": "calm",
 			"gesture": "open_hands",
 			"to": "you"
@@ -811,7 +811,7 @@
 		},
 		{
 			"say": "malhotra",
-			"text": "{called}! The chairman called. Mr. Bhatia's uncle called the chairman. The side room. Today.",
+			"text": "{called}. The chairman called. Mr. Bhatia's uncle called the chairman. The side room. Today.",
 			"mood": "worried",
 			"gesture": "explain"
 		},
@@ -2259,7 +2259,7 @@
 			"else": [
 				{
 					"say": "iyer",
-					"text": "Rohit's mother still asks for {called} by name. That's worth more than my report.",
+					"text": "Rohit's mother still asks for you by name, {called}. That's worth more than my report.",
 					"mood": "calm",
 					"gesture": "explain",
 					"to": "rao"

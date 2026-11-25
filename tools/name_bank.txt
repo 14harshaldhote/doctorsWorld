@@ -1,0 +1,705 @@
+# The names the game can say: each is recorded as "Doctor <name>." in the
+# voice of everyone who calls the doctor by name (tools/make_voices.py), so
+# a player with one of these names hears it said. Any other name is shown
+# and said as "Doctor".
+#
+# One name a line. Other spellings of the same name go after a slash; a
+# respelling for the voice goes after a bar:   D'Souza / Dsouza | D Souza
+# Every respelling was checked against the sounds the voice makes.
+
+# --- Surnames ---------------------------------------------------------------
+# North
+Sharma
+Verma
+Varma
+Gupta
+Singh
+Kumar
+Kumari | Koomaaree
+Yadav
+Mishra | Meeshra
+Pandey | Paanday
+Tiwari / Tewari
+Dubey / Dube | Doobay
+Tripathi | Trippaatee
+Shukla
+Srivastava / Shrivastava
+Saxena
+Agarwal / Agrawal / Aggarwal
+Bansal
+Goyal / Goel
+Mittal
+Jindal
+Garg
+Singhal
+Jain
+Kapoor / Kapur
+Khanna
+Malhotra
+Chopra
+Arora
+Bhatia
+Sethi
+Mehra
+Kohli
+Ahuja | Ahooja
+Anand
+Bajaj
+Bedi
+Chadha | Chuddha
+Chawla
+Dhawan
+Grover
+Gulati | Goolaati
+Khurana | Khurrana
+Madan
+Narang
+Oberoi
+Puri
+Sahni / Sawhney
+Sood
+Suri | Suuri
+Talwar
+Tandon
+Vohra
+Walia | Waalia
+Batra
+Kakkar
+Sachdeva | Suchdayva
+Taneja | Tanayja
+Wadhwa | Wudhwaa
+Nanda
+Bhalla
+Dhingra
+Chauhan
+Rathore / Rathod | Rah-tore
+Rajput
+Thakur
+Rana
+Tomar
+Bisht
+Negi | Naygi
+Rawat
+Joshi
+Bhatt / Bhat
+Pant | Punt
+Upadhyay | Oopaadhyai
+Chaturvedi | Chaturvaydee
+Dwivedi | Dwivaydee
+Trivedi | Trivvaydee
+Awasthi | Awustee
+Bajpai
+Dixit / Dikshit
+Mathur | Maatur
+Nigam
+Bhargava
+Kaul
+Raina
+Dhar | Daar
+Gill
+Sandhu
+Dhillon
+Grewal | Graywaal
+Sidhu
+Bajwa
+Brar
+Mann
+Virk
+Cheema
+Randhawa
+Ahluwalia
+Bains
+Chahal
+Kalra
+Kaur
+Jaiswal
+Chaudhary / Choudhary / Chaudhari | Chowdhary
+Prasad | Prasaad
+Sinha
+Jha | Jaa
+Rai
+Ojha | Ojhaa
+Pathak | Puttak
+Pandit
+Tyagi
+Maurya
+Rastogi
+Khandelwal
+Maheshwari
+Bhandari
+Soni
+Sahu
+Prajapati
+Vishwakarma
+Lal
+Nath | Naat
+Seth | Sayt
+Rajan
+# West
+Shah
+Patel
+Mehta
+Desai
+Modi
+Parikh
+Thakkar | Tukkar
+Doshi
+Gandhi
+Vyas | Viyaas
+Pandya
+Dave | Daavay
+Kothari | Kotaari
+Sanghvi
+Amin | Ameen
+Solanki
+Parmar
+Jadeja | Jadayja
+Kulkarni
+Deshpande | Desch-paanday
+Deshmukh | Desch-mookh
+Patil
+Pawar
+Jadhav
+Shinde
+More | Moray
+Gaikwad
+Kale
+Kamble | Kaamblay
+Bhosale
+Chavan
+Mane | Maanay
+Naik | Nike
+Sawant
+Gokhale | Gokhalay
+Apte | Aaptay
+Phadke | Phadkay
+Karve | Karvay
+Ranade | Raanaday
+Godbole | Godbolay
+Kelkar
+Inamdar
+Thorat | Toraat
+Mhatre | Maatray
+Kadam
+Rane
+Tendulkar
+Bhide
+Sathe | Saatay
+Salvi
+Shetye | Shetyay
+# South
+Reddy
+Rao
+Naidu
+Nair | Nyre
+Menon
+Pillai
+Iyer
+Iyengar | Eye-yengaar
+Krishnan
+Subramanian / Subramaniam
+Raman
+Venkatesh | Venkataysh
+Srinivasan | Shreenivaasan
+Raghavan
+Narayanan | Naraayanan
+Ramachandran
+Gopal | Gopaal
+Kurup
+Panicker
+Warrier
+Nambiar
+Kutty
+Shetty
+Hegde
+Kamath
+Pai
+Shenoy | Shaynoy
+Prabhu
+Gowda
+Murthy / Murty | Moortee
+Shastri / Sastry
+Acharya
+Swamy | Swaamy
+Raju
+Chari
+Varghese / Verghese
+Kurian
+Mathew
+Thomas
+George
+Joseph
+Abraham
+Jacob
+John
+Philip
+Chacko
+Cherian | Cheriyan
+Koshy
+Babu
+Chandran
+Mohan
+Selvam
+Murugan | Moorugan
+Rajendran
+Ganesan | Ganaysan
+Natarajan
+Sundaram
+Balan
+Ravi
+Anwar
+# East
+Banerjee
+Chatterjee
+Mukherjee
+Bose
+Sen
+Dutta / Datta
+Das
+Ghosh
+Roy
+Chakraborty
+Bhattacharya
+Ganguly | Gangooly
+Majumdar | Majoomdar
+Sarkar
+Biswas
+Mondal / Mandal
+Mitra
+Basu
+Pal
+Saha
+Dey / De
+Guha | Gooha
+Chowdhury
+Mohanty
+Patnaik
+Panda
+Sahoo
+Behera | Behayra
+Nayak
+Barua / Baruah | Baroova
+Bora
+Gogoi
+Saikia | Sighkia
+Hazarika
+Kalita
+Sengupta
+Dasgupta
+Lahiri | Laheeree
+Sanyal
+Mahapatra
+# Muslim
+Khan
+Ahmed / Ahmad
+Ali
+Shaikh / Sheikh
+Ansari
+Qureshi
+Siddiqui
+Syed | Sayyed
+Hussain / Husain
+Hasan / Hassan
+Rizvi
+Naqvi
+Zaidi
+Abbas | Abbaas
+Pathan | Pataan
+Mirza
+Baig
+Malik
+Farooqui
+Rahman / Rehman
+Iqbal
+Akhtar
+Hashmi
+Haider
+Memon
+Kazi / Qazi
+# Christian, Goan, Parsi
+D'Souza / Dsouza / Desouza
+Fernandes / Fernandez
+Pereira
+Rodrigues
+D'Costa / Dcosta | D-Costa
+Gomes
+Pinto
+Lobo
+Menezes
+Dias | Deeas
+Almeida
+Mascarenhas
+Lewis
+Francis
+Samuel
+David
+Daniel
+Irani
+Mistry | Mistree
+Wadia | Waadiya
+Engineer
+# Elsewhere
+Smith
+Johnson
+Williams
+Brown
+Jones
+Garcia
+Miller
+Davis
+Wilson
+Anderson
+Taylor
+Moore
+Jackson
+Martin
+Lee
+Thompson
+White
+Harris
+Clark
+Walker
+Hall
+Allen
+Young
+King
+Wright
+Scott
+Green
+Baker
+Adams
+Hill
+Campbell
+Mitchell
+Roberts
+Carter
+Evans
+Turner
+Parker
+Collins
+Edwards
+Morris
+Murphy
+Cook
+Morgan
+Cooper
+Kelly
+Ward
+Watson
+Gray / Grey
+Hughes
+Kim
+Park
+Chen
+Wang
+Li | Lee
+Zhang | Jaang
+Liu | Leo
+Nguyen
+Tanaka
+Silva
+Santos
+Costa
+Lopez
+Gonzalez
+Hernandez
+Perez
+Sanchez
+Mensah
+Okafor
+Ibrahim
+Mohamed / Mohammed
+Schmidt
+Rossi
+O'Brien / Obrien
+
+# --- First names --------------------------------------------------------------
+Aarav
+Aditya
+Ajay
+Akash | Aakaash
+Akshay
+Alok
+Aman
+Amit
+Ankit
+Ankur
+Anuj
+Anurag | Anurraag
+Arjun
+Arnav
+Arun
+Ashish
+Ashok
+Atul
+Ayush
+Bharat
+Chetan | Chaytan
+Deepak
+Dev | Dayv
+Dhruv | Druv
+Dinesh | Dinaysh
+Gaurav
+Gautam
+Harsh
+Hemant | Haymant
+Hitesh | Hitaysh
+Ishaan / Ishan
+Jatin
+Karan
+Kartik / Karthik
+Kunal
+Lokesh | Lokaysh
+Manish | Maneesh
+Manoj | Manohj
+Mayank
+Mihir
+Mohit
+Mukesh | Mookaysh
+Naveen
+Neeraj
+Nikhil
+Nilesh | Neelaysh
+Nitin
+Om
+Pankaj
+Parth | Paart
+Pranav
+Prashant
+Prateek / Pratik
+Praveen
+Rahul
+Raj
+Rajat
+Rajesh | Raajaysh
+Rakesh | Raakaysh
+Ram | Raam
+Ramesh
+Rishabh
+Rishi
+Rohan
+Rohit
+Sachin
+Sahil
+Sameer / Samir
+Sandeep
+Sanjay
+Saurabh
+Shivam
+Siddharth | Siddhaart
+Sumit
+Sunil | Suneel
+Suraj | Suuraj
+Suresh
+Tarun
+Tushar
+Uday | Ooday
+Varun
+Vijay
+Vikas | Vikaas
+Vikram
+Vinay
+Vinod
+Vishal | Vishaal
+Vivek
+Yash
+Yogesh | Yogaysh
+Abhishek
+Abhinav
+Akhil
+Aniket
+Ashwin
+Ganesh | Ganaysh
+Girish | Gheereesh
+Hari
+Kiran | Kirrun
+Krishna
+Mahesh | Mahaysh
+Prakash
+Raghav
+Rajiv / Rajeev
+Sagar
+Santosh
+Satish | Sateesh
+Shankar
+Shubham
+Sourav / Saurav | Sowrav
+Tanmay
+Vedant | Vaydaant
+Venkat
+Imran
+Irfan
+Faisal
+Farhan
+Salman
+Aamir / Amir
+Arif
+Asif
+Ayaan
+Kabir
+Rehan
+Gurpreet
+Harpreet
+Jaspreet
+Manpreet
+Arvind / Aravind
+Balaji | Baalaaji
+Murali | Moorali
+Pradeep
+Harish
+Aanya
+Aditi
+Aishwarya | Eyeshwarya
+Ananya
+Anjali
+Ankita
+Anushka
+Aparna
+Archana
+Asha
+Avni
+Bhavna
+Deepa
+Deepika
+Divya
+Diya
+Gauri
+Isha
+Ishita
+Jaya
+Jyoti | Jotee
+Kajal
+Kavya
+Kavita
+Khushi | Khooshi
+Komal
+Kriti
+Lakshmi
+Madhuri | Maadhuhree
+Meena
+Meera / Mira
+Megha | Maygha
+Monika
+Nandini
+Neha
+Nidhi | Nidhee
+Nikita
+Nisha
+Pallavi
+Pooja
+Preeti / Priti
+Priya
+Priyanka
+Radha | Raadha
+Radhika | Raadhika
+Rashmi
+Riya
+Ritu
+Sakshi
+Sanjana
+Sapna
+Shalini | Shaalini
+Shikha
+Shilpa
+Shivani
+Shreya
+Shruti
+Simran
+Sneha | Snayha
+Sonal
+Sonia
+Sunita
+Swati | Swaati
+Tanvi
+Tanya
+Trisha
+Usha
+Vaishnavi
+Varsha
+Vidya
+Zara
+Ayesha / Aisha
+Fatima
+Sana
+Sara | Saara
+Sarah
+Zoya
+Heena
+Anika
+Kiara
+Myra
+Saanvi
+Tara
+Ira
+Navya
+Avantika
+Esha | Eesha
+Garima
+Juhi | Joohee
+Kanika
+Lavanya
+Mahima
+Namrata
+Payal
+Poonam
+Seema
+Shweta | Schwayta
+Suman
+Uma
+Nila
+Mei
+Lin
+Kofi
+Harleen
+Jasleen
+Anita
+Geeta / Gita | Gheeta
+Roshni
+Smita
+# Elsewhere
+James
+Robert
+Michael
+William
+Richard
+Matthew
+Anthony
+Mark
+Paul
+Andrew
+Kevin
+Ryan
+Noah
+Liam
+Ethan
+Lucas
+Oliver
+Alex
+Sam
+Ben
+Chris
+Emma
+Olivia
+Sophia
+Mia
+Amelia
+Emily
+Charlotte
+Grace
+Hannah
+Anna
+Laura
+Jessica
+Elizabeth
+Mary
+Lisa
+Rachel
+Lily
+Chloe
+Zoe
+Lucy
+Ella
+Kate
+Maya
+Omar
+Yusuf

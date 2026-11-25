@@ -12,7 +12,7 @@ signal finished(skipped: bool)
 const ACTIONS := ["set", "shot", "fade", "card", "letter", "cue"]
 
 var profile: PlayerProfile
-var camera: Camera3D
+var camera: FitCamera
 var ui: ConversationUi
 var overlay: StoryOverlay
 var story: StoryPlayer
@@ -29,9 +29,9 @@ func _init(for_profile: PlayerProfile = null) -> void:
 
 
 func _ready() -> void:
-	camera = Camera3D.new()
+	camera = FitCamera.new()
 	camera.name = "Camera"
-	camera.fov = 42
+	camera.designed_fov = 42
 	add_child(camera)
 	camera.make_current()
 	var layer := CanvasLayer.new()
@@ -139,7 +139,7 @@ func _start_shot(shot_name: String) -> void:
 		return
 	_shot = current_set.shots[shot_name]
 	_shot_t = 0.0
-	camera.fov = float(_shot.get("fov", 42.0))
+	camera.designed_fov = float(_shot.get("fov", 42.0))
 	camera.h_offset = float(_shot.get("offset", 0.0))
 	_update_camera(0.0)
 

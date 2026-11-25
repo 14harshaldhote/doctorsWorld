@@ -1420,7 +1420,7 @@
 								},
 								{
 									"say": "sethi",
-									"text": "...Rigid. Right. Book theatre. I'm twenty minutes away. And {called}? Thank you for not listening to me.",
+									"text": "...Rigid. Right. Book theatre. I'm twenty minutes away. One more thing, {called}. Thank you for not listening to me.",
 									"mood": "focused",
 									"head": "nod"
 								}
@@ -2386,7 +2386,7 @@
 		},
 		{
 			"say": "rao",
-			"text": "I chair, I don't vote. {called}, you were alone with the floor on Tuesday night. You decide it.",
+			"text": "I chair, I don't vote. You were alone with the floor on Tuesday night, {called}. You decide it.",
 			"mood": "calm",
 			"gesture": "point",
 			"to": "you"

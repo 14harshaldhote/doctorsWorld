@@ -1249,7 +1249,9 @@ func _radio_page() -> Control:
 	if not request.is_empty():
 		list.add_child(UiKit.label("TODAY'S REQUEST", 8, UiKit.TEXT_KICKER, UiKit.heavy_font()))
 		var song := Songs.song(str(request.get("song", "")))
-		var row := _radio_row("Request", str(request.get("text", "")).replace("{called}", "Doctor"),
+		var said := str(request.get("text", ""))
+		said = said.replace("{called}", Speech.address(str(request.get("say", "rj")), profile.called() if profile != null else "Doctor"))
+		var row := _radio_row("Request", said,
 			"Then: " + str(song.get("title", "")), on and radio.request == request)
 		_tappable(row, _radio_pressed.bind(str(request.get("song", "")), request))
 		list.add_child(row)
@@ -1362,6 +1364,8 @@ func play_radio(id: String, request: Dictionary = {}) -> bool:
 	if radio == null:
 		radio = SongPlayer.new()
 		radio.name = "Radio"
+		if profile != null:
+			radio.called = profile.called()
 		add_child(radio)
 	if not radio.play(id, request):
 		return false

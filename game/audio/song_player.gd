@@ -21,6 +21,8 @@ const REQUEST_LETTER := 0.065
 ## The song playing anywhere now, or null.
 static var active: SongPlayer
 
+## How the doctor is addressed ("Dr. Verma"), for a request with their name.
+var called := "Doctor"
 var song_id := ""
 ## Seconds into the music (the request doesn't count).
 var time := 0.0
@@ -137,9 +139,11 @@ func tick(delta: float) -> void:
 				stop()
 
 
-## The request's words, said to "Doctor" (the recorded line says that).
+## The request's words, to the doctor by name where the RJ's voice can say
+## it (Speech.address), else to "Doctor".
 func request_text() -> String:
-	return str(request.get("text", "")).replace("{called}", "Doctor")
+	var text := str(request.get("text", ""))
+	return text.replace("{called}", Speech.address(str(request.get("say", "rj")), called)) if "{called}" in text else text
 
 
 ## The words of the line being sung now ("" between songs or before the first).

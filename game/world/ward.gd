@@ -199,7 +199,7 @@ const NIGHT_SKY := Color("#16222E")
 var profile: PlayerProfile
 var walk_area: WalkArea
 var player: AvatarRig
-var camera: Camera3D
+var camera: FitCamera
 var hud: LobbyHud
 var talk_ui: ConversationUi
 var overlay: StoryOverlay
@@ -303,9 +303,9 @@ func _ready() -> void:
 	player.name = "Player"
 	player.voice_pitch = 1.08 - 0.04 * profile.avatar.height
 	add_child(player)
-	camera = Camera3D.new()
+	camera = FitCamera.new()
 	camera.name = "Camera"
-	camera.fov = 42
+	camera.designed_fov = 42
 	add_child(camera)
 	_layer = CanvasLayer.new()
 	_layer.name = "HudLayer"
@@ -1525,6 +1525,8 @@ func _update_routes(delta: float) -> void:
 func open_task(task_id: String, which_case: String) -> void:
 	active = task_id
 	mode = "task"
+	# A message from the walk would sit over the task's own panels.
+	hud.hide_toast()
 	var task: TrainingTask
 	if task_id == "chart":
 		# What the doctor found out before the chart was written decides some lines.
@@ -1809,6 +1811,7 @@ func open_operation(procedure: String) -> void:
 	var entry := beat()
 	active = procedure
 	mode = "task"
+	hud.hide_toast()
 	var setup := {"procedure": procedure, "called": profile.called(), "difficulty": _case_level(entry)}
 	if entry.has("casebook"):
 		# A Chief's patient on the table, and the day's pressure on the team.
@@ -2158,7 +2161,7 @@ func _place_camera(weight: float) -> void:
 	_camera_target = _camera_target.lerp(target, weight) if weight < 1.0 else target
 	camera.position = camera.position.lerp(goal, weight) if weight < 1.0 else goal
 	camera.h_offset = lerpf(camera.h_offset, offset, weight)
-	camera.fov = lerpf(camera.fov, fov, weight)
+	camera.designed_fov = lerpf(camera.designed_fov, fov, weight)
 	camera.look_at(_camera_target)
 
 

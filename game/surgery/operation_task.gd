@@ -186,7 +186,7 @@ func _init(with_seed: int = 1, with_setup: Dictionary = {}) -> void:
 	_snap_vitals()
 	phase = "timeout"
 	step = "timeout"
-	_say_by(_lead(), "Time-out. Everyone stops. %s, read it out. {called}, check every line." % scrub_name())
+	_say_by(_lead(), "Time-out. Everyone stops. %s, read it out. Check every line, {called}." % scrub_name())
 	_next_timeout_line()
 
 
@@ -1926,4 +1926,4 @@ func _say_by(who: String, line: String, warns: bool = false) -> void:
 	if who == "khan" and str(setup.get("anaesthetist", "khan")).is_empty():
 		who = _lead()
 	speaker = who
-	_say(_fill(line).replace("{called}", str(setup.get("called", "Doctor"))), warns)
+	_say(_fill(line).replace("{called}", Speech.address(who, str(setup.get("called", "Doctor")))), warns)

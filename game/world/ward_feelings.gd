@@ -64,6 +64,7 @@ func setup() -> void:
 	songs = SongPlayer.new()
 	songs.name = "Songs"
 	songs.manual = true
+	songs.called = ward.profile.called()
 	songs.finished.connect(_on_song_finished)
 	ward.add_child(songs)
 

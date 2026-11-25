@@ -640,9 +640,28 @@ never voiced.
   is asked to say (the theatre and ward coaching).
 - Every line is acted the same way as the story (below), so coaching never
   sounds flatter than the scene around it.
-- The player's name ({called}) is said as "Doctor", so one clip fits every
-  player. Nobody else says the player's name ({name}, {first}): a recording
-  can't. A line from code with numbers in it is recorded whole as it was
+- The player's name ({called}). Every line with it is recorded whole saying
+  "Doctor", and also in two pieces: the words before the name and the words
+  after it (each piece keeps the pause next to the name). Every name in
+  `tools/name_bank.txt` (about 685: common Indian surnames and first names
+  from every region, and common names from elsewhere) is recorded as "Doctor
+  Verma." in the voice of everyone who uses the player's name; one name's
+  recordings sit in one file, `assets/voices/names/*.ogg`, one after the
+  other with silence between, and the manifest's `names` says where each
+  voice's take starts and how long it lasts (`RecordedVoice` plays a
+  stretch of a file with `from`). `VoiceBank.find` drops the player's name
+  between the pieces when it was recorded in that voice, and plays the
+  whole "Doctor" line when it wasn't. `Speech.address` decides what the
+  screen shows: the name when the speaker's voice can say it (or voices
+  are off), else "Doctor", so the words on screen are the words heard.
+  `StoryRunner.fill(text, who)`, the theatre's lines and the radio requests
+  go through it. A name can only be dropped in at a pause, so every spoken
+  line puts {called} at the start of a sentence or after a comma, and ends
+  it there (test_spoken_names checks the story). New names go in the list
+  with a respelling after a bar where the voice gets them wrong, checked
+  against `Tokenizer().phonemize(text, "en-gb")`; the recordings are kept in
+  `~/.cache/doctorsworld/names` between runs. Nobody else says the
+  player's name ({name}, {first}): a recording can't. A line from code with numbers in it is recorded whole as it was
   heard; for numbers it never said, the words between the numbers plus clips
   of each number on its own are kept too, and `VoiceBank` joins them up
   ("Heart rate" + "88" + "and slowing"). Training lines are written so their
@@ -1171,6 +1190,20 @@ xvfb-run -a godot --path . --resolution 2048x1536 -s res://tools/screenshots.gd 
 ```
 
 On a Mac or a desktop with a screen, drop `xvfb-run -a`.
+
+## Every screen shape
+
+Scenes are framed on an iPhone on its side (19.5 by 9). Every 3D scene's
+camera is a `FitCamera`: scenes set `designed_fov`, and on a screen
+narrower for its height (an iPhone SE, a Mac window, an iPad) the camera's
+real field of view opens up so it shows as much across as the iPhone does
+(at most 75 degrees), refitting when a Mac window is resized. Tags for what
+the player must reach next (the next skills lab station, the door home, the
+person to meet in the lobby, the ward's places) are pinned: off screen or
+under a panel, they wait at the nearest clear edge with an arrow and take a
+tap. A message from the walk is put away when a task opens, so it never
+sits over the task's panels. test_screen_fit and test_skills_lab check six
+screen sizes.
 
 ## Rendering choice
 

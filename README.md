@@ -588,6 +588,17 @@ much of your life to give it.
   are yours to read, in whatever voice is in your head. The music ducks out
   of the way while anyone speaks. Too slow? Too fast? There's a setting. Too
   honest? No setting for that.
+- They say your name. Type one of about seven hundred common names (Sharma,
+  Iyer, Fernandes, Kaur, Khan, Das, Wang, most of a college register) and
+  Sister Grace says "Dr. Sharma" out loud, mid-sentence, in her own voice,
+  with exactly the warmth she has for you, which is some. A name the game
+  hasn't learned yet gets "Doctor", on screen as well as out loud, so what you
+  read always matches what you hear.
+- Words said right. "Hm" is a sound, not two letters. An IV is a drip, not
+  the number four. 1998 is "nineteen ninety-eight", 270 kilos is kilos, and
+  beta, paratha and dhol are said the way your mother says them. Every
+  name the game can say was checked sound by sound, so a Dr. Deshpande isn't
+  called something that gets the hospital reported.
 - People talk the way people talk, not the way they write. More "na", fewer
   speeches. The seniors are sarcastic. The young ones are Gen Z: Zoya is
   lowkey a fan and highkey terrified, Dev Malhotra finds his father's budget
@@ -630,6 +641,10 @@ much of your life to give it.
   have about half as much to draw, so the hospital runs smoothly on phones as
   tired as the staff. The sound plays even with the silent switch on, because
   the game has its own volume settings and you'd only turn them all off anyway.
+- Fits any screen. An iPad or a Mac window is taller than a phone, so the
+  camera steps back on those and you see the same width of the room the
+  phone does: nobody stands just out of shot, and the Day 2 exit door no
+  longer hides behind your task list like it owes someone money.
 - On a Mac it's the same game in a window you can resize, with a mouse
   instead of a thumb. Space or Return moves a conversation on and the number
   keys pick your reply, so you can be rude to a board member's mother without

@@ -24,7 +24,12 @@ nobody else's game sounds like this). A line's mood sets its pace, calls
 come through a phone, children sound like children. The player's own
 doctor is never voiced, so their lines and replies get no clips.
 
-The player's name in a line ({called}) is said as "Doctor". A line with
+The player's name in a line ({called}) is said as "Doctor" in the line's
+own clip. Each such line is also kept in two pieces, the words before the
+name and the words after it, and every name in tools/name_bank.txt is
+recorded as "Doctor Verma." in the voice of everyone who uses the player's
+name (all of one name's recordings in one file, assets/voices/names), so
+the game can say a player's own name between the pieces. A line with
 numbers in it (a pulse, a swab count) is recorded whole, numbers and all,
 as the game said it; for numbers it never said, the words around them and
 each number on its own are kept too, and the game joins them up
@@ -228,6 +233,18 @@ ACRONYMS = ["ICU", "IV", "UPS", "VIP", "MBBS", "ECG", "CPR", "OPD", "MRI", "HIV"
 # Test players' names, which turn back into {called} in the catalogue. (Not
 # "Rao" or "Joseph": the cast has a Dr. Rao and a Mr. Joseph.)
 TEST_NAMES = ["Verma", "Asha", "Kiran", "Mei", "Lin", "Kofi", "Mensah", "Ravi", "Das", "Nila"]
+# The names the game can say (one a line; see the file).
+NAME_BANK = os.path.join(ROOT, "tools", "name_bank.txt")
+# Each name, recorded once in each voice, waits here between runs, so a new
+# voice or a new name doesn't remake all of them. Not part of the game.
+NAME_CACHE = os.path.join(os.path.expanduser("~"), ".cache", "doctorsworld", "names")
+# In a name's file: silence between the voices, and how far into the silence
+# before each one the game starts playing it (so a slightly early start
+# loses nothing).
+NAME_GAP = 0.3
+NAME_LEAD = 0.05
+# The pause after the words before a name ("Morning," then the name).
+COMMA_PAUSE = 0.1
 # Numbers get clips around the values heard in each kind of line (a pulse
 # of 88 gives 52 to 126), never past this.
 LARGEST_NUMBER = 250
@@ -272,6 +289,37 @@ def story_lines():
             with open(os.path.join(ROOT, "story", name)) as file:
                 walk(json.load(file), False)
     return found
+
+
+def name_bank():
+    """[(keys, said)] for every name in tools/name_bank.txt: the ways it is
+    looked up (VoiceBank.name_key) and how the voice is told to say it."""
+    found = []
+    with open(NAME_BANK) as file:
+        for line in file:
+            line = line.split("#")[0].strip()
+            if not line:
+                continue
+            names, _, said = line.partition("|")
+            spellings = [name.strip() for name in names.split("/") if name.strip()]
+            found.append(([normalize(name) for name in spellings], said.strip() or spellings[0]))
+    return found
+
+
+def split_called(text):
+    """A line with the player's name in it, cut at the name: (words before,
+    how the name ends: "." "!" "?" or ",", the pause after it, words after).
+    None when the name sits in the middle of a sentence ("for {called} by
+    name"), where a name can't be dropped in."""
+    match = re.search(r"\{called\}(\.\.\.|[.!?,:;])\s*", text)
+    if match is None or text.count("{called}") != 1:
+        return None
+    before = text[:match.start()].rstrip()
+    if before and before[-1] not in ",.?!:;":
+        return None
+    mark = match.group(1)
+    ending = mark if mark in "!?," else "."
+    return before, ending, mark, text[match.end():].strip()
 
 
 def rota_reason(patient, with_):
@@ -735,11 +783,15 @@ def encode(samples, path):
     os.replace(path + ".tmp.ogg", path)
 
 
-def clip_name(who, text, speed, ending, mood=None):
+def clip_name(who, text, speed, ending, mood=None, lead=0.0, tail=0.0):
     said = [VOICES[who], spoken(text), round(speed, 3), ending]
     if mood is not None:
         # An acted story line: remade whenever its direction changes.
         said += [DIRECTION_VERSION, mood, MOODS.get(mood, MOODS[""]), PAUSES, SOFT_ABOVE]
+    if lead or tail:
+        # A piece of a line said around a name, with the pause before or
+        # after the name kept in the clip.
+        said += ["around a name", round(lead, 3), round(tail, 3)]
     digest = hashlib.sha1(json.dumps(said).encode()).hexdigest()
     return "%s/%s.ogg" % (who.replace(".", "_"), digest[:12])
 
@@ -748,14 +800,18 @@ def make_clip(job):
     """Makes one clip. Returns its name and manifest part."""
     model_dir, who, text, speed, ending = job[:5]
     mood = job[5] if len(job) > 5 else None
+    lead, tail = (job[6], job[7]) if len(job) > 7 else (0.0, 0.0)
     name = clip_name(*job[1:])
     if mood is None:
         samples = render(model_dir, who, text, speed, ending)
-        length = round(len(samples) / RATE, 3)
-        words = word_times(spoken(text), length)
+        words = word_times(spoken(text), round(len(samples) / RATE, 3))
     else:
         samples, words = performed(model_dir, who, text, mood)
-        length = round(len(samples) / RATE, 3)
+    if lead or tail:
+        samples = np.concatenate([np.zeros(int(RATE * lead), dtype=np.float32), samples,
+                                  np.zeros(int(RATE * tail), dtype=np.float32)])
+        words = [round(time + lead, 3) for time in words]
+    length = round(len(samples) / RATE, 3)
     encode(samples, os.path.join(OUT, name))
     return name, {"clip": name, "length": length, "words": words}
 
@@ -767,9 +823,53 @@ def made_before():
         return {}
     with open(path) as file:
         old = json.load(file)
-    parts = [part for line in old.get("lines", []) for part in line["parts"] if "clip" in part]
+    parts = [part for line in old.get("lines", []) for part in line["parts"] + line.get("named", [])
+             if "clip" in part]
     parts += [said for numbers_of in old.get("numbers", {}).values() for said in numbers_of.values()]
     return {part["clip"]: part for part in parts if os.path.exists(os.path.join(OUT, part["clip"]))}
+
+
+def name_said(said, ending):
+    """What the voice says for a name: "Doctor Verma." """
+    return "Doctor %s%s" % (said, ending)
+
+
+def name_cache_path(who, said, ending):
+    return os.path.join(NAME_CACHE, clip_name(who, name_said(said, ending), 1.0, ending, "").replace("/", "_") + ".npz")
+
+
+def make_name(job):
+    """Records one name in one voice, into the cache. Returns its path."""
+    model_dir, who, said, ending = job
+    path = name_cache_path(who, said, ending)
+    samples, words = performed(model_dir, who, name_said(said, ending), "")
+    os.makedirs(NAME_CACHE, exist_ok=True)
+    np.savez(path + ".tmp.npz", samples=samples, words=np.asarray(words, dtype=np.float32))
+    os.replace(path + ".tmp.npz", path)
+    return path
+
+
+def pack_name(said, voices):
+    """One name's file: everyone's recording of it one after the other, with
+    silence between. Returns its clip and {who: {ending: [from, length,
+    word ends]}}."""
+    paths = [name_cache_path(who, said, ending) for who, ending in voices]
+    digest = hashlib.sha1(json.dumps([os.path.basename(path) for path in paths] + [NAME_GAP]).encode()).hexdigest()
+    clip = "names/%s.ogg" % digest[:12]
+    pieces = [np.zeros(int(RATE * NAME_GAP), dtype=np.float32)]
+    at = NAME_GAP
+    found = {}
+    for (who, ending), path in zip(voices, paths):
+        with np.load(path) as data:
+            samples, words = data["samples"], data["words"]
+        length = len(samples) / RATE
+        found.setdefault(who, {})[ending] = [round(at - NAME_LEAD, 3), round(length + NAME_LEAD + 0.03, 3),
+                                             [round(float(time) + NAME_LEAD, 3) for time in words]]
+        pieces += [samples, np.zeros(int(RATE * NAME_GAP), dtype=np.float32)]
+        at += length + NAME_GAP
+    if not os.path.exists(os.path.join(OUT, clip)):
+        encode(np.concatenate(pieces), os.path.join(OUT, clip))
+    return clip, found
 
 
 # --- The whole cast ------------------------------------------------------------
@@ -777,9 +877,43 @@ def made_before():
 def plan(model_dir, only):
     """Every clip to make, and the manifest lines that use them."""
     story = story_lines()
-    lines = []      # (who, key, [part spec]) where a part spec is a job or {"number": i}
+    lines = []      # (who, key, [part spec], named) where a part spec is a job or {"number": i}
     numbered = {}   # who -> numbers they need clips for
+    naming = {}     # who -> how their lines end the player's name (".", "!")
     skipped = []
+
+    def around_name(spec):
+        """A text part with {called} in it, as the parts that go around a
+        recorded name; None when the name can't be dropped in."""
+        cut = split_called(spec[2])
+        if cut is None:
+            return None
+        before, ending, mark, after = cut
+        mood = spec[5] if len(spec) > 5 else None
+        gap = MOODS.get(mood or "", MOODS[""])["gap"]
+        parts = []
+        if before:
+            pause = PAUSES.get(before[-1], COMMA_PAUSE) * gap if before[-1] in ".?!" else COMMA_PAUSE
+            parts.append(spec[:2] + (before,) + spec[3:6] + (0.0, round(pause, 3)))
+        parts.append({"name": ending})
+        if after:
+            parts.append(spec[:2] + (after,) + spec[3:6] + (round(PAUSES.get(mark, COMMA_PAUSE) * gap, 3), 0.0))
+        naming.setdefault(spec[1], set()).add(ending)
+        return parts
+
+    def named_of(specs):
+        if not any(isinstance(spec, tuple) and "{called}" in spec[2] for spec in specs):
+            return None
+        named = []
+        for spec in specs:
+            if isinstance(spec, tuple) and "{called}" in spec[2]:
+                around = around_name(spec)
+                if around is None:
+                    return None
+                named += around
+            else:
+                named.append(spec)
+        return named
 
     def add(who, text, mood, templated, acted=False):
         if who == PLAYER or (only and who not in only):
@@ -795,11 +929,13 @@ def plan(model_dir, only):
         if acted:
             # The whole line as it was said, numbers and all; a line with
             # numbers keeps its pieces too (below), for numbers not heard.
-            lines.append((who, normalize(text), [(model_dir, who, text, 1.0, ".", mood)]))
+            specs = [(model_dir, who, text, 1.0, ".", mood)]
+            lines.append((who, normalize(text), specs, named_of(specs)))
             if split is None:
                 return
         if split is None:
-            lines.append((who, normalize(text), [(model_dir, who, text, speed, ".")]))
+            specs = [(model_dir, who, text, speed, ".")]
+            lines.append((who, normalize(text), specs, named_of(specs)))
             return
         key, parts = split
         specs = []
@@ -809,7 +945,7 @@ def plan(model_dir, only):
             else:
                 last = index == len(parts) - 1
                 specs.append((model_dir, who, part, speed, "." if last else ","))
-        lines.append((who, key, specs))
+        lines.append((who, key, specs, named_of(specs)))
         needed = numbered.setdefault(who, set())
         for value in re.findall(r"\d+", text):
             low = max(0, int(int(value) * 0.6) - 2)
@@ -827,12 +963,13 @@ def plan(model_dir, only):
     for who, text, mood in patient_lines():
         add(who, text, mood, False, acted=True)
     unique = {}
-    for who, key, specs in lines:
-        unique.setdefault((who, key), (who, key, specs))
+    for line in lines:
+        unique.setdefault(line[:2], line)
     lines = list(unique.values())
     numbers = {who: [(model_dir, who, str(value), 1.0, ",") for value in sorted(numbered[who])]
                for who in sorted(numbered)}
-    return lines, numbers, skipped
+    voices = sorted((who, ending) for who, endings in naming.items() for ending in endings)
+    return lines, numbers, voices, skipped
 
 
 def main():
@@ -853,10 +990,10 @@ def main():
         print("wrote sample.ogg")
         return
     only = set(filter(None, args.only.split(",")))
-    lines, numbers, skipped = plan(args.model, only)
+    lines, numbers, voices, skipped = plan(args.model, only)
     jobs = {}
-    for _who, _key, specs in lines:
-        for spec in specs:
+    for _who, _key, specs, named in lines:
+        for spec in specs + (named or []):
             if isinstance(spec, tuple):
                 jobs[clip_name(*spec[1:])] = spec
     for specs in numbers.values():
@@ -867,15 +1004,29 @@ def main():
     made = {name: part for name, part in made_before().items() if name in jobs}
     todo = [job for name, job in jobs.items() if name not in made]
     print("%d clips already made, %d to make" % (len(made), len(todo)), flush=True)
+    bank = [] if only else name_bank()
+    names_todo = [(args.model, who, said, ending) for _keys, said in bank for who, ending in voices
+                  if not os.path.exists(name_cache_path(who, said, ending))]
+    print("%d names in %d voices, %d recordings to make" % (len(bank), len(voices), len(names_todo)), flush=True)
     with multiprocessing.Pool(args.jobs) as pool:
         for count, (name, info) in enumerate(pool.imap_unordered(make_clip, todo, chunksize=4), 1):
             made[name] = info
             if count % 100 == 0:
                 print("  %d / %d" % (count, len(todo)), flush=True)
-    manifest = {"format": 1, "lines": [], "numbers": {}}
-    for who, key, specs in lines:
+        for count, _path in enumerate(pool.imap_unordered(make_name, names_todo, chunksize=8), 1):
+            if count % 500 == 0:
+                print("  names %d / %d" % (count, len(names_todo)), flush=True)
+    manifest = {"format": 1, "lines": [], "numbers": {}, "names": {}}
+    for who, key, specs, named in lines:
         parts = [spec if isinstance(spec, dict) else made[clip_name(*spec[1:])] for spec in specs]
-        manifest["lines"].append({"who": who, "key": key, "parts": parts})
+        entry = {"who": who, "key": key, "parts": parts}
+        if named:
+            entry["named"] = [spec if isinstance(spec, dict) else made[clip_name(*spec[1:])] for spec in named]
+        manifest["lines"].append(entry)
+    for keys, said in bank:
+        clip, found = pack_name(said, voices)
+        for key in keys:
+            manifest["names"][key] = {"clip": clip, "said": found}
     for who, specs in numbers.items():
         manifest["numbers"][who] = {spec[2]: made[clip_name(*spec[1:])] for spec in specs}
     if only and os.path.exists(os.path.join(OUT, "manifest.json")):
@@ -886,12 +1037,15 @@ def main():
         manifest["lines"] = [line for line in old["lines"] if line["who"] not in remade] + manifest["lines"]
         for who, said in old.get("numbers", {}).items():
             manifest["numbers"].setdefault(who, said)
+        manifest["names"] = old.get("names", {})
     manifest["lines"].sort(key=lambda line: (line["who"], line["key"]))
     with open(os.path.join(OUT, "manifest.json"), "w") as file:
         json.dump(manifest, file, separators=(",", ":"), sort_keys=True)
     # Clips no line uses any more go.
     used = {part["clip"] for line in manifest["lines"] for part in line["parts"] if "clip" in part}
     used |= {said["clip"] for numbers_of in manifest["numbers"].values() for said in numbers_of.values()}
+    used |= {part["clip"] for line in manifest["lines"] for part in line.get("named", []) if "clip" in part}
+    used |= {entry["clip"] for entry in manifest["names"].values()}
     removed = 0
     for folder in os.listdir(OUT):
         full = os.path.join(OUT, folder)

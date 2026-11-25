@@ -184,7 +184,7 @@
 	"kapoor_tour": [
 		{
 			"say": "malhotra",
-			"text": "{called}, this is Dr. Sameer Kapoor. Medical Director of CarePlus. Twelve hospitals, four cities.",
+			"text": "{called}. This is Dr. Sameer Kapoor. Medical Director of CarePlus. Twelve hospitals, four cities.",
 			"mood": "happy",
 			"gesture": "open_hands",
 			"to": "you"

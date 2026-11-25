@@ -5,7 +5,7 @@
 		{"do": "walk", "who": "iyer", "to": "meet"},
 		{"do": "face", "who": "you", "at": "iyer"},
 		{"do": "face", "who": "iyer", "at": "you"},
-		{"say": "iyer", "text": "{called}? You're late.", "mood": "focused", "gesture": "fold_arms"},
+		{"say": "iyer", "text": "{called}. You're late.", "mood": "focused", "gesture": "fold_arms"},
 		{"say": "iyer", "text": "Hm. That's fine. It means you're nervous.", "mood": "calm", "gesture": "explain"},
 		{"say": "iyer", "text": "I'm Meera Iyer. For the next year, every mistake you make is my mistake. So let's not make too many, okay?",
 			"gesture": "chest"},
@@ -36,7 +36,7 @@
 	],
 
 	"grace": [
-		{"say": "grace", "text": "So you're the new intern. {called}, right?", "mood": "happy", "gesture": "explain"},
+		{"say": "grace", "text": "So you're the new intern, {called}. Good, we need the hands.", "mood": "happy", "gesture": "explain"},
 		{"say": "grace", "text": "Rule one, wash your hands. Rule two... see rule one.", "gesture": "wag", "head": "nod"},
 		{"choose": [
 			{"tone": "Warm", "text": "People say you're the one who really runs this place.", "trust": {"grace": 5}, "then": [

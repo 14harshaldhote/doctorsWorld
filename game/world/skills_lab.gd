@@ -46,7 +46,6 @@ const HOME_FADE := 1.2
 ## The overview is framed for a wide phone. A narrower screen (a Mac window,
 ## an iPad) opens the view out to show the same width of the lab, so the
 ## history station and the door are never cut off at the sides.
-const WIDE_ASPECT := 2.0
 const OVERVIEW_FOV := 42.0
 
 const WALL := Color("#EEF2EC")
@@ -58,7 +57,7 @@ const TEAL := Color("#127C80")
 var profile: PlayerProfile
 var walk_area: WalkArea
 var player: AvatarRig
-var camera: Camera3D
+var camera: FitCamera
 var hud: LobbyHud
 var talk_ui: ConversationUi
 var overlay: StoryOverlay
@@ -120,9 +119,9 @@ func _ready() -> void:
 	player.rotation.y = _facing
 	add_child(player)
 	_marker = _build_marker()
-	camera = Camera3D.new()
+	camera = FitCamera.new()
 	camera.name = "Camera"
-	camera.fov = 42
+	camera.designed_fov = 42
 	add_child(camera)
 	_layer = CanvasLayer.new()
 	_layer.name = "HudLayer"
@@ -1059,23 +1058,12 @@ func _place_camera(weight: float) -> void:
 		focus.z = clampf(focus.z, -0.6, 1.4)
 		goal = focus + Vector3(0, 6.2, 7.0)
 		target = focus + Vector3(0, 0.2, -1.6)
-		fov = overview_fov()
+		fov = OVERVIEW_FOV
 	_camera_target = _camera_target.lerp(target, weight) if weight < 1.0 else target
 	camera.position = camera.position.lerp(goal, weight) if weight < 1.0 else goal
 	camera.h_offset = lerpf(camera.h_offset, offset, weight)
-	camera.fov = lerpf(camera.fov, fov, weight)
+	camera.designed_fov = lerpf(camera.designed_fov, fov, weight)
 	camera.look_at(_camera_target)
-
-
-## The overview's field of view for the screen's shape: 42 degrees on a wide
-## phone, more on a narrower screen so it shows as much of the lab across.
-func overview_fov() -> float:
-	var view := get_viewport().get_visible_rect().size if is_inside_tree() else Vector2(WIDE_ASPECT, 1.0)
-	var aspect := view.x / maxf(view.y, 1.0)
-	if aspect >= WIDE_ASPECT:
-		return OVERVIEW_FOV
-	var across := tan(deg_to_rad(OVERVIEW_FOV / 2.0)) * WIDE_ASPECT / aspect
-	return minf(rad_to_deg(2.0 * atan(across)), 70.0)
 
 
 func _update_tags() -> void:

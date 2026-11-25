@@ -62,11 +62,11 @@
 		}
 	},
 	"requests": [
-		{"say": "rj", "song": "night", "text": "A request from Ward 4, bed two, for {called}. Thank you for the sleeping pill. He would like another one. Here's the night shift song."},
+		{"say": "rj", "song": "night", "text": "A request from Ward 4, bed two. It's for you, {called}. Thank you for the sleeping pill. He would like another one. Here's the night shift song."},
 		{"say": "rj", "song": "dal", "text": "This one's from Sister Grace to all the interns. Label your samples. And eat something. Her words, not mine. Here's the dal song."},
 		{"say": "rj", "song": "dal", "text": "Dedication from the canteen to whoever keeps stealing the green chillies. Mani knows. Mani always knows."},
 		{"say": "rj", "song": "night", "text": "For Doctor Sethi, from the night nurses. Your snoring is now on the rota. Here's the night shift song."},
-		{"say": "rj", "song": "roast", "text": "From cubicle three, for {called}. You were very gentle and you have nice shoes. That's the whole request. Here's the roast."},
+		{"say": "rj", "song": "roast", "text": "From cubicle three. This one's for you, {called}. You were very gentle and you have nice shoes. That's the whole request. Here's the roast."},
 		{"say": "rj", "song": "roast", "text": "From Mr. Malhotra, to every department. The AC budget is final. Here's a song to sweat to."},
 		{"say": "rj", "song": "roast", "text": "For Doctor Iyer, from nobody, because everybody is scared of her. Anonymous. Very anonymous."},
 		{"say": "rj", "song": "night", "text": "Request from the lab. Please write the patient's name on the tube. Any name. We're not fussy."}
