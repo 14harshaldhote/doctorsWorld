@@ -465,6 +465,76 @@ func test_an_ordinary_evening_chai_the_radio_home_a_call_food_and_bed() -> void:
 	expect_equal(profile.count(Life.DONE), 5, "and this evening is over")
 
 
+func test_nothing_covers_the_menu_after_a_card() -> void:
+	# A walk home or a meal is a card over the screen that takes a tap; once
+	# it has gone, nothing may be left over the menu catching taps and clicks
+	# (the menu froze after the first card).
+	var evening := _evening(5)
+	for frame in 30:
+		evening.update(STEP)
+	expect(_covering_the_menu(evening).is_empty(), "nothing over the menu at first")
+	for id: String in ["hostel", "eat", "study", "scroll"]:
+		evening.choose(id)
+		expect_equal(evening.phase, "card" if id != "call" else "talk", "%s starts with a card" % id)
+		expect(not _covering_the_menu(evening).is_empty(), "the card takes the taps while it's up (%s)" % id)
+		expect(_back_to_menu(evening), "and the menu comes back after %s" % id)
+		for frame in 30:
+			evening.update(STEP)
+		var covering := _covering_the_menu(evening)
+		expect(covering.is_empty(), "after %s nothing covers the menu; found %s" % [id, covering])
+	expect(not evening.overlay.end_card_open(), "no card is left up")
+	# A party night: the party, its game, the walk home.
+	for finished in [10, 13, 7]:
+		var party := _evening(finished)
+		party.choose("party")
+		expect(_back_to_menu(party), "the party on day %d ends" % finished)
+		if party.is_done():
+			continue
+		for frame in 30:
+			party.update(STEP)
+		var covering := _covering_the_menu(party)
+		expect(covering.is_empty(), "after the day %d party nothing covers the menu; found %s" % [finished, covering])
+
+
+func test_a_card_lets_taps_through_once_it_has_gone() -> void:
+	var overlay := add_node(StoryOverlay.new()) as StoryOverlay
+	overlay.end_card("Back to the hostel", "Twelve minutes of auto-rickshaw horns.", {}, 2.0)
+	expect_equal(overlay.mouse_filter, Control.MOUSE_FILTER_STOP, "the card is the button while it's up")
+	for frame in 30:
+		overlay.tick(STEP)
+	expect(overlay.end_card_open(), "still up after a second")
+	for frame in 40:
+		overlay.tick(STEP)
+	expect(not overlay.end_card_open(), "gone after its time")
+	expect_equal(overlay.mouse_filter, Control.MOUSE_FILTER_IGNORE, "and the screen under it takes taps again")
+	overlay.end_card("Lights out", "", {}, 4.0)
+	for frame in 40:
+		overlay.tick(STEP)
+	expect(overlay.skip_end_card(), "a tap ends a card early")
+	for frame in 30:
+		overlay.tick(STEP)
+	expect_equal(overlay.mouse_filter, Control.MOUSE_FILTER_IGNORE, "and lets taps through after that too")
+
+
+## The evening's layers drawn over its menu that would catch a tap on it
+## (anything visible that takes the mouse and covers the menu's middle).
+func _covering_the_menu(evening: Evening) -> Array:
+	var found := []
+	var layer := evening.panel.get_parent()
+	var view := evening.get_viewport().get_visible_rect()
+	var point := Vector2(view.size.x * 0.85, view.size.y * 0.5)
+	for index in range(evening.panel.get_index() + 1, layer.get_child_count()):
+		var top := layer.get_child(index) as Control
+		if top == null or not top.visible:
+			continue
+		for node in [top] + top.find_children("*", "Control", true, false):
+			var control := node as Control
+			if control.is_visible_in_tree() and control.mouse_filter != Control.MOUSE_FILTER_IGNORE \
+					and control.get_global_rect().has_point(point):
+				found.append(str(control.name))
+	return found
+
+
 func test_bed_at_once_skips_everything_but_the_walk() -> void:
 	var evening := _evening(5)
 	evening.choose("bed")

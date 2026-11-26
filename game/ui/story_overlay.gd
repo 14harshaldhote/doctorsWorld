@@ -307,6 +307,11 @@ func tick(delta: float) -> void:
 		var fade_in := clampf(_card_t / 0.5, 0.0, 1.0)
 		var fade_out := clampf((_card_time - _card_t) / 0.5, 0.0, 1.0)
 		_card.modulate.a = minf(fade_in, fade_out)
+		if _card_t >= _card_time and _end_card:
+			# The card has gone: the screen under it takes taps again (an
+			# evening's menu comes back after its cards).
+			_end_card = false
+			mouse_filter = Control.MOUSE_FILTER_IGNORE
 	if _confetti != null:
 		_confetti.tick(delta)
 		if _confetti.finished():

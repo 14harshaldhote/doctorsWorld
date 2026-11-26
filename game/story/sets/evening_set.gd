@@ -114,11 +114,23 @@ func free_spot() -> Vector3:
 func _room(wall: Color, floor_colour: Color, background: Color = NIGHT, ambient: Color = Color("#C9D3E0"),
 		ambient_energy: float = 0.5, energy: float = 0.62, sun: Color = Color("#FFE9CC")) -> void:
 	StageLighting.add_to(self, background, Vector3(-48, 28, 0), energy, ambient, ambient_energy, sun)
-	LowPoly.put(self, LowPoly.box(Vector3(10, 0.1, 8), floor_colour), Vector3(0, -0.05, 0.6))
-	LowPoly.put(self, LowPoly.box(Vector3(10, 3.3, 0.2), wall), Vector3(0, 1.65, -3.1))
-	LowPoly.put(self, LowPoly.box(Vector3(10, 0.14, 0.24), wall.darkened(0.25)), Vector3(0, 0.07, -3.0))
-	LowPoly.put(self, LowPoly.box(Vector3(0.2, 3.3, 8), wall.darkened(0.06)), Vector3(-4.6, 1.65, 0.6))
-	LowPoly.put(self, LowPoly.box(Vector3(0.24, 0.14, 8), wall.darkened(0.3)), Vector3(-4.5, 0.07, 0.6))
+	# A closed room: floor, four walls and a ceiling reaching well past what
+	# any shot sees, so a wider screen (an iPad, a Mac window) widens the view
+	# into more room and never past its edges into the dark.
+	LowPoly.put(self, LowPoly.box(Vector3(14, 0.1, 14), floor_colour), Vector3(1.2, -0.05, 3.4))
+	LowPoly.put(self, LowPoly.box(Vector3(12, 3.3, 0.2), wall), Vector3(1.2, 1.65, -3.1))
+	LowPoly.put(self, LowPoly.box(Vector3(12, 0.14, 0.24), wall.darkened(0.25)), Vector3(1.2, 0.07, -3.0))
+	LowPoly.put(self, LowPoly.box(Vector3(0.2, 3.3, 13), wall.darkened(0.06)), Vector3(-4.6, 1.65, 3.4))
+	LowPoly.put(self, LowPoly.box(Vector3(0.24, 0.14, 13), wall.darkened(0.3)), Vector3(-4.5, 0.07, 3.4))
+	LowPoly.put(self, LowPoly.box(Vector3(0.2, 3.3, 13), wall.darkened(0.1)), Vector3(7.0, 1.65, 3.4))
+	LowPoly.put(self, LowPoly.box(Vector3(0.24, 0.14, 13), wall.darkened(0.3)), Vector3(6.9, 0.07, 3.4))
+	LowPoly.put(self, LowPoly.box(Vector3(12, 3.3, 0.2), wall.darkened(0.1)), Vector3(1.2, 1.65, 9.9))
+	# The ceiling, lit a little from below by the room's own lights.
+	var ceiling := LowPoly.box(Vector3(12, 0.12, 13.2), wall.lightened(0.3))
+	ceiling.material_override = LowPoly.glow(wall.lightened(0.3).darkened(0.35), 0.35)
+	LowPoly.put(self, ceiling, Vector3(1.2, 3.36, 3.4))
+	LowPoly.put(self, LowPoly.box(Vector3(12, 0.12, 0.14), wall.darkened(0.12)), Vector3(1.2, 3.25, -2.94))
+	LowPoly.put(self, LowPoly.box(Vector3(0.14, 0.12, 13), wall.darkened(0.16)), Vector3(-4.44, 3.25, 3.4))
 
 
 func _lamp(at: Vector3, colour: Color, energy: float, reach: float) -> void:
@@ -299,8 +311,8 @@ func _build_hostel_room() -> void:
 			if row * 5 + column < 13:
 				LowPoly.put(self, LowPoly.box(Vector3(0.05, 0.012, 0.01), Color("#B3263A")),
 					Vector3(1.38 + column * 0.085, 1.88 - row * 0.1, -2.975), Vector3(0, 0, 0.7))
-	LowPoly.put(self, LowPoly.box(Vector3(0.05, 0.05, 0.12), Color("#8E9599")), Vector3(2.6, 1.9, -2.94))
-	LowPoly.put(self, LowPoly.box(Vector3(0.55, 1.0, 0.1), Color("#F7F4EE")), Vector3(2.6, 1.4, -2.9))
+	LowPoly.put(self, LowPoly.box(Vector3(0.05, 0.05, 0.12), Color("#8E9599")), Vector3(2.25, 1.9, -2.94))
+	LowPoly.put(self, LowPoly.box(Vector3(0.55, 1.0, 0.1), Color("#F7F4EE")), Vector3(2.25, 1.4, -2.9))
 	# A pile of clothes on the second chair, and a suitcase under the bed.
 	_chair(Vector3(-3.4, 0, -1.9), PI / 2, Color("#8E9599"))
 	LowPoly.put(self, LowPoly.box(Vector3(0.4, 0.2, 0.36), Color("#5E9FD0")), Vector3(-3.4, 0.56, -1.9), Vector3(0, 0.3, 0.1))
@@ -312,12 +324,91 @@ func _build_hostel_room() -> void:
 		var arm := LowPoly.joint(_fan, "Blade", Vector3.ZERO, Vector3(0, TAU * blade / 3.0, 0))
 		LowPoly.put(arm, LowPoly.box(Vector3(0.62, 0.015, 0.12), Color("#DADFD9")), Vector3(0.36, -0.02, 0))
 	LowPoly.put(self, LowPoly.cylinder(0.015, 0.015, 0.3, 4, Color("#C9CED2")), Vector3(-0.6, 3.15, 0.2))
+	_hostel_clutter()
 	_lamp(Vector3(-1.9, 1.4, -1.9), Color("#BFE3F0"), 0.5, 3.0)
 	_lamp(Vector3(0.0, 2.6, 0.6), Color("#FFE2B0"), 0.6, 5.5)
+	_lamp(Vector3(-1.35, 1.25, -2.4), Color("#FFC98A"), 0.55, 2.4)
 	marks["desk"] = Vector3(-1.9, 0, -1.75)
 	marks["bed"] = Vector3(-2.75, 0, 0.6)
+	shots["wide"] = {"from": Vector3(3.0, 2.55, 4.6), "at": Vector3(-1.3, 0.85, -1.0), "fov": 50.0}
+	shots["talk"] = {"from": Vector3(2.4, 2.0, 3.6), "at": Vector3(-1.4, 0.95, -1.2), "fov": 44.0, "offset": 0.62}
 	shots["desk"] = {"from": Vector3(-0.6, 1.75, 0.2), "at": Vector3(-2.0, 1.0, -2.3), "fov": 44.0}
 	shots["bed"] = {"from": Vector3(0.4, 2.2, 3.0), "at": Vector3(-3.0, 0.6, 0.4), "fov": 44.0}
+
+
+## Everything else a hostel room collects: the steel almirah, a bucket and
+## mug, a towel on a string, curtains that don't meet, a rug, slippers, a
+## desk lamp, a clock that's five minutes fast, the dustbin of failed notes,
+## a shelf of books bought second-hand from a senior, and the door.
+func _hostel_clutter() -> void:
+	# The room is small: a wall on the right with the door in it.
+	var wall := Color("#C9D8C5").darkened(0.1)
+	LowPoly.put(self, LowPoly.box(Vector3(0.2, 3.3, 13), wall), Vector3(3.95, 1.65, 3.4))
+	LowPoly.put(self, LowPoly.box(Vector3(0.24, 0.14, 13), wall.darkened(0.25)), Vector3(3.85, 0.07, 3.4))
+	# The almirah, with a mirror on its door and a sticker from home.
+	var almirah := LowPoly.joint(self, "Almirah", Vector3(3.3, 0, -2.72))
+	LowPoly.put(almirah, LowPoly.box(Vector3(1.0, 1.95, 0.55), Color("#7F8C93")), Vector3(0, 0.975, 0))
+	LowPoly.put(almirah, LowPoly.box(Vector3(0.02, 1.8, 0.02), Color("#4E575C")), Vector3(0, 0.975, 0.285))
+	LowPoly.put(almirah, LowPoly.box(Vector3(0.3, 0.75, 0.01), Color("#CFE4EA")), Vector3(-0.24, 1.25, 0.285))
+	LowPoly.put(almirah, LowPoly.box(Vector3(0.12, 0.12, 0.01), Color("#E05A3A")), Vector3(0.25, 1.45, 0.285))
+	LowPoly.put(almirah, LowPoly.box(Vector3(0.75, 0.32, 0.5), Color("#3E5A78")), Vector3(0.02, 2.11, -0.02), Vector3(0, 0.12, 0))
+	LowPoly.put(almirah, LowPoly.shadow_blob(0.8, Vector2(0.7, 0.45)), Vector3.ZERO)
+	# The bucket and mug every hostel room is issued with, by the door.
+	LowPoly.put(self, LowPoly.cylinder(0.2, 0.16, 0.36, 10, Color("#2F7FC1")), Vector3(3.45, 0.18, -1.35))
+	LowPoly.put(self, LowPoly.cylinder(0.07, 0.07, 0.12, 8, Color("#E05A3A")), Vector3(3.5, 0.06, -0.95))
+	# The door, a shirt on its hook.
+	LowPoly.put(self, LowPoly.box(Vector3(0.08, 2.15, 1.0), Color("#7A5236")), Vector3(3.83, 1.075, 0.4))
+	LowPoly.put(self, LowPoly.box(Vector3(0.1, 2.25, 0.08), Color("#5C3D28")), Vector3(3.83, 1.12, -0.13))
+	LowPoly.put(self, LowPoly.box(Vector3(0.1, 2.25, 0.08), Color("#5C3D28")), Vector3(3.83, 1.12, 0.93))
+	LowPoly.put(self, LowPoly.sphere(0.04, Color("#C9B27A"), 6, 4), Vector3(3.75, 1.05, 0.78))
+	LowPoly.put(self, LowPoly.box(Vector3(0.06, 0.7, 0.5), Color("#F2EEE4")), Vector3(3.75, 1.55, 0.25))
+	# A towel and yesterday's shirt on a string across the corner.
+	LowPoly.put(self, LowPoly.box(Vector3(1.5, 0.015, 0.015), Color("#D9DDE0")), Vector3(-3.75, 2.35, -2.85))
+	LowPoly.put(self, LowPoly.box(Vector3(0.42, 0.55, 0.02), Color("#E8B23A")), Vector3(-4.1, 2.08, -2.85))
+	LowPoly.put(self, LowPoly.box(Vector3(0.48, 0.42, 0.02), Color("#5E9FD0")), Vector3(-3.45, 2.14, -2.85), Vector3(0, 0, 0.05))
+	# Curtains that don't quite meet over the window.
+	for side in [-1.0, 1.0]:
+		LowPoly.put(self, LowPoly.box(Vector3(0.32, 1.25, 0.05), Color("#C98B2E")), Vector3(-1.9 + 0.92 * side, 1.9, -2.94))
+	LowPoly.put(self, LowPoly.box(Vector3(2.3, 0.04, 0.04), Color("#8E9599")), Vector3(-1.9, 2.55, -2.93))
+	# A rug between the bed and the desk, slippers kicked off by the bed.
+	LowPoly.put(self, LowPoly.box(Vector3(1.7, 0.012, 1.15), Color("#9C3B2E")), Vector3(-1.65, 0.006, 0.15))
+	LowPoly.put(self, LowPoly.box(Vector3(1.45, 0.014, 0.9), Color("#C9763E")), Vector3(-1.65, 0.008, 0.15))
+	LowPoly.put(self, LowPoly.box(Vector3(1.1, 0.016, 0.55), Color("#9C3B2E")), Vector3(-1.65, 0.01, 0.15))
+	for slipper in 2:
+		LowPoly.put(self, LowPoly.box(Vector3(0.11, 0.03, 0.26), Color("#2B2F33")), Vector3(-2.85 + slipper * 0.17, 0.015, 1.25),
+			Vector3(0, 0.3 - slipper * 0.5, 0))
+	# The desk lamp, its pool of warm light on the notes.
+	LowPoly.put(self, LowPoly.cylinder(0.08, 0.09, 0.03, 8, Color("#2B2F33")), Vector3(-1.3, 0.765, -2.55))
+	LowPoly.put(self, LowPoly.box(Vector3(0.02, 0.38, 0.02), Color("#2B2F33")), Vector3(-1.3, 0.95, -2.55), Vector3(0.3, 0, 0))
+	var shade := LowPoly.cylinder(0.05, 0.11, 0.12, 8, Color("#E8B23A"))
+	shade.material_override = LowPoly.glow(Color("#E8B23A"), 0.6)
+	LowPoly.put(self, shade, Vector3(-1.3, 1.13, -2.45), Vector3(0.5, 0, 0))
+	for sheet in 3:
+		LowPoly.put(self, LowPoly.box(Vector3(0.21, 0.004, 0.29), Color("#F7F4EE")), Vector3(-1.05 - sheet * 0.05, 0.778 + sheet * 0.004, -2.3),
+			Vector3(0, 0.2 * sheet - 0.2, 0))
+	LowPoly.put(self, LowPoly.cylinder(0.035, 0.035, 0.24, 8, Color("#8FD3E8")), Vector3(-2.5, 0.89, -2.25))
+	# The dustbin of crumpled notes.
+	LowPoly.put(self, LowPoly.cylinder(0.14, 0.11, 0.3, 8, Color("#4E575C")), Vector3(-0.85, 0.15, -2.6))
+	for ball in 3:
+		LowPoly.put(self, LowPoly.sphere(0.05, Color("#F2EEE4"), 5, 3), Vector3(-0.85 + (ball - 1) * 0.06, 0.32, -2.6 + (ball % 2) * 0.05))
+	LowPoly.put(self, LowPoly.sphere(0.05, Color("#F2EEE4"), 5, 3), Vector3(-0.55, 0.05, -2.35))
+	# Books from a senior, on a shelf over the bed.
+	LowPoly.put(self, LowPoly.box(Vector3(0.28, 0.04, 1.3), Color("#6B4A33")), Vector3(-4.35, 1.65, 0.6))
+	var spines := [Color("#24427A"), Color("#B3263A"), Color("#3E8E5A"), Color("#E8B23A"), Color("#5A3A6E"), Color("#24427A"), Color("#C9763E")]
+	for book in spines.size():
+		var tall := 0.26 + float(book % 3) * 0.05
+		LowPoly.put(self, LowPoly.box(Vector3(0.2, tall, 0.07), spines[book]), Vector3(-4.33, 1.67 + tall / 2.0, 0.08 + book * 0.1),
+			Vector3(0.12 if book == spines.size() - 1 else 0.0, 0, 0))
+	# The clock, five minutes fast on purpose.
+	var clock := LowPoly.cylinder(0.17, 0.17, 0.04, 14, Color("#F7F4EE"))
+	LowPoly.put(self, clock, Vector3(1.0, 2.75, -2.98), Vector3(PI / 2, 0, 0))
+	LowPoly.put(self, LowPoly.box(Vector3(0.015, 0.12, 0.01), Color("#2B2F33")), Vector3(1.0, 2.79, -2.95))
+	LowPoly.put(self, LowPoly.box(Vector3(0.09, 0.015, 0.01), Color("#2B2F33")), Vector3(1.04, 2.75, -2.95))
+	# Sticky notes round the revision wall.
+	var notes := [Vector2(0.15, 2.2), Vector2(1.05, 2.05), Vector2(0.2, 1.4), Vector2(1.0, 1.5), Vector2(0.95, 2.3)]
+	for index in notes.size():
+		LowPoly.put(self, LowPoly.box(Vector3(0.13, 0.13, 0.01), [Color("#F5E37A"), Color("#8FE3D2"), Color("#F0A3B5")][index % 3]),
+			Vector3(notes[index].x, notes[index].y, -2.985), Vector3(0, 0, 0.12 * (index % 2) - 0.06))
 
 
 ## The doctor at the desk, laptop open, and (off to one side of the set, out
@@ -334,8 +425,23 @@ func add_hostel_people() -> void:
 ## "call" shot looks at it; a call frame goes over it on screen.
 func _build_home_end() -> void:
 	var home := LowPoly.joint(self, "HomeEnd", FAMILY)
-	LowPoly.put(home, LowPoly.box(Vector3(4.2, 2.8, 0.2), Color("#E9C79A")), Vector3(0, 1.4, -1.0))
-	LowPoly.put(home, LowPoly.box(Vector3(4.2, 0.1, 3.0), Color("#9A6B4A")), Vector3(0, -0.05, 0.3))
+	# A whole sitting room round the camera, so a wider screen sees more of
+	# it, never its edges.
+	LowPoly.put(home, LowPoly.box(Vector3(8.4, 2.8, 0.2), Color("#E9C79A")), Vector3(0, 1.4, -1.0))
+	LowPoly.put(home, LowPoly.box(Vector3(8.4, 0.1, 6.0), Color("#9A6B4A")), Vector3(0, -0.05, 1.9))
+	for side in [-1.0, 1.0]:
+		LowPoly.put(home, LowPoly.box(Vector3(0.2, 2.8, 6.0), Color("#E2BE90")), Vector3(4.1 * side, 1.4, 1.9))
+	var ceiling := LowPoly.box(Vector3(8.4, 0.1, 6.0), Color("#F2E4CC"))
+	ceiling.material_override = LowPoly.glow(Color("#B9A98F"), 0.35)
+	LowPoly.put(home, ceiling, Vector3(0, 2.85, 1.9))
+	LowPoly.put(home, LowPoly.box(Vector3(8.4, 0.12, 0.22), Color("#B98D5E")), Vector3(0, 0.06, -0.88))
+	# A steel almirah and a shelf with the good plates nobody uses.
+	LowPoly.put(home, LowPoly.box(Vector3(0.9, 1.9, 0.5), Color("#8E9AA0")), Vector3(-2.6, 0.95, -0.66))
+	LowPoly.put(home, LowPoly.box(Vector3(0.02, 1.7, 0.02), Color("#5E676B")), Vector3(-2.6, 0.95, -0.4))
+	LowPoly.put(home, LowPoly.box(Vector3(1.1, 0.05, 0.25), Color("#6B4A33")), Vector3(2.5, 1.55, -0.78))
+	for plate in 4:
+		LowPoly.put(home, LowPoly.cylinder(0.11, 0.11, 0.02, 10, Color("#F4F1EA")), Vector3(2.1 + plate * 0.27, 1.69, -0.8),
+			Vector3(PI / 2, 0, 0))
 	# The sofa with the plastic still on the arms, the family photo, the
 	# calendar from the sweet shop, the tube light everybody's lit by.
 	LowPoly.put(home, LowPoly.box(Vector3(2.4, 0.45, 0.7), Color("#7A3B4B")), Vector3(0, 0.22, -0.55))
